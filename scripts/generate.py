@@ -64,15 +64,38 @@ def call_claude(prompt: str, model: str | None = None, timeout: int = 600) -> st
 RELOAD_SCRIPT = """
 <script>
 (function () {
-  // Reload at the next top-of-hour (UTC = PT, both whole-hour offsets).
-  // Jitter 15-45s so all clients don't hit Vercel the same millisecond,
-  // and so the new deploy has time to land first.
-  var now = new Date();
-  var next = new Date(now);
-  next.setUTCMinutes(0, 0, 0);
-  next.setUTCHours(next.getUTCHours() + 1);
-  var jitter = 15000 + Math.random() * 30000;
-  setTimeout(function () { window.location.reload(); }, next - now + jitter);
+  // At the next top-of-hour, poll for new content (title change) every 12s.
+  // Reload as soon as it changes, or after 3 min if it didn't.
+  // UTC top-of-hour == PT top-of-hour (PT offset is a whole number).
+  function msUntilNextHour() {
+    var now = new Date();
+    var next = new Date(now);
+    next.setUTCMinutes(0, 0, 0);
+    next.setUTCHours(next.getUTCHours() + 1);
+    return next - now;
+  }
+  var initialTitle = document.title;
+  setTimeout(function () {
+    var attempts = 0;
+    var iv = setInterval(function () {
+      attempts++;
+      if (attempts > 15) {
+        clearInterval(iv);
+        window.location.reload();
+        return;
+      }
+      fetch(window.location.pathname + '?_t=' + Date.now(), { cache: 'no-store' })
+        .then(function (r) { return r.text(); })
+        .then(function (text) {
+          var m = text.match(/<title>([^<]+)<\\/title>/);
+          if (m && m[1] !== initialTitle) {
+            clearInterval(iv);
+            window.location.reload();
+          }
+        })
+        .catch(function () {});
+    }, 12000);
+  }, msUntilNextHour());
 })();
 </script>
 """
