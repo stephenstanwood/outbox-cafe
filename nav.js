@@ -31,30 +31,23 @@
       style.textContent = [
         '.outbox-nav { position: fixed; top: 50%; transform: translateY(-50%);',
         '  z-index: 99999; display: flex; align-items: center; justify-content: center;',
-        '  width: 44px; height: 68px;',
-        '  background: rgba(253, 249, 236, 0.92);',
-        '  color: #2a2418 !important;',
-        '  border: 1px solid rgba(42, 36, 24, 0.30);',
-        '  box-shadow: 0 4px 14px rgba(0,0,0,0.22);',
-        '  font: 700 26px/1 ui-monospace, "SF Mono", "Menlo", monospace;',
+        '  width: 20px; height: 44px;',
+        '  background: transparent;',
+        '  color: currentColor;',
+        '  border: 0;',
+        '  font: 500 14px/1 ui-monospace, "SF Mono", "Menlo", monospace;',
         '  cursor: pointer; text-decoration: none !important;',
-        '  opacity: 0.75; transition: opacity 0.15s, background 0.15s, transform 0.15s;',
-        '  -webkit-tap-highlight-color: transparent; }',
-        '.outbox-nav:hover { opacity: 1; background: #fffaeb; text-decoration: none; }',
-        '.outbox-nav.outbox-prev { left: 0; border-radius: 0 8px 8px 0; }',
-        '.outbox-nav.outbox-next { right: 0; border-radius: 8px 0 0 8px; }',
-        '.outbox-nav.outbox-prev:hover { transform: translateY(-50%) translateX(2px); }',
-        '.outbox-nav.outbox-next:hover { transform: translateY(-50%) translateX(-2px); }',
-        '.outbox-nav-hint { position: fixed; top: 8px; right: 14px; z-index: 99999;',
-        '  font: 11px/1.3 ui-monospace, monospace; color: rgba(42,36,24,0.55);',
-        '  background: rgba(253,249,236,0.78); padding: 4px 8px; border-radius: 12px;',
-        '  pointer-events: none; opacity: 0; transition: opacity 0.3s; }',
-        '.outbox-nav-hint.show { opacity: 1; }',
+        '  opacity: 0.12;',
+        '  transition: opacity 0.25s ease, background 0.25s ease, width 0.25s ease;',
+        '  -webkit-tap-highlight-color: transparent;',
+        '  mix-blend-mode: difference; }',
+        '.outbox-nav:hover { opacity: 0.6; background: rgba(127,127,127,0.08); width: 28px; }',
+        '.outbox-nav.outbox-prev { left: 0; }',
+        '.outbox-nav.outbox-next { right: 0; }',
         '@media (max-width: 540px) {',
-        '  .outbox-nav { width: 36px; height: 56px; font-size: 20px; }',
-        '  .outbox-nav-hint { display: none; }',
+        '  .outbox-nav { width: 16px; height: 36px; font-size: 12px; opacity: 0.18; }',
         '}',
-        '@media print { .outbox-nav, .outbox-nav-hint { display: none; } }',
+        '@media print { .outbox-nav { display: none; } }',
       ].join('\n');
       document.head.appendChild(style);
 
@@ -71,19 +64,6 @@
       next.textContent = '→';
       next.setAttribute('aria-label', 'next in the collection');
       document.body.appendChild(next);
-
-      // One-time hint for keyboard nav, fades after a few seconds
-      try {
-        if (!sessionStorage.getItem('outbox-nav-hint-shown')) {
-          var hint = document.createElement('div');
-          hint.className = 'outbox-nav-hint';
-          hint.textContent = '← / → to browse';
-          document.body.appendChild(hint);
-          requestAnimationFrame(function () { hint.classList.add('show'); });
-          setTimeout(function () { hint.classList.remove('show'); }, 4500);
-          sessionStorage.setItem('outbox-nav-hint-shown', '1');
-        }
-      } catch (e) {}
 
       document.addEventListener('keydown', function (e) {
         var t = e.target;
