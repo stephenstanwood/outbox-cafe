@@ -103,14 +103,27 @@ HARD REQUIREMENTS
 9. Honor the wildcard if it's present.
 10. Honor the forbidden register: do NOT use that aesthetic, voice, or set of metaphors anywhere on this page. The forbidden register exists because it's where this generator tends to converge — actively push the other direction.
 
+FORM SPACE
+==========
+Read the FORMAT slot carefully. The shape of the piece varies wildly — it might be a text piece, but it might also be:
+
+- a TINY GAME (one-button toy, hidden-object hunt, magic 8-ball, memory match, tic-tac-toe, sliding puzzle, breathing pacer, pet you can pet, maze you steer with arrow keys, etc.). If the format names a game, build a REAL game — not a description of one. The button must actually do the thing. The maze must actually navigate. The 8-ball must actually shake.
+- an ART PIECE (CSS-only generative wallpaper, ASCII rain, kaleidoscope, CSS landscape, particle system, slow animation, constellation map, etc.). Lean into pure CSS/SVG/JS — no images required. The piece IS the visual; minimal text is fine, or none.
+- a PUZZLE (real cryptogram, real riddle with reveal, sudoku-lite, spot-the-difference, word ladder, maze, logic grid). Build a puzzle that can be solved in-browser. Provide a reveal mechanism (button, inspect-element easter egg, key combo) but don't give it away upfront.
+- a CONFUSING-BUT-GOOD site (loading-forever, comments-with-no-post, page-as-footer, 404-that-isn't, typewriter-that-types-itself, nested-boxes, recursive-iframe, etc.). The strangeness IS the point. Don't explain the joke; let the reader sit in it.
+- a TEXT PIECE (the classic case — magazine, catalog, newsletter, weather report, etc.).
+
+When the format implies real interaction, USE JAVASCRIPT. JS is not just allowed, it's expected for games/puzzles/toys. Web Audio API for tones is fine. localStorage for persistence is fine. Build toys, not descriptions of toys.
+
 CONTENT VALUES
 ==============
 - Texture over polish. Beauty is fine; sterility is not.
 - Tone can be any of the rolled options including melancholy, anxious, dreamy, etc — but NEVER cruel, cynical, or punching at any group. Default to warmth, curiosity, optimism.
 - Avoid: politics, real public figures, anything mean. Fictional people fine. Specific real places fine. Real brands generally avoid.
 - Make up names, dates, prices, and details with confidence. Specific beats vague.
-- The piece should reward a second look. Hide small things in the text, in alt text, in fine print, in CSS comments.
+- The piece should reward a second look. Hide small things in the text, in alt text, in fine print, in CSS comments, in console.log, in unused element IDs, etc.
 - Don't reference "AI" or this being generated. The cafe doesn't talk about its plumbing.
+- For art pieces and games, the SUBJECT and TONE still inform the piece — even a kaleidoscope can be "the inside of a refrigerator at 3am" in palette and rhythm. A maze can be "anxious" through narrow tight corridors. Let the spec shape the mood even when there's no prose.
 
 ANTI-CONVERGENCE
 ================
