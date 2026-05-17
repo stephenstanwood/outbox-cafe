@@ -79,11 +79,11 @@
     display: block;
     text-decoration: none;
     color: var(--ink);
-    aspect-ratio: 5 / 7;
+    aspect-ratio: 4 / 5;
     background: var(--paper);
     border-radius: 12px;
     padding: 0;
-    overflow: hidden;
+    overflow: visible;
     transform: rotate(var(--rot, 0deg));
     box-shadow:
       0 1px 0 rgba(255,255,255,0.6) inset,
@@ -117,12 +117,13 @@
   .card-inner {
     position: relative;
     z-index: 2;
-    padding: 12px 12px 10px;
+    padding: 8px 10px 10px;
     height: 100%;
     display: flex; flex-direction: column;
     background: var(--paper);
     border-radius: 8px;
     margin: 4px;
+    overflow: hidden;
   }
 
   .card-top {
@@ -140,12 +141,13 @@
     background: #2a1c0a;
     border: 2px solid var(--ink);
     border-radius: 4px;
-    overflow: hidden;
+    overflow: visible;  /* let stickers poke out */
     position: relative;
     box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
   }
   .card-art-img {
     width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block;
+    border-radius: 2px;
   }
   .card-art-placeholder {
     width: 100%; height: 100%;
@@ -157,49 +159,31 @@
   }
 
   .card-name {
-    margin: 8px 0 4px;
-    font-size: 14px;
+    margin: 10px 0 2px;
+    font-size: 15px;
     font-weight: 700;
     font-family: "Georgia", serif;
-    line-height: 1.18;
+    line-height: 1.2;
     color: var(--ink);
-    /* clamp to 2 lines */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
-  .card-type {
-    font-family: "Courier New", monospace;
-    font-size: 10px;
-    color: var(--dim);
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid rgba(0,0,0,0.10);
-    padding-bottom: 4px;
-    margin-bottom: 4px;
-    text-transform: lowercase;
-    /* clamp */
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .card-tone {
-    font-size: 11px;
-    color: var(--ink);
-    margin-bottom: 4px;
+  .card-tag {
+    margin: 2px 0 6px;
+    font-family: "Georgia", serif;
+    font-size: 12px;
     font-style: italic;
+    color: var(--dim);
+    line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .card-tone .lbl {
-    color: var(--dim); font-style: normal; font-size: 9px;
-    text-transform: uppercase; letter-spacing: 1px; margin-right: 4px;
-  }
+  .card-tag::before { content: "— "; }
 
   .card-foot {
     margin-top: auto;
@@ -213,6 +197,153 @@
     display: inline-block; width: 10px; height: 10px; border-radius: 50%;
     border: 1px solid rgba(0,0,0,0.25);
     box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);
+  }
+
+  /* STICKERS — overlaid on the art frame */
+  .sticker {
+    position: absolute;
+    z-index: 4;
+    padding: 3px 7px;
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.3), 2px 3px 5px rgba(0,0,0,0.25);
+  }
+  .stk-new {
+    background: #ffeb3b; color: #c43d15;
+    border: 2px solid #c43d15;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  .stk-price, .stk-price-tiny {
+    background: #fff177; color: #2a2418;
+    border: 1px dashed #c43d15;
+    font-family: "Courier New", monospace;
+    font-weight: 700;
+  }
+  .stk-price-tiny { font-size: 9px; padding: 2px 5px; }
+  .stk-rare {
+    background: rgba(196, 61, 21, 0.92); color: #fff;
+    border-radius: 50% / 30%;
+    padding: 5px 12px;
+    font-style: italic;
+    font-size: 12px;
+  }
+  .stk-vintage {
+    background: #828f4a; color: #fffbe6;
+    border: 1px solid #4f5a1f;
+    font-size: 10px;
+  }
+  .stk-mint {
+    background: #a8e6cf; color: #1f5a35;
+    border: 1px solid #1f5a35;
+    font-size: 10px;
+  }
+  .stk-used {
+    background: #b89669; color: #2a1810;
+    border: 1px solid #6b5230;
+    opacity: 0.92;
+    font-size: 10px;
+  }
+  .stk-promo {
+    background: #ff44cc; color: #fff;
+    border: 1px solid #8a1166;
+    font-size: 10px;
+  }
+  .stk-foil {
+    background: linear-gradient(135deg, #ff6b9d, #ffd966, #66e09b, #7ad9ff, #ff6b9d);
+    background-size: 200% 200%;
+    color: #1a1612;
+    text-shadow: 1px 1px 0 #fff;
+    border: 1px solid #1a1612;
+    animation: foil-shift 4s linear infinite;
+    font-size: 10px;
+  }
+  @keyframes foil-shift {
+    to { background-position: 200% 200%; }
+  }
+  .stk-authentic {
+    background: rgba(31, 90, 53, 0.92); color: #fffbe6;
+    border-radius: 50% / 35%;
+    padding: 5px 10px;
+    font-style: italic;
+    font-size: 10px;
+  }
+  .stk-free {
+    background: #ff8c4a; color: #fff;
+    border: 1px solid #c43d15;
+    font-size: 11px;
+  }
+  .stk-reduced {
+    background: #fffbe6; color: #c43d15;
+    border: 2px solid #c43d15;
+    text-decoration: line-through;
+    text-decoration-color: #c43d15;
+    font-size: 10px;
+  }
+  .stk-limited {
+    background: #1a1612; color: #ffd966;
+    font-size: 9px;
+  }
+  .stk-show {
+    background: #c89a3e; color: #1a1612;
+    border-radius: 50%;
+    padding: 6px 8px;
+    font-size: 8px;
+    line-height: 1;
+    text-align: center;
+    width: 50px; height: 50px;
+    display: grid; place-items: center;
+    box-shadow: 0 0 0 2px #1a1612 inset, 1px 1px 0 rgba(0,0,0,0.3);
+  }
+  .stk-sunday {
+    background: #c8e3f5; color: #093540;
+    border: 1px solid #093540;
+    font-family: "Brush Script MT", cursive;
+    font-style: normal;
+    font-size: 13px;
+    padding: 3px 9px;
+  }
+  .stk-mustgo {
+    background: #c43d15; color: #fff;
+    font-size: 11px;
+    font-style: italic;
+  }
+  .stk-asis {
+    background: transparent; color: #2a1810;
+    border: 1px solid #2a1810;
+    font-size: 10px;
+    font-family: "Courier New", monospace;
+  }
+  .stk-askm {
+    background: #fdf9ec; color: #2a2418;
+    border: 1px dashed #2a2418;
+    font-family: "Brush Script MT", cursive;
+    font-style: normal;
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+  .stk-handmade {
+    background: #f3e7c3; color: #5a4a30;
+    border: 1px solid #5a4a30;
+    font-style: italic;
+    font-size: 10px;
+  }
+  .stk-local {
+    background: #d4e6c8; color: #2d5016;
+    border: 1px solid #2d5016;
+    font-size: 10px;
+  }
+  .stk-fragile {
+    background: #fff; color: #c43d15;
+    border: 1px solid #c43d15;
+    font-size: 9px;
+    letter-spacing: 2px;
   }
 
   /* Holographic shine — animates on hover */
@@ -311,10 +442,12 @@
               <span class="card-num">No.013/∞</span>
               <span class="card-rarity" title="RARE">★★★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T07-27.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T07-27.png" alt="" loading="lazy">
+              <span class="sticker stk-askm" style="top:50%; right:-10px; transform:translateY(-50%) rotate(12deg);">ASK FOR M.</span>
+            </div>
             <h3 class="card-name">Headlight Municipal Videotex — Screensaver Review Subcommittee, Winter Session</h3>
-            <div class="card-type">1985 pre-web BBS · screensaver showcase</div>
-            <div class="card-tone"><span class="lbl">tone</span> bureaucratic</div>
+            <div class="card-tag">vouched for</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 07-27 PT</span>
               <span class="card-palette"><i style="background:#ffaa33"></i><i style="background:#ffd180"></i><i style="background:#b87a22"></i></span>
@@ -330,10 +463,12 @@
               <span class="card-num">No.012/∞</span>
               <span class="card-rarity" title="UNCOMMON">★★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T07-15.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T07-15.png" alt="" loading="lazy">
+              <span class="sticker stk-new" style="top:50%; right:-10px; transform:translateY(-50%) rotate(12deg);">NEW!</span>
+            </div>
             <h3 class="card-name">★ AUCTION: BAYBROOK TOWNSHIP RECYCLING GUIDE (2007 ED.) — A PIECE OF MY ACTUAL SOUL — bidshack.org ★</h3>
-            <div class="card-type">2009 pre-iPhone blog ecosystem · auction listing</div>
-            <div class="card-tone"><span class="lbl">tone</span> enthusiastic-fan</div>
+            <div class="card-tag">not in the catalog</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 07-15 PT</span>
               <span class="card-palette"><i style="background:#f5b7b1"></i><i style="background:#9caf88"></i><i style="background:#e89890"></i></span>
@@ -349,10 +484,12 @@
               <span class="card-num">No.011/∞</span>
               <span class="card-rarity" title="COMMON">★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T07-04.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T07-04.png" alt="" loading="lazy">
+              
+            </div>
             <h3 class="card-name">★彡 WEDNESDAYCORE!!!! ・゚✧ THE OFFICIAL FAN CATALOG ・゚✧ NEW STOCK EVERY WEEK FOREVER!!!!!!!</h3>
-            <div class="card-type">2014 peak Tumblr soft-grunge · product catalog page</div>
-            <div class="card-tone"><span class="lbl">tone</span> breathless</div>
+            <div class="card-tag">trust the cat</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 07-04 PT</span>
               <span class="card-palette"><i style="background:#cb6446"></i><i style="background:#f4d4cb"></i><i style="background:#7a3520"></i></span>
@@ -368,10 +505,12 @@
               <span class="card-num">No.010/∞</span>
               <span class="card-rarity" title="COMMON">★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T06-54.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T06-54.png" alt="" loading="lazy">
+              <span class="sticker stk-sunday" style="bottom:8px; left:8px; transform:rotate(6deg);">SUNDAY ONLY</span>
+            </div>
             <h3 class="card-name">YONDER</h3>
-            <div class="card-type">1991 gopher menus and FTP index… · single-screen text adventure node</div>
-            <div class="card-tone"><span class="lbl">tone</span> earnest</div>
+            <div class="card-tag">the last one</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 06-54 PT</span>
               <span class="card-palette"><i style="background:#00f0ff"></i><i style="background:#ff006e"></i></span>
@@ -387,10 +526,12 @@
               <span class="card-num">No.009/∞</span>
               <span class="card-rarity" title="COMMON">★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T06-41.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T06-41.png" alt="" loading="lazy">
+              
+            </div>
             <h3 class="card-name">★ THE 1999 GIZMOSCOPE!!! ★ MILLENNIUM EDITION ★</h3>
-            <div class="card-type">1999 pre-Y2K millennium anxiety · horoscope page (12 signs</div>
-            <div class="card-tone"><span class="lbl">tone</span> breathless</div>
+            <div class="card-tag">still warm</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 06-41 PT</span>
               <span class="card-palette"><i style="background:#f4ecd8"></i><i style="background:#093540"></i><i style="background:#0c4250"></i></span>
@@ -406,10 +547,12 @@
               <span class="card-num">No.008/∞</span>
               <span class="card-rarity" title="UNCOMMON">★★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T06-23.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T06-23.png" alt="" loading="lazy">
+              <span class="sticker stk-reduced" style="top:6px; right:6px; transform:rotate(8deg);">REDUCED</span>
+            </div>
             <h3 class="card-name">OBITUARY: The "HOMECOMING" Tour — A Reunion That Did Not Happen (And Will Not, And Cannot)</h3>
-            <div class="card-type">undated · obituary for something that did not d…</div>
-            <div class="card-tone"><span class="lbl">tone</span> conspiratorial</div>
+            <div class="card-tag">free with purchase</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 06-23 PT</span>
               <span class="card-palette"><i style="background:#f5b7b1"></i><i style="background:#9caf88"></i><i style="background:#d68b85"></i></span>
@@ -425,10 +568,12 @@
               <span class="card-num">No.007/∞</span>
               <span class="card-rarity" title="HOLO RARE">★★★★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T06-18.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T06-18.png" alt="" loading="lazy">
+              <span class="sticker stk-price" style="top:34%; left:-8px; transform:rotate(-14deg);">$3.50</span>
+            </div>
             <h3 class="card-name">FIELD GUIDE ENTRY #1: A SPECIFIC TUESDAY (please read before commenting)</h3>
-            <div class="card-type">2003 LiveJournal · field guide entry (one species)</div>
-            <div class="card-tone"><span class="lbl">tone</span> defensive</div>
+            <div class="card-tag">small but bossy</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 06-18 PT</span>
               <span class="card-palette"><i style="background:#ffaa33"></i><i style="background:#ffd17a"></i><i style="background:#b97820"></i></span>
@@ -444,10 +589,12 @@
               <span class="card-num">No.006/∞</span>
               <span class="card-rarity" title="UNCOMMON">★★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T06-04.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T06-04.png" alt="" loading="lazy">
+              <span class="sticker stk-free" style="top:50%; right:-10px; transform:translateY(-50%) rotate(12deg);">FREE!</span>
+            </div>
             <h3 class="card-name">The Pebble Falls Volunteer Cumulus Appreciation Society · Cloud #44-B</h3>
-            <div class="card-type">undated · corkboard</div>
-            <div class="card-tone"><span class="lbl">tone</span> chipper</div>
+            <div class="card-tag">officially unsponsored</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 06-04 PT</span>
               <span class="card-palette"><i style="background:#0a0a2a"></i><i style="background:#15153a"></i><i style="background:#1a1a3a"></i></span>
@@ -463,10 +610,12 @@
               <span class="card-num">No.005/∞</span>
               <span class="card-rarity" title="UNCOMMON">★★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T05-56.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T05-56.png" alt="" loading="lazy">
+              <span class="sticker stk-sunday" style="top:34%; left:-8px; transform:rotate(-14deg);">SUNDAY ONLY</span>
+            </div>
             <h3 class="card-name">The Hornbeam Society — Friends of Old Knockle, Est. April 2020</h3>
-            <div class="card-type">2020 Discord-server-as-community · tribute page to a fictional thing</div>
-            <div class="card-tone"><span class="lbl">tone</span> earnest cryptid believer</div>
+            <div class="card-tag">use as directed</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 05-56 PT</span>
               <span class="card-palette"><i style="background:#f4ecd8"></i><i style="background:#093540"></i><i style="background:#d4cab5"></i></span>
@@ -482,10 +631,12 @@
               <span class="card-num">No.004/∞</span>
               <span class="card-rarity" title="RARE">★★★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T05-42.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T05-42.png" alt="" loading="lazy">
+              
+            </div>
             <h3 class="card-name">The Official Unofficial Visitor's Companion to the Estate Sale of Aunt Vesper Quibley — Page 47 of 200</h3>
-            <div class="card-type">2014 peak Tumblr soft-grunge · instruction manual (page 47 of 200)</div>
-            <div class="card-tone"><span class="lbl">tone</span> enthusiastic-fan</div>
+            <div class="card-tag">looks better in person</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 05-42 PT</span>
               <span class="card-palette"><i style="background:#55ffff"></i><i style="background:#ff55ff"></i></span>
@@ -501,10 +652,12 @@
               <span class="card-num">No.003/∞</span>
               <span class="card-rarity" title="RARE">★★★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T05-35.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T05-35.png" alt="" loading="lazy">
+              
+            </div>
             <h3 class="card-name">Granny Pernilla's Rubber Band Weather Station — Channel 7 ½ — Whiffle Hollow's Most Trusted Twang Forecast Since 1962</h3>
-            <div class="card-type">1997 peak GeoCities · weather report</div>
-            <div class="card-tone"><span class="lbl">tone</span> folksy</div>
+            <div class="card-tag">limited to one person</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 05-35 PT</span>
               <span class="card-palette"><i style="background:#ffc6df"></i><i style="background:#a8d8ea"></i><i style="background:#4a2740"></i></span>
@@ -520,10 +673,12 @@
               <span class="card-num">No.002/∞</span>
               <span class="card-rarity" title="HOLO RARE">★★★★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T05-25.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T05-25.png" alt="" loading="lazy">
+              <span class="sticker stk-price" style="top:6px; left:6px; transform:rotate(-7deg);">$0.99</span>
+            </div>
             <h3 class="card-name">Placard #47 — Fizzstone Phosphate-Lime (1957–1963) · Marvin's Amateur History Cabinet</h3>
-            <div class="card-type">2009 pre-iPhone blog ecosystem · museum exhibit placard</div>
-            <div class="card-tone"><span class="lbl">tone</span> amateur historian</div>
+            <div class="card-tag">comes with a story</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 05-25 PT</span>
               <span class="card-palette"><i style="background:#cb6446"></i><i style="background:#a8d8ea"></i><i style="background:#dfb35d"></i></span>
@@ -539,10 +694,12 @@
               <span class="card-num">No.001/∞</span>
               <span class="card-rarity" title="COMMON">★</span>
             </div>
-            <div class="card-art"><img class="card-art-img" src="/archive/thumbs/2026-05-17T05-16.png" alt="" loading="lazy"></div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-17T05-16.png" alt="" loading="lazy">
+              
+            </div>
             <h3 class="card-name">Lottie Truesdale's Bulletin · Apricot Bend State Park, Kiosk No. 4</h3>
-            <div class="card-type">undated · classified ads page</div>
-            <div class="card-tone"><span class="lbl">tone</span> ranger at a state park</div>
+            <div class="card-tag">store at room temperature</div>
             <div class="card-foot">
               <span class="card-stamp">2026-05-17 · 05-16 PT</span>
               <span class="card-palette"><i style="background:#ffc6df"></i><i style="background:#a8d8ea"></i><i style="background:#ff96c2"></i></span>
