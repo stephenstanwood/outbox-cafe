@@ -244,12 +244,14 @@ def rebuild_cabinet() -> None:
             wm = m.group(0).strip()
             wm = re.sub(r"\s+", " ", wm)[:140]
         palette = _extract_palette(html)
-        # Stable per-card rotation/paper from filename hash
-        h = sum(ord(c) for c in f.stem)
-        rot = ((h % 9) - 4) * 0.9  # -3.6..+3.6
-        paper_idx = (h // 7) % 8
-        nudge_x = ((h // 11) % 9) - 4  # -4..+4 px
-        nudge_y = ((h // 13) % 9) - 4
+        # Stable per-card variety via md5 — sum-of-ords collides too easily
+        import hashlib
+        digest = hashlib.md5(f.stem.encode()).digest()
+        h = int.from_bytes(digest[:4], "big")
+        rot = ((digest[4] % 9) - 4) * 0.9  # -3.6..+3.6
+        paper_idx = digest[5] % 8
+        nudge_x = (digest[6] % 9) - 4  # -4..+4 px
+        nudge_y = (digest[7] % 9) - 4
         entries.append({
             "file": f.name,
             "title": title,
