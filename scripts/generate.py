@@ -1179,6 +1179,14 @@ def main() -> int:
         git_commit_and_push(msg)
         print("✓ committed and pushed")
 
+    # Best-effort Bluesky drop announcement. Never blocks the gen.
+    try:
+        from post_bsky import post_drop
+        if post_drop(archive_file, shot_path if shot_path.exists() else None):
+            print("✓ posted to bluesky")
+    except Exception as e:
+        print(f"bluesky post errored (non-fatal): {e}", file=sys.stderr)
+
     return 0
 
 
