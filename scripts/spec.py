@@ -16,8 +16,14 @@ DATA_DIR = ROOT / "data"
 DIMENSIONS_PATH = DATA_DIR / "dimensions.json"
 HISTORY_PATH = DATA_DIR / "history.jsonl"
 
-# How many recent specs to consider for anti-clustering
-RECENT_WINDOW = 12
+# How many recent specs to consider for anti-clustering.
+# Long enough to suppress every pool: smallest is forbidden_register (~8 effective)
+# and we want hard-block to span ~half the pool, so 40 is comfortable for everything.
+RECENT_WINDOW = 40
+
+# Items picked in the last min(HARD_BLOCK_CAP, pool//2) gens are excluded entirely.
+# At 10-min cadence: 20 gens ≈ 3.3 hours of "you can't see this again."
+HARD_BLOCK_CAP = 20
 
 # Probability the wildcard slot is used at all
 WILDCARD_PROBABILITY = 0.40
@@ -47,24 +53,37 @@ def append_history(spec: dict[str, Any]) -> None:
 
 
 def _weighted_choice(options: list[str], recent_values: list[str], rng: random.Random) -> str:
-    """Pick from options, with a penalty for items used recently.
+    """Pick from options with anti-repeat mechanics.
 
-    Recent-use penalty: items in the last RECENT_WINDOW specs get a weight
-    multiplier that decays linearly with how recent they are. The most recent
-    pick is the most penalized.
+    Two-zone scheme:
+    - HARD BLOCK: items picked in the last K rolls (K ≈ pool_size / 2, capped)
+      are excluded entirely from this pick. Guarantees no near-term repeats
+      and forces real spread across the pool.
+    - SOFT PENALTY: items farther back in the window still get a reduced
+      weight, decaying linearly until they're freely re-selectable past the
+      window.
     """
+    pool_size = len(options)
+    block_k = min(pool_size // 2, HARD_BLOCK_CAP, len(recent_values))
+    blocked = set(recent_values[-block_k:]) if block_k > 0 else set()
+    pool = [o for o in options if o not in blocked]
+    if not pool:
+        pool = options  # safety: tiny pool, nothing left — fall back to full set
+
     weights = []
-    for opt in options:
-        base = 1.0
-        # decay penalty for recency: most recent = 0.05x, oldest in window = ~1x
+    for opt in pool:
         penalty = 1.0
+        # walk from newest backward; first match wins (hardest penalty)
         for idx, recent in enumerate(reversed(recent_values)):
+            if idx < block_k:
+                continue  # this zone is already hard-blocked, no soft penalty needed
             if recent == opt:
-                # idx 0 = most recent
-                penalty = min(penalty, 0.05 + 0.075 * idx)
+                # idx > block_k: soft penalty, decays back to 1.0 over the rest of the window
+                soft_idx = idx - block_k
+                penalty = min(penalty, 0.1 + 0.05 * soft_idx)
                 break
-        weights.append(base * penalty)
-    return rng.choices(options, weights=weights, k=1)[0]
+        weights.append(penalty)
+    return rng.choices(pool, weights=weights, k=1)[0]
 
 
 def roll_spec(seed: int | None = None) -> dict[str, Any]:
