@@ -166,6 +166,13 @@ SPEC_LLM_PROMPT = """You are rolling a spec for outbox.cafe — a constantly-evo
 
 The dimension pools are bottomless — don't think of yourself as picking from a list. INVENT. Reach into untouched corners of internet history, hobby subcultures, regional weirdness, fictional ephemera, art movements, mechanical curiosities, kitchen objects, weather phenomena, defunct industries.
 
+AVOID THESE PATTERNS THE ENGINE OVERUSES (no exceptions, regardless of how cleverly you'd phrase them):
+- Day-of-the-week themes — no Wednesdays, Tuesdays, Mondays, weekends-as-concept, "a regular [day]", etc. Days as throwaway specifics in a piece are fine; days as the SUBJECT are off-limits.
+- "Fictional baseball team" / minor-league-anything subjects.
+- "One specific X" framing (one specific cloud, one specific Tuesday, one specific intersection) — the construction has been used too much.
+- Eulogies / obituaries / tributes for inanimate objects (chairs, rubber bands, etc.) — also overused.
+- Society-for-the-appreciation-of-one-X subjects.
+
 RECENT PICKS TO AVOID (last ~25 gens; do not repeat any, and aim to land in a different aesthetic territory):
 - era: {era_recent}
 - format: {format_recent}
@@ -215,7 +222,7 @@ Start with {{ and end with }}. Nothing else.
 def roll_spec_via_llm(
     seed: int | None = None,
     model: str | None = None,
-    timeout: int = 120,
+    timeout: int = 240,
 ) -> dict[str, Any]:
     """Ask Claude to invent a fresh spec across all dimensions. Fall back to static roller on any failure."""
     import re
