@@ -1250,7 +1250,14 @@ def git_commit_and_push(message: str) -> None:
         return
     print("git push failed — pulling --rebase and retrying", file=sys.stderr)
     subprocess.run(["git", "-C", str(ROOT), "pull", "--rebase"], check=True)
-    subprocess.run(["git", "-C", str(ROOT), "push"], check=True)
+    push2 = subprocess.run(["git", "-C", str(ROOT), "push"])
+    if push2.returncode != 0:
+        try:
+            from cat_signal import signal
+            signal("git-push-failed", "git push failed twice (after pull --rebase). manual intervention needed.", priority="high")
+        except Exception:
+            pass
+        raise subprocess.CalledProcessError(push2.returncode, push2.args if hasattr(push2, "args") else "git push")
 
 
 def main() -> int:
@@ -1304,6 +1311,11 @@ def main() -> int:
         debug = ROOT / "data" / "last_bad_output.txt"
         debug.write_text(raw)
         print(f"output did not look like HTML; raw saved to {debug}", file=sys.stderr)
+        try:
+            from cat_signal import signal
+            signal("gen-bad-output", f"claude returned non-HTML output. raw saved to data/last_bad_output.txt", priority="high")
+        except Exception:
+            pass
         return 2
 
     # Inject the canonical spec as meta tags so the cabinet can read it reliably
