@@ -61,6 +61,36 @@ def call_claude(prompt: str, model: str | None = None, timeout: int = 600) -> st
     return result.stdout
 
 
+RELOAD_SCRIPT = """
+<script>
+(function () {
+  // Reload at the next top-of-hour (UTC = PT, both whole-hour offsets).
+  // Jitter 15-45s so all clients don't hit Vercel the same millisecond,
+  // and so the new deploy has time to land first.
+  var now = new Date();
+  var next = new Date(now);
+  next.setUTCMinutes(0, 0, 0);
+  next.setUTCHours(next.getUTCHours() + 1);
+  var jitter = 15000 + Math.random() * 30000;
+  setTimeout(function () { window.location.reload(); }, next - now + jitter);
+})();
+</script>
+"""
+
+
+def inject_reload(html: str) -> str:
+    """Insert the hourly reload script before </body>."""
+    if re.search(r"</body\s*>", html, re.IGNORECASE):
+        return re.sub(
+            r"(</body\s*>)",
+            RELOAD_SCRIPT + r"\1",
+            html,
+            count=1,
+            flags=re.IGNORECASE,
+        )
+    return html + RELOAD_SCRIPT
+
+
 def inject_spec_meta(html: str, spec: dict) -> str:
     """Inject canonical spec as <meta> tags into <head> for reliable extraction by the cabinet."""
 
@@ -995,7 +1025,7 @@ def rebuild_cabinet() -> None:
 </body>
 </html>
 """
-    CABINET_PATH.write_text(cabinet_html)
+    CABINET_PATH.write_text(inject_reload(cabinet_html))
 
 
 def git_commit_and_push(message: str) -> None:
@@ -1054,7 +1084,8 @@ def main() -> int:
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
     archive_file = ARCHIVE_DIR / filename_for_now()
     archive_file.write_text(html)
-    shutil.copyfile(archive_file, INDEX_PATH)
+    # Homepage gets the auto-reload script; the archive file stays static.
+    INDEX_PATH.write_text(inject_reload(html))
     # Record the produced filename in the spec so future matchups are unambiguous
     spec["file"] = archive_file.name
 
