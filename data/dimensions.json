@@ -139,13 +139,13 @@
   ],
 
   "subject": [
-    "a fictional minor-league baseball team",
+    "a fictional municipal bus driver's union newsletter",
     "a beverage that doesn't exist",
     "one town's recycling rules",
     "one specific cloud (no other clouds)",
     "the etymology of a single word",
     "a person you've never met",
-    "a bird that only visits on Tuesdays",
+    "a bird that only visits when the bakery runs out of croissants",
     "a recipe for something inedible",
     "a sport invented for this page",
     "a small museum nobody visits",
@@ -165,7 +165,7 @@
     "an apology to a chair",
     "a competition for who can stand the longest",
     "things that smell like rain",
-    "one specific Tuesday in 1998",
+    "the contents of an unmarked drawer in a hotel lobby",
     "a person trying to learn to whistle",
     "a society of people who all have the same name",
     "the year 1996 (from inside)",
@@ -193,18 +193,18 @@
     "the diary of a substitute teacher",
     "things you can do with a single rubber band",
     "a fictional spelling bee final round",
-    "a society for the appreciation of one font",
+    "a manual for a hobby that requires only thread",
     "a small island that disappears at high tide",
     "a barber shop with one chair",
     "the official biography of the wind",
-    "a fan page for a regular Wednesday",
+    "a fan page for a specific cloud someone saw from a plane",
     "things found in a parking lot at sunrise",
     "a guidebook to a town that doesn't have any roads",
     "a museum dedicated to lost keys",
     "instructions for an unfollowable recipe",
     "a kid's first lemonade stand (annual report)",
     "an interview with the moon",
-    "a society dedicated to a single specific tree"
+    "a guidebook to a single intersection's habit-tracking"
   ],
 
   "tone": [
@@ -328,7 +328,7 @@
   ],
 
   "wildcard": [
-    "must include the word 'tuesday'",
+    "must include a specific weather pattern that doesn't exist",
     "must end with a question",
     "must have exactly 3 footnotes",
     "must be written entirely in the second person",
