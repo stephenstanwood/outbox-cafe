@@ -33,11 +33,19 @@ def _format_photos_block(photos: list[dict[str, Any]]) -> str:
     lines = []
     for i, p in enumerate(photos, 1):
         alt = (p.get("alt") or "").replace("\n", " ").strip() or "(no description)"
-        lines.append(
-            f"  [{i}] URL: {p['url']}\n"
-            f"      Alt: {alt}\n"
-            f"      Credit: {p['credit_name']} on Unsplash · {p['html_link']}"
-        )
+        source = p.get("source", "unsplash")
+        if source == "ai":
+            lines.append(
+                f"  [{i}] URL: {p['url']}\n"
+                f"      Alt: {alt}\n"
+                f"      Source: AI-generated artwork (no attribution required, modify freely)"
+            )
+        else:
+            lines.append(
+                f"  [{i}] URL: {p['url']}\n"
+                f"      Alt: {alt}\n"
+                f"      Credit: {p['credit_name']} on Unsplash · {p['html_link']}"
+            )
     return "\n".join(lines)
 
 
@@ -78,17 +86,17 @@ Make a single self-contained HTML file that fully inhabits the rolled spec.
 
 AVAILABLE IMAGES
 ================
-Three real photos from Unsplash have been pre-fetched for this piece's subject. You may use any of them, all of them, or none — pick what fits the format and tone you're building.
+Three images have been pre-fetched for this piece. Each is labeled with its source: either real photos from UNSPLASH (real strangers and real places — they need credit) or AI-GENERATED artwork (custom-made for this spec, no attribution needed, modify freely). You may use any, all, or none — pick what fits the format you're building.
 
 {photos_block}
 
 If you use one or more:
-  - Embed as `<img src="..." alt="..." loading="lazy" style="...">` — set explicit max-width / max-height inline so they fit the layout. They are real photos, full-size; you must constrain them.
+  - Embed as `<img src="..." alt="..." loading="lazy" style="...">` — set explicit max-width / max-height inline so they fit the layout. The originals are full-size; you must constrain them.
   - You may crop, mask, filter, blur, tint, frame, or otherwise integrate them into the piece's aesthetic — they don't have to look like "stock photos." Old-web pages would have photo grids, dithered photos, sepia tints, polaroid frames, drop-caps wrapping around them, etc.
-  - The photos are real strangers and real places — don't claim them as "the recipient" or "the inventor" of fictional things. They're decoration, mood, texture.
-  - Photo credits are REQUIRED by Unsplash's terms. Include a small "Photo credits" line at the bottom of the page (can be very small, italic, in fine print) listing each photographer used: "Photo by NAME on Unsplash" with the credit link. Keep it tasteful, like a real magazine masthead colophon.
+  - For UNSPLASH photos: they're real strangers and real places — don't claim them as "the recipient" or "the inventor" of fictional things. They're decoration, mood, texture. Photo credits are REQUIRED by Unsplash's terms — include a small "Photo credits" line at the bottom (very small, italic, fine print) listing each Unsplash photographer used: "Photo by NAME on Unsplash" with the credit link. Skip this line entirely if you only used AI-generated images.
+  - For AI-GENERATED images: no attribution needed. You can claim them as illustrations, diagrams, portraits of fictional people, etc.
 
-If the format / tone doesn't fit images (text adventure, ASCII gallery, manifesto, etc.), skip them entirely — don't force them in.
+If the format / tone doesn't fit images (text adventure, ASCII gallery, manifesto, art piece, game, puzzle, etc.), skip them entirely — don't force them in.
 
 HARD REQUIREMENTS
 =================
