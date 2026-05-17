@@ -44,6 +44,8 @@ fi
 
 # Ensure claude is in PATH for cron/launchd
 export PATH="/opt/homebrew/bin:$HOME/.bun/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
+# Disable Python's stdout buffering so we see progress live in the log
+export PYTHONUNBUFFERED=1
 
 cd "$REPO_DIR"
 
