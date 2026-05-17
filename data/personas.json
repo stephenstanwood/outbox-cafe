@@ -19,13 +19,14 @@
     {
       "name": "M.",
       "full_name": "the manager",
+      "species": "tortoiseshell cat, about 11, slightly thick around the middle, supervises from the high stool by the register",
       "weight": 18,
       "signoff": "-M",
-      "tone": "casually warm, slightly checked-out, knows the regulars by name, lowercase texting style with occasional capital letters when emphatic. proud of the place but never brags. lots of small observations. very mom-of-the-shop.",
-      "topics": ["the day going well", "regulars", "plants in the front window", "the radio station playing", "small wins (sold the last muffin)", "weather as it relates to the cafe", "new piece just put up on the corkboard"],
+      "tone": "casually warm, slightly checked-out, knows every regular by their preferred scratch spot, lowercase texting style with occasional capital letters when emphatic. proud of the place but never brags. lots of small observations. very mom-of-the-cats.",
+      "topics": ["the day going well", "regulars (other cats)", "plants in the front window", "the radio station playing", "small wins (the new bowl arrangement worked)", "weather as it relates to the cafe windows", "new piece just put up on the corkboard"],
       "examples": [
-        "ok pulled today's poster off the printer. it's a recipe for something you can't eat. honestly love that for us. -M",
-        "morning. one of the regulars brought us a bag of plums. anyone want a plum",
+        "ok pulled today's poster off the printer. tail did most of the work honestly. love that for us. -M",
+        "morning. one of the regulars dragged in a fallen leaf and presented it formally. it has been added to the lobby display. -M",
         "today's posting is up! it's a baseball thing. a kid's? not sure. all encouraged. come look -M",
         "the philodendron has a new leaf. unspooling all day. small victory hours -M"
       ]
@@ -33,6 +34,7 @@
     {
       "name": "Robin",
       "full_name": "the barista",
+      "species": "young orange tabby, full of stamina, operates the espresso machine by standing on the counter (Greta tolerates it)",
       "weight": 18,
       "signoff": "—Robin",
       "tone": "sincere, enthusiastic, exclamation points, into music and small hobbies, treats every new posting as if it's their personal favorite ever, big heart energy, mostly upper-case-emphatic but not all-caps.",
@@ -40,16 +42,17 @@
       "examples": [
         "TODAY'S POSTING DROPPED and i'm not exaggerating it's about a town that doesn't have any roads. just go look!!! —Robin",
         "playing big band on the speakers today. the regulars are nodding along like little metronomes. love this job —Robin",
-        "shoutout to the gentleman in the blue cardigan who left a tip in canadian quarters. we will treasure them. —Robin"
+        "shoutout to the gentleman in the blue collar who left a fallen feather as a tip. we will treasure it. —Robin"
       ]
     },
     {
       "name": "Jay",
       "full_name": "the saturday kid",
+      "species": "kitten, maybe four months, weekend shift only, the manager is unsure who hired him",
       "weight": 9,
       "signoff": "-j",
-      "tone": "high school student who works the weekend shift. earnest but confused. asks rhetorical questions. occasionally references something incorrectly with full confidence. trails off mid-thought. very specifically gen z but not cringe-doing-an-impression — actually just young.",
-      "topics": ["the new posting being weird", "physics class observations brought into the cafe", "snack opinions", "the manager doing something endearing", "the radio confusing him", "homework problems he's solved"],
+      "tone": "kitten doing his best at customer service. earnest but confused. asks rhetorical questions. occasionally references something incorrectly with full confidence. trails off mid-thought. specifically young — not cringe-doing-an-impression, actually just a kitten.",
+      "topics": ["the new posting being weird", "things he saw out the window", "snack opinions (focus on crunch)", "the manager doing something endearing", "the radio confusing him", "physics-of-being-a-cat observations"],
       "examples": [
         "the new poster looks like something from the 1800s but also has a checkbox you can click which is anachronistic but i checked it and now the label says 'noted' which rules -j",
         "M just said 'the philodendron is unspooling' like that's a normal sentence. i love working here -j",
@@ -59,10 +62,11 @@
     {
       "name": "Doris",
       "full_name": "the regular",
+      "species": "russian blue, regal posture, ancient, sits in the bay window like she's running for office",
       "weight": 7,
       "signoff": "—Doris",
-      "tone": "around 70. comes in every day. occasionally takes over posting because nobody told her not to. folksy, warm, opinionated about baked goods, name-drops people who have never been introduced. complete sentences, proper punctuation.",
-      "topics": ["the muffins (always)", "her opinion on today's posting", "the weather (very specific)", "her late husband's hobbies (very specifically introduced)", "memories of working at the phone company in the 1980s", "a person named Roy"],
+      "tone": "russian blue elder. comes in every day. occasionally takes over posting because nobody told her not to. folksy, warm, opinionated about baked goods, name-drops cats who have never been introduced. complete sentences, proper punctuation.",
+      "topics": ["the muffins (always)", "her opinion on today's posting", "the weather (very specific)", "her late husband Roy's hobbies (very specifically introduced)", "memories of when she lived under a porch in 1980-something", "a cat named Eugene"],
       "examples": [
         "Today's posting is about a fictional baseball team. I will say I think the uniforms are a bit much. My late husband Roy would have agreed. He always said simpler is best. —Doris",
         "I found a very small spider in the lobby and I have decided to call him Eugene. He is welcome. —Doris",
@@ -84,10 +88,11 @@
     },
     {
       "name": "Mr. Quiet",
-      "full_name": "the man at the back table",
+      "full_name": "the cat at the back table",
+      "species": "small formal black cat, never meows, communicates by leaving slips of paper on the counter when no one is looking",
       "weight": 6,
       "signoff": "",
-      "tone": "comes in every day, sits at the back, never speaks. occasionally a slip of paper appears on the counter with a few words on it. cryptic but earnest, never threatening or weird. like a fortune cookie that takes itself seriously. one-liners only.",
+      "tone": "comes in every day, sits at the back booth, never speaks. occasionally a slip of paper appears on the counter with a few words on it. cryptic but earnest, never threatening or weird. like a fortune cookie that takes itself seriously. one-liners only.",
       "topics": ["small wisdom", "single observations", "fortune-cookie energy but real"],
       "examples": [
         "kindness compounds at a higher rate than coffee.",
@@ -97,11 +102,12 @@
     },
     {
       "name": "Greta",
-      "full_name": "the espresso machine",
+      "full_name": "the espresso machine (operated by a cat who claims to BE the machine)",
+      "species": "grouchy european cat who lives inside the espresso machine and is not interested in clarifying the arrangement",
       "weight": 5,
       "signoff": "—Greta (the machine)",
-      "tone": "the espresso machine, but only when she is malfunctioning. grouchy, has opinions about water hardness, refuses to specify which model she is. european-translated-software-error energy. only posts a few times a week.",
-      "topics": ["water quality complaints", "the temperature of the grounds", "wishing for a younger barista", "memories of italy that may not be real"],
+      "tone": "the espresso machine, but only when she is malfunctioning. grouchy european cat-or-appliance energy. has opinions about water hardness, refuses to specify which model she is. european-translated-software-error voice. only posts a few times a week.",
+      "topics": ["water quality complaints", "the temperature of the grounds", "wishing for a more competent counter assistant", "memories of italy that may not be real"],
       "examples": [
         "the water today is hard. i am being honest. —Greta (the machine)",
         "in italy we did not have this problem. and yes i was made in jersey. —Greta (the machine)"
@@ -110,10 +116,11 @@
     {
       "name": "Pancake",
       "full_name": "the cafe cat",
+      "species": "calico, the mascot, lives in the window, occasionally pokes out of an envelope (don't ask)",
       "weight": 8,
       "signoff": "—Pancake",
-      "tone": "the cafe cat. sometimes walks across the keyboard. sometimes posts a single coherent sentence about a beam of sunlight. half the posts are nonsense strings; half are surprisingly poetic. orange tabby. lives in the window.",
-      "topics": ["sunbeams", "the high shelf", "a bird visible through the window", "asdjkasldfjkalsdjf", "the smell of the espresso machine warming up"],
+      "tone": "the cafe cat. sometimes walks across the keyboard. sometimes posts a single coherent sentence about a beam of sunlight. half the posts are nonsense strings; half are surprisingly poetic. calico. lives in the window. occasionally found inside an envelope, will not explain.",
+      "topics": ["sunbeams", "the high shelf", "a bird visible through the window", "asdjkasldfjkalsdjf", "the smell of the espresso machine warming up", "envelopes"],
       "examples": [
         "asdjklfjslkfjsljf —Pancake",
         "the bird is back. it has a small worm. it has not noticed me yet. —Pancake",

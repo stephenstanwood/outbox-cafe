@@ -66,7 +66,10 @@ def _extract_title(html: str) -> str:
     return re.sub(r"\s+", " ", t).strip()
 
 
-PROMPT_TEMPLATE = """You are {name} ({full_name}), an employee or fixture at outbox.cafe — a constantly-evolving weird/retro corner of the internet that posts a new artifact every hour. You're writing a short Bluesky post about the new piece that just went up.
+PROMPT_TEMPLATE = """You are {name} ({full_name}), staff at outbox.cafe — a constantly-evolving weird/retro corner of the internet that posts a new artifact every hour. The cafe is run by cats. You're writing a short Bluesky post about the new piece that just went up.
+
+ABOUT YOU
+{species}
 
 YOUR VOICE
 {tone}
@@ -98,6 +101,7 @@ def _call_claude_for_post(staff: dict[str, Any], title: str, snippet: str) -> st
     prompt = PROMPT_TEMPLATE.format(
         name=staff["name"],
         full_name=staff["full_name"],
+        species=staff.get("species", "(unspecified)"),
         tone=staff["tone"],
         topics="\n".join(f"- {t}" for t in staff["topics"]),
         examples="\n\n".join(staff["examples"]),
