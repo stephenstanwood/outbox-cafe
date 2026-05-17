@@ -317,7 +317,29 @@ def _extract_meta(html: str, field: str) -> str:
         html,
         re.IGNORECASE,
     )
-    return (m.group(1).strip() if m else "")[:80]
+    return m.group(1).strip() if m else ""
+
+
+def _condense(s: str, max_chars: int = 50) -> str:
+    """Take the first slash/comma-separated segment and trim a trailing meta descriptor.
+
+    Spec values often look like 'conspiratorial / paranoid / underlined words' or
+    '1996 Web 1.0 banner-ad era, hit counters, under construction GIFs' — the first
+    segment is the canonical short label, the rest is engine guts.
+    """
+    if not s:
+        return ""
+    first = re.split(r"\s*[/,]\s*", s, maxsplit=1)[0].strip()
+    # Drop trailing meta words that describe the *style* rather than name it
+    first = re.sub(
+        r"\s+(era|tone|voice|moments?|points?|words?|energy)$",
+        "",
+        first,
+        flags=re.IGNORECASE,
+    ).strip()
+    if len(first) > max_chars:
+        first = first[: max_chars - 1].rstrip() + "…"
+    return first
 
 
 def rebuild_cabinet() -> None:
@@ -335,10 +357,10 @@ def rebuild_cabinet() -> None:
             continue
         title = extract_title(html)
         # Prefer the canonical meta tags injected at generation time.
-        era = _extract_meta(html, "era")
-        fmt = _extract_meta(html, "format")
-        tone = _extract_meta(html, "tone")
-        if not (era or fmt or tone):
+        era_raw = _extract_meta(html, "era")
+        fmt_raw = _extract_meta(html, "format")
+        tone_raw = _extract_meta(html, "tone")
+        if not (era_raw or fmt_raw or tone_raw):
             # Fallback: parse the spec watermark line from the page footer
             wm = ""
             m = re.search(
@@ -348,7 +370,11 @@ def rebuild_cabinet() -> None:
             )
             if m:
                 wm = re.sub(r"\s+", " ", m.group(0).strip())[:200]
-            era, fmt, tone = _split_watermark(wm)
+            era_raw, fmt_raw, tone_raw = _split_watermark(wm)
+        # Condense for card display — strip meta-descriptive tails
+        era = _condense(era_raw, 32)
+        fmt = _condense(fmt_raw, 38)
+        tone = _condense(tone_raw, 28)
         palette = _extract_palette(html)
         digest = hashlib.md5(f.stem.encode()).digest()
         h = int.from_bytes(digest[:4], "big")
