@@ -114,6 +114,24 @@ def inject_reload(html: str) -> str:
     return html + RELOAD_SCRIPT
 
 
+NAV_SCRIPT_TAG = '\n<script src="/nav.js" defer></script>\n'
+
+
+def inject_nav(html: str) -> str:
+    """Insert the nav.js script tag before </body>. Idempotent."""
+    if 'src="/nav.js"' in html:
+        return html
+    if re.search(r"</body\s*>", html, re.IGNORECASE):
+        return re.sub(
+            r"(</body\s*>)",
+            NAV_SCRIPT_TAG + r"\1",
+            html,
+            count=1,
+            flags=re.IGNORECASE,
+        )
+    return html + NAV_SCRIPT_TAG
+
+
 def inject_spec_meta(html: str, spec: dict) -> str:
     """Inject canonical spec as <meta> tags into <head> for reliable extraction by the cabinet."""
 
@@ -600,6 +618,25 @@ def rebuild_cabinet() -> None:
 
     cards_html = "\n".join(render_card(i, e) for i, e in enumerate(entries))
     count = total
+
+    # Emit the chronological file list for nav.js (oldest first → newest last)
+    chrono_files = sorted(
+        (f.name for f in ARCHIVE_DIR.glob("*.html") if f.name != "index.html")
+    )
+    (ARCHIVE_DIR / "list.json").write_text(json.dumps(chrono_files))
+
+    # Make sure every existing archive page has the nav.js script tag.
+    # inject_nav is idempotent — files that already have it are unchanged.
+    for f in ARCHIVE_DIR.glob("*.html"):
+        if f.name == "index.html":
+            continue
+        try:
+            content = f.read_text(errors="ignore")
+        except Exception:
+            continue
+        new_content = inject_nav(content)
+        if new_content != content:
+            f.write_text(new_content)
 
     cabinet_html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -1106,9 +1143,10 @@ def main() -> int:
 
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
     archive_file = ARCHIVE_DIR / filename_for_now()
-    archive_file.write_text(html)
-    # Homepage gets the auto-reload script; the archive file stays static.
-    INDEX_PATH.write_text(inject_reload(html))
+    # Archive entries get the nav.js chrome so visitors can flip ← → through history.
+    archive_file.write_text(inject_nav(html))
+    # Homepage adds the auto-reload script on top of nav (it watches for the next hour).
+    INDEX_PATH.write_text(inject_reload(inject_nav(html)))
     # Record the produced filename in the spec so future matchups are unambiguous
     spec["file"] = archive_file.name
 
