@@ -135,6 +135,17 @@ def inject_nav(html: str) -> str:
     return html + NAV_SCRIPT_TAG
 
 
+def _extract_snippet(html: str, max_chars: int = 180) -> str:
+    """Pull a visible-feeling snippet from the page body to use as og:description."""
+    s = re.sub(r"<script[^>]*>.*?</script>", " ", html, flags=re.DOTALL | re.IGNORECASE)
+    s = re.sub(r"<style[^>]*>.*?</style>", " ", s, flags=re.DOTALL | re.IGNORECASE)
+    s = re.sub(r"<[^>]+>", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    if len(s) > max_chars:
+        s = s[:max_chars].rsplit(" ", 1)[0] + "…"
+    return s
+
+
 def inject_og_tags(html: str, title: str, archive_filename: str, description: str = "") -> str:
     """Inject Open Graph + Twitter Card meta tags + favicon link so link previews
     on social have a card, and the tab gets an icon."""
@@ -1128,6 +1139,34 @@ def rebuild_cabinet() -> None:
     CABINET_PATH.write_text(inject_reload(cabinet_html))
 
 
+def rebuild_sitemap() -> None:
+    """Build /sitemap.xml from the archive."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    pt = ZoneInfo("America/Los_Angeles")
+
+    sitemap_path = ROOT / "sitemap.xml"
+    base = "https://outbox.cafe"
+    urls = [
+        (f"{base}/", "1.0", "hourly"),
+        (f"{base}/archive/", "0.8", "hourly"),
+        (f"{base}/about/", "0.5", "monthly"),
+    ]
+    files = sorted(ARCHIVE_DIR.glob("*.html"), reverse=True)
+    files = [f for f in files if f.name != "index.html"]
+    for f in files:
+        urls.append((f"{base}/archive/{f.name}", "0.6", "monthly"))
+
+    parts = ['<?xml version="1.0" encoding="UTF-8"?>',
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for url, prio, freq in urls:
+        parts.append(
+            f'  <url><loc>{url}</loc><changefreq>{freq}</changefreq><priority>{prio}</priority></url>'
+        )
+    parts.append('</urlset>')
+    sitemap_path.write_text("\n".join(parts) + "\n")
+
+
 def rebuild_feed() -> None:
     """Build /feed.xml (RSS 2.0) from the archive. Run after each gen."""
     from datetime import datetime
@@ -1274,7 +1313,8 @@ def main() -> int:
     archive_file = ARCHIVE_DIR / filename_for_now()
     # Open Graph / Twitter Card tags so bsky / tumblr link cards preview well
     title_pre_og = extract_title(html) or archive_file.stem
-    html = inject_og_tags(html, title_pre_og, archive_file.name)
+    desc = _extract_snippet(html, max_chars=180)
+    html = inject_og_tags(html, title_pre_og, archive_file.name, description=desc)
     # Archive entries get the nav.js chrome so visitors can flip ← → through history.
     archive_file.write_text(inject_nav(html))
     # Homepage adds the auto-reload script on top of nav (it watches for the next hour).
@@ -1290,6 +1330,7 @@ def main() -> int:
     append_history(spec)
     rebuild_cabinet()
     rebuild_feed()
+    rebuild_sitemap()
 
     title = extract_title(html)
     print(f"\n✓ wrote {archive_file.name} — {title}")
