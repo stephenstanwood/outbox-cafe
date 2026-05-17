@@ -61,6 +61,37 @@ def call_claude(prompt: str, model: str | None = None, timeout: int = 600) -> st
     return result.stdout
 
 
+def inject_spec_meta(html: str, spec: dict) -> str:
+    """Inject canonical spec as <meta> tags into <head> for reliable extraction by the cabinet."""
+
+    def v(field: str) -> str:
+        item = spec.get(field, {})
+        if isinstance(item, dict):
+            return item.get("value") or item.get("key") or ""
+        return str(item)
+
+    length_key = spec.get("length", {}).get("key", "") if isinstance(spec.get("length"), dict) else ""
+
+    meta_block = (
+        f'\n  <meta name="outbox-spec-era" content="{v("era")}">'
+        f'\n  <meta name="outbox-spec-format" content="{v("format")}">'
+        f'\n  <meta name="outbox-spec-subject" content="{v("subject")}">'
+        f'\n  <meta name="outbox-spec-tone" content="{v("tone")}">'
+        f'\n  <meta name="outbox-spec-length" content="{length_key}">'
+        f'\n  <meta name="outbox-spec-palette" content="{v("palette")}">'
+        f'\n  <meta name="outbox-spec-wildcard" content="{v("wildcard")}">'
+        f'\n  <meta name="outbox-spec-forbidden" content="{v("forbidden_register")}">'
+    )
+
+    # Insert right after the opening <head> tag
+    m = re.search(r"(<head[^>]*>)", html, re.IGNORECASE)
+    if m:
+        idx = m.end()
+        return html[:idx] + meta_block + html[idx:]
+    # Fallback: no <head> tag found, leave HTML untouched
+    return html
+
+
 def extract_html(raw: str) -> str:
     """Pull the HTML document out of Claude's response, in case it wrapped it."""
     s = raw.strip()
@@ -276,7 +307,17 @@ def _split_watermark(wm: str) -> tuple[str, str, str]:
     parts = [re.sub(r"^(era|format|tone)\s*:?\s*", "", p, flags=re.I) for p in parts]
     while len(parts) < 3:
         parts.append("")
-    return parts[0][:50], parts[1][:50], parts[2][:50]
+    return parts[0][:60], parts[1][:60], parts[2][:60]
+
+
+def _extract_meta(html: str, field: str) -> str:
+    """Extract a single <meta name="outbox-spec-FIELD" content="..."> value."""
+    m = re.search(
+        rf'<meta\s+name="outbox-spec-{field}"\s+content="([^"]*)"',
+        html,
+        re.IGNORECASE,
+    )
+    return (m.group(1).strip() if m else "")[:80]
 
 
 def rebuild_cabinet() -> None:
@@ -293,15 +334,21 @@ def rebuild_cabinet() -> None:
         except Exception:
             continue
         title = extract_title(html)
-        wm = ""
-        m = re.search(
-            r"(era|format|tone)[^<]*?·[^<]*?·[^<]*",
-            html,
-            re.IGNORECASE,
-        )
-        if m:
-            wm = re.sub(r"\s+", " ", m.group(0).strip())[:200]
-        era, fmt, tone = _split_watermark(wm)
+        # Prefer the canonical meta tags injected at generation time.
+        era = _extract_meta(html, "era")
+        fmt = _extract_meta(html, "format")
+        tone = _extract_meta(html, "tone")
+        if not (era or fmt or tone):
+            # Fallback: parse the spec watermark line from the page footer
+            wm = ""
+            m = re.search(
+                r"(era|format|tone)[^<]*?·[^<]*?·[^<]*",
+                html,
+                re.IGNORECASE,
+            )
+            if m:
+                wm = re.sub(r"\s+", " ", m.group(0).strip())[:200]
+            era, fmt, tone = _split_watermark(wm)
         palette = _extract_palette(html)
         digest = hashlib.md5(f.stem.encode()).digest()
         h = int.from_bytes(digest[:4], "big")
@@ -322,7 +369,10 @@ def rebuild_cabinet() -> None:
             "rarity_stars": rarity_stars,
             "rarity_cls": rarity_cls,
             "has_thumb": has_thumb,
-            "thumb_path": f"./thumbs/{f.stem}.png" if has_thumb else "",
+            # absolute paths so the browser resolves correctly when Vercel
+            # serves /archive without a trailing slash
+            "thumb_path": f"/archive/thumbs/{f.stem}.png" if has_thumb else "",
+            "page_path": f"/archive/{f.name}",
             "hash": h,
         })
 
@@ -347,7 +397,7 @@ def rebuild_cabinet() -> None:
         tone_line = e["tone"] or "—"
         stamp_pretty = e["stamp"].replace("T", " · ") + " PT"
         return f'''
-        <a class="card {e["rarity_cls"]}" href="./{e["file"]}"
+        <a class="card {e["rarity_cls"]}" href="{e["page_path"]}"
            style="--c1:{c1}; --c2:{c2}; --c3:{c3}; --rot:{e['rot']:.2f}deg;">
           <div class="card-inner">
             <div class="card-top">
@@ -737,6 +787,9 @@ def main() -> int:
         debug.write_text(raw)
         print(f"output did not look like HTML; raw saved to {debug}", file=sys.stderr)
         return 2
+
+    # Inject the canonical spec as meta tags so the cabinet can read it reliably
+    html = inject_spec_meta(html, spec)
 
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
     archive_file = ARCHIVE_DIR / filename_for_now()
