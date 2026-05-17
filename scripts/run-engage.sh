@@ -34,6 +34,7 @@ if [ -f "$REPO_DIR/.env" ]; then
 fi
 
 export PATH="/opt/homebrew/bin:$HOME/.bun/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
+export PYTHONUNBUFFERED=1
 
 cd "$REPO_DIR"
 echo
