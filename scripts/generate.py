@@ -26,8 +26,10 @@ from spec import (
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
+THUMBS_DIR = ARCHIVE_DIR / "thumbs"
 INDEX_PATH = ROOT / "index.html"
 CABINET_PATH = ARCHIVE_DIR / "index.html"
+SHOT_SCRIPT = ROOT / "scripts" / "screenshot.js"
 
 PT = ZoneInfo("America/Los_Angeles")
 
@@ -83,6 +85,31 @@ def looks_like_html(s: str) -> bool:
 def filename_for_now() -> str:
     now = datetime.now(tz=PT)
     return now.strftime("%Y-%m-%dT%H-%M.html")
+
+
+def take_screenshot(html_file: Path, output: Path) -> bool:
+    """Call screenshot.js to capture a viewport PNG. Non-fatal on failure."""
+    if not SHOT_SCRIPT.exists():
+        return False
+    output.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        subprocess.run(
+            ["node", str(SHOT_SCRIPT), str(html_file), str(output)],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        return output.exists()
+    except subprocess.CalledProcessError as e:
+        print(f"screenshot failed (non-fatal): {e.stderr[:200]}", file=sys.stderr)
+        return False
+    except FileNotFoundError:
+        print("node not in PATH — skipping screenshot", file=sys.stderr)
+        return False
+    except subprocess.TimeoutExpired:
+        print("screenshot timed out — skipping", file=sys.stderr)
+        return False
 
 
 def extract_title(html: str) -> str:
@@ -222,8 +249,40 @@ DECORATIONS = [
 ]
 
 
+RARITY_TIERS = [
+    # (label, stars, weight, css-class)
+    ("COMMON",      "★",      50, "rarity-c"),
+    ("UNCOMMON",    "★★",     28, "rarity-u"),
+    ("RARE",        "★★★",    14, "rarity-r"),
+    ("HOLO RARE",   "★★★★",   6,  "rarity-h"),
+    ("FIRST EDITION","★★★★★", 2,  "rarity-f"),
+]
+
+
+def _pick_rarity(h: int) -> tuple[str, str, str]:
+    """Deterministic rarity from a hash int."""
+    bucket = h % sum(w for _, _, w, _ in RARITY_TIERS)
+    acc = 0
+    for label, stars, weight, cls in RARITY_TIERS:
+        acc += weight
+        if bucket < acc:
+            return (label, stars, cls)
+    return RARITY_TIERS[0][0], RARITY_TIERS[0][1], RARITY_TIERS[0][3]
+
+
+def _split_watermark(wm: str) -> tuple[str, str, str]:
+    """Parse 'era · format · tone' (or any · -separated string) into 3 parts."""
+    parts = [p.strip() for p in re.split(r"\s*[·•]\s*", wm) if p.strip()]
+    parts = [re.sub(r"^(era|format|tone)\s*:?\s*", "", p, flags=re.I) for p in parts]
+    while len(parts) < 3:
+        parts.append("")
+    return parts[0][:50], parts[1][:50], parts[2][:50]
+
+
 def rebuild_cabinet() -> None:
-    """Rebuild archive/index.html as a weird pinned-corkboard scrapbook."""
+    """Rebuild archive/index.html as a trading-card collection page."""
+    import hashlib
+
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
     entries: list[dict] = []
     for f in sorted(ARCHIVE_DIR.glob("*.html"), reverse=True):
@@ -241,321 +300,386 @@ def rebuild_cabinet() -> None:
             re.IGNORECASE,
         )
         if m:
-            wm = m.group(0).strip()
-            wm = re.sub(r"\s+", " ", wm)[:140]
+            wm = re.sub(r"\s+", " ", m.group(0).strip())[:200]
+        era, fmt, tone = _split_watermark(wm)
         palette = _extract_palette(html)
-        # Stable per-card variety via md5 — sum-of-ords collides too easily
-        import hashlib
         digest = hashlib.md5(f.stem.encode()).digest()
         h = int.from_bytes(digest[:4], "big")
-        rot = ((digest[4] % 9) - 4) * 0.9  # -3.6..+3.6
-        paper_idx = digest[5] % 8
-        nudge_x = (digest[6] % 9) - 4  # -4..+4 px
-        nudge_y = (digest[7] % 9) - 4
+        rot = ((digest[4] % 7) - 3) * 0.5  # -1.5..+1.5 (subtler than corkboard)
+        rarity_label, rarity_stars, rarity_cls = _pick_rarity(h)
+        thumb = THUMBS_DIR / (f.stem + ".png")
+        has_thumb = thumb.exists()
         entries.append({
             "file": f.name,
             "title": title,
-            "watermark": wm,
             "stamp": f.stem,
             "palette": palette,
+            "era": era,
+            "format": fmt,
+            "tone": tone,
             "rot": rot,
-            "paper": paper_idx,
-            "nx": nudge_x,
-            "ny": nudge_y,
+            "rarity_label": rarity_label,
+            "rarity_stars": rarity_stars,
+            "rarity_cls": rarity_cls,
+            "has_thumb": has_thumb,
+            "thumb_path": f"./thumbs/{f.stem}.png" if has_thumb else "",
             "hash": h,
         })
 
-    # Interleave decorations every ~5 entries
-    items: list[dict] = []
-    for i, e in enumerate(entries):
-        items.append({"type": "entry", **e})
-        if (i + 1) % 5 == 0:
-            deco_idx = (i // 5) % len(DECORATIONS)
-            d = DECORATIONS[deco_idx]
-            h = (i + 1) * 17 + deco_idx * 7
-            items.append({
-                "type": "decor",
-                "kind": d["kind"],
-                "html": d["html"],
-                "rot": ((h % 11) - 5) * 0.8,
-                "nx": ((h // 5) % 9) - 4,
-                "ny": ((h // 9) % 9) - 4,
-            })
+    total = len(entries)
 
-    count = len(entries)
+    def card_number(idx: int) -> str:
+        # Newest is highest number; reversed list shows newest first.
+        return f"{total - idx:03d}/∞"
 
-    def render_entry(e: dict) -> str:
+    def render_card(idx: int, e: dict) -> str:
+        c1 = e["palette"][0] if e["palette"] else "#cb6446"
+        c2 = e["palette"][1] if len(e["palette"]) > 1 else c1
+        c3 = e["palette"][2] if len(e["palette"]) > 2 else c2
         palette_dots = "".join(
             f'<i style="background:{c}"></i>' for c in e["palette"]
         )
-        stamp_pretty = e["stamp"].replace("T", " · ")
-        title_html = e["title"]
+        if e["has_thumb"]:
+            art = f'<img class="card-art-img" src="{e["thumb_path"]}" alt="" loading="lazy">'
+        else:
+            art = '<div class="card-art-placeholder">no preview yet</div>'
+        type_line = " · ".join(p for p in (e["era"], e["format"]) if p) or "—"
+        tone_line = e["tone"] or "—"
+        stamp_pretty = e["stamp"].replace("T", " · ") + " PT"
         return f'''
-        <article class="card paper-{e['paper']}" style="--rot:{e['rot']:.2f}deg; --nx:{e['nx']}px; --ny:{e['ny']}px;">
-          <span class="pin"></span>
-          <a class="card-link" href="./{e['file']}">
-            <h3 class="card-title">{title_html}</h3>
-            <div class="card-stamp">{stamp_pretty} PT</div>
-            {f'<div class="card-wm">{e["watermark"]}</div>' if e["watermark"] else ''}
-            <div class="palette">{palette_dots}</div>
-          </a>
-        </article>'''
+        <a class="card {e["rarity_cls"]}" href="./{e["file"]}"
+           style="--c1:{c1}; --c2:{c2}; --c3:{c3}; --rot:{e['rot']:.2f}deg;">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-num">No.{card_number(idx)}</span>
+              <span class="card-rarity" title="{e['rarity_label']}">{e['rarity_stars']}</span>
+            </div>
+            <div class="card-art">{art}</div>
+            <h3 class="card-name">{e["title"]}</h3>
+            <div class="card-type">{type_line}</div>
+            <div class="card-tone"><span class="lbl">tone</span> {tone_line}</div>
+            <div class="card-foot">
+              <span class="card-stamp">{stamp_pretty}</span>
+              <span class="card-palette">{palette_dots}</span>
+            </div>
+          </div>
+          <div class="card-shine" aria-hidden="true"></div>
+        </a>'''
 
-    def render_decor(d: dict) -> str:
-        return f'''
-        <article class="card decor decor-{d['kind']}" style="--rot:{d['rot']:.2f}deg; --nx:{d['nx']}px; --ny:{d['ny']}px;" aria-hidden="true">
-          <span class="pin pin-{d['kind']}"></span>
-          {d['html']}
-        </article>'''
-
-    cards_html = "\n".join(
-        render_entry(it) if it["type"] == "entry" else render_decor(it)
-        for it in items
-    )
+    cards_html = "\n".join(render_card(i, e) for i, e in enumerate(entries))
+    count = total
 
     cabinet_html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>THE CORKBOARD · outbox.cafe</title>
+<title>THE COLLECTION · outbox.cafe</title>
 <style>
   :root {{
-    --ink: #2a2418;
-    --dim: #8a7a5c;
+    --ink: #1a1612;
+    --paper: #f4ecdc;
+    --paper-2: #ede2c8;
+    --gold: #c89a3e;
     --accent: #b8473a;
-    --cork-a: #d4b485;
-    --cork-b: #b89669;
-    --cork-c: #c2a479;
+    --dim: #7a6a4c;
   }}
   * {{ box-sizing: border-box; }}
-  html, body {{ margin: 0; padding: 0; color: var(--ink);
-    font-family: "Georgia", "Times New Roman", serif;
-    font-size: 15px; line-height: 1.45; }}
+  html, body {{ margin: 0; padding: 0; color: var(--ink); }}
   body {{
     min-height: 100vh;
-    padding: 18px 14px 100px;
+    padding: 22px 14px 80px;
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 15px; line-height: 1.45;
     background:
-      radial-gradient(circle at 12% 18%, rgba(0,0,0,0.10) 0 2px, transparent 3px),
-      radial-gradient(circle at 38% 62%, rgba(0,0,0,0.08) 0 1.5px, transparent 2.5px),
-      radial-gradient(circle at 71% 33%, rgba(0,0,0,0.12) 0 2px, transparent 3px),
-      radial-gradient(circle at 84% 79%, rgba(0,0,0,0.07) 0 1.5px, transparent 2.5px),
-      radial-gradient(circle at 22% 88%, rgba(0,0,0,0.09) 0 2px, transparent 3px),
-      radial-gradient(circle at 56% 5%, rgba(0,0,0,0.06) 0 1.5px, transparent 2.5px),
-      linear-gradient(135deg, var(--cork-a) 0%, var(--cork-c) 50%, var(--cork-b) 100%);
-    background-size: 130px 130px, 90px 90px, 160px 160px, 110px 110px, 140px 140px, 100px 100px, 100% 100%;
+      radial-gradient(circle at 20% 30%, rgba(184,71,58,0.04) 0 40%, transparent 60%),
+      radial-gradient(circle at 80% 70%, rgba(200,154,62,0.05) 0 35%, transparent 55%),
+      repeating-linear-gradient(45deg, rgba(0,0,0,0.012) 0 2px, transparent 2px 5px),
+      var(--paper);
   }}
 
-  /* HEADER ribbon */
-  header.ribbon {{
-    max-width: 920px;
-    margin: 0 auto 24px;
+  /* HEADER — chunky stencil block */
+  header.hero {{
+    max-width: 1240px;
+    margin: 0 auto 28px;
+    padding: 22px 18px 18px;
     text-align: center;
-    background: #fdf9ec;
-    border: 3px double #2a2418;
-    padding: 18px 14px 14px;
-    transform: rotate(-0.4deg);
-    box-shadow: 0 6px 0 rgba(0,0,0,0.18);
     position: relative;
   }}
-  header.ribbon::before, header.ribbon::after {{
-    content: ""; position: absolute; top: -7px;
-    width: 14px; height: 14px; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ff8c4a, #c43d15 60%, #6b1a05);
-    box-shadow: inset 0 -2px 2px rgba(0,0,0,0.4);
+  header.hero h1 {{
+    margin: 0;
+    font-family: "Impact", "Anton", "Arial Black", "Helvetica Neue", sans-serif;
+    font-size: clamp(44px, 9vw, 96px);
+    letter-spacing: clamp(2px, 0.5vw, 5px);
+    line-height: 0.95;
+    color: var(--ink);
+    text-shadow:
+      3px 3px 0 var(--accent),
+      6px 6px 0 var(--gold),
+      9px 9px 0 rgba(0,0,0,0.10);
+    transform: skewX(-3deg);
   }}
-  header.ribbon::before {{ left: 10%; }}
-  header.ribbon::after {{ right: 10%; background: radial-gradient(circle at 30% 30%, #ffe066, #d09f10 60%, #7a5a08); }}
-  header.ribbon h1 {{
-    margin: 0; font-family: "Impact", "Anton", "Arial Black", sans-serif;
-    font-size: clamp(36px, 7vw, 64px); letter-spacing: 3px;
-    color: #2a2418; text-shadow: 3px 3px 0 #cb6446;
+  header.hero .sub {{
+    margin: 14px 0 0; font-style: italic; color: var(--dim);
+    font-size: clamp(13px, 1.5vw, 16px);
   }}
-  header.ribbon .sub {{ color: #6b5a3c; font-style: italic; margin-top: 6px; font-size: 14px; }}
-  header.ribbon .meta {{ display: inline-block; margin-top: 10px; padding: 3px 10px;
-    background: #2a2418; color: #fdf9ec; font-family: "Courier New", monospace;
-    font-size: 12px; letter-spacing: 1px; transform: rotate(-1deg); }}
-  header.ribbon .latest-link {{ display: inline-block; margin-left: 10px; color: #b8473a; font-weight: bold; transform: rotate(0.8deg); }}
+  header.hero .meta {{
+    display: inline-flex; gap: 14px; margin-top: 12px; padding: 6px 14px;
+    background: var(--ink); color: var(--paper);
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 12px; letter-spacing: 2px;
+    border: 2px solid var(--gold);
+    box-shadow: 4px 4px 0 var(--gold);
+  }}
+  header.hero .meta a {{ color: var(--gold); text-decoration: none; }}
+  header.hero .meta a:hover {{ text-decoration: underline; }}
 
-  /* The cork "board" */
-  .board {{
-    max-width: 1120px;
+  /* CARD GRID */
+  .grid {{
+    max-width: 1240px;
     margin: 0 auto;
-    column-count: 3;
-    column-gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px 18px;
+    padding: 0 4px;
   }}
-  @media (max-width: 880px) {{ .board {{ column-count: 2; }} }}
-  @media (max-width: 540px) {{ .board {{ column-count: 1; }} }}
 
-  /* Cards */
+  /* CARD */
   .card {{
-    break-inside: avoid;
     position: relative;
     display: block;
-    margin: 0 0 18px;
-    padding: 18px 16px 14px;
-    transform: rotate(var(--rot, 0deg)) translate(var(--nx, 0), var(--ny, 0));
+    text-decoration: none;
+    color: var(--ink);
+    aspect-ratio: 5 / 7;
+    background: var(--paper);
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    transform: rotate(var(--rot, 0deg));
     box-shadow:
-      0 1px 0 rgba(255,255,255,0.5) inset,
-      0 6px 14px rgba(0,0,0,0.20),
-      0 2px 4px rgba(0,0,0,0.15);
+      0 1px 0 rgba(255,255,255,0.6) inset,
+      0 2px 6px rgba(0,0,0,0.10),
+      0 8px 18px rgba(0,0,0,0.14);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
+    isolation: isolate;
   }}
   .card:hover {{
-    transform: rotate(0deg) translate(0,0) scale(1.04);
-    box-shadow: 0 10px 22px rgba(0,0,0,0.30), 0 3px 6px rgba(0,0,0,0.18);
+    transform: rotate(0deg) translateY(-4px) scale(1.025);
+    box-shadow:
+      0 14px 30px rgba(0,0,0,0.22),
+      0 4px 8px rgba(0,0,0,0.10);
     z-index: 10;
   }}
 
-  /* Paper styles — vary so the wall feels real */
-  .paper-0 {{ background: #fdf9ec; }}            /* cream index card */
-  .paper-1 {{ background: #f3e7c3; }}            /* manila */
-  .paper-2 {{ background: #ffd7e3; }}            /* pink message slip */
-  .paper-3 {{ background: #e3dcfb; }}            /* lavender */
-  .paper-4 {{ background: linear-gradient(180deg, #fffbcc 0 24px, #fff4a2 24px); }}  /* yellow legal */
-  .paper-5 {{ background: #c8e3f5; }}            /* robin's egg */
-  .paper-6 {{ background: #d4e6c8; }}            /* faded sage */
-  .paper-7 {{ background: #ffb866; color: #2a1810; }}  /* loud orange */
-
-  .paper-0::before, .paper-1::before, .paper-2::before, .paper-3::before,
-  .paper-5::before, .paper-6::before, .paper-7::before {{
-    content: ""; position: absolute; left: 14px; right: 14px; top: 28px; bottom: 22px;
-    border-top: 1px solid rgba(0,0,0,0.10);
-    border-bottom: 1px solid rgba(0,0,0,0.06);
+  /* Outer frame in palette color */
+  .card::before {{
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: 12px;
+    padding: 6px;
+    background: linear-gradient(135deg, var(--c1, #cb6446) 0%, var(--c2, #cb6446) 50%, var(--c3, #cb6446) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
     pointer-events: none;
+    z-index: 1;
   }}
 
-  /* Pin / thumbtack */
-  .pin {{
-    position: absolute; top: -6px; left: 50%;
-    width: 14px; height: 14px; margin-left: -7px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ff7a4a, #c43d15 55%, #5a1004);
-    box-shadow: 0 1px 1px rgba(0,0,0,0.4), inset -1px -1px 2px rgba(0,0,0,0.4);
-    z-index: 5;
+  .card-inner {{
+    position: relative;
+    z-index: 2;
+    padding: 12px 12px 10px;
+    height: 100%;
+    display: flex; flex-direction: column;
+    background: var(--paper);
+    border-radius: 8px;
+    margin: 4px;
   }}
-  .card:nth-child(3n) .pin {{ background: radial-gradient(circle at 30% 30%, #ffd966, #d09f10 55%, #5a3f04); }}
-  .card:nth-child(3n+1) .pin {{ background: radial-gradient(circle at 30% 30%, #7ad9ff, #1c79b8 55%, #0a3a5a); }}
-  .card:nth-child(4n) .pin {{ background: radial-gradient(circle at 30% 30%, #66e09b, #1f7a3d 55%, #053a18); }}
 
-  /* Card content */
-  .card-link {{ display: block; text-decoration: none; color: inherit; }}
-  .card-title {{ margin: 0 0 8px; font-size: 17px; font-weight: 700;
-    color: #2a2418; line-height: 1.25;
-    font-family: "Georgia", "Times New Roman", serif; }}
-  .card-stamp {{ font-family: "Courier New", monospace; font-size: 11px;
-    color: #8a7a5c; letter-spacing: 0.5px; margin-bottom: 8px; }}
-  .card-wm {{ font-size: 12px; color: #6b5a3c; font-style: italic; margin-bottom: 10px; line-height: 1.4; }}
-  .palette {{ display: flex; gap: 4px; margin-top: 8px; }}
-  .palette i {{
-    display: inline-block; width: 14px; height: 14px; border-radius: 50%;
+  .card-top {{
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: "Courier New", monospace; font-size: 10px;
+    color: var(--dim); letter-spacing: 1.2px;
+    margin-bottom: 6px;
+  }}
+  .card-num {{ font-weight: 700; }}
+  .card-rarity {{ color: var(--gold); letter-spacing: 1px; font-size: 11px; }}
+
+  .card-art {{
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #2a1c0a;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+  }}
+  .card-art-img {{
+    width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block;
+  }}
+  .card-art-placeholder {{
+    width: 100%; height: 100%;
+    display: grid; place-items: center;
+    color: rgba(255,255,255,0.5);
+    font-family: "Courier New", monospace; font-size: 11px;
+    background: repeating-linear-gradient(45deg, #3a2a18 0 8px, #2a1c0a 8px 16px);
+    letter-spacing: 1px;
+  }}
+
+  .card-name {{
+    margin: 8px 0 4px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: "Georgia", serif;
+    line-height: 1.18;
+    color: var(--ink);
+    /* clamp to 2 lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }}
+
+  .card-type {{
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(0,0,0,0.10);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+    text-transform: lowercase;
+    /* clamp */
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }}
+
+  .card-tone {{
+    font-size: 11px;
+    color: var(--ink);
+    margin-bottom: 4px;
+    font-style: italic;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }}
+  .card-tone .lbl {{
+    color: var(--dim); font-style: normal; font-size: 9px;
+    text-transform: uppercase; letter-spacing: 1px; margin-right: 4px;
+  }}
+
+  .card-foot {{
+    margin-top: auto;
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 4px; border-top: 1px solid rgba(0,0,0,0.08);
+    font-family: "Courier New", monospace; font-size: 9px; color: var(--dim);
+    letter-spacing: 0.5px;
+  }}
+  .card-palette {{ display: inline-flex; gap: 3px; }}
+  .card-palette i {{
+    display: inline-block; width: 10px; height: 10px; border-radius: 50%;
     border: 1px solid rgba(0,0,0,0.25);
     box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);
   }}
 
-  /* DECORATIONS */
-  .decor {{ font-family: "Georgia", "Times New Roman", serif; }}
-  .decor strong {{ display: block; font-size: 15px; letter-spacing: 2px; margin-bottom: 4px; }}
-  .decor .big {{ font-family: "Impact", "Arial Black", sans-serif; font-size: 28px; line-height: 1.05; letter-spacing: 1px; margin: 4px 0; }}
-  .decor .big-num {{ font-family: "Impact", "Arial Black", sans-serif; font-size: 16px; margin-top: 8px; color: #c43d15; }}
-  .decor .small-line {{ font-size: 11px; color: #6b5a3c; margin-top: 6px; }}
-  .decor .big-line {{ font-family: "Impact", sans-serif; font-size: 14px; letter-spacing: 1px; }}
-
-  /* lost-pet tear-aways */
-  .tearaways {{ display: flex; flex-wrap: wrap; gap: 0; margin: 10px -16px -14px; border-top: 1px dashed #8a7a5c; padding-top: 4px; }}
-  .tearaways span {{ flex: 1 1 50px; font-family: "Courier New", monospace; font-size: 9px; padding: 4px 2px; text-align: center; color: #6b5a3c;
-    border-right: 1px dashed #8a7a5c; transform: rotate(90deg); }}
-  .tearaways span:last-child {{ border-right: 0; }}
-
-  /* takeout menu */
-  .decor-takeout-menu {{ background: #fff3d8 !important; padding: 14px 14px 12px !important; }}
-  .menu-list {{ list-style: none; padding: 0; margin: 8px 0 0; font-size: 13px; }}
-  .menu-list li {{ display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dotted #b89669; }}
-
-  /* polaroid */
-  .decor-polaroid {{ background: #fefcf4 !important; padding: 14px 14px 36px !important; }}
-  .polaroid-pic {{
-    aspect-ratio: 4 / 3; width: 100%;
-    background:
-      radial-gradient(ellipse at center, rgba(255,255,255,0.4), transparent 60%),
-      linear-gradient(135deg, #8a7a5c 0%, #5a4a30 100%);
-    border: 1px solid #2a2418;
+  /* Holographic shine — animates on hover */
+  .card-shine {{
+    position: absolute; inset: 0;
+    border-radius: 12px;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0;
+    background: linear-gradient(115deg,
+      transparent 30%,
+      rgba(255,255,255,0.40) 45%,
+      rgba(150,220,255,0.30) 50%,
+      rgba(255,180,255,0.30) 55%,
+      transparent 70%);
+    background-size: 200% 200%;
+    background-position: 100% 0%;
+    transition: opacity 0.25s ease;
+    mix-blend-mode: overlay;
   }}
-  .polaroid-cap {{ position: absolute; bottom: 8px; left: 0; right: 0; text-align: center;
-    font-family: "Brush Script MT", "Lucida Handwriting", cursive; font-size: 16px; color: #2a2418; }}
+  .card:hover .card-shine {{ opacity: 1; animation: shine 1.6s ease-in-out forwards; }}
+  @keyframes shine {{ to {{ background-position: 0% 100%; }} }}
 
-  /* punch card */
-  .punches {{ display: flex; gap: 6px; margin: 8px 0 4px; flex-wrap: wrap; justify-content: center; font-size: 22px; color: #2a2418; }}
-  .punches .p {{ width: 22px; height: 22px; display: grid; place-items: center;
-    border: 1px solid #2a2418; border-radius: 50%; }}
-
-  /* kid drawing */
-  .drawing {{ text-align: center; font-size: 30px; line-height: 1.0; font-family: "Comic Sans MS", "Marker Felt", sans-serif; color: #2a2418; }}
-  .drawing .sun {{ color: #d09f10; font-size: 36px; }}
-  .drawing .stick > * {{ display: block; }}
-  .drawing .head {{ font-size: 28px; }}
-  .drawing .body {{ font-size: 36px; margin-top: -4px; }}
-  .drawing .arms {{ font-size: 28px; margin-top: -10px; }}
-  .drawing .legs {{ font-size: 28px; margin-top: -6px; }}
-  .drawing .grass {{ font-size: 18px; color: #1f7a3d; margin-top: 4px; }}
-
-  /* post-it */
-  .decor-postit {{ background: #fff4a2 !important; padding: 26px 16px !important; }}
-  .postit-msg {{ font-family: "Brush Script MT", "Lucida Handwriting", cursive; font-size: 24px; text-align: center; color: #2a2418; }}
-
-  /* quote card */
-  .decor-quote {{ background: #fdf9ec !important; }}
-  .quote-mark {{ font-family: "Georgia", serif; font-size: 60px; line-height: 0.5; color: #b8473a; margin-bottom: 6px; }}
-  .quote-body {{ font-style: italic; font-size: 15px; }}
-  .quote-attr {{ font-size: 11px; color: #6b5a3c; margin-top: 8px; }}
-
-  /* band flyer — xerox aesthetic */
-  .decor-band-flyer {{ background: #f0e2c0 !important; }}
-  .band-loud {{ font-family: "Impact", sans-serif; font-size: 36px; line-height: 1.0; letter-spacing: 1px; transform: skewX(-6deg); color: #2a2418; }}
-
-  /* weather */
-  .decor-weather {{ background: #c8e3f5 !important; }}
-
-  /* Pin variants — different colored thumbtacks on decorations */
-  .pin-lost-pet {{ background: radial-gradient(circle at 30% 30%, #ff8c4a, #c43d15 55%, #5a1004) !important; }}
-  .pin-postit {{ display: none; }}  /* post-its are sticky, not pinned */
+  /* RARITY: visual variants */
+  .rarity-c {{}}  /* common: nothing extra */
+  .rarity-u {{}}  /* uncommon: nothing extra (still subtle) */
+  .rarity-r .card-rarity, .rarity-h .card-rarity, .rarity-f .card-rarity {{
+    color: var(--accent);
+    text-shadow: 1px 1px 0 var(--gold);
+  }}
+  .rarity-h::after, .rarity-f::after {{
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: 12px;
+    pointer-events: none; z-index: 4;
+    background: conic-gradient(
+      from 0deg,
+      rgba(255,140,255,0.06),
+      rgba(140,200,255,0.06),
+      rgba(255,255,140,0.06),
+      rgba(140,255,200,0.06),
+      rgba(255,140,255,0.06));
+    mix-blend-mode: overlay;
+    opacity: 0.7;
+    animation: holo-spin 18s linear infinite;
+  }}
+  @keyframes holo-spin {{ to {{ transform: rotate(360deg); }} }}
+  .rarity-f::before {{
+    background: linear-gradient(135deg, var(--gold) 0%, var(--c1, #cb6446) 50%, var(--gold) 100%) !important;
+  }}
+  .rarity-f .card-num::after {{
+    content: " · 1ST ED";
+    color: var(--gold); font-weight: 700;
+  }}
 
   /* FOOTER */
   footer {{
-    max-width: 920px; margin: 36px auto 0; padding: 14px 18px;
-    background: rgba(253, 249, 236, 0.85);
-    border: 1px dashed #2a2418;
-    color: #2a2418; font-size: 12px; text-align: center;
-    transform: rotate(0.3deg);
+    max-width: 940px;
+    margin: 48px auto 0;
+    padding: 16px 22px;
+    border-top: 1px dashed var(--dim);
+    color: var(--dim);
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.7;
   }}
-  footer a {{ color: #b8473a; }}
+  footer a {{ color: var(--accent); }}
 
-  /* Mobile tweaks */
-  @media (max-width: 540px) {{
-    body {{ padding: 14px 10px 80px; }}
-    .card {{ margin: 0 0 22px; }}
-    .card:hover {{ transform: rotate(0) scale(1.02); }}
+  /* Mobile */
+  @media (max-width: 640px) {{
+    body {{ padding: 16px 10px 60px; }}
+    .grid {{ gap: 16px 12px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }}
+    .card-name {{ font-size: 13px; }}
+    .card:hover {{ transform: rotate(0) translateY(-2px) scale(1.01); }}
   }}
 </style>
 </head>
 <body>
 
-<header class="ribbon">
-  <h1>THE&nbsp;CORKBOARD</h1>
-  <div class="sub">everything we've pinned up at outbox.cafe</div>
-  <div>
-    <span class="meta">{count} PIECE{'S' if count != 1 else ''} ON THE WALL</span>
-    <a class="latest-link" href="/">→ latest piece</a>
+<header class="hero">
+  <h1>THE&nbsp;COLLECTION</h1>
+  <div class="sub">everything we've put up at outbox.cafe · cards drop hourly · gotta look at 'em all</div>
+  <div class="meta">
+    <span>SET: 2026</span>
+    <span>{count} / ∞</span>
+    <a href="/">→ NEWEST CARD</a>
   </div>
 </header>
 
-<main class="board">
-{cards_html if entries else '<p style="text-align:center;color:#fdf9ec;font-size:14px;background:rgba(0,0,0,0.3);padding:14px;max-width:500px;margin:60px auto;border-radius:2px;">nothing pinned yet. check back at the top of the hour.</p>'}
+<main class="grid">
+{cards_html if entries else '<p style="text-align:center;color:var(--dim);font-size:14px;padding:40px;">no cards yet. the first one drops at the top of the hour.</p>'}
 </main>
 
 <footer>
-  outbox.cafe · something new at the top of every hour · the corkboard keeps the rest<br>
-  <small>note: not all items on the corkboard are clickable. some things are just here.</small>
+  outbox.cafe · trading cards mint themselves at the top of every hour<br>
+  <small>rarity is randomly assigned at mint. 1st-edition cards have a gold border. holographics shimmer in the dark.</small>
 </footer>
 
 </body>
@@ -618,6 +742,11 @@ def main() -> int:
     archive_file = ARCHIVE_DIR / filename_for_now()
     archive_file.write_text(html)
     shutil.copyfile(archive_file, INDEX_PATH)
+
+    # Screenshot for the cabinet — non-fatal on failure
+    shot_path = THUMBS_DIR / (archive_file.stem + ".png")
+    if take_screenshot(archive_file, shot_path):
+        print(f"  thumbnail → {shot_path.name}")
 
     append_history(spec)
     rebuild_cabinet()

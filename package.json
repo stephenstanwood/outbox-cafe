@@ -1,0 +1,12 @@
+{
+  "name": "outbox-cafe",
+  "version": "0.1.0",
+  "private": true,
+  "description": "screenshot pipeline for outbox.cafe — single dep, just puppeteer for the cabinet thumbnails",
+  "scripts": {
+    "shot": "node scripts/screenshot.js"
+  },
+  "dependencies": {
+    "puppeteer": "^23.0.0"
+  }
+}
