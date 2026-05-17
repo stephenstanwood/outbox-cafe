@@ -257,9 +257,10 @@ def roll_spec_via_llm(
         forbidden_examples=example_str("forbidden_register"),
     )
 
+    # Spec rolling is just JSON output — haiku is plenty smart and much faster
+    # than the default model. Falls back to static roller on any failure anyway.
     cmd = ["claude", "--print", "--tools", "", "--permission-mode", "plan"]
-    if model:
-        cmd += ["--model", model]
+    cmd += ["--model", model or "haiku"]
 
     try:
         result = subprocess.run(

@@ -111,7 +111,8 @@ def _call_claude_for_post(staff: dict[str, Any], title: str, snippet: str) -> st
     )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--permission-mode", "plan"],
+            # Short persona-voiced post — haiku is plenty fast and smart enough
+            ["claude", "--print", "--tools", "", "--permission-mode", "plan", "--model", "haiku"],
             input=prompt,
             capture_output=True,
             text=True,

@@ -43,15 +43,18 @@ def call_claude(prompt: str, model: str | None = None, timeout: int = 600) -> st
     Without --tools "", claude operates agentically — it picks up Write/Edit
     and modifies files itself rather than printing the result. We want pure
     text-out: prompt in, HTML out.
+
+    Default model is sonnet: opus was timing out on hourly cron firings (10+ min
+    page gens for 200-600 line HTML). Sonnet is plenty creative for the brief.
+    Override with --model on the CLI if a specific gen needs more horsepower.
     """
     cmd = [
         "claude",
         "--print",
         "--tools", "",
         "--permission-mode", "plan",
+        "--model", model or "sonnet",
     ]
-    if model:
-        cmd += ["--model", model]
     result = subprocess.run(
         cmd,
         input=prompt,
