@@ -290,6 +290,72 @@ RARITY_TIERS = [
 ]
 
 
+TAGLINES = [
+    "still warm", "found in a drawer", "well-loved", "as-is", "kept in a shoebox",
+    "smells faintly of toast", "from the back room", "not in the catalog",
+    "officially unsponsored", "approved by Doris", "found behind the radiator",
+    "no batteries included", "patent pending forever", "from a private collection",
+    "good for what ails you", "ships flat", "small but bossy", "do not refrigerate",
+    "best before whenever", "limited to one person", "guaranteed to occur",
+    "rumored, never seen", "ask about the smell", "extra weird",
+    "may contain feelings", "made yesterday", "made tuesday",
+    "fits in a pocket", "loud but kind", "vouched for",
+    "comes with a small thanks", "the good kind", "as advertised, mostly",
+    "kept in a cigar box", "kept in the freezer",
+    "perfect for nothing", "perfect for everything",
+    "free with purchase", "not for resale (it is)",
+    "untested but charming", "no refunds, no questions",
+    "lightly haunted", "previously enjoyed", "from grandma's basement",
+    "this side up", "do not read in mirror", "remove tag before use",
+    "void where prohibited", "wash in cold", "hang to dry",
+    "may settle in shipping", "comes pre-loved",
+    "trust the process", "trust the cat", "ask Doris",
+    "shake gently", "do not shake", "store at room temperature",
+    "comes with a story", "comes with a sticker", "the last one",
+    "actually the last one", "okay this is the last one for real",
+    "smells like a library", "smells like rain", "smells like nothing",
+    "looks fine to us", "looks better in person",
+    "use as directed", "use as desired", "use as needed",
+]
+
+
+STICKERS = [
+    # text, css-class, weight
+    ("NEW!",         "stk-new",       10),
+    ("$1.25",        "stk-price",     8),
+    ("$0.99",        "stk-price",     8),
+    ("$3.50",        "stk-price",     5),
+    ("5¢",           "stk-price-tiny", 4),
+    ("RARE",         "stk-rare",      5),
+    ("VINTAGE",      "stk-vintage",   5),
+    ("MINT",         "stk-mint",      4),
+    ("USED",         "stk-used",      6),
+    ("PROMO",        "stk-promo",     4),
+    ("FOIL",         "stk-foil",      2),
+    ("AUTHENTIC",    "stk-authentic", 3),
+    ("FREE!",        "stk-free",      4),
+    ("REDUCED",      "stk-reduced",   3),
+    ("LIMITED",      "stk-limited",   2),
+    ("BEST IN SHOW", "stk-show",      1),
+    ("SUNDAY ONLY",  "stk-sunday",    2),
+    ("MUST GO",      "stk-mustgo",    3),
+    ("AS-IS",        "stk-asis",      4),
+    ("ASK FOR M.",   "stk-askm",      2),
+    ("HANDMADE",     "stk-handmade",  3),
+    ("LOCAL",        "stk-local",     3),
+    ("FRAGILE",      "stk-fragile",   3),
+]
+
+STICKER_POSITIONS = [
+    "top:6px; right:6px; transform:rotate(8deg);",
+    "top:6px; left:6px; transform:rotate(-7deg);",
+    "bottom:8px; right:8px; transform:rotate(-5deg);",
+    "bottom:8px; left:8px; transform:rotate(6deg);",
+    "top:50%; right:-10px; transform:translateY(-50%) rotate(12deg);",
+    "top:34%; left:-8px; transform:rotate(-14deg);",
+]
+
+
 def _pick_rarity(h: int) -> tuple[str, str, str]:
     """Deterministic rarity from a hash int."""
     bucket = h % sum(w for _, _, w, _ in RARITY_TIERS)
@@ -408,6 +474,38 @@ def rebuild_cabinet() -> None:
         # Newest is highest number; reversed list shows newest first.
         return f"{total - idx:03d}/∞"
 
+    # Weighted choice helpers — deterministic by card hash so the cabinet
+    # doesn't churn visually between rebuilds.
+    def deterministic_pick(pool: list, h: int) -> any:
+        total = sum(w for *_, w in pool) if isinstance(pool[0], tuple) else len(pool)
+        if isinstance(pool[0], tuple):
+            bucket = h % total
+            acc = 0
+            for item in pool:
+                acc += item[-1]
+                if bucket < acc:
+                    return item
+            return pool[-1]
+        return pool[h % len(pool)]
+
+    def pick_stickers(h: int) -> list[tuple[str, str, str]]:
+        # 40% 0 stickers, 50% 1 sticker, 10% 2 stickers (deterministic)
+        n_bucket = h % 10
+        n = 0 if n_bucket < 4 else (1 if n_bucket < 9 else 2)
+        if n == 0:
+            return []
+        chosen = []
+        used_positions = set()
+        for i in range(n):
+            sub_hash = (h >> (8 * (i + 1))) & 0xFFFFFFFF
+            text, cls, _ = deterministic_pick(STICKERS, sub_hash)
+            pos = STICKER_POSITIONS[sub_hash % len(STICKER_POSITIONS)]
+            if pos in used_positions:
+                continue
+            used_positions.add(pos)
+            chosen.append((text, cls, pos))
+        return chosen
+
     def render_card(idx: int, e: dict) -> str:
         c1 = e["palette"][0] if e["palette"] else "#cb6446"
         c2 = e["palette"][1] if len(e["palette"]) > 1 else c1
@@ -419,9 +517,12 @@ def rebuild_cabinet() -> None:
             art = f'<img class="card-art-img" src="{e["thumb_path"]}" alt="" loading="lazy">'
         else:
             art = '<div class="card-art-placeholder">no preview yet</div>'
-        type_line = " · ".join(p for p in (e["era"], e["format"]) if p) or "—"
-        tone_line = e["tone"] or "—"
         stamp_pretty = e["stamp"].replace("T", " · ") + " PT"
+        tagline = TAGLINES[e["hash"] % len(TAGLINES)]
+        stickers_html = "".join(
+            f'<span class="sticker {cls}" style="{pos}">{text}</span>'
+            for text, cls, pos in pick_stickers(e["hash"])
+        )
         return f'''
         <a class="card {e["rarity_cls"]}" href="{e["page_path"]}"
            style="--c1:{c1}; --c2:{c2}; --c3:{c3}; --rot:{e['rot']:.2f}deg;">
@@ -430,10 +531,12 @@ def rebuild_cabinet() -> None:
               <span class="card-num">No.{card_number(idx)}</span>
               <span class="card-rarity" title="{e['rarity_label']}">{e['rarity_stars']}</span>
             </div>
-            <div class="card-art">{art}</div>
+            <div class="card-art">
+              {art}
+              {stickers_html}
+            </div>
             <h3 class="card-name">{e["title"]}</h3>
-            <div class="card-type">{type_line}</div>
-            <div class="card-tone"><span class="lbl">tone</span> {tone_line}</div>
+            <div class="card-tag">{tagline}</div>
             <div class="card-foot">
               <span class="card-stamp">{stamp_pretty}</span>
               <span class="card-palette">{palette_dots}</span>
@@ -526,11 +629,11 @@ def rebuild_cabinet() -> None:
     display: block;
     text-decoration: none;
     color: var(--ink);
-    aspect-ratio: 5 / 7;
+    aspect-ratio: 4 / 5;
     background: var(--paper);
     border-radius: 12px;
     padding: 0;
-    overflow: hidden;
+    overflow: visible;
     transform: rotate(var(--rot, 0deg));
     box-shadow:
       0 1px 0 rgba(255,255,255,0.6) inset,
@@ -564,12 +667,13 @@ def rebuild_cabinet() -> None:
   .card-inner {{
     position: relative;
     z-index: 2;
-    padding: 12px 12px 10px;
+    padding: 8px 10px 10px;
     height: 100%;
     display: flex; flex-direction: column;
     background: var(--paper);
     border-radius: 8px;
     margin: 4px;
+    overflow: hidden;
   }}
 
   .card-top {{
@@ -587,12 +691,13 @@ def rebuild_cabinet() -> None:
     background: #2a1c0a;
     border: 2px solid var(--ink);
     border-radius: 4px;
-    overflow: hidden;
+    overflow: visible;  /* let stickers poke out */
     position: relative;
     box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
   }}
   .card-art-img {{
     width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block;
+    border-radius: 2px;
   }}
   .card-art-placeholder {{
     width: 100%; height: 100%;
@@ -604,49 +709,31 @@ def rebuild_cabinet() -> None:
   }}
 
   .card-name {{
-    margin: 8px 0 4px;
-    font-size: 14px;
+    margin: 10px 0 2px;
+    font-size: 15px;
     font-weight: 700;
     font-family: "Georgia", serif;
-    line-height: 1.18;
+    line-height: 1.2;
     color: var(--ink);
-    /* clamp to 2 lines */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }}
 
-  .card-type {{
-    font-family: "Courier New", monospace;
-    font-size: 10px;
-    color: var(--dim);
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid rgba(0,0,0,0.10);
-    padding-bottom: 4px;
-    margin-bottom: 4px;
-    text-transform: lowercase;
-    /* clamp */
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }}
-
-  .card-tone {{
-    font-size: 11px;
-    color: var(--ink);
-    margin-bottom: 4px;
+  .card-tag {{
+    margin: 2px 0 6px;
+    font-family: "Georgia", serif;
+    font-size: 12px;
     font-style: italic;
+    color: var(--dim);
+    line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }}
-  .card-tone .lbl {{
-    color: var(--dim); font-style: normal; font-size: 9px;
-    text-transform: uppercase; letter-spacing: 1px; margin-right: 4px;
-  }}
+  .card-tag::before {{ content: "— "; }}
 
   .card-foot {{
     margin-top: auto;
@@ -660,6 +747,153 @@ def rebuild_cabinet() -> None:
     display: inline-block; width: 10px; height: 10px; border-radius: 50%;
     border: 1px solid rgba(0,0,0,0.25);
     box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);
+  }}
+
+  /* STICKERS — overlaid on the art frame */
+  .sticker {{
+    position: absolute;
+    z-index: 4;
+    padding: 3px 7px;
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.3), 2px 3px 5px rgba(0,0,0,0.25);
+  }}
+  .stk-new {{
+    background: #ffeb3b; color: #c43d15;
+    border: 2px solid #c43d15;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    padding: 8px 12px;
+    font-size: 14px;
+  }}
+  .stk-price, .stk-price-tiny {{
+    background: #fff177; color: #2a2418;
+    border: 1px dashed #c43d15;
+    font-family: "Courier New", monospace;
+    font-weight: 700;
+  }}
+  .stk-price-tiny {{ font-size: 9px; padding: 2px 5px; }}
+  .stk-rare {{
+    background: rgba(196, 61, 21, 0.92); color: #fff;
+    border-radius: 50% / 30%;
+    padding: 5px 12px;
+    font-style: italic;
+    font-size: 12px;
+  }}
+  .stk-vintage {{
+    background: #828f4a; color: #fffbe6;
+    border: 1px solid #4f5a1f;
+    font-size: 10px;
+  }}
+  .stk-mint {{
+    background: #a8e6cf; color: #1f5a35;
+    border: 1px solid #1f5a35;
+    font-size: 10px;
+  }}
+  .stk-used {{
+    background: #b89669; color: #2a1810;
+    border: 1px solid #6b5230;
+    opacity: 0.92;
+    font-size: 10px;
+  }}
+  .stk-promo {{
+    background: #ff44cc; color: #fff;
+    border: 1px solid #8a1166;
+    font-size: 10px;
+  }}
+  .stk-foil {{
+    background: linear-gradient(135deg, #ff6b9d, #ffd966, #66e09b, #7ad9ff, #ff6b9d);
+    background-size: 200% 200%;
+    color: #1a1612;
+    text-shadow: 1px 1px 0 #fff;
+    border: 1px solid #1a1612;
+    animation: foil-shift 4s linear infinite;
+    font-size: 10px;
+  }}
+  @keyframes foil-shift {{
+    to {{ background-position: 200% 200%; }}
+  }}
+  .stk-authentic {{
+    background: rgba(31, 90, 53, 0.92); color: #fffbe6;
+    border-radius: 50% / 35%;
+    padding: 5px 10px;
+    font-style: italic;
+    font-size: 10px;
+  }}
+  .stk-free {{
+    background: #ff8c4a; color: #fff;
+    border: 1px solid #c43d15;
+    font-size: 11px;
+  }}
+  .stk-reduced {{
+    background: #fffbe6; color: #c43d15;
+    border: 2px solid #c43d15;
+    text-decoration: line-through;
+    text-decoration-color: #c43d15;
+    font-size: 10px;
+  }}
+  .stk-limited {{
+    background: #1a1612; color: #ffd966;
+    font-size: 9px;
+  }}
+  .stk-show {{
+    background: #c89a3e; color: #1a1612;
+    border-radius: 50%;
+    padding: 6px 8px;
+    font-size: 8px;
+    line-height: 1;
+    text-align: center;
+    width: 50px; height: 50px;
+    display: grid; place-items: center;
+    box-shadow: 0 0 0 2px #1a1612 inset, 1px 1px 0 rgba(0,0,0,0.3);
+  }}
+  .stk-sunday {{
+    background: #c8e3f5; color: #093540;
+    border: 1px solid #093540;
+    font-family: "Brush Script MT", cursive;
+    font-style: normal;
+    font-size: 13px;
+    padding: 3px 9px;
+  }}
+  .stk-mustgo {{
+    background: #c43d15; color: #fff;
+    font-size: 11px;
+    font-style: italic;
+  }}
+  .stk-asis {{
+    background: transparent; color: #2a1810;
+    border: 1px solid #2a1810;
+    font-size: 10px;
+    font-family: "Courier New", monospace;
+  }}
+  .stk-askm {{
+    background: #fdf9ec; color: #2a2418;
+    border: 1px dashed #2a2418;
+    font-family: "Brush Script MT", cursive;
+    font-style: normal;
+    font-size: 12px;
+    padding: 3px 8px;
+  }}
+  .stk-handmade {{
+    background: #f3e7c3; color: #5a4a30;
+    border: 1px solid #5a4a30;
+    font-style: italic;
+    font-size: 10px;
+  }}
+  .stk-local {{
+    background: #d4e6c8; color: #2d5016;
+    border: 1px solid #2d5016;
+    font-size: 10px;
+  }}
+  .stk-fragile {{
+    background: #fff; color: #c43d15;
+    border: 1px solid #c43d15;
+    font-size: 9px;
+    letter-spacing: 2px;
   }}
 
   /* Holographic shine — animates on hover */
