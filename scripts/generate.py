@@ -25,6 +25,7 @@ from spec import (
     roll_spec_via_llm,
 )
 from images import fetch_images, derive_query
+from images_ai import fetch_ai_images
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
@@ -1127,11 +1128,20 @@ def main() -> int:
     print(format_spec_for_human(spec))
     print()
 
-    # Fetch a small set of thematic images from Unsplash (free tier).
-    img_query = derive_query(spec)
-    photos = fetch_images(img_query, count=3) if img_query else []
-    if photos:
-        print(f"unsplash: {len(photos)} image(s) for '{img_query}'")
+    # Fetch a small set of thematic images. Randomly pick between AI-generated
+    # (custom to spec, no attribution needed) and Unsplash (real photos, real
+    # photographers). Mix keeps variety high across the archive.
+    import random as _rng
+    photos: list = []
+    if _rng.random() < 0.6:
+        photos = fetch_ai_images(spec, count=3)
+        if photos:
+            print(f"fal.ai: {len(photos)} ai image(s)")
+    if not photos:
+        img_query = derive_query(spec)
+        photos = fetch_images(img_query, count=3) if img_query else []
+        if photos:
+            print(f"unsplash: {len(photos)} image(s) for '{img_query}'")
 
     prompt = build_prompt(spec, photos=photos)
 
