@@ -80,6 +80,44 @@
         if (e.key === 'ArrowLeft' && hasNewer) { e.preventDefault(); location.href = newerHref; }
         else if (e.key === 'ArrowRight' && hasOlder) { e.preventDefault(); location.href = olderHref; }
       });
+
+      // Touch swipe nav. Same convention as keys: swipe right → newer, swipe left → older.
+      // Skip if the touch starts on an interactive element so gen-page sliders/buttons/links
+      // keep working normally.
+      function isInteractive(el) {
+        while (el && el !== document.body) {
+          var tag = el.tagName;
+          if (tag === 'INPUT' || tag === 'BUTTON' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'A') return true;
+          if (el.isContentEditable) return true;
+          if (el.getAttribute && (el.getAttribute('role') === 'slider' || el.getAttribute('role') === 'button')) return true;
+          if (el.draggable) return true;
+          el = el.parentElement;
+        }
+        return false;
+      }
+
+      var sx = null, sy = null, st = null;
+      document.addEventListener('touchstart', function (e) {
+        if (e.touches.length !== 1) { sx = null; return; }
+        if (isInteractive(e.target)) { sx = null; return; }
+        sx = e.touches[0].clientX;
+        sy = e.touches[0].clientY;
+        st = Date.now();
+      }, { passive: true });
+
+      document.addEventListener('touchend', function (e) {
+        if (sx === null) return;
+        var t = e.changedTouches[0];
+        var dx = t.clientX - sx;
+        var dy = t.clientY - sy;
+        var dt = Date.now() - st;
+        sx = null;
+        if (Math.abs(dx) < 60) return;             // not far enough
+        if (Math.abs(dy) > Math.abs(dx) * 0.6) return; // too vertical
+        if (dt > 700) return;                       // too slow, likely a drag
+        if (dx > 0 && hasNewer) { location.href = newerHref; }
+        else if (dx < 0 && hasOlder) { location.href = olderHref; }
+      }, { passive: true });
     })
     .catch(function () {});
 })();
