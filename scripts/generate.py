@@ -145,6 +145,7 @@ def inject_og_tags(html: str, title: str, archive_filename: str, description: st
     safe_desc = (description or "an artifact from outbox.cafe — a constantly-evolving weird corner of the internet").replace('"', '&quot;')
     block = (
         f'\n  <link rel="icon" type="image/png" href="/favicon.png">'
+        f'\n  <link rel="alternate" type="application/rss+xml" title="outbox.cafe" href="/feed.xml">'
         f'\n  <meta property="og:title" content="{safe_title}">'
         f'\n  <meta property="og:description" content="{safe_desc}">'
         f'\n  <meta property="og:image" content="{image_url}">'
@@ -675,6 +676,7 @@ def rebuild_cabinet() -> None:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/rss+xml" title="outbox.cafe" href="/feed.xml">
 <meta property="og:title" content="THE COLLECTION · outbox.cafe">
 <meta property="og:description" content="every hour another piece. browse the cabinet.">
 <meta property="og:url" content="https://outbox.cafe/archive/">
@@ -1116,13 +1118,78 @@ def rebuild_cabinet() -> None:
 
 <footer>
   outbox.cafe · trading cards mint themselves at the top of every hour<br>
-  <small>rarity is randomly assigned at mint. 1st-edition cards have a gold border. holographics shimmer in the dark.</small>
+  <small>rarity is randomly assigned at mint. 1st-edition cards have a gold border. holographics shimmer in the dark.</small><br>
+  <small><a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
 </footer>
 
 </body>
 </html>
 """
     CABINET_PATH.write_text(inject_reload(cabinet_html))
+
+
+def rebuild_feed() -> None:
+    """Build /feed.xml (RSS 2.0) from the archive. Run after each gen."""
+    from datetime import datetime
+    from email.utils import format_datetime
+    from zoneinfo import ZoneInfo
+    import html as _html
+
+    ROOT_DIR = ROOT
+    feed_path = ROOT_DIR / "feed.xml"
+    pt = ZoneInfo("America/Los_Angeles")
+
+    files = sorted(ARCHIVE_DIR.glob("*.html"), reverse=True)
+    files = [f for f in files if f.name != "index.html"]
+
+    items_xml = []
+    for f in files[:200]:  # cap at 200 most-recent so feed.xml stays small
+        try:
+            html_text = f.read_text(errors="ignore")
+        except Exception:
+            continue
+        title = extract_title(html_text) or f.stem
+        # Parse YYYY-MM-DDTHH-MM.html → naive datetime in PT
+        m = re.match(r"(\d{4}-\d{2}-\d{2})T(\d{2})-(\d{2})", f.stem)
+        if m:
+            try:
+                pub_dt = datetime.strptime(
+                    f"{m.group(1)} {m.group(2)}:{m.group(3)}",
+                    "%Y-%m-%d %H:%M",
+                ).replace(tzinfo=pt)
+            except Exception:
+                pub_dt = datetime.fromtimestamp(f.stat().st_mtime, tz=pt)
+        else:
+            pub_dt = datetime.fromtimestamp(f.stat().st_mtime, tz=pt)
+        link = f"https://outbox.cafe/archive/{f.name}"
+        # Description: title only; readers should click through to see the actual piece
+        desc = _html.escape(title)
+        items_xml.append(
+            "  <item>\n"
+            f"    <title>{_html.escape(title)}</title>\n"
+            f"    <link>{link}</link>\n"
+            f"    <guid isPermaLink=\"true\">{link}</guid>\n"
+            f"    <pubDate>{format_datetime(pub_dt)}</pubDate>\n"
+            f"    <description>{desc}</description>\n"
+            "  </item>"
+        )
+
+    now_pt = datetime.now(tz=pt)
+    feed_xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+        '<channel>\n'
+        '  <title>outbox.cafe</title>\n'
+        '  <link>https://outbox.cafe</link>\n'
+        '  <description>a small place on the internet. a new posting at the top of every hour.</description>\n'
+        '  <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>\n'
+        '  <language>en-us</language>\n'
+        '  <generator>outbox-cafe generator</generator>\n'
+        f'  <lastBuildDate>{format_datetime(now_pt)}</lastBuildDate>\n'
+        + "\n".join(items_xml)
+        + "\n</channel>\n</rss>\n"
+    )
+    feed_path.write_text(feed_xml)
 
 
 def git_commit_and_push(message: str) -> None:
@@ -1222,6 +1289,7 @@ def main() -> int:
 
     append_history(spec)
     rebuild_cabinet()
+    rebuild_feed()
 
     title = extract_title(html)
     print(f"\n✓ wrote {archive_file.name} — {title}")
