@@ -23,6 +23,7 @@ from spec import (
     load_dimensions,
     roll_spec,
 )
+from images import fetch_images, derive_query
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
@@ -1120,7 +1121,13 @@ def main() -> int:
     print(format_spec_for_human(spec))
     print()
 
-    prompt = build_prompt(spec)
+    # Fetch a small set of thematic images from Unsplash (free tier).
+    img_query = derive_query(spec)
+    photos = fetch_images(img_query, count=3) if img_query else []
+    if photos:
+        print(f"unsplash: {len(photos)} image(s) for '{img_query}'")
+
+    prompt = build_prompt(spec, photos=photos)
 
     if args.dry_run:
         print("---- PROMPT ----")

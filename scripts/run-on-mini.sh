@@ -18,6 +18,13 @@ if [ -f "$PROXY_ENV" ]; then
   set +a
 fi
 
+# outbox-cafe specific env (UNSPLASH_ACCESS_KEY, future image-gen API keys, etc.)
+if [ -f "$REPO_DIR/.env" ]; then
+  set -a
+  . "$REPO_DIR/.env"
+  set +a
+fi
+
 # Ensure claude is in PATH for cron/launchd
 export PATH="/opt/homebrew/bin:$HOME/.bun/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 
