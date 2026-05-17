@@ -135,6 +135,34 @@ def inject_nav(html: str) -> str:
     return html + NAV_SCRIPT_TAG
 
 
+def inject_og_tags(html: str, title: str, archive_filename: str, description: str = "") -> str:
+    """Inject Open Graph + Twitter Card meta tags + favicon link so link previews
+    on social have a card, and the tab gets an icon."""
+    base = "https://outbox.cafe"
+    page_url = f"{base}/archive/{archive_filename}"
+    image_url = f"{base}/archive/thumbs/{Path(archive_filename).stem}.png"
+    safe_title = (title or "outbox.cafe").replace('"', '&quot;')
+    safe_desc = (description or "an artifact from outbox.cafe — a constantly-evolving weird corner of the internet").replace('"', '&quot;')
+    block = (
+        f'\n  <link rel="icon" type="image/png" href="/favicon.png">'
+        f'\n  <meta property="og:title" content="{safe_title}">'
+        f'\n  <meta property="og:description" content="{safe_desc}">'
+        f'\n  <meta property="og:image" content="{image_url}">'
+        f'\n  <meta property="og:url" content="{page_url}">'
+        f'\n  <meta property="og:type" content="article">'
+        f'\n  <meta property="og:site_name" content="outbox.cafe">'
+        f'\n  <meta name="twitter:card" content="summary_large_image">'
+        f'\n  <meta name="twitter:title" content="{safe_title}">'
+        f'\n  <meta name="twitter:description" content="{safe_desc}">'
+        f'\n  <meta name="twitter:image" content="{image_url}">'
+    )
+    m = re.search(r"(<head[^>]*>)", html, re.IGNORECASE)
+    if m:
+        idx = m.end()
+        return html[:idx] + block + html[idx:]
+    return html
+
+
 def inject_spec_meta(html: str, spec: dict) -> str:
     """Inject canonical spec as <meta> tags into <head> for reliable extraction by the cabinet."""
 
@@ -1166,6 +1194,9 @@ def main() -> int:
 
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
     archive_file = ARCHIVE_DIR / filename_for_now()
+    # Open Graph / Twitter Card tags so bsky / tumblr link cards preview well
+    title_pre_og = extract_title(html) or archive_file.stem
+    html = inject_og_tags(html, title_pre_og, archive_file.name)
     # Archive entries get the nav.js chrome so visitors can flip ← → through history.
     archive_file.write_text(inject_nav(html))
     # Homepage adds the auto-reload script on top of nav (it watches for the next hour).
