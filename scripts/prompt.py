@@ -67,10 +67,11 @@ HARD REQUIREMENTS
 3. <title> tag at the top with a real, interesting title that fits the piece. Not "Untitled" or "Generated Page" — give it a name.
 4. <meta name="viewport" content="width=device-width, initial-scale=1"> in <head>.
 5. Mandatory element must be present and functional. If it's the hit counter, it must actually increment in localStorage. If it's a form, it must actually do something locally.
-6. Include a small footer with: a hyperlink to "/archive" labeled however fits the piece, and a one-line spec watermark (era · format · tone) styled to feel in-character.
-7. JavaScript must not throw errors. localStorage usage is fine.
-8. Honor the wildcard if it's present.
-9. Honor the forbidden register: do NOT use that aesthetic, voice, or set of metaphors anywhere on this page. The forbidden register exists because it's where this generator tends to converge — actively push the other direction.
+6. Include a small footer with a hyperlink to "/archive", labeled however fits the piece — "the cabinet," "more like this," "back issues," "see the rest," "the corkboard," "other postings," etc. Choose freely.
+7. **NEVER print the rolled spec or its dimensions anywhere visible on the page.** The era, format, tone, palette, mandatory element, wildcard, and forbidden register are your internal brief — readers must not see them. No "filed under: 2003 LJ · catalog · gossipy" footers, no "this piece's mood: anxious" metadata, no "type: weather report" tags, no "spec watermarks" of any kind. The reader should experience the piece as a real thing on its own terms, not as the output of a generator. (Engine metadata is recorded separately via meta tags — that's the only place it belongs.)
+8. JavaScript must not throw errors. localStorage usage is fine.
+9. Honor the wildcard if it's present.
+10. Honor the forbidden register: do NOT use that aesthetic, voice, or set of metaphors anywhere on this page. The forbidden register exists because it's where this generator tends to converge — actively push the other direction.
 
 CONTENT VALUES
 ==============
