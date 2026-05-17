@@ -36,19 +36,36 @@ def filename_to_utc(stem: str) -> datetime | None:
 
 
 def closest_history_match(file_utc: datetime, history: list[dict]) -> dict | None:
-    """Find history entry with generated_at closest to file_utc within 5 min."""
+    """Find the latest history entry whose generated_at <= file_utc, within 15 min.
+
+    History timestamps record when the spec was *rolled* — Claude generation can take
+    30-90+ seconds, so the file is written 1-8 minutes after the history entry.
+    """
     best = None
-    best_delta = timedelta(minutes=5)
+    best_delta = timedelta(minutes=15)
     for h in history:
         try:
             h_dt = datetime.fromisoformat(h["generated_at"])
         except Exception:
             continue
-        delta = abs(h_dt - file_utc)
+        if h_dt > file_utc:
+            continue  # spec rolled AFTER file was written — wrong entry
+        delta = file_utc - h_dt
         if delta < best_delta:
             best = h
             best_delta = delta
     return best
+
+
+def strip_outbox_meta(html: str) -> str:
+    """Remove all <meta name="outbox-spec-*" ...> tags so backfill can overwrite."""
+    import re
+    return re.sub(
+        r'\s*<meta\s+name="outbox-spec-[a-z]+"\s+content="[^"]*"\s*/?>',
+        "",
+        html,
+        flags=re.IGNORECASE,
+    )
 
 
 def main() -> int:
@@ -57,6 +74,7 @@ def main() -> int:
         print("no history.jsonl — nothing to backfill")
         return 0
 
+    force = "--force" in sys.argv
     changed = 0
     skipped = 0
     for f in sorted(ARCHIVE_DIR.glob("*.html")):
@@ -64,8 +82,10 @@ def main() -> int:
             continue
         html = f.read_text(errors="ignore")
         if 'outbox-spec-era' in html:
-            skipped += 1
-            continue
+            if not force:
+                skipped += 1
+                continue
+            html = strip_outbox_meta(html)
         file_utc = filename_to_utc(f.stem)
         if not file_utc:
             print(f"  skip (unparseable filename): {f.name}")

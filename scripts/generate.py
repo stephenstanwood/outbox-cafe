@@ -795,6 +795,8 @@ def main() -> int:
     archive_file = ARCHIVE_DIR / filename_for_now()
     archive_file.write_text(html)
     shutil.copyfile(archive_file, INDEX_PATH)
+    # Record the produced filename in the spec so future matchups are unambiguous
+    spec["file"] = archive_file.name
 
     # Screenshot for the cabinet — non-fatal on failure
     shot_path = THUMBS_DIR / (archive_file.stem + ".png")
