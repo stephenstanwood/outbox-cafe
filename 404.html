@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>not in our records · outbox.cafe</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/rss+xml" title="outbox.cafe" href="/feed.xml">
+<style>
+  :root {
+    --ink: #1a1612;
+    --paper: #f4ecdc;
+    --paper-2: #ede2c8;
+    --accent: #b8473a;
+    --dim: #7a6a4c;
+    --teal: #1d4d57;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; color: var(--ink); }
+  body {
+    min-height: 100vh;
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 17px; line-height: 1.55;
+    background:
+      radial-gradient(circle at 18% 22%, rgba(184,71,58,0.04) 0 40%, transparent 60%),
+      radial-gradient(circle at 82% 78%, rgba(29,77,87,0.05) 0 38%, transparent 58%),
+      var(--paper);
+    padding: 60px 18px 80px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  main {
+    max-width: 560px;
+    text-align: center;
+  }
+  .stamp {
+    font-family: ui-monospace, "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .cat-portrait {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 24px;
+    display: block;
+    border: 4px solid var(--paper-2);
+    background: var(--paper-2);
+  }
+  h1 {
+    font-size: 36px;
+    line-height: 1.1;
+    margin: 0 0 18px;
+    letter-spacing: -0.01em;
+  }
+  p {
+    margin: 0 0 14px;
+    text-align: left;
+  }
+  .signoff {
+    text-align: right;
+    color: var(--dim);
+    font-style: italic;
+    margin-top: 6px;
+  }
+  .options {
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+  }
+  .options li {
+    margin-bottom: 8px;
+  }
+  .options a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+  }
+  .options a:hover { background: var(--accent); color: var(--paper); border-bottom-color: transparent; }
+  footer {
+    text-align: center;
+    color: var(--dim);
+    font-size: 13px;
+    margin-top: 50px;
+  }
+
+  @media (max-width: 540px) {
+    body { padding: 36px 14px 60px; }
+    h1 { font-size: 28px; }
+    .cat-portrait { width: 140px; height: 140px; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<div class="stamp">404 · not in our records</div>
+
+<img class="cat-portrait" src="/about/portraits/m.png" alt="M., the manager cat" loading="lazy">
+
+<h1>this page is not in our records</h1>
+
+<p>hi. m here. you came looking for something we don't have a posting for. could be we never had one. could be we did and it's filed somewhere different now. could be the website is having a moment.</p>
+
+<p>either way, the door's still propped open. come in.</p>
+
+<ul class="options">
+  <li><a href="/">→ go look at what's currently up</a></li>
+  <li><a href="/archive/">→ browse the whole cabinet</a></li>
+  <li><a href="/about/">→ read about the place</a></li>
+  <li><a href="/feed.xml">→ subscribe via rss</a></li>
+</ul>
+
+<p class="signoff">-M</p>
+
+<footer>outbox.cafe</footer>
+
+</main>
+</body>
+</html>
