@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Granny Pernilla's Rubber Band Weather Station — Channel 7 ½ — Whiffle Hollow's Most Trusted Twang Forecast Since 1962</title>
+<!-- a single rubber band can do a powerful lot. so can a single grandmother. -->
+<style>
+  /* tiled background — pink gingham checked with little baby blue dots, all in CSS, no images */
+  html, body { margin:0; padding:0; }
+  body {
+    font-family: "Comic Sans MS", "Chalkboard SE", "Bradley Hand", cursive;
+    color: #4a2740;
+    background-color: #ffe9f2;
+    background-image:
+      radial-gradient(circle at 10px 10px, #a8d8ea 2.5px, transparent 3px),
+      radial-gradient(circle at 30px 30px, #a8d8ea 2.5px, transparent 3px),
+      linear-gradient(45deg, #ffc6df 25%, transparent 25%, transparent 75%, #ffc6df 75%),
+      linear-gradient(45deg, #ffc6df 25%, transparent 25%, transparent 75%, #ffc6df 75%);
+    background-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
+    background-position: 0 0, 20px 20px, 0 0, 20px 20px;
+    line-height: 1.55;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+  .frame {
+    max-width: 760px;
+    margin: 14px auto;
+    padding: 0 8px 60px 8px;
+  }
+  /* the big tin-roof header */
+  .roof {
+    background: repeating-linear-gradient(90deg, #ffc6df 0 24px, #a8d8ea 24px 48px);
+    border: 4px ridge #ff90b8;
+    text-align: center;
+    padding: 6px 4px 10px 4px;
+    box-shadow: 6px 6px 0 #c98fb1;
+  }
+  .roof h1 {
+    font-family: "Impact", "Arial Black", sans-serif;
+    margin: 6px 0 2px 0;
+    font-size: 28px;
+    color: #2b4670;
+    text-shadow: 2px 2px 0 #ffffff, 4px 4px 0 #ff90b8;
+    letter-spacing: 1px;
+    line-height: 1.05;
+  }
+  .roof .sub {
+    background: #fff;
+    border: 2px dashed #2b4670;
+    display: inline-block;
+    padding: 2px 10px;
+    font-size: 13px;
+    margin-top: 4px;
+    color: #6a2a55;
+  }
+  .blink { animation: blinky 1.2s steps(2) infinite; }
+  @keyframes blinky { 50% { opacity: 0; } }
+  .scroller {
+    background: #2b4670;
+    color: #ffe9f2;
+    border-top: 2px solid #ff90b8;
+    border-bottom: 2px solid #ff90b8;
+    padding: 4px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    margin-top: 6px;
+  }
+  .scroller span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll 38s linear infinite;
+  }
+  @keyframes scroll { to { transform: translateX(-100%); } }
+  /* panels */
+  .panel {
+    background: #ffffff;
+    border: 3px outset #ffc6df;
+    margin: 14px 0;
+    padding: 10px 12px;
+    box-shadow: 4px 4px 0 #a8d8ea;
+  }
+  .panel h2 {
+    margin: 0 0 8px 0;
+    font-family: "Impact", "Arial Black", sans-serif;
+    color: #2b4670;
+    background: linear-gradient(180deg, #ffc6df 0%, #ffe9f2 100%);
+    border: 2px groove #a8d8ea;
+    padding: 4px 8px;
+    font-size: 20px;
+    letter-spacing: 1px;
+  }
+  .panel h3 {
+    font-family: "Impact", "Arial Black", sans-serif;
+    color: #6a2a55;
+    margin: 12px 0 4px 0;
+    border-bottom: 2px dotted #a8d8ea;
+    padding-bottom: 2px;
+  }
+  /* the gauges */
+  .gauges {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .gauge {
+    background: linear-gradient(180deg, #a8d8ea 0%, #ffffff 60%, #ffc6df 100%);
+    border: 3px ridge #ffffff;
+    padding: 8px;
+    text-align: center;
+    box-shadow: inset 0 0 0 2px #2b4670;
+  }
+  .gauge .label {
+    font-family: "Impact", sans-serif;
+    color: #2b4670;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .gauge .value {
+    font-family: "Courier New", monospace;
+    font-size: 28px;
+    color: #6a2a55;
+    margin: 4px 0;
+    text-shadow: 1px 1px 0 #ffffff;
+  }
+  .gauge .note {
+    font-size: 11px;
+    color: #2b4670;
+    font-style: italic;
+  }
+  /* the doppler */
+  .doppler {
+    background: #2b4670;
+    color: #ffc6df;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    line-height: 1.05;
+    padding: 6px;
+    border: 4px inset #a8d8ea;
+    overflow-x: auto;
+    white-space: pre;
+    text-align: center;
+  }
+  .doppler .hot { color: #ffe9f2; background: #ff90b8; }
+  .doppler .warm { color: #2b4670; background: #ffc6df; }
+  .doppler .cool { color: #2b4670; background: #a8d8ea; }
+  /* hourly table */
+  table.hourly {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.hourly th, table.hourly td {
+    border: 1px solid #ff90b8;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.hourly th {
+    background: #ffc6df;
+    color: #2b4670;
+    font-family: "Impact", sans-serif;
+    letter-spacing: 1px;
+  }
+  table.hourly tr:nth-child(odd) td { background: #ffe9f2; }
+  table.hourly tr:nth-child(even) td { background: #e6f3f8; }
+  /* almanac */
+  .almanac ol {
+    padding-left: 22px;
+    margin: 6px 0;
+  }
+  .almanac li {
+    margin-bottom: 6px;
+    padding: 4px 6px;
+    background: linear-gradient(90deg, #ffe9f2 0%, transparent 100%);
+    border-left: 4px solid #a8d8ea;
+  }
+  .almanac li b { color: #6a2a55; }
+  /* mailbag */
+  .letter {
+    background: #fff8de;
+    border: 1px dashed #c98fb1;
+    padding: 8px 10px;
+    margin: 8px 0;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    color: #4a2740;
+    position: relative;
+  }
+  .letter::before {
+    content: "✉";
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: #ffc6df;
+    color: #2b4670;
+    padding: 0 6px;
+    border: 1px solid #c98fb1;
+  }
+  .letter .sig { display: block; text-align: right; font-style: italic; margin-top: 4px; }
+  /* tips */
+  .tips ul { list-style: "✿ "; padding-left: 22px; }
+  .tips li { margin-bottom: 5px; }
+  /* webring */
+  .ring {
+    text-align: center;
+    background: #a8d8ea;
+    border: 4px double #2b4670;
+    padding: 10px;
+    font-size: 13px;
+  }
+  .ring a {
+    display: inline-block;
+    margin: 0 6px;
+    padding: 2px 6px;
+    background: #ffc6df;
+    color: #2b4670;
+    text-decoration: none;
+    border: 2px outset #fff;
+  }
+  .ring a:hover { border-style: inset; background: #ffe9f2; }
+  /* under construction */
+  .uc {
+    text-align: center;
+    background: #fffacc;
+    border: 3px ridge #ff90b8;
+    padding: 6px;
+    font-family: "Impact", sans-serif;
+    color: #6a2a55;
+    margin: 12px 0;
+    letter-spacing: 1px;
+  }
+  .uc .gif {
+    display: inline-block;
+    background: repeating-linear-gradient(45deg, #ffc107 0 8px, #2b4670 8px 16px);
+    color: #fff;
+    padding: 2px 6px;
+    border: 2px solid #2b4670;
+    animation: pulse 0.6s steps(2) infinite;
+  }
+  @keyframes pulse { 50% { background: repeating-linear-gradient(45deg, #2b4670 0 8px, #ffc107 8px 16px); } }
+  /* the floating mascot — Twangy the Rubber Band Fairy */
+  #twangy {
+    position: fixed;
+    top: 200px;
+    left: 60px;
+    width: 64px;
+    height: 64px;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.6s cubic-bezier(.22,1.6,.36,1), top 0.9s ease-out, left 0.9s ease-out;
+    font-family: "Comic Sans MS", cursive;
+  }
+  #twangy .body {
+    width: 64px;
+    height: 64px;
+    position: relative;
+  }
+  /* the rubber band itself — a stretched oval done in CSS */
+  #twangy .band {
+    position: absolute;
+    top: 22px; left: 4px;
+    width: 56px; height: 22px;
+    border: 4px solid #ff90b8;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 0 0 0 1px #c98fb1 inset;
+  }
+  /* a little face inside the band */
+  #twangy .face {
+    position: absolute;
+    top: 28px; left: 18px;
+    width: 28px; height: 12px;
+    color: #2b4670;
+    font-size: 11px;
+    text-align: center;
+    line-height: 12px;
+    font-weight: bold;
+  }
+  #twangy .wings {
+    position: absolute;
+    top: 8px; left: 16px;
+    width: 32px; height: 18px;
+    background: radial-gradient(ellipse at center, rgba(168,216,234,0.9) 0%, rgba(168,216,234,0.3) 70%, transparent 100%);
+    border-radius: 50%;
+    animation: flap 0.18s alternate infinite;
+  }
+  @keyframes flap { from { transform: scaleY(0.7); } to { transform: scaleY(1.1); } }
+  #twangy .speech {
+    position: absolute;
+    top: -22px;
+    left: 50px;
+    background: #fff;
+    border: 2px solid #2b4670;
+    border-radius: 12px;
+    padding: 1px 8px;
+    font-size: 11px;
+    color: #2b4670;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  #twangy.talking .speech { opacity: 1; }
+  /* footer */
+  footer {
+    margin-top: 28px;
+    text-align: center;
+    background: #2b4670;
+    color: #ffe9f2;
+    padding: 10px;
+    border: 4px ridge #ffc6df;
+    font-size: 12px;
+  }
+  footer a { color: #ffc6df; }
+  footer .watermark {
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    margin-top: 6px;
+    color: #a8d8ea;
+    letter-spacing: 1px;
+  }
+  /* radial visitor counter (mandatory? no, optional, just for flavor) */
+  .counter {
+    display: inline-block;
+    background: #000;
+    color: #ffc6df;
+    font-family: "Courier New", monospace;
+    padding: 2px 6px;
+    border: 2px inset #c98fb1;
+    letter-spacing: 2px;
+  }
+  /* an extra "twang" button */
+  button.twang {
+    font-family: "Comic Sans MS", cursive;
+    background: linear-gradient(180deg, #ffc6df, #ff90b8);
+    color: #2b4670;
+    border: 3px outset #ffe9f2;
+    padding: 4px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  button.twang:active { border-style: inset; }
+  .twang-display {
+    display: inline-block;
+    margin-left: 8px;
+    font-family: "Courier New", monospace;
+    color: #6a2a55;
+  }
+  .smol { font-size: 11px; color: #6a2a55; font-style: italic; }
+  hr.fancy {
+    border: 0;
+    height: 6px;
+    background: repeating-linear-gradient(90deg, #ffc6df 0 10px, #a8d8ea 10px 20px);
+    margin: 14px 0;
+  }
+  @media (max-width: 600px) {
+    .roof h1 { font-size: 22px; }
+    .panel h2 { font-size: 17px; }
+    body { font-size: 15px; }
+    #twangy { width: 48px; height: 48px; }
+    #twangy .body { width: 48px; height: 48px; }
+    #twangy .band { width: 42px; height: 18px; top: 18px; left: 3px; border-width: 3px; }
+    #twangy .face { top: 22px; left: 12px; font-size: 9px; }
+    #twangy .wings { top: 6px; left: 12px; width: 24px; height: 14px; }
+    #twangy .speech { font-size: 10px; top: -20px; left: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- if you read this far, hello darling. Granny baked extra. -->
+
+<div class="frame">
+
+  <div class="roof">
+    <h1>★ GRANNY PERNILLA'S<br><span style="color:#6a2a55">RUBBER BAND WEATHER STATION</span> ★</h1>
+    <div class="sub"><span class="blink">●</span> LIVE FROM THE PORCH IN WHIFFLE HOLLOW &mdash; CHANNEL 7&frac12; &mdash; <span class="blink">●</span></div>
+    <div class="scroller"><span>
+      &nbsp;&nbsp;★ TODAY'S TWANG: A-FLAT ★ &nbsp; HUMIDITY HIGH, SO BANDS ARE FEELIN' LOOSEY-GOOSEY ★ &nbsp; CRITTER REPORT: ONE POSSUM, POLITE ★ &nbsp; SCATTERED SNAPS AFTER SUPPER ★ &nbsp; GRANNY WANTS YOU TO DRINK SOME WATER ★ &nbsp; PIE COOLING ON THE SILL, DO NOT TOUCH ★ &nbsp;
+    </span></div>
+  </div>
+
+  <div class="panel">
+    <h2>☀ A Word From The Porch ☀</h2>
+    <p>Well goodness, look who's here! Pull up a rocker, sugar &mdash; the cushion's still warm from Doris. I been keepin' track of the rubber band weather since 1962, when Harold (rest his soul) brought home a sack of office-supply seconds from the stationery store closing up over in Possumneck. We have <em>not</em> run out since. Mercy, no.</p>
+    <p>Today's forecast is a good one for the <b>single band</b> &mdash; that's our specialty here. None of that fancy ball-of-bands business; just <u>one little hoop of stretch</u> and the wide world of trouble and good it can get into. Lord, I been doin' this a long time and a single band can still surprise me. Keeps you young, I tell you what.</p>
+    <p class="smol">visitors today: <span class="counter" id="counter">000007</span> &nbsp;&middot;&nbsp; pie remaining: <span class="counter">71%</span></p>
+  </div>
+
+  <div class="panel">
+    <h2>📡 Current Conditions Over the Hollow 📡</h2>
+    <div class="gauges">
+      <div class="gauge">
+        <div class="label">SNAP INDEX</div>
+        <div class="value">3.2</div>
+        <div class="note">low &mdash; bands stretchy as taffy</div>
+      </div>
+      <div class="gauge">
+        <div class="label">TWANG TONE</div>
+        <div class="value">A♭</div>
+        <div class="note">middle of the porch</div>
+      </div>
+      <div class="gauge">
+        <div class="label">SPROING %</div>
+        <div class="value">88%</div>
+        <div class="note">friskier than a barn cat</div>
+      </div>
+      <div class="gauge">
+        <div class="label">HUMIDITY</div>
+        <div class="value">74%</div>
+        <div class="note">bands relaxed, biscuits puffy</div>
+      </div>
+      <div class="gauge">
+        <div class="label">DUST PRESSURE</div>
+        <div class="value">29.84"</div>
+        <div class="note">steady; sneeze warning low</div>
+      </div>
+      <div class="gauge">
+        <div class="label">CRITTER COUNT</div>
+        <div class="value">1🦝</div>
+        <div class="note">that's just Earl, he's fine</div>
+      </div>
+    </div>
+    <p class="smol" style="margin-top:8px;">★ readings taken from the kitchen sill, the mailbox post, and the second peg from the left on the screen door.</p>
+  </div>
+
+  <div class="panel">
+    <h2>📻 Hourly Outlook for the Single-Band Citizen 📻</h2>
+    <table class="hourly">
+      <thead>
+        <tr><th>Hour</th><th>Conditions</th><th>What to do with your band</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>6 AM</td><td>Dewy, quiet, mourning dove</td><td>Loop your braid back &mdash; mornin' hair don't need a fancy clip, just a band and faith.</td></tr>
+        <tr><td>8 AM</td><td>Sun on the linoleum</td><td>Around the lid of that <b>stubborn pickle jar</b>. Grip improves about 400%. Harold taught me that one.</td></tr>
+        <tr><td>10 AM</td><td>Fair, breeze from the south</td><td>Mark the page in your library book. They frown on dog-ears, sugar.</td></tr>
+        <tr><td>Noon</td><td>Warmer, biscuit-scented</td><td>Wrap the handle of your wooden spoon &mdash; it'll quit slidin' into the chili pot. I lost three good spoons before I figured this out.</td></tr>
+        <tr><td>2 PM</td><td>Drowsy, cicada front moving in</td><td>Around your wrist as a little reminder. Tie a half-knot if you really gotta remember. Don't go tight, just a kiss-tight.</td></tr>
+        <tr><td>4 PM</td><td>Heat shimmer on the gravel</td><td>Stretch it taut between two fingers and <b>twang</b>. That's the official sound of the hollow. Try it. Go on.</td></tr>
+        <tr><td>6 PM</td><td>Cooling, supper-light gold</td><td>Bundle the silverware before you pack the picnic basket. Don't make me say it twice, Edgar.</td></tr>
+        <tr><td>8 PM</td><td>Lightning bugs negotiable</td><td>One band 'round a stack of recipe cards keeps Aunt Lurene's bourbon-pecan-pie card on the top, which is where the Lord intended.</td></tr>
+        <tr><td>10 PM</td><td>Crickets, soft</td><td>Loop around the doorknob to keep the latch from clackin' when you tip out for a glass of water. Considerate. Granny notices.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>🌪 Doppler Snap-Radar™ &mdash; Live View 🌪</h2>
+    <div class="doppler" aria-label="A square radar grid centered on Whiffle Hollow showing pockets of pink high-snap pressure and cool blue stretch fronts. There is one little smiley face at the center because Granny is always at home.">
+<span> .  .  .  .  .  .  .  .  .  .  .  .  .  .  . </span>
+<span> .  .  .  <span class="cool">~</span> <span class="cool">~</span> <span class="cool">~</span> .  .  .  .  .  .  .  .  . </span>
+<span> .  .  <span class="cool">~</span> <span class="cool">~</span> <span class="warm">o</span> <span class="warm">o</span> <span class="cool">~</span> .  .  .  .  .  .  .  . </span>
+<span> .  <span class="cool">~</span> <span class="warm">o</span> <span class="warm">o</span> <span class="hot">@</span> <span class="hot">@</span> <span class="warm">o</span> <span class="cool">~</span> .  .  .  .  .  .  . </span>
+<span> .  <span class="warm">o</span> <span class="warm">o</span> <span class="hot">@</span> <span class="hot">★</span> <span class="hot">@</span> <span class="warm">o</span> <span class="cool">~</span> .  .  .  .  .  .  . </span>
+<span> .  <span class="cool">~</span> <span class="warm">o</span> <span class="warm">o</span> <span class="hot">@</span> <span class="warm">o</span> <span class="cool">~</span> .  .  .  .  .  .  .  . </span>
+<span> .  .  <span class="cool">~</span> <span class="warm">o</span> <span class="warm">o</span> <span class="cool">~</span> .  .  .  <span class="cool">~</span> <span class="cool">~</span> .  .  .  . </span>
+<span> .  .  .  <span class="cool">~</span> <span class="cool">~</span> .  .  .  <span class="cool">~</span> <span class="warm">o</span> <span class="warm">o</span> <span class="cool">~</span> .  .  . </span>
+<span> .  .  .  .  .  .  .  <span class="cool">~</span> <span class="warm">o</span> <span class="hot">@</span> <span class="warm">o</span> <span class="cool">~</span> .  .  . </span>
+<span> .  .  .  .  .  .  .  .  <span class="cool">~</span> <span class="warm">o</span> <span class="cool">~</span> .  .  .  . </span>
+<span> .  .  .  .  .  .  .  .  .  .  .  .  .  .  . </span>
+<span style="display:block; color:#ffc6df; margin-top:4px;">★ = Granny's porch &nbsp; @ = snap pocket &nbsp; o = warm twang &nbsp; ~ = cool stretch</span>
+    </div>
+    <p class="smol" style="margin-top:8px;">★ A snap pocket is movin' east toward the Pettiford farm. Caleb Pettiford should secure his ledger pages before lunch &mdash; he knows what he did.</p>
+  </div>
+
+  <div class="panel almanac">
+    <h2>📖 Granny's Single-Band Almanac &mdash; This Week's Doings 📖</h2>
+    <p>The almanac is the only thing more reliable than Earl. (Earl is a raccoon. He is not reliable.)</p>
+    <ol>
+      <li><b>Monday &mdash; Jar Day.</b> Wrap one band 'round the lid of the most stubborn jar in the house. Twist. If the jar opens, eat what's inside. If it does not, that jar has earned its rest and you should put it on the shelf and respect it.</li>
+      <li><b>Tuesday &mdash; Bookmark Day.</b> Slip a band over the front cover and around to the page you're on. Especially useful for paperbacks left on porches in summer rain, which is most of them.</li>
+      <li><b>Wednesday &mdash; Reminder Day.</b> Around the wrist. Loose. The reminder is for whatever is on your heart. Don't tell me what it is, that's your business; I'm just the weatherwoman.</li>
+      <li><b>Thursday &mdash; Twang Day.</b> Stretch between thumb and pointer, pluck. The hollow is loudest on Thursdays for reasons no scientist has been able to explain to my satisfaction.</li>
+      <li><b>Friday &mdash; Holdin'-Up Day.</b> Cabinet handle that won't stay shut? Loop a band over both knobs in an X. Holds 'til you can find a screwdriver. Sometimes that takes years; the band will wait.</li>
+      <li><b>Saturday &mdash; Goin'-Out Day.</b> One band 'round a rolled-up dollar in your shoe is an old farmer trick for not losin' your last bit of pocket money at the county fair. Don't ask me how Harold lost his anyway.</li>
+      <li><b>Sunday &mdash; Restin' Day.</b> Place the band on the windowsill in the sun. Let it rest like the rest of us. Even rubber needs a sabbath, that's just sense.</li>
+    </ol>
+  </div>
+
+  <div class="panel tips">
+    <h2>💡 Granny's Seventeen Trustworthy Notions for a Single Band 💡</h2>
+    <p>Listed in order of how often Doris from down the road asks me about 'em.</p>
+    <ul>
+      <li>Hair tie in a Sunday-morning emergency. Won't last, but it'll get you to coffee.</li>
+      <li>Around a paint can's mouth, side-to-side, to wipe the brush on. The rim stays clean, the lid still seats. <i>This one changed my life.</i></li>
+      <li>Around a wire hanger so your good blouse don't slip off in the closet at three in the morning, which is when blouses slide off, every time, like they're auditioning.</li>
+      <li>Bookmark, page-marker, recipe-card holder.</li>
+      <li>Wrist reminder, soft-tight.</li>
+      <li>Grip-improver on a screw-top jar, dribbly faucet handle, or a glasses earpiece that's gone slick.</li>
+      <li>Stretched between two upright nails on the back of the door: a little gallery for postcards from Cousin Wilbur, who is fine, he's just in Tucson.</li>
+      <li>Around a stack of dollar bills, a deck of cards, a bundle of letters tied with intention.</li>
+      <li>Wrapped twice around a wobbly chair leg where it meets the seat. Buys you a year.</li>
+      <li>Tucked into your apron pocket as a what-if. Most of life is a what-if.</li>
+      <li>Bracelet for a child who needs somethin' fidget-worthy in church. <span class="smol">(don't tell Pastor Welkin.)</span></li>
+      <li>Around the TV remote so it don't slip behind the cushion. (You'll lose it anyway, that's just remotes.)</li>
+      <li>Make a finger puppet with a face drawn on. I've named mine Eunice. She is a widow.</li>
+      <li>The world's smallest harp. Stretched between thumb and pinky, plucked with the other hand's index. Won't make you any money but will make you feel like a person.</li>
+      <li>Plant tie for a young tomato seedling. Loose, sugar. Loose. Tomatoes don't like a tight commitment any more than the rest of us.</li>
+      <li>Around a pencil at the eraser end to keep it from rollin' off the desk. Beats coffee, this trick.</li>
+      <li>And lastly: hold one between your hands, close your eyes, stretch and release a few times, and just notice. That counts as a thing you do with a rubber band. It might be the best one.</li>
+    </ul>
+    <p class="smol">★ if you got an eighteenth, send a postcard to PO Box 4, Whiffle Hollow.</p>
+  </div>
+
+  <div class="uc">
+    <span class="gif">▲▼ UNDER CONSTRUCTION ▼▲</span> &nbsp; Granny is learnin' the computer &nbsp; <span class="gif">▲▼ NEW! ▼▲</span>
+  </div>
+
+  <div class="panel">
+    <h2>✉ The Mailbag ✉</h2>
+    <p>Letters arrived this week on the topic of single-band weather. I read every one. Even yours, Bobby.</p>
+
+    <div class="letter">
+      Dear Granny &mdash; my band keeps snappin' when I pull it. Is this my fault?<br>
+      <span class="sig">&mdash; Patient in Possumneck</span>
+    </div>
+    <p><b>Granny says:</b> No darlin', that's just a brittle one. Rubber bands have moods like the rest of us. Try one from the bottom of the drawer; the ones underneath stay supple longer because they're not in the sun gettin' opinions.</p>
+
+    <div class="letter">
+      Granny, I'm a young man in the city and I have nothing but one rubber band and a long evening ahead of me. What do I do?<br>
+      <span class="sig">&mdash; Lonesome on Sixth Avenue</span>
+    </div>
+    <p><b>Granny says:</b> Honey, you sit down somewhere comfortable, you stretch that band slow between two fingers, and you think of one person who'd be tickled to hear from you, and you write 'em a letter. Use the band to hold the envelope closed if your spit's run out. The evening's not so long when there's a letter in it.</p>
+
+    <div class="letter">
+      Why does my dog eat them?<br>
+      <span class="sig">&mdash; Beatrice + Mister Wendell, age 9</span>
+    </div>
+    <p><b>Granny says:</b> Mister Wendell is a sweet boy with a worm in his brain about rubbery things. Put 'em in a drawer he can't reach. Bless his heart, he can't help it.</p>
+
+    <div class="letter">
+      Granny is the rubber band weather real<br>
+      <span class="sig">&mdash; A Skeptic</span>
+    </div>
+    <p><b>Granny says:</b> Sugar, real is a big word. I been watchin' rubber bands forty-some years and they got moods that match the air. Whether that's <i>weather</i> or just <i>noticing</i> &mdash; well, those two ain't very far apart, are they.</p>
+  </div>
+
+  <div class="panel">
+    <h2>🔔 Twang the Porch Bell 🔔</h2>
+    <p>Go on, give it a pluck. It rings out over the hollow.</p>
+    <button class="twang" id="twangBtn">★ TWANG ★</button>
+    <span class="twang-display" id="twangDisp">total twangs heard from this porch: 0</span>
+    <p class="smol">★ your twangs are saved in the cookie jar (well, localStorage, which is what we call cookie jars now).</p>
+  </div>
+
+  <hr class="fancy">
+
+  <div class="ring">
+    <b>★ A LITTLE WEB-RING OF THINGS-YOU-CAN-DO-WITH-ONE ★</b><br>
+    <a href="#">⟵ One Paperclip's Daily Forecast</a>
+    <a href="#">A Single Bobby Pin Reports In</a>
+    <a href="#">One Postage Stamp: The Society</a>
+    <a href="#">Next ⟶</a><br>
+    <span class="smol">★ join the ring by mailing a self-addressed-stamped-floppy to Granny.</span>
+  </div>
+
+  <footer>
+    <div><a href="/archive">★ back to the Hollow Archive ★</a> &nbsp;&middot;&nbsp; <a href="/">refresh the porch</a></div>
+    <div class="watermark">1997 geocities · weather report · porch-rocking grandparent · whiffle hollow ksnap-97.1</div>
+    <div class="smol" style="color:#ffe9f2; margin-top:6px;">&copy; 1997-forever, granny pernilla pernsteen. all rubber bands are loved equally.</div>
+  </footer>
+
+</div>
+
+<!-- twangy lives down here. say hi. -->
+<div id="twangy" aria-hidden="true" title="Twangy the Rubber Band Fairy, hovering near you with the wisdom of one band">
+  <div class="body">
+    <div class="wings"></div>
+    <div class="band"></div>
+    <div class="face">^_^</div>
+    <div class="speech" id="twangySpeech">howdy, sugar!</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  // --- Twangy the Rubber Band Fairy: floating mascot ---
+  var twangy = document.getElementById('twangy');
+  var speech = document.getElementById('twangySpeech');
+  var face = twangy.querySelector('.face');
+  var pos = { x: 80, y: 240 };
+  var target = { x: 80, y: 240 };
+  var bob = 0;
+
+  function setPos(x, y) {
+    twangy.style.left = x + 'px';
+    twangy.style.top = y + 'px';
+  }
+  setPos(pos.x, pos.y);
+
+  // gently follow the mouse, but offset so she's hovering nearby, not on top
+  document.addEventListener('mousemove', function (e) {
+    target.x = Math.min(window.innerWidth - 90, Math.max(8, e.clientX + 40));
+    target.y = Math.min(window.innerHeight - 90, Math.max(8, e.clientY - 60));
+  });
+
+  // on touch, hop near where they tapped
+  document.addEventListener('touchstart', function (e) {
+    if (e.touches && e.touches[0]) {
+      target.x = Math.min(window.innerWidth - 70, Math.max(8, e.touches[0].clientX + 30));
+      target.y = Math.min(window.innerHeight - 90, Math.max(8, e.touches[0].clientY - 70));
+    }
+  }, { passive: true });
+
+  function tick() {
+    pos.x += (target.x - pos.x) * 0.06;
+    pos.y += (target.y - pos.y) * 0.06;
+    bob += 0.06;
+    var dy = Math.sin(bob) * 4;
+    setPos(pos.x, pos.y + dy);
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // Twangy says little things every so often
+  var sayings = [
+    "howdy, sugar!",
+    "drink some water!",
+    "one band, big world.",
+    "biscuits at 4.",
+    "earl says hi.",
+    "stretch slow now.",
+    "you're doin' fine.",
+    "twang it gently.",
+    "harold woulda liked you.",
+    "loose, not tight.",
+    "pie's almost ready.",
+    "y'all come back now."
+  ];
+  var faces = ["^_^", "^o^", "•‿•", "^_^", "n_n", "•◡•"];
+  function speak() {
+    speech.textContent = sayings[Math.floor(Math.random() * sayings.length)];
+    face.textContent = faces[Math.floor(Math.random() * faces.length)];
+    twangy.classList.add('talking');
+    setTimeout(function () { twangy.classList.remove('talking'); }, 3200);
+  }
+  setTimeout(speak, 1400);
+  setInterval(speak, 8500);
+
+  // --- the twang button + cookie jar ---
+  var btn = document.getElementById('twangBtn');
+  var disp = document.getElementById('twangDisp');
+  var key = 'whiffle.twangs';
+  function readCount() {
+    try {
+      var v = localStorage.getItem(key);
+      var n = parseInt(v || '0', 10);
+      return isNaN(n) ? 0 : n;
+    } catch (e) { return 0; }
+  }
+  function writeCount(n) {
+    try { localStorage.setItem(key, String(n)); } catch (e) {}
+  }
+  function render(n) {
+    disp.textContent = 'total twangs heard from this porch: ' + n;
+  }
+  var count = readCount();
+  render(count);
+
+  // tiny audio twang using the WebAudio API
+  var audioCtx = null;
+  function twangSound() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = audioCtx.createOscillator();
+      var g = audioCtx.createGain();
+      var notes = [220, 246.94, 261.63, 293.66, 329.63];
+      o.frequency.value = notes[Math.floor(Math.random() * notes.length)];
+      o.type = 'triangle';
+      g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.18, audioCtx.currentTime + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start();
+      o.stop(audioCtx.currentTime + 0.62);
+    } catch (e) { /* it's fine, twang in your heart instead */ }
+  }
+  btn.addEventListener('click', function () {
+    count += 1;
+    writeCount(count);
+    render(count);
+    twangSound();
+    speech.textContent = 'twaaang ♪';
+    twangy.classList.add('talking');
+    setTimeout(function () { twangy.classList.remove('talking'); }, 1600);
+  });
+
+  // --- visitor counter, just a little uptick per pageview, kept in the jar ---
+  var ckey = 'whiffle.visits';
+  var visits = 0;
+  try {
+    var raw = localStorage.getItem(ckey);
+    visits = parseInt(raw || '6', 10);
+    if (isNaN(visits)) visits = 6;
+    visits += 1;
+    localStorage.setItem(ckey, String(visits));
+  } catch (e) { visits = 7; }
+  var pad = String(visits).padStart(6, '0');
+  var c = document.getElementById('counter');
+  if (c) c.textContent = pad;
+
+})();
+</script>
+
+</body>
+</html>
