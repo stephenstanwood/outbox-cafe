@@ -27,7 +27,21 @@ def _recent_titles(n: int = 20) -> list[str]:
     return titles
 
 
-def build_prompt(spec: dict[str, Any]) -> str:
+def _format_photos_block(photos: list[dict[str, Any]]) -> str:
+    if not photos:
+        return "  (no images available — write a text-only piece)"
+    lines = []
+    for i, p in enumerate(photos, 1):
+        alt = (p.get("alt") or "").replace("\n", " ").strip() or "(no description)"
+        lines.append(
+            f"  [{i}] URL: {p['url']}\n"
+            f"      Alt: {alt}\n"
+            f"      Credit: {p['credit_name']} on Unsplash · {p['html_link']}"
+        )
+    return "\n".join(lines)
+
+
+def build_prompt(spec: dict[str, Any], photos: list[dict[str, Any]] | None = None) -> str:
     """Build the prompt that gets handed to Claude to generate the hourly page."""
 
     def v(field: str) -> str:
@@ -43,6 +57,8 @@ def build_prompt(spec: dict[str, Any]) -> str:
         if recent_titles
         else "  (none yet — this is one of the first generations)"
     )
+    photos = photos or []
+    photos_block = _format_photos_block(photos)
 
     return f"""You are generating an hourly artifact for outbox.cafe, a weird/retro corner of the web. Every hour a new self-contained HTML page goes up at the root and gets archived. The site values genuine variety, retro-optimism, and texture over polish. People should want to look at this for a few minutes, then look at it again later and notice new details.
 
@@ -60,9 +76,23 @@ ROLLED SPEC FOR THIS HOUR
 
 Make a single self-contained HTML file that fully inhabits the rolled spec.
 
+AVAILABLE IMAGES
+================
+Three real photos from Unsplash have been pre-fetched for this piece's subject. You may use any of them, all of them, or none — pick what fits the format and tone you're building.
+
+{photos_block}
+
+If you use one or more:
+  - Embed as `<img src="..." alt="..." loading="lazy" style="...">` — set explicit max-width / max-height inline so they fit the layout. They are real photos, full-size; you must constrain them.
+  - You may crop, mask, filter, blur, tint, frame, or otherwise integrate them into the piece's aesthetic — they don't have to look like "stock photos." Old-web pages would have photo grids, dithered photos, sepia tints, polaroid frames, drop-caps wrapping around them, etc.
+  - The photos are real strangers and real places — don't claim them as "the recipient" or "the inventor" of fictional things. They're decoration, mood, texture.
+  - Photo credits are REQUIRED by Unsplash's terms. Include a small "Photo credits" line at the bottom of the page (can be very small, italic, in fine print) listing each photographer used: "Photo by NAME on Unsplash" with the credit link. Keep it tasteful, like a real magazine masthead colophon.
+
+If the format / tone doesn't fit images (text adventure, ASCII gallery, manifesto, etc.), skip them entirely — don't force them in.
+
 HARD REQUIREMENTS
 =================
-1. Single self-contained HTML file. All CSS and JS embedded — no external assets, no <img> tags pointing to URLs (you can <img> a data: URL if you really want, but text/CSS only is preferred). No external fonts.
+1. Single self-contained HTML file. All CSS and JS embedded — no external assets *except* the Unsplash image URLs listed above. No external fonts.
 2. Mobile responsive — must read on a phone without horizontal scroll (unless the spec REQUIRES horizontal scroll as the mandatory element).
 3. <title> tag at the top with a real, interesting title that fits the piece. Not "Untitled" or "Generated Page" — give it a name.
 4. <meta name="viewport" content="width=device-width, initial-scale=1"> in <head>.
