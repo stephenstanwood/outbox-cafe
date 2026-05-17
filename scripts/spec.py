@@ -180,7 +180,7 @@ DIMENSIONS — definitions and seed examples (texture cues only; do not be limit
 
 - era: aesthetic/temporal frame. Seeds: {era_examples}. Also fair game: medieval scriptoria, 1970s mail art, 1923 amateur radio QSL cards, 1850 penny dreadful, 2031 retro-future, 1880 panorama broadside, 1965 ham radio, 2014 SoundCloud rap, 1932 transcontinental telegraph, etc.
 
-- format: the SHAPE. Could be a TEXT piece (newsletter, catalog, classifieds), a TINY GAME (one-button toy, magic 8-ball, find-the-cat, memory match, maze, tic-tac-toe, breathing pacer), an ART PIECE (CSS-only wallpaper, ASCII rain, kaleidoscope, slow ink-drop, particle system), a PUZZLE (cryptogram, word ladder, logic grid, sliding tiles), or a CONFUSING-BUT-GOOD thing (page-that's-only-a-footer, comments-with-no-post, typewriter-types-itself, recursive iframe). Seeds: {format_examples}. Get weird.
+- format: the SHAPE of the piece. The possibility space is enormous — text-based things, tiny browser games, generative art pieces, real puzzles, confusing-but-good experiences, pages-as-physical-objects (a receipt, a clock, a J-card, a panel of stained glass, a cassette label, an EKG strip, a postage stamp), sensory pieces (just-sound, just-color, just-motion, just-cursor), formats nobody has named yet. INVENT one specific shape: describe in 1-2 concrete sentences what the page IS, what it DOES, and what the visitor sees and touches. Reach for something the internet hasn't quite seen before — do not recombine the obvious archetypes.
 
 - subject: what the page is ABOUT — specific, concrete, can be fictional. Seeds: {subject_examples}. Reach for weird specific corners.
 
@@ -242,7 +242,6 @@ def roll_spec_via_llm(
         wildcard_recent=recent_str("wildcard"),
         forbidden_recent=recent_str("forbidden_register"),
         era_examples=example_str("era"),
-        format_examples=example_str("format"),
         subject_examples=example_str("subject"),
         tone_examples=example_str("tone"),
         palette_examples=example_str("palette"),
