@@ -349,6 +349,11 @@ def run() -> int:
         did, jwt = _auth()
     except Exception as e:
         print(f"[engage] auth failed: {e}", file=sys.stderr)
+        try:
+            from cat_signal import signal
+            signal("bsky-auth", f"bluesky auth failed in engagement loop. likely cause: app password revoked or expired. err: {str(e)[:200]}", priority="high")
+        except Exception:
+            pass
         return 2
 
     try:

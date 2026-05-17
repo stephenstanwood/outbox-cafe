@@ -11,3 +11,6 @@ node_modules/
 
 # Bsky engagement watermark — per-Mini state, gitignored to avoid push conflicts
 data/engage_state.json
+
+# Cat-signal dedup state — per-Mini, ephemeral
+data/cat_signal_state.json
