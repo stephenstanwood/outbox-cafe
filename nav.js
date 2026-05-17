@@ -79,6 +79,14 @@
         if (e.metaKey || e.ctrlKey || e.altKey) return;
         if (e.key === 'ArrowLeft' && hasNewer) { e.preventDefault(); location.href = newerHref; }
         else if (e.key === 'ArrowRight' && hasOlder) { e.preventDefault(); location.href = olderHref; }
+        // 'r' = random gen — stumble-upon mode
+        else if ((e.key === 'r' || e.key === 'R') && list.length > 1) {
+          e.preventDefault();
+          var pick;
+          do { pick = list[Math.floor(Math.random() * list.length)]; }
+          while (pick === (m && m[1]));
+          location.href = '/archive/' + pick;
+        }
       });
 
       // Touch swipe nav. Same convention as keys: swipe right → newer, swipe left → older.
