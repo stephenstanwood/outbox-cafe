@@ -8,6 +8,23 @@
 
 set -eo pipefail
 
+# Single-flight: if another run is in progress, skip this firing rather than
+# pile up (gens take 1-4 min; cron fires every 10 min in stash mode).
+# Atomic mkdir lock (macOS doesn't ship flock). Stale locks (>15 min) get cleared.
+LOCK_DIR="/tmp/outbox-cafe-run.lock"
+if [ -d "$LOCK_DIR" ]; then
+  lock_age=$(( $(date +%s) - $(stat -f %m "$LOCK_DIR" 2>/dev/null || echo 0) ))
+  if [ "$lock_age" -gt 900 ]; then
+    echo "$(date -Iseconds): clearing stale lock ($lock_age s old)"
+    rm -rf "$LOCK_DIR"
+  fi
+fi
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  echo "$(date -Iseconds): another run is in progress — skipping"
+  exit 0
+fi
+trap "rmdir '$LOCK_DIR' 2>/dev/null" EXIT
+
 REPO_DIR="$HOME/Projects/outbox-cafe"
 PROXY_ENV="$HOME/Projects/mini-claude-proxy/.env"
 

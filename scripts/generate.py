@@ -1126,9 +1126,9 @@ def rebuild_cabinet() -> None:
 
 
 def git_commit_and_push(message: str) -> None:
-    """Stage everything, commit, push. Quiet on failure."""
+    """Stage everything, commit, push. Retry once with a pull --rebase if push
+    fails (the remote moved during the long gen — a real race for hourly cron)."""
     subprocess.run(["git", "-C", str(ROOT), "add", "-A"], check=True)
-    # No-op if nothing to commit
     diff = subprocess.run(
         ["git", "-C", str(ROOT), "diff", "--cached", "--quiet"],
     )
@@ -1139,6 +1139,11 @@ def git_commit_and_push(message: str) -> None:
         ["git", "-C", str(ROOT), "commit", "-m", message],
         check=True,
     )
+    push = subprocess.run(["git", "-C", str(ROOT), "push"])
+    if push.returncode == 0:
+        return
+    print("git push failed — pulling --rebase and retrying", file=sys.stderr)
+    subprocess.run(["git", "-C", str(ROOT), "pull", "--rebase"], check=True)
     subprocess.run(["git", "-C", str(ROOT), "push"], check=True)
 
 
