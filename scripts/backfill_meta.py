@@ -36,25 +36,33 @@ def filename_to_utc(stem: str) -> datetime | None:
 
 
 def closest_history_match(file_utc: datetime, history: list[dict]) -> dict | None:
-    """Find the latest history entry whose generated_at <= file_utc, within 15 min.
+    """Find the matching history entry for a file written near file_utc.
 
-    History timestamps record when the spec was *rolled* — Claude generation can take
-    30-90+ seconds, so the file is written 1-8 minutes after the history entry.
+    Filename only encodes minute granularity (file_utc = beginning of that minute).
+    The actual write happens 0-59s into that minute. Spec roll happens BEFORE the
+    Claude call, which takes 30-90+ seconds. So h_dt is typically 30s-15min before
+    the actual write time.
+
+    If multiple specs were rolled in quick succession (a test scenario), prefer
+    the LATEST one — that's the one whose generation produced the persisted file.
     """
-    best = None
-    best_delta = timedelta(minutes=15)
+    candidates = []
     for h in history:
         try:
             h_dt = datetime.fromisoformat(h["generated_at"])
         except Exception:
             continue
-        if h_dt > file_utc:
-            continue  # spec rolled AFTER file was written — wrong entry
-        delta = file_utc - h_dt
-        if delta < best_delta:
-            best = h
-            best_delta = delta
-    return best
+        # Window: h_dt in [file_utc - 15min, file_utc + 90s]
+        if h_dt > file_utc + timedelta(seconds=90):
+            continue
+        if file_utc - h_dt > timedelta(minutes=15):
+            continue
+        candidates.append((h_dt, h))
+    if not candidates:
+        return None
+    # Latest within the window wins
+    candidates.sort(key=lambda t: t[0], reverse=True)
+    return candidates[0][1]
 
 
 def strip_outbox_meta(html: str) -> str:
@@ -92,7 +100,12 @@ def main() -> int:
             continue
         match = closest_history_match(file_utc, history)
         if not match:
-            print(f"  skip (no history match): {f.name}")
+            # If --force stripped existing meta but we can't replace, write the
+            # stripped version so we don't leave behind incorrect tags.
+            if force:
+                f.write_text(html)
+                changed += 1
+            print(f"  ~ {f.name}: no history match (left without meta)")
             continue
         new_html = inject_spec_meta(html, match)
         f.write_text(new_html)
