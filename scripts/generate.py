@@ -674,6 +674,12 @@ def rebuild_cabinet() -> None:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta property="og:title" content="THE COLLECTION · outbox.cafe">
+<meta property="og:description" content="every hour another piece. browse the cabinet.">
+<meta property="og:url" content="https://outbox.cafe/archive/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="outbox.cafe">
 <title>THE COLLECTION · outbox.cafe</title>
 <style>
   :root {{
