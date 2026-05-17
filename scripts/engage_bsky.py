@@ -35,6 +35,7 @@ STATE_PATH = ROOT / "data" / "engage_state.json"
 BSKY_BASE = "https://bsky.social/xrpc"
 MAX_REPLIES_PER_RUN = 10  # safety cap so a backlog doesn't fire 50 replies at once
 HANDLED_URI_CAP = 500
+AMBIENT_PROBABILITY = 0.04  # at every-15-min cron firings = ~3-4 ambient posts/day
 
 
 def _load_personas() -> dict[str, Any]:
@@ -216,6 +217,109 @@ def _create_like(did: str, jwt: str, subject_uri: str, subject_cid: str) -> dict
     )
 
 
+AMBIENT_PROMPT = """You are {name} ({full_name}), staff at outbox.cafe — a constantly-evolving weird/retro corner of the internet, run by cats. You're posting a small "ambient" observation on Bluesky — just a normal between-drop post, NOT about any specific new piece.
+
+ABOUT YOU
+{species}
+
+YOUR VOICE
+{tone}
+
+TOPICS YOU TEND TO OBSERVE
+{topics}
+
+EXAMPLES OF YOUR PAST POSTS (study rhythm/length/voice — match exactly)
+{examples}
+
+HOUSE RULES — APPLY TO EVERY POST
+- Relentlessly positive. Never sour.
+- Never reference AI, bots, models, or that this is automated.
+- Never post about politics, current events, real death/grief/illness, financial advice, religion, public figures, anything controversial.
+- This is an ambient observation, NOT a drop announcement — do NOT mention "today's posting" or link out. Just one small slice of cafe life.
+
+YOUR TASK
+Write a single short observation in your voice (under 220 characters). End with your signoff exactly as written: {signoff!r} (or no signoff if empty). Use your typical capitalization, punctuation, and rhythm.
+
+OUTPUT THE POST TEXT ONLY. No preamble, no quotes around it, no explanation.
+"""
+
+
+def _generate_ambient(staff: dict[str, Any]) -> str | None:
+    prompt = AMBIENT_PROMPT.format(
+        name=staff["name"],
+        full_name=staff["full_name"],
+        species=staff.get("species", "(unspecified)"),
+        tone=staff["tone"],
+        topics="\n".join(f"- {t}" for t in staff["topics"]),
+        examples="\n\n".join(staff["examples"]),
+        signoff=staff.get("signoff", ""),
+    )
+    try:
+        result = subprocess.run(
+            ["claude", "--print", "--tools", "", "--permission-mode", "plan"],
+            input=prompt,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+    except Exception as e:
+        print(f"[engage/ambient] claude failed: {e}", file=sys.stderr)
+        return None
+    if result.returncode != 0:
+        print(f"[engage/ambient] claude exit {result.returncode}", file=sys.stderr)
+        return None
+    text = (result.stdout or "").strip()
+    text = re.sub(r"^```[a-z]*\s*", "", text).strip()
+    text = re.sub(r"\s*```\s*$", "", text).strip()
+    if text.startswith('"') and text.endswith('"') and text.count('"') == 2:
+        text = text[1:-1].strip()
+    return text or None
+
+
+def _create_plain_post(did: str, jwt: str, text: str) -> dict:
+    record = {
+        "$type": "app.bsky.feed.post",
+        "text": text,
+        "createdAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "langs": ["en"],
+    }
+    return _bsky(
+        "/com.atproto.repo.createRecord",
+        data={
+            "repo": did,
+            "collection": "app.bsky.feed.post",
+            "record": record,
+        },
+        headers={"Authorization": f"Bearer {jwt}"},
+        method="POST",
+    )
+
+
+def _maybe_ambient_post(
+    did: str,
+    jwt: str,
+    staff_pool: list,
+    weights: list,
+    rng: random.Random,
+) -> bool:
+    """Roll the dice; if hit, post a between-drop staff observation. Returns True if posted."""
+    if rng.random() > AMBIENT_PROBABILITY:
+        return False
+    staff = rng.choices(staff_pool, weights=weights, k=1)[0]
+    text = _generate_ambient(staff)
+    if not text:
+        return False
+    try:
+        resp = _create_plain_post(did, jwt, text)
+        print(f"[engage/ambient] posted as {staff['name']}: {resp.get('uri','?')}")
+        return True
+    except urllib.error.HTTPError as e:
+        print(f"[engage/ambient] HTTP {e.code}: {e.read().decode()[:200]}", file=sys.stderr)
+    except Exception as e:
+        print(f"[engage/ambient] post failed: {e}", file=sys.stderr)
+    return False
+
+
 def _fetch_post(uri: str, jwt: str) -> dict | None:
     encoded = urllib.parse.quote(uri, safe="")
     try:
@@ -340,6 +444,10 @@ def run() -> int:
         if idx_at:
             state["last_indexedAt"] = idx_at
         _save_state(state)
+
+    # Roll for an ambient between-drop post (low probability per run)
+    if _maybe_ambient_post(did, jwt, staff_pool, weights, rng):
+        actions += 1
 
     if actions == 0:
         print("[engage] nothing new")
