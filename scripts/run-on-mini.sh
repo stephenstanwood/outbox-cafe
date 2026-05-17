@@ -3,8 +3,8 @@
 # Source claude OAuth token from the proxy env, ensure PATH includes claude,
 # pull any external changes, run one generation, commit+push.
 #
-# Cron entry (every 10 min during 4am-8pm Pacific):
-#   */10 4-19 * * * /Users/stephenstanwood/Projects/outbox-cafe/scripts/run-on-mini.sh >> /Users/stephenstanwood/logs/outbox-cafe.log 2>&1
+# Cron entry (hourly, 24/7):
+#   0 * * * * /Users/stephenstanwood/Projects/outbox-cafe/scripts/run-on-mini.sh >> /Users/stephenstanwood/logs/outbox-cafe.log 2>&1
 
 set -eo pipefail
 
