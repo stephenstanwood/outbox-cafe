@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lottie Truesdale's Bulletin · Apricot Bend State Park, Kiosk No. 4</title>
+<style>
+  /* Lottie's no-knead, for the trail register: 3c bread flour, 1.5c warm water, 1 tsp instant yeast, 1.5 tsp salt. Stir sloppy. Cover overnight. Dutch oven, 475F, lid on 25 min, lid off 15. Cool before slicing, or don't. */
+  :root{
+    --pink:#ffc6df; --blue:#a8d8ea; --pink-deep:#ff96c2; --blue-deep:#6fb6cf;
+    --cream:#fffbf3; --ink:#2a3a4a; --buttery:#ffe89e;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:"Trebuchet MS","Lucida Sans Unicode",sans-serif;
+    color:var(--ink); line-height:1.5; padding:12px; min-height:100vh;
+    background:
+      radial-gradient(circle at 18% 8%, var(--pink) 0%, transparent 38%),
+      radial-gradient(circle at 84% 86%, var(--blue) 0%, transparent 42%),
+      linear-gradient(180deg,#fff5fa 0%,#eff9ff 100%);
+  }
+  .frame{
+    max-width:720px; margin:0 auto; background:var(--cream);
+    border:3px double var(--ink); padding:0 20px 18px;
+    box-shadow:8px 8px 0 var(--pink),16px 16px 0 var(--blue);
+  }
+  .marquee-band{
+    background:linear-gradient(90deg,var(--pink),var(--blue),var(--pink));
+    border-bottom:2px solid var(--ink); padding:6px 0;
+    margin:0 -20px 16px; overflow:hidden; white-space:nowrap;
+    font-weight:700; letter-spacing:.1em; font-size:13px;
+  }
+  .marquee-band span{display:inline-block; padding-left:100%; animation:scroll 34s linear infinite}
+  @keyframes scroll{to{transform:translateX(-100%)}}
+  h1{
+    font-family:Georgia,"Times New Roman",serif; font-size:32px;
+    text-align:center; margin:10px 0 2px; text-shadow:2px 2px 0 var(--pink);
+  }
+  .sub{text-align:center; font-style:italic; font-size:14px; color:#6a7a8a; margin:0 0 14px}
+  .intro{
+    background:var(--blue); border:2px solid var(--ink); border-radius:6px;
+    padding:14px 14px 10px; margin:8px 0 18px; position:relative;
+  }
+  .intro::before{
+    content:"⛺"; position:absolute; top:-16px; left:14px;
+    background:var(--cream); border:2px solid var(--ink); border-radius:50%;
+    width:30px; height:30px; display:grid; place-items:center; font-size:15px;
+  }
+  .intro p{margin:4px 0}
+  .banner{
+    background:var(--pink); border:2px solid var(--ink);
+    display:inline-block; padding:4px 10px; margin:14px 0 8px;
+    font-weight:700; letter-spacing:.08em;
+  }
+  .ad{
+    border:2px solid var(--ink); background:#fff; padding:10px 12px;
+    margin:0 0 14px; border-radius:4px;
+  }
+  .tag{
+    display:inline-block; border:1.5px solid var(--ink); padding:1px 8px;
+    font-size:11px; letter-spacing:.12em; font-weight:700; margin-bottom:6px;
+  }
+  .tag.for-sale{background:var(--pink)}
+  .tag.free{background:var(--blue)}
+  .tag.wanted{background:var(--buttery)}
+  .tag.lost{background:#d9b3ff}
+  .tag.found{background:#b3ffcc}
+  .tag.services{background:#ffd5a6}
+  .tag.notice{background:#c4f0ff}
+  .body{font-family:"Courier New",monospace; font-size:13px; margin:4px 0}
+  .price{font-weight:700; font-family:"Courier New",monospace}
+  .fine{font-size:9.5px; color:#7a8a9a; margin-top:4px; letter-spacing:.02em}
+  .note{
+    background:var(--blue); border-left:4px solid var(--blue-deep);
+    padding:6px 10px; margin-top:8px; font-size:13px; font-style:italic;
+  }
+  .note::before{content:"RANGER CASS — "; font-weight:700; font-style:normal; letter-spacing:.05em}
+  .register{
+    background:linear-gradient(180deg,var(--cream),#fff5fa);
+    border:2px dashed var(--ink); padding:12px 14px; margin:18px 0;
+  }
+  .register h3{margin:0 0 4px; font-family:Georgia,serif}
+  .register p{font-size:13px; margin:2px 0 10px}
+  .register form{display:flex; gap:6px; flex-wrap:wrap}
+  .register input[type=text]{
+    flex:1 1 200px; padding:6px 8px; border:2px solid var(--ink);
+    background:#fff; font:inherit;
+  }
+  .register button{
+    padding:6px 14px; border:2px solid var(--ink); cursor:pointer;
+    background:linear-gradient(180deg,var(--pink) 0%,var(--pink-deep) 100%);
+    font-weight:700; font:inherit;
+  }
+  .register button:hover{background:linear-gradient(180deg,var(--blue),var(--blue-deep))}
+  #book{
+    margin:10px 0 0; font-family:"Courier New",monospace; font-size:13px;
+    list-style:"✿ "; padding-left:22px;
+  }
+  .webring{
+    margin:20px 0 8px; border:3px ridge var(--blue); padding:14px;
+    background:linear-gradient(135deg,#fff 0%,var(--blue) 100%); text-align:center;
+  }
+  .webring h3{margin:0 0 8px; font-family:Georgia,serif; font-size:18px}
+  .ringnav{display:flex; justify-content:space-around; flex-wrap:wrap; gap:6px; margin-bottom:8px}
+  .ringnav a{
+    background:var(--cream); border:2px outset var(--pink-deep);
+    padding:4px 10px; text-decoration:none; color:var(--ink);
+    font-size:12px; font-weight:700;
+  }
+  .ringnav a:active{border-style:inset}
+  .ring-also{font-size:11.5px; color:#445566; margin:6px 0 0; line-height:1.7}
+  footer{
+    text-align:center; margin:14px 0 6px; font-size:11px; color:#7a8a9a;
+    border-top:1px dotted var(--ink); padding-top:8px;
+  }
+  footer a{color:var(--pink-deep); font-weight:700}
+  .spark::after{content:" ✦"; color:var(--pink-deep)}
+  @media (max-width:480px){
+    h1{font-size:24px}
+    .frame{padding:0 12px 14px; box-shadow:4px 4px 0 var(--pink),8px 8px 0 var(--blue)}
+  }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="marquee-band">
+      <span>✿ NOW ENTERING APRICOT BEND STATE PARK ✿ KIOSK NO. 4 ✿ BULLETIN BOARD BOARDWALK ✿ PLEASE DO NOT FEED THE CLASSIFIEDS ✿ TRAIL CONDITIONS: SOFT, AGREEABLE ✿ NOW ENTERING APRICOT BEND STATE PARK ✿ KIOSK NO. 4 ✿</span>
+    </div>
+
+    <h1>Lottie Truesdale<span class="spark"></span></h1>
+    <p class="sub">a self-guided field tour of one woman's classifieds, posted on this board over the past several seasons</p>
+
+    <div class="intro">
+      <p><strong>Howdy, hikers!</strong> Ranger Cass here, and welcome to one of my favorite little corners of the park — Kiosk Number Four. Some folks blow right past it on their way to the trout pond, and I have to say, it just about breaks my heart. Because every other Tuesday, somebody by the name of <em>Lottie Truesdale</em> walks up from her place on the east side of Apricot Bend and pins fresh classifieds to this board.</p>
+      <p>Now, the kicker — none of us at headquarters has ever actually met her. Honest! She's an early riser. By the time we unlock the visitor center, she's already three miles gone. But over the years we've gotten real good at reading her handwriting. Come on, I'll show you around. Take your time. Touch the laminated ones if you like.</p>
+    </div>
+
+    <span class="banner">THIS WEEK'S POSTINGS</span>
+
+    <div class="ad">
+      <span class="tag for-sale">FOR SALE</span>
+      <div class="body"><strong>1986 Whirlpool dehumidifier.</strong> Runs like a tractor. Quieter than my second husband. Yellow casing has a small crack near the handle — purely cosmetic. <span class="price">$40 OBO.</span> Call after 7pm so the dog has time to settle.</div>
+      <div class="fine">— L.T., RR 2, Apricot Bend · cash or trout, no checks please</div>
+      <div class="note">"Runs like a tractor" is, in Lottie's vocabulary, the highest possible compliment. I have personally heard her use it for a sourdough starter, a 1978 Buick, and the postmaster's youngest son. She is a genuine fan of mechanical things that just keep going.</div>
+    </div>
+
+    <div class="ad">
+      <span class="tag free">FREE</span>
+      <div class="body"><strong>Three bushels of unripe quinces.</strong> Hard as billiard balls right now — needs a month in a paper sack with a banana, then it'll bake up into the prettiest pink jelly you've ever seen in your life. Bring your own basket. Bring two if you can spare them. The tree out by the mailbox has been generous this year and I cannot keep up.</div>
+      <div class="note">Now THAT'S a tree. The quince by Lottie's mailbox is, no exaggeration, the senior member of the Apricot Bend flora club. Older than the road. Older than the road's name. Goes pink-and-white in April. You'll know it when you see it — you'll smell it first.</div>
+    </div>
+
+    <div class="ad">
+      <span class="tag wanted">WANTED</span>
+      <div class="body"><strong>Reading companion</strong> for <em>Middlemarch</em>, George Eliot, beginning October 1st. We will go slow. No skimming. No "I get the gist." Twice a week at the library, or at my kitchen table if you don't mind the dog watching us with great judgment. Tea provided. Snacks reciprocal.</div>
+      <div class="note">Folks, can I just say — she does this every fall. Last year it was <em>Bleak House</em>. Year before, <em>Daniel Deronda</em>. She's never short of takers. If you join her, please eat first; her snacks are mostly digestive biscuits she splits with the basset hound.</div>
+    </div>
+
+    <div class="ad">
+      <span class="tag lost">LOST</span>
+      <div class="body"><strong>Brass thimble.</strong> Engraved with the initials <em>E.M.T.</em> on the inside band — that was my mother. Last seen in the side pocket of my green canvas tote, or possibly the parking lot of the IGA on the 14th. No reward, but I will bake you bread for a month.</div>
+      <div class="fine">a real month. four loaves. she means it.</div>
+      <div class="note">If anyone on this tour finds a brass thimble out there on the trail today, you bring it on up to the visitor center, hear? I will hand-walk it to her porch myself. Four of Lottie's loaves is the going rate of a small kingdom.</div>
+    </div>
+
+    <div class="ad">
+      <span class="tag found">FOUND</span>
+      <div class="body"><strong>Set of car keys</strong> behind the recycling bins at the IGA. Wooden frog on the keychain. Frog is missing one googly eye. If they're yours, describe the other items on the ring (there are three, and one is unusual) and meet me at the courthouse steps Saturday at noon.</div>
+      <div class="note">She found these the very same week she lost the thimble. I have my own theories about that, but a ranger keeps his theories to himself.</div>
+    </div>
+
+    <div class="ad">
+      <span class="tag services">SERVICES</span>
+      <div class="body"><strong>Bread lessons</strong> for any grandchild who wants one. <span class="price">No charge, ever.</span> We'll start with the no-knead method first because it builds confidence, and then we'll do a braided challah so they have something to show off at school. Bring an apron or borrow one of mine — I have plenty.</div>
+      <div class="note">This is the one I want every visitor to see. There is a generation of children growing up in Apricot Bend who can produce a perfect loaf of bread by age nine because Lottie Truesdale decided that should be true. That is a quiet kind of legend right there, and I will not stop pointing it out.</div>
+    </div>
+
+    <div class="ad">
+      <span class="tag notice">ANNOUNCEMENT</span>
+      <div class="body"><strong>Periwinkle is fine.</strong> Thank you, sincerely, to everyone who called or knocked. The vet says her hip will heal up by Thanksgiving. She is presently asleep on my good quilt and demanding more attention than the situation strictly requires. We are both grateful.</div>
+      <div class="note">Periwinkle is a 12-year-old basset hound the color of an old penny. She rode shotgun in Lottie's station wagon for years, till the hip caught up with her. If you see them on the back roads now, the dog's got her own little harnessed bench in the cargo area, with the window cracked just enough for her ears to flap.</div>
+    </div>
+
+    <div class="register">
+      <h3>✿ Trail Register ✿</h3>
+      <p>Sign in below so we know you visited the kiosk today. Lottie reads this herself sometimes — she says it's how she keeps track of who's been by.</p>
+      <form id="reg-form" autocomplete="off">
+        <input type="text" id="reg-name" placeholder="your trail name" maxlength="40" required>
+        <button type="submit">Sign the Book</button>
+      </form>
+      <ul id="book"></ul>
+    </div>
+
+    <div class="webring">
+      <h3>≪ ✿ The Apricot Bend Web Ring ✿ ≫</h3>
+      <div class="ringnav">
+        <a href="#prev">⟵ PREV</a>
+        <a href="#random">✦ SURPRISE ME ✦</a>
+        <a href="#next">NEXT ⟶</a>
+      </div>
+      <div class="ring-also">
+        also along the ring: <em>Mary Lou's Pressed Flower Diary</em> ✿ <em>WJKT-FM Quiet Storm Memorial Page</em> ✿ <em>Bingo Hall Historical Society</em> ✿ <em>The Stearns County Pen Pal Project</em> ✿ <em>Birdhouse Showcase '01</em> ✿ <em>Glenda's Geocities Refuge</em> ✿ <em>The Quince Belongs To Everyone</em>
+      </div>
+    </div>
+
+    <footer>
+      <a href="/archive">← back to the trail map (archive)</a>
+      <div>undated · classifieds page · ranger cass speaking — kiosk 4, apricot bend</div>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var KEY = 'apricot-bend-trail-register-v1';
+      var form = document.getElementById('reg-form');
+      var input = document.getElementById('reg-name');
+      var list = document.getElementById('book');
+
+      function load(){
+        try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+        catch(e){ return []; }
+      }
+      function save(arr){
+        try { localStorage.setItem(KEY, JSON.stringify(arr.slice(-25))); } catch(e){}
+      }
+      function render(){
+        var entries = load();
+        list.innerHTML = '';
+        if (!entries.length){
+          var li = document.createElement('li');
+          li.style.color = '#888'; li.style.fontStyle = 'italic';
+          li.textContent = '(book is empty — be the first to sign today)';
+          list.appendChild(li);
+          return;
+        }
+        entries.slice().reverse().forEach(function(e){
+          var li = document.createElement('li');
+          li.textContent = e.name + '  — ' + e.when;
+          list.appendChild(li);
+        });
+      }
+      form.addEventListener('submit', function(ev){
+        ev.preventDefault();
+        var name = (input.value || '').trim().slice(0, 40);
+        if (!name) return;
+        var entries = load();
+        var d = new Date();
+        var when = d.toLocaleDateString(undefined,{month:'short',day:'numeric'}) +
+                   ' · ' +
+                   d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+        entries.push({ name: name, when: when });
+        save(entries);
+        input.value = '';
+        render();
+      });
+
+      var ringMsg = [
+        "you've been routed to a different bend of the river. try the link again in a minute.",
+        "next site is offline for haying season. check back after the third cutting.",
+        "ringmaster Glenda is currently feeding her geese. one moment please.",
+        "the surprise was a quince. the surprise is always a quince. try again."
+      ];
+      document.querySelectorAll('.ringnav a').forEach(function(a){
+        a.addEventListener('click', function(ev){
+          ev.preventDefault();
+          alert(ringMsg[Math.floor(Math.random()*ringMsg.length)]);
+        });
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
