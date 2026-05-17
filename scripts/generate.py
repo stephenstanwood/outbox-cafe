@@ -22,6 +22,7 @@ from spec import (
     format_spec_for_human,
     load_dimensions,
     roll_spec,
+    roll_spec_via_llm,
 )
 from images import fetch_images, derive_query
 
@@ -1112,9 +1113,14 @@ def main() -> int:
     p.add_argument("--commit", action="store_true", help="git commit + push after writing")
     p.add_argument("--dry-run", action="store_true", help="roll spec + print prompt, don't call Claude")
     p.add_argument("--model", default=None, help="override claude model (default: account default)")
+    p.add_argument("--static-spec", action="store_true", help="use the deterministic static spec roller instead of the LLM roller")
     args = p.parse_args()
 
-    spec = roll_spec(seed=args.seed)
+    if args.static_spec:
+        spec = roll_spec(seed=args.seed)
+    else:
+        print("rolling spec via llm ...")
+        spec = roll_spec_via_llm(seed=args.seed, model=args.model)
     print("=" * 60)
     print(f"hourly generation @ {datetime.now(tz=PT).isoformat()}")
     print("=" * 60)
