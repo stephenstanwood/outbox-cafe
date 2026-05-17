@@ -407,5 +407,19 @@
   setTimeout(function () { window.location.reload(); }, next - now + jitter);
 })();
 </script>
+
+<script>
+(function () {
+  // Reload at the next top-of-hour (UTC = PT, both whole-hour offsets).
+  // Jitter 15-45s so all clients don't hit Vercel the same millisecond,
+  // and so the new deploy has time to land first.
+  var now = new Date();
+  var next = new Date(now);
+  next.setUTCMinutes(0, 0, 0);
+  next.setUTCHours(next.getUTCHours() + 1);
+  var jitter = 15000 + Math.random() * 30000;
+  setTimeout(function () { window.location.reload(); }, next - now + jitter);
+})();
+</script>
 </body>
 </html>
