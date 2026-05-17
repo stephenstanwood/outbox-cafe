@@ -21,10 +21,11 @@
         if (currentIdx < 0) return;
       }
 
-      var prevIdx = currentIdx === 0 ? list.length - 1 : currentIdx - 1;
-      var nextIdx = currentIdx === list.length - 1 ? 0 : currentIdx + 1;
-      var prevHref = '/archive/' + list[prevIdx];
-      var nextHref = '/archive/' + list[nextIdx];
+      // Bounded — no wrap. At the oldest, there is no prev. At the newest, no next.
+      var hasPrev = currentIdx > 0;
+      var hasNext = currentIdx < list.length - 1;
+      var prevHref = hasPrev ? '/archive/' + list[currentIdx - 1] : null;
+      var nextHref = hasNext ? '/archive/' + list[currentIdx + 1] : null;
 
       var style = document.createElement('style');
       style.id = 'outbox-nav-style';
@@ -51,26 +52,30 @@
       ].join('\n');
       document.head.appendChild(style);
 
-      var prev = document.createElement('a');
-      prev.className = 'outbox-nav outbox-prev';
-      prev.href = prevHref;
-      prev.textContent = '←';
-      prev.setAttribute('aria-label', 'previous in the collection');
-      document.body.appendChild(prev);
+      if (hasPrev) {
+        var prev = document.createElement('a');
+        prev.className = 'outbox-nav outbox-prev';
+        prev.href = prevHref;
+        prev.textContent = '←';
+        prev.setAttribute('aria-label', 'older entry');
+        document.body.appendChild(prev);
+      }
 
-      var next = document.createElement('a');
-      next.className = 'outbox-nav outbox-next';
-      next.href = nextHref;
-      next.textContent = '→';
-      next.setAttribute('aria-label', 'next in the collection');
-      document.body.appendChild(next);
+      if (hasNext) {
+        var next = document.createElement('a');
+        next.className = 'outbox-nav outbox-next';
+        next.href = nextHref;
+        next.textContent = '→';
+        next.setAttribute('aria-label', 'newer entry');
+        document.body.appendChild(next);
+      }
 
       document.addEventListener('keydown', function (e) {
         var t = e.target;
         if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
         if (e.metaKey || e.ctrlKey || e.altKey) return;
-        if (e.key === 'ArrowLeft') { e.preventDefault(); location.href = prevHref; }
-        else if (e.key === 'ArrowRight') { e.preventDefault(); location.href = nextHref; }
+        if (e.key === 'ArrowLeft' && hasPrev) { e.preventDefault(); location.href = prevHref; }
+        else if (e.key === 'ArrowRight' && hasNext) { e.preventDefault(); location.href = nextHref; }
       });
     })
     .catch(function () {});
