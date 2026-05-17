@@ -136,6 +136,171 @@ def roll_spec(seed: int | None = None) -> dict[str, Any]:
     return spec
 
 
+def _recent_picks(field: str, history: list[dict], n: int = 25) -> list[str]:
+    """Last N distinct values for a field, newest first."""
+    seen: set[str] = set()
+    out: list[str] = []
+    for h in reversed(history):
+        v = h.get(field, {})
+        if isinstance(v, dict):
+            v = v.get("value")
+        if not v or v in seen:
+            continue
+        seen.add(v)
+        out.append(str(v))
+        if len(out) >= n:
+            break
+    return out
+
+
+def _examples_from_dimensions(dims: dict, field: str, n: int, rng: random.Random) -> list[str]:
+    """Pull n random example values from the static seed list (texture cue for the LLM)."""
+    pool = dims.get(field, [])
+    if not pool:
+        return []
+    picks = rng.sample(pool, min(n, len(pool)))
+    return [str(p) for p in picks]
+
+
+SPEC_LLM_PROMPT = """You are rolling a spec for outbox.cafe — a constantly-evolving, weird/retro corner of the internet. Each hour a new self-contained HTML page goes up. Your job: invent a fresh spec across these dimensions. Push HARD for variety. NEVER converge to your own defaults (dry deadpan, lowercase fragments, archival/museum/cabinet metaphors, melancholy minimalism, night-shift dispatcher voice).
+
+The dimension pools are bottomless — don't think of yourself as picking from a list. INVENT. Reach into untouched corners of internet history, hobby subcultures, regional weirdness, fictional ephemera, art movements, mechanical curiosities, kitchen objects, weather phenomena, defunct industries.
+
+RECENT PICKS TO AVOID (last ~25 gens; do not repeat any, and aim to land in a different aesthetic territory):
+- era: {era_recent}
+- format: {format_recent}
+- subject: {subject_recent}
+- tone: {tone_recent}
+- palette: {palette_recent}
+- mandatory_element: {mandatory_recent}
+- wildcard: {wildcard_recent}
+- forbidden_register: {forbidden_recent}
+
+DIMENSIONS — definitions and seed examples (texture cues only; do not be limited to these):
+
+- era: aesthetic/temporal frame. Seeds: {era_examples}. Also fair game: medieval scriptoria, 1970s mail art, 1923 amateur radio QSL cards, 1850 penny dreadful, 2031 retro-future, 1880 panorama broadside, 1965 ham radio, 2014 SoundCloud rap, 1932 transcontinental telegraph, etc.
+
+- format: the SHAPE. Could be a TEXT piece (newsletter, catalog, classifieds), a TINY GAME (one-button toy, magic 8-ball, find-the-cat, memory match, maze, tic-tac-toe, breathing pacer), an ART PIECE (CSS-only wallpaper, ASCII rain, kaleidoscope, slow ink-drop, particle system), a PUZZLE (cryptogram, word ladder, logic grid, sliding tiles), or a CONFUSING-BUT-GOOD thing (page-that's-only-a-footer, comments-with-no-post, typewriter-types-itself, recursive iframe). Seeds: {format_examples}. Get weird.
+
+- subject: what the page is ABOUT — specific, concrete, can be fictional. Seeds: {subject_examples}. Reach for weird specific corners.
+
+- tone: the voice. Seeds: {tone_examples}. Pick a HUMAN, specific voice. Tone can be melancholy/anxious/dreamy — never cruel or cynical.
+
+- length: pick exactly one of "tiny" (30-80 lines), "medium" (120-220 lines), or "large" (350-600 lines).
+
+- palette: two-color combo with hex codes that feels like a specific physical thing. Seeds: {palette_examples}.
+
+- mandatory_element: one specific functional/interactive feature that MUST be present and working. Seeds: {mandatory_examples}.
+
+- wildcard: an additional weird constraint. Seeds: {wildcard_examples}. About 35% of the time set to "no wildcard this hour".
+
+- forbidden_register: an aesthetic to actively AVOID this hour (rotates among Claude's defaults so the engine doesn't converge). Seeds: {forbidden_examples}. About 30% of the time set to "no register forbidden this hour".
+
+OUTPUT — strict JSON, no prose, no fences, no commentary. Schema:
+{{
+  "era": {{"value": "..."}},
+  "format": {{"value": "..."}},
+  "subject": {{"value": "..."}},
+  "tone": {{"value": "..."}},
+  "length": "tiny" | "medium" | "large",
+  "palette": {{"value": "..."}},
+  "mandatory_element": {{"value": "..."}},
+  "wildcard": {{"value": "..."}},
+  "forbidden_register": {{"value": "..."}}
+}}
+Start with {{ and end with }}. Nothing else.
+"""
+
+
+def roll_spec_via_llm(
+    seed: int | None = None,
+    model: str | None = None,
+    timeout: int = 120,
+) -> dict[str, Any]:
+    """Ask Claude to invent a fresh spec across all dimensions. Fall back to static roller on any failure."""
+    import re
+    import subprocess
+
+    rng = random.Random(seed) if seed is not None else random.Random()
+    dims = load_dimensions()
+    history = load_recent_history(40)
+
+    def recent_str(field: str) -> str:
+        items = _recent_picks(field, history, n=25)
+        return "; ".join(items) if items else "(none yet)"
+
+    def example_str(field: str) -> str:
+        return "; ".join(_examples_from_dimensions(dims, field, n=5, rng=rng))
+
+    prompt = SPEC_LLM_PROMPT.format(
+        era_recent=recent_str("era"),
+        format_recent=recent_str("format"),
+        subject_recent=recent_str("subject"),
+        tone_recent=recent_str("tone"),
+        palette_recent=recent_str("palette"),
+        mandatory_recent=recent_str("mandatory_element"),
+        wildcard_recent=recent_str("wildcard"),
+        forbidden_recent=recent_str("forbidden_register"),
+        era_examples=example_str("era"),
+        format_examples=example_str("format"),
+        subject_examples=example_str("subject"),
+        tone_examples=example_str("tone"),
+        palette_examples=example_str("palette"),
+        mandatory_examples=example_str("mandatory_element"),
+        wildcard_examples=example_str("wildcard"),
+        forbidden_examples=example_str("forbidden_register"),
+    )
+
+    cmd = ["claude", "--print", "--tools", "", "--permission-mode", "plan"]
+    if model:
+        cmd += ["--model", model]
+
+    try:
+        result = subprocess.run(
+            cmd, input=prompt, capture_output=True, text=True, timeout=timeout
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"claude exit {result.returncode}: {result.stderr[:300]}")
+        out = result.stdout.strip()
+        # Strip ```json fences if present
+        out = re.sub(r"^```(?:json)?\s*", "", out)
+        out = re.sub(r"\s*```\s*$", "", out)
+        start = out.find("{")
+        end = out.rfind("}")
+        if start < 0 or end < 0:
+            raise ValueError(f"no JSON object in output: {out[:200]!r}")
+        data = json.loads(out[start:end + 1])
+    except Exception as e:
+        print(f"[spec_llm] failed: {e} — falling back to static roller", flush=True)
+        return roll_spec(seed=seed)
+
+    spec: dict[str, Any] = {}
+    for field in (
+        "era", "format", "subject", "tone",
+        "palette", "mandatory_element", "wildcard", "forbidden_register",
+    ):
+        v = data.get(field)
+        if isinstance(v, dict) and v.get("value"):
+            spec[field] = {"value": str(v["value"])}
+        elif isinstance(v, str) and v.strip():
+            spec[field] = {"value": v.strip()}
+        else:
+            print(f"[spec_llm] missing/bad field {field!r} — falling back to static roller", flush=True)
+            return roll_spec(seed=seed)
+
+    length_key = data.get("length")
+    if isinstance(length_key, dict):
+        length_key = length_key.get("key")
+    if length_key not in ("tiny", "medium", "large"):
+        length_key = "medium"
+    spec["length"] = next(L for L in dims["length"] if L["key"] == length_key)
+
+    spec["generated_at"] = datetime.now(timezone.utc).isoformat()
+    spec["seed"] = seed
+    spec["rolled_by"] = "llm"
+    return spec
+
+
 def format_spec_for_human(spec: dict[str, Any]) -> str:
     """Pretty-print a spec for logs and the page footer watermark."""
 
