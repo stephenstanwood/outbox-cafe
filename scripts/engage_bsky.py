@@ -110,12 +110,24 @@ def _bsky(path: str, *, data=None, headers=None, method=None) -> dict:
 def _auth() -> tuple[str, str]:
     handle = os.environ["BSKY_HANDLE"]
     pw = os.environ["BSKY_APP_PASSWORD"]
-    sess = _bsky(
-        "/com.atproto.server.createSession",
-        data={"identifier": handle, "password": pw},
-        method="POST",
-    )
-    return sess["did"], sess["accessJwt"]
+    last_err: Exception | None = None
+    for attempt in range(3):
+        try:
+            sess = _bsky(
+                "/com.atproto.server.createSession",
+                data={"identifier": handle, "password": pw},
+                method="POST",
+            )
+            return sess["did"], sess["accessJwt"]
+        except urllib.error.HTTPError:
+            raise
+        except Exception as e:
+            last_err = e
+            if attempt < 2:
+                import time
+                time.sleep(2 * (attempt + 1))
+    assert last_err is not None
+    raise last_err
 
 
 REPLY_PROMPT = """You are {name}, staff at outbox.cafe. The cafe is a small place on the internet, run by cats. Someone has {action} on Bluesky, and you might respond.
@@ -844,9 +856,16 @@ def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
         did, jwt = _auth()
     except Exception as e:
         print(f"[engage] auth failed: {e}", file=sys.stderr)
+        is_http_auth = isinstance(e, urllib.error.HTTPError) and e.code in (400, 401, 403)
+        if is_http_auth:
+            key = "bsky-auth"
+            msg = f"bluesky auth rejected in engagement loop (HTTP {e.code}). likely cause: app password revoked or expired. err: {str(e)[:200]}"
+        else:
+            key = "bsky-unreachable"
+            msg = f"bluesky unreachable from engagement loop (likely platform issue, not auth). err: {str(e)[:200]}"
         try:
             from cat_signal import signal
-            signal("bsky-auth", f"bluesky auth failed in engagement loop. likely cause: app password revoked or expired. err: {str(e)[:200]}", priority="high")
+            signal(key, msg, priority="high")
         except Exception:
             pass
         return 2
