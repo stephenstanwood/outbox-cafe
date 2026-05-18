@@ -1,8 +1,14 @@
 """Cross-post each fresh gen to Tumblr (outbox-cafe.tumblr.com).
 
-Tumblr ≠ Bluesky on a few axes that shape this script:
-- Outbound links are FINE — Tumblr's algorithm doesn't punish them. We do link out
-  to the archive page on each post.
+Posting philosophy (carried from SBT — see project CLAUDE.md):
+- The post is the point. We don't ship people off to our site at every turn.
+- Posts stand alone: a quote, a fragment, a specific detail + the thumbnail
+  image. Followers see content; trust builds; they seek us out.
+- No "read more" CTA, no clickable funnel photo. Profile bio carries the URL.
+- Exception: a truly interactive piece (game/puzzle/toy) that can't live in a
+  post — those CAN link. Not the default.
+
+Tumblr-specific differences from Bluesky:
 - Posts stick around — Tumblr is an archive by nature. No auto-delete.
 - Tags drive discovery — we attach a small set of small-web / generative tags.
 - Captions can be longer than 200 chars. The cats can stretch out a bit.
@@ -69,7 +75,7 @@ def _extract_snippet(html: str, max_chars: int = 600) -> str:
     return text[:max_chars]
 
 
-PROMPT_TEMPLATE = """You are {name}, staff at outbox.cafe. The cafe is a small place on the internet, run by cats. A new poster just went up on the corkboard. You're writing a short Tumblr post about it.
+PROMPT_TEMPLATE = """You are {name}, staff at outbox.cafe. The cafe is a small place on the internet, run by cats. A new poster just went up on the corkboard. You're writing a short Tumblr post.
 
 ABOUT YOU
 {species}
@@ -85,15 +91,19 @@ ON THE CORKBOARD RIGHT NOW
 {snippet}
 
 YOUR TASK
-Write 2-4 sentences in your voice about the poster. Tumblr lets you stretch out more than Bluesky — you can be a little wordier, mention a specific detail, quote a fragment, riff. The cafe will append a "read →" link automatically after your text, so DO NOT include any URL yourself. DO NOT include hashtags (those go in the tags field separately).
+Write 2-5 sentences that stand alone as great content. The post itself IS the thing — there's no link to click through to, no "read more". A follower scrolling Tumblr should get something whole from your post on its own.
+
+Best moves: quote a striking fragment verbatim, fixate on one specific detail, lift a line and react to it, riff on a strange image or phrase from the poster. The thumbnail image will appear above your text and does the visual work — your words add texture, not summary.
+
+Tumblr lets you stretch more than Bluesky — be a little wordier than a tweet, but don't pad. DO NOT include any URL. DO NOT include hashtags (those go in the tags field separately).
 
 CRITICAL RULES
 - Stay weird. Stay specific. Surprise yourself.
 - Never describe the cafe as "weird", "retro", "vintage", etc. The cafe doesn't describe itself.
 - Never reference AI, bots, models, or automation.
 - Never sour, combative, or corrective.
+- Never use "found this", "from the archive", "new piece", "just dropped", or any meta-announcement phrasing — the post is content, not a teaser.
 - Skip politics, current events, real death/illness, finance, religion.
-- DO NOT say "outbox.cafe" by name. The link below your post handles that.
 
 OUTPUT JUST THE POST TEXT. No preamble, no quotes around it, no commentary. Match your typical capitalization, punctuation, and rhythm. End with your signoff exactly as written ({signoff!r}) — or no signoff if empty."""
 
@@ -231,22 +241,22 @@ def post_drop(
         if clean and len(clean) <= 40:
             tags.insert(0, clean)
 
-    # Caption HTML: cat's text + a "read →" link. Tumblr renders HTML in legacy captions.
+    # Caption: just the cat's words. No "read →", no link funnel — the post
+    # stands alone. (Tumblr profile bio carries the cafe URL for anyone curious.)
     safe_text = _html.escape(body_text).replace("\n", "<br>")
-    caption_html = (
-        f"<p>{safe_text}</p>"
-        f'<p><a href="{archive_url}">read &rarr;</a></p>'
-    )
+    caption_html = f"<p>{safe_text}</p>"
 
     url = f"https://api.tumblr.com/v2/blog/{blog}.tumblr.com/post"
     auth = _oauth_header("POST", url, os.environ["TUMBLR_OAUTH_TOKEN_SECRET"])
 
     try:
         if thumb_png_path and thumb_png_path.exists():
+            # No `link` field — we don't want the photo to be a clickable
+            # funnel back to the archive page. Photo opens in Tumblr's
+            # normal post view, which is fine.
             fields = {
                 "type": "photo",
                 "caption": caption_html,
-                "link": archive_url,
                 "tags": ",".join(tags),
             }
             body, ctype = _build_multipart_legacy(fields, thumb_png_path.read_bytes(), thumb_png_path.name)
