@@ -1,5 +1,7 @@
-"""Cat-signal: post a Discord alert when the unattended cafe needs Stephen's
-attention. Routes through ~/.claude/scripts/post-to-tasks.sh (#tasks channel).
+"""Cat-signal: DM Stephen a Discord alert when the unattended cafe needs his
+attention. Posts directly to the bot's DM channel — NEVER to #tasks. Stephen
+explicitly does not want routine activity in #tasks; the only thing that
+reaches him from this project is a breakage DM via this module.
 
 Trigger conditions are decided by the caller (generate.py, engage_bsky.py);
 this module just formats and sends. Best-effort — failures here never bubble.
@@ -11,14 +13,16 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
 import sys
 import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 STATE_PATH = ROOT / "data" / "cat_signal_state.json"
-HELPER = Path(os.path.expanduser("~/.claude/scripts/post-to-tasks.sh"))
+BOT_TOKEN_FILE = Path(os.path.expanduser("~/.claude/channels/discord/.env"))
+DM_CHANNEL = "1486102002474811524"   # bot ↔ Stephen DM channel
 DEDUP_WINDOW_SECONDS = 6 * 3600
 
 
@@ -36,19 +40,46 @@ def _save(state: dict) -> None:
     STATE_PATH.write_text(json.dumps(state, indent=2))
 
 
+def _read_bot_token() -> str | None:
+    try:
+        with BOT_TOKEN_FILE.open() as f:
+            for line in f:
+                if line.startswith("DISCORD_BOT_TOKEN="):
+                    return line.strip().split("=", 1)[1]
+    except Exception:
+        return None
+    return None
+
+
+def _dm(token: str, body: str) -> bool:
+    req = urllib.request.Request(
+        f"https://discord.com/api/v10/channels/{DM_CHANNEL}/messages",
+        data=json.dumps({"content": body}).encode(),
+        headers={
+            "Authorization": f"Bot {token}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            return 200 <= r.status < 300
+    except urllib.error.HTTPError as e:
+        print(f"[cat-signal] discord DM HTTP {e.code}: {e.read().decode()[:200]}", file=sys.stderr)
+    except Exception as e:
+        print(f"[cat-signal] discord DM failed: {e}", file=sys.stderr)
+    return False
+
+
 def signal(key: str, message: str, priority: str = "normal") -> bool:
-    """Send a cat-signal Discord alert. Dedupes per-`key` within 6 hours.
+    """DM Stephen with a cat-signal alert. Dedupes per-`key` within 6 hours.
 
     `key` is a short identifier for what's wrong ('bsky-auth', 'fal-quota',
     'git-push', etc.). `priority` is one of low/normal/high — only changes
     the prefix label on the message.
 
-    Returns True if the alert was sent; False if deduped or helper missing.
+    Returns True if the alert was sent; False if deduped or token missing.
     """
-    if not HELPER.exists():
-        print(f"[cat-signal] helper missing at {HELPER} — skipping", file=sys.stderr)
-        return False
-
     state = _load()
     now = time.time()
     last = state.get(key)
@@ -57,28 +88,24 @@ def signal(key: str, message: str, priority: str = "normal") -> bool:
         print(f"[cat-signal] '{key}' was last sent {ago_min}m ago — suppressing", file=sys.stderr)
         return False
 
-    prefix = {
-        "high": "[ALERT]",
-        "normal": "[note]",
-        "low": "[fyi]",
-    }.get(priority, "[note]")
+    token = _read_bot_token()
+    if not token:
+        print(f"[cat-signal] no bot token at {BOT_TOKEN_FILE} — skipping", file=sys.stderr)
+        return False
 
-    body = f"**{prefix} outbox.cafe** — `{key}`\n{message}"
-    try:
-        subprocess.run(
-            [str(HELPER)],
-            input=body,
-            text=True,
-            timeout=15,
-            check=False,
-        )
-    except Exception as e:
-        print(f"[cat-signal] post-to-tasks failed: {e}", file=sys.stderr)
+    prefix = {
+        "high": "🔴",
+        "normal": "🟡",
+        "low": "🔵",
+    }.get(priority, "🟡")
+
+    body = f"{prefix} **outbox.cafe** · `{key}`\n{message}"
+    if not _dm(token, body):
         return False
 
     state[key] = now
     _save(state)
-    print(f"[cat-signal] sent '{key}' (priority={priority})", file=sys.stderr)
+    print(f"[cat-signal] DM sent '{key}' (priority={priority})", file=sys.stderr)
     return True
 
 
