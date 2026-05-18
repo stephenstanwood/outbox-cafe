@@ -1381,10 +1381,12 @@ def main() -> int:
 
     # Engagement pass — process mentions/replies/quotes right after a drop so
     # the cafe reacts within seconds, not up to 15 min later. Ambient skipped
-    # because the drop announcement is already today's hourly voice.
+    # because the drop announcement is already today's hourly voice. Cap kept
+    # low so a notification backlog can't push the gen wrapper past its
+    # 15-min stale-lock window (the standalone */15 engage clears the rest).
     try:
         from engage_bsky import run as run_engage
-        run_engage(skip_ambient=True)
+        run_engage(skip_ambient=True, max_replies=3)
     except Exception as e:
         print(f"engage pass errored (non-fatal): {e}", file=sys.stderr)
 
