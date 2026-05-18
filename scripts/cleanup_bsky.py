@@ -17,10 +17,33 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 BSKY_BASE = "https://bsky.social/xrpc"
 DEFAULT_DELETE_AFTER_HOURS = 36
 MAX_DELETES_PER_RUN = 50    # safety cap so a runaway loop can't nuke everything
+ENGAGEMENT_SNAPSHOT = Path(__file__).resolve().parent.parent / "data" / "post_engagement.jsonl"
+
+
+def _snapshot_engagement(post: dict) -> None:
+    """Freeze the post's final engagement counts before deletion so the reflection
+    loop can still see what landed weeks ago."""
+    try:
+        entry = {
+            "uri": post.get("uri"),
+            "like_count": post.get("likeCount", 0),
+            "reply_count": post.get("replyCount", 0),
+            "repost_count": post.get("repostCount", 0),
+            "quote_count": post.get("quoteCount", 0),
+            "snapshot_ts": datetime.now(timezone.utc).isoformat(),
+        }
+        if not entry["uri"]:
+            return
+        ENGAGEMENT_SNAPSHOT.parent.mkdir(parents=True, exist_ok=True)
+        with ENGAGEMENT_SNAPSHOT.open("a") as f:
+            f.write(json.dumps(entry) + "\n")
+    except Exception as e:
+        print(f"[cleanup] engagement snapshot failed (non-fatal): {e}", file=sys.stderr)
 
 
 def _req(path: str, *, data=None, headers=None, method=None) -> dict:
@@ -107,6 +130,7 @@ def cleanup(hours: int = DEFAULT_DELETE_AFTER_HOURS) -> int:
             if idx_dt > cutoff:
                 continue
             rkey = uri.rsplit("/", 1)[-1]
+            _snapshot_engagement(post)
             try:
                 _req(
                     "/com.atproto.repo.deleteRecord",
