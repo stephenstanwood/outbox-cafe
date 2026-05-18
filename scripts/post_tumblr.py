@@ -154,21 +154,21 @@ def _oauth_header(method: str, url: str, oauth_token_secret: str = "") -> str:
     return "OAuth " + ", ".join(f'{k}="{_q(v)}"' for k, v in params.items())
 
 
-def _build_multipart(
-    json_body: dict,
+def _build_multipart_legacy(
+    fields: dict[str, str],
     image_bytes: bytes,
     image_name: str = "thumb.png",
 ) -> tuple[bytes, str]:
-    """Build a multipart/form-data body for Tumblr NPF upload. Returns (body, content_type)."""
+    """Multipart body for the legacy /post endpoint: simple form fields + a `data` image file."""
     boundary = "----outboxcafe" + secrets.token_hex(12)
     parts: list[bytes] = []
+    for name, value in fields.items():
+        parts.append(f"--{boundary}\r\n".encode())
+        parts.append(f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode())
+        parts.append(value.encode("utf-8"))
+        parts.append(b"\r\n")
     parts.append(f"--{boundary}\r\n".encode())
-    parts.append(b'Content-Disposition: form-data; name="json"; filename="json"\r\n')
-    parts.append(b"Content-Type: application/json\r\n\r\n")
-    parts.append(json.dumps(json_body).encode())
-    parts.append(b"\r\n")
-    parts.append(f"--{boundary}\r\n".encode())
-    parts.append(f'Content-Disposition: form-data; name="data-0"; filename="{image_name}"\r\n'.encode())
+    parts.append(f'Content-Disposition: form-data; name="data"; filename="{image_name}"\r\n'.encode())
     parts.append(b"Content-Type: image/png\r\n\r\n")
     parts.append(image_bytes)
     parts.append(b"\r\n")
@@ -225,44 +225,40 @@ def post_drop(
         print("[post_tumblr] claude returned no text — skipping", file=sys.stderr)
         return False
 
-    # Build NPF blocks: image (if available) + body text + "read →" link
-    blocks: list[dict] = []
-    if thumb_png_path and thumb_png_path.exists():
-        blocks.append({
-            "type": "image",
-            "media": [{"identifier": "data-0", "type": "image/png"}],
-            "alt_text": title[:300],
-        })
-    blocks.append({"type": "text", "text": body_text})
-    read_label = "read →"
-    blocks.append({
-        "type": "text",
-        "text": read_label,
-        "formatting": [{
-            "start": 0,
-            "end": len(read_label),
-            "type": "link",
-            "url": archive_url,
-        }],
-    })
-
     tags = list(DEFAULT_TAGS)
     if spec_format:
         clean = re.sub(r"[^a-z0-9\s]", "", spec_format.lower()).strip()
         if clean and len(clean) <= 40:
             tags.insert(0, clean)
 
-    npf_body = {"content": blocks, "tags": ",".join(tags), "source_url": archive_url}
+    # Caption HTML: cat's text + a "read →" link. Tumblr renders HTML in legacy captions.
+    safe_text = _html.escape(body_text).replace("\n", "<br>")
+    caption_html = (
+        f"<p>{safe_text}</p>"
+        f'<p><a href="{archive_url}">read &rarr;</a></p>'
+    )
 
-    url = f"https://api.tumblr.com/v2/blog/{blog}.tumblr.com/posts"
+    url = f"https://api.tumblr.com/v2/blog/{blog}.tumblr.com/post"
     auth = _oauth_header("POST", url, os.environ["TUMBLR_OAUTH_TOKEN_SECRET"])
 
     try:
         if thumb_png_path and thumb_png_path.exists():
-            body, ctype = _build_multipart(npf_body, thumb_png_path.read_bytes(), thumb_png_path.name)
+            fields = {
+                "type": "photo",
+                "caption": caption_html,
+                "link": archive_url,
+                "tags": ",".join(tags),
+            }
+            body, ctype = _build_multipart_legacy(fields, thumb_png_path.read_bytes(), thumb_png_path.name)
         else:
-            body = json.dumps(npf_body).encode()
-            ctype = "application/json"
+            fields = {
+                "type": "text",
+                "title": title[:200],
+                "body": caption_html,
+                "tags": ",".join(tags),
+            }
+            body = urllib.parse.urlencode(fields).encode()
+            ctype = "application/x-www-form-urlencoded"
         req = urllib.request.Request(
             url,
             data=body,
