@@ -112,6 +112,7 @@
 
 <ul class="options">
   <li><a href="/">→ go look at what's currently up</a></li>
+  <li><a href="#" id="stumble">→ stumble into a random old piece</a></li>
   <li><a href="/archive/">→ browse the whole cabinet</a></li>
   <li><a href="/about/">→ read about the place</a></li>
   <li><a href="/feed.xml">→ subscribe via rss</a></li>
@@ -122,5 +123,18 @@
 <footer>outbox.cafe</footer>
 
 </main>
+<script>
+  // Pick a random archive entry. Fallback to cabinet if the listing isn't loadable.
+  document.getElementById('stumble').addEventListener('click', function (e) {
+    e.preventDefault();
+    fetch('/archive/list.json', { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (list) {
+        if (!Array.isArray(list) || list.length === 0) { location.href = '/archive/'; return; }
+        location.href = '/archive/' + list[Math.floor(Math.random() * list.length)];
+      })
+      .catch(function () { location.href = '/archive/'; });
+  });
+</script>
 </body>
 </html>

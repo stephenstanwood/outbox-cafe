@@ -1122,9 +1122,25 @@ def rebuild_cabinet() -> None:
   <div class="meta">
     <span>SET: 2026</span>
     <span>{count} / ∞</span>
-    <a href="/">→ NEWEST CARD</a>
+    <a href="/">→ NEWEST</a>
+    <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
   </div>
 </header>
+
+<script>
+  // Stumble button: pick a random card and go there.
+  document.getElementById('cabinet-shuffle').addEventListener('click', function (e) {{
+    e.preventDefault();
+    fetch('/archive/list.json', {{ cache: 'no-store' }})
+      .then(function (r) {{ return r.json(); }})
+      .then(function (list) {{
+        if (Array.isArray(list) && list.length) {{
+          location.href = '/archive/' + list[Math.floor(Math.random() * list.length)];
+        }}
+      }})
+      .catch(function () {{}});
+  }});
+</script>
 
 <main class="grid">
 {cards_html if entries else '<p style="text-align:center;color:var(--dim);font-size:14px;padding:40px;">no cards yet. the first one drops at the top of the hour.</p>'}
