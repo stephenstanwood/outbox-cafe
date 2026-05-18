@@ -142,9 +142,22 @@ def _signals_last_24h() -> list[str]:
 
 
 def main() -> int:
+    # Run the reflection pass first so its summary lands in tonight's digest and
+    # tomorrow's posts already use the updated weights.
+    try:
+        from reflect import run as run_reflect
+        run_reflect()
+    except Exception as e:
+        print(f"[digest] reflect pass errored (non-fatal): {e}", file=sys.stderr)
+
     count, titles = _gens_last_24h()
     bsky = _bsky_summary()
     signals = _signals_last_24h()
+    try:
+        from voice_weights import summary_line
+        reflection = summary_line()
+    except Exception:
+        reflection = ""
 
     parts = ["**outbox.cafe nightly digest**"]
     parts.append(f"_{datetime.now(tz=PT).strftime('%a %b %d %Y · %H:%M PT')}_")
@@ -170,6 +183,10 @@ def main() -> int:
     if signals:
         parts.append("")
         parts.append(f"**signals fired in last 24h:** {', '.join('`' + s + '`' for s in signals)}")
+
+    if reflection:
+        parts.append("")
+        parts.append(f"**reflection:** {reflection}")
 
     text = "\n".join(parts)
     _post_discord(text)
