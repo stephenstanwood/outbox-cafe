@@ -52,7 +52,6 @@ def call_claude(prompt: str, model: str | None = None, timeout: int = 600) -> st
         "claude",
         "--print",
         "--tools", "",
-        "--permission-mode", "plan",
         "--model", model or "sonnet",
     ]
     result = subprocess.run(
