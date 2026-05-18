@@ -28,6 +28,8 @@ ROOT = Path(__file__).resolve().parent.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
 BSKY_BASE = "https://bsky.social/xrpc"
 POST_MAX_CHARS = 300
+# Bluesky's uploadBlob cap is 1,000,000 bytes; leave headroom for protocol overhead.
+BSKY_BLOB_MAX = 950_000
 
 # Drop announcements have a configurable skip rate (per personas.json post_types.drop_announcement.skip_rate)
 DEFAULT_SKIP_RATE = 0.30
@@ -193,6 +195,43 @@ def _find_url_byterange(text: str, url: str) -> tuple[int, int] | None:
     return len(prefix_bytes), len(prefix_bytes) + len(url_bytes)
 
 
+def _prepare_image_for_bsky(path: Path) -> tuple[bytes, str]:
+    """Return (bytes, content_type) for an image guaranteed to be under BSKY_BLOB_MAX.
+
+    If the original PNG is already small enough, returns it untouched. Otherwise
+    re-encodes as JPEG, walking down a quality ladder and then downscaling until
+    it fits.
+    """
+    raw = path.read_bytes()
+    if len(raw) <= BSKY_BLOB_MAX:
+        return raw, "image/png"
+
+    from io import BytesIO
+    from PIL import Image
+
+    img = Image.open(BytesIO(raw))
+    if img.mode not in ("RGB", "L"):
+        img = img.convert("RGB")
+
+    width = img.width
+    best: bytes | None = None
+    while width >= 600:
+        scaled = img if width == img.width else img.resize(
+            (width, round(img.height * width / img.width)), Image.LANCZOS
+        )
+        for quality in (88, 80, 72, 64, 56):
+            buf = BytesIO()
+            scaled.save(buf, format="JPEG", quality=quality, optimize=True, progressive=True)
+            data = buf.getvalue()
+            if len(data) <= BSKY_BLOB_MAX:
+                return data, "image/jpeg"
+            best = data
+        width = int(width * 0.85)
+
+    # Fell through every step; return the smallest thing we produced.
+    return best or raw, "image/jpeg"
+
+
 def post_drop(
     archive_html_path: Path,
     thumb_png_path: Path | None,
@@ -271,11 +310,11 @@ def post_drop(
     image_embed = None
     if thumb_png_path and thumb_png_path.exists():
         try:
-            img_bytes = thumb_png_path.read_bytes()
+            img_bytes, content_type = _prepare_image_for_bsky(thumb_png_path)
             blob_resp = _bsky_request(
                 "/com.atproto.repo.uploadBlob",
                 data=img_bytes,
-                headers={**auth, "Content-Type": "image/png"},
+                headers={**auth, "Content-Type": content_type},
                 method="POST",
             )
             blob = blob_resp["blob"]
