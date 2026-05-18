@@ -32,10 +32,34 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
 STATE_PATH = ROOT / "data" / "engage_state.json"
+WILD_STATE_PATH = ROOT / "data" / "wild_state.json"
 BSKY_BASE = "https://bsky.social/xrpc"
 MAX_REPLIES_PER_RUN = 10  # safety cap so a backlog doesn't fire 50 replies at once
 HANDLED_URI_CAP = 500
 AMBIENT_PROBABILITY = 0.04  # at every-15-min cron firings = ~3-4 ambient posts/day
+
+# In-the-wild engagement — reply to strangers' posts about small-web / weird-internet
+# topics. Cafe never pitches its own site; just leaves a small in-character observation.
+WILD_RUN_PROBABILITY = 0.08   # per */15 firing → expected ~7-8 attempts/day, hit cap most days
+WILD_DAILY_CAP = 5            # max wild replies in any 24h window
+WILD_REPLIED_HISTORY_CAP = 200
+WILD_RECENT_HANDLE_WINDOW = 7 * 24 * 3600  # don't reply to the same handle twice in 7 days
+WILD_SEARCH_TOPICS = [
+    "neocities",
+    "small web",
+    "weird web",
+    "weird internet",
+    "old web",
+    "indie web",
+    "personal site",
+    "geocities",
+    "zine",
+    "web art",
+    "homepage",
+    "smallweb",
+    "weirdweb",
+    "html zine",
+]
 
 
 def _load_personas() -> dict[str, Any]:
@@ -325,6 +349,244 @@ def _maybe_ambient_post(
     return False
 
 
+WILD_REPLY_PROMPT = """You are {name} ({full_name}), staff at outbox.cafe — a constantly-evolving weird/retro corner of the internet, run by cats. You're scrolling Bluesky and noticed a stranger's post you might gently react to. This is NOT someone who mentioned the cafe — they don't know about us. Your reply should be a small, sincere observation in your voice — NEVER a pitch, never promotional, never linking out.
+
+ABOUT YOU
+{species}
+
+YOUR VOICE
+{tone}
+
+YOUR PAST POSTS (study rhythm, length, voice — match exactly)
+{examples}
+
+HOUSE RULES — APPLY TO EVERY REPLY
+- Relentlessly positive. Never sour, never corrective, never sarcastic.
+- Never reference AI, bots, models, or that the cafe is automated.
+- DO NOT promote outbox.cafe. No URL, no "we have an archive," no "come visit." Just one small in-character remark.
+- Never post about: politics, current events, real death/grief/illness, financial advice, religion (specific), controversial public figures, anything mean.
+- Don't reply with a question that demands a response. A gentle observation is better than starting a conversation.
+- Be a cat at the next table making a small remark — not a brand account.
+
+MODERATION GATE — read the source carefully
+If ANY of these apply, output ONLY the single token NOPOST:
+- The source touches a filtered topic (politics, news, grief, illness, finance, religion, controversy).
+- A reply would feel like spam, brand-account energy, or unsolicited marketing.
+- The post is a specific technical question we can't actually answer.
+- The post is part of a beef, drama, or pile-on.
+- The post is melancholy/heavy in a way that a cat-cafe quip would feel tone-deaf.
+- The post is itself a reply to something else (we want top-level posts only — already filtered, but double-check).
+When in doubt, NOPOST.
+
+THE POST YOU'RE CONSIDERING
+From: @{their_handle}
+Their post: {source_text}
+
+YOUR TASK
+If safe and well-suited: write a brief reply (under 200 chars) in your voice. End with your signoff exactly as written: {signoff!r} (or no signoff if empty). Use your typical capitalization, punctuation, and rhythm.
+
+Otherwise: NOPOST.
+
+OUTPUT FORMAT
+- Either: NOPOST
+- Or: the reply text alone — no preamble, no quotes around it, no explanation.
+"""
+
+
+def _load_wild_state() -> dict[str, Any]:
+    if not WILD_STATE_PATH.exists():
+        return {"replied": []}
+    try:
+        return json.loads(WILD_STATE_PATH.read_text())
+    except Exception:
+        return {"replied": []}
+
+
+def _save_wild_state(state: dict[str, Any]) -> None:
+    WILD_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    WILD_STATE_PATH.write_text(json.dumps(state, indent=2))
+
+
+def _wild_count_24h(state: dict[str, Any]) -> int:
+    import time
+    cutoff = time.time() - 24 * 3600
+    return sum(
+        1 for r in state.get("replied", [])
+        if isinstance(r, dict) and not r.get("skipped") and r.get("ts", 0) > cutoff
+    )
+
+
+def _wild_recent_handles(state: dict[str, Any]) -> set[str]:
+    import time
+    cutoff = time.time() - WILD_RECENT_HANDLE_WINDOW
+    return {
+        r.get("handle") for r in state.get("replied", [])
+        if isinstance(r, dict) and r.get("handle") and r.get("ts", 0) > cutoff
+    }
+
+
+def _generate_wild_reply(
+    staff: dict[str, Any],
+    their_handle: str,
+    source_text: str,
+) -> str | None:
+    prompt = WILD_REPLY_PROMPT.format(
+        name=staff["name"],
+        full_name=staff["full_name"],
+        species=staff.get("species", "(unspecified)"),
+        tone=staff["tone"],
+        examples="\n\n".join(staff["examples"]),
+        their_handle=their_handle,
+        source_text=source_text or "(no text)",
+        signoff=staff.get("signoff", ""),
+    )
+    try:
+        result = subprocess.run(
+            ["claude", "--print", "--tools", "", "--permission-mode", "plan", "--model", "haiku"],
+            input=prompt,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+    except Exception as e:
+        print(f"[wild] claude failed: {e}", file=sys.stderr)
+        return None
+    if result.returncode != 0:
+        print(f"[wild] claude exit {result.returncode}", file=sys.stderr)
+        return None
+    text = (result.stdout or "").strip()
+    if "NOPOST" in text.upper()[:40]:
+        return None
+    text = re.sub(r"^```[a-z]*\s*", "", text).strip()
+    text = re.sub(r"\s*```\s*$", "", text).strip()
+    if text.startswith('"') and text.endswith('"') and text.count('"') == 2:
+        text = text[1:-1].strip()
+    return text or None
+
+
+def _maybe_wild_reply(
+    did: str,
+    jwt: str,
+    staff_pool: list,
+    weights: list,
+    rng: random.Random,
+) -> bool:
+    """Search a curated small-web topic, find a fresh stranger's post, reply in cat voice.
+
+    Strict daily cap + 7-day per-handle dedup so we never look like a follower bot.
+    Returns True if a reply was posted.
+    """
+    if rng.random() > WILD_RUN_PROBABILITY:
+        return False
+
+    state = _load_wild_state()
+    daily = _wild_count_24h(state)
+    if daily >= WILD_DAILY_CAP:
+        print(f"[wild] daily cap {WILD_DAILY_CAP} reached ({daily}) — skip")
+        return False
+
+    replied_uris = {
+        r.get("uri") for r in state.get("replied", [])
+        if isinstance(r, dict) and r.get("uri")
+    }
+    recent_handles = _wild_recent_handles(state)
+    our_handle = os.environ.get("BSKY_HANDLE", "")
+
+    topic = rng.choice(WILD_SEARCH_TOPICS)
+    try:
+        search = _bsky(
+            f"/app.bsky.feed.searchPosts?q={urllib.parse.quote(topic)}&sort=latest&limit=20",
+            headers={"Authorization": f"Bearer {jwt}"},
+        )
+    except Exception as e:
+        print(f"[wild] search {topic!r} failed: {e}", file=sys.stderr)
+        return False
+
+    posts = search.get("posts") or []
+    target = None
+    for p in posts:
+        uri = p.get("uri")
+        if not uri or uri in replied_uris:
+            continue
+        author = p.get("author") or {}
+        handle = author.get("handle", "")
+        if handle == our_handle or handle in recent_handles:
+            continue
+        rec = p.get("record") or {}
+        text = (rec.get("text") or "").strip()
+        if len(text) < 30:
+            continue
+        if rec.get("reply"):  # top-level only
+            continue
+        # Skip if the post itself contains common controversy/news markers
+        lower = text.lower()
+        if any(t in lower for t in [
+            "trump", "biden", "election", "war", "shooting", "shooter",
+            "rip", "passed away", "died", "obituary",
+            "bitcoin", "crypto", "stock", "etf",
+        ]):
+            continue
+        target = p
+        break
+
+    if not target:
+        print(f"[wild] no candidates for topic {topic!r} (scanned {len(posts)})")
+        return False
+
+    target_uri = target["uri"]
+    target_cid = target["cid"]
+    target_handle = (target.get("author") or {}).get("handle", "(unknown)")
+    target_text = (target.get("record") or {}).get("text", "")
+
+    staff = rng.choices(staff_pool, weights=weights, k=1)[0]
+    reply_text = _generate_wild_reply(staff, target_handle, target_text)
+
+    import time
+    if not reply_text:
+        # Record the NOPOST so we don't keep re-evaluating the same post each run
+        state.setdefault("replied", []).append({
+            "uri": target_uri,
+            "ts": time.time(),
+            "skipped": True,
+            "topic": topic,
+        })
+        state["replied"] = state["replied"][-WILD_REPLIED_HISTORY_CAP:]
+        _save_wild_state(state)
+        print(f"[wild] NOPOST for @{target_handle} ({topic!r}): {target_text[:60]!r}")
+        return False
+
+    try:
+        resp = _create_reply(did, jwt, reply_text, target_uri, target_cid)
+        print(f"[wild] replied as {staff['name']} to @{target_handle} ({topic!r}): {resp.get('uri','?')}")
+        state.setdefault("replied", []).append({
+            "uri": target_uri,
+            "ts": time.time(),
+            "persona": staff["name"],
+            "topic": topic,
+            "handle": target_handle,
+        })
+        state["replied"] = state["replied"][-WILD_REPLIED_HISTORY_CAP:]
+        _save_wild_state(state)
+        try:
+            from post_log import log as post_log
+            post_log(
+                "wild",
+                persona=staff["name"],
+                uri=resp.get("uri"),
+                subject=f"@{target_handle}",
+                text=reply_text,
+                topic=topic,
+            )
+        except Exception:
+            pass
+        return True
+    except urllib.error.HTTPError as e:
+        print(f"[wild] reply HTTP {e.code}: {e.read().decode()[:200]}", file=sys.stderr)
+    except Exception as e:
+        print(f"[wild] reply failed: {e}", file=sys.stderr)
+    return False
+
+
 def _fetch_post(uri: str, jwt: str) -> dict | None:
     encoded = urllib.parse.quote(uri, safe="")
     try:
@@ -470,6 +732,13 @@ def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
     # Skipped when called from inside the hourly gen cron — that run already
     # produced a drop announcement, no need to also fire an ambient observation.
     if not skip_ambient and _maybe_ambient_post(did, jwt, staff_pool, weights, rng):
+        actions += 1
+
+    # Roll for an in-the-wild reply (low probability per run, daily cap of 5).
+    # Same skip-on-gen rule — wild engagement belongs to between-drop hours
+    # so the cafe feels like it's quietly out in the world, not piggy-backed
+    # on its own drop firehose.
+    if not skip_ambient and _maybe_wild_reply(did, jwt, staff_pool, weights, rng):
         actions += 1
 
     if actions == 0:

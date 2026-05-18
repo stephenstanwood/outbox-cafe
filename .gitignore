@@ -17,3 +17,6 @@ data/cat_signal_state.json
 
 # Bsky post log — per-Mini, append-only audit trail
 data/post_log.jsonl
+
+# In-the-wild engagement state — daily cap + per-handle dedup
+data/wild_state.json

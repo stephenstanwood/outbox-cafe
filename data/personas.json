@@ -131,8 +131,8 @@
 
   "post_types": {
     "drop_announcement": {
-      "description": "Posted within ~20 minutes of a new hourly piece going up. Varies wildly in form: sometimes a sentence, sometimes a quote pulled from the piece, sometimes oblique reference, sometimes a single emoji or noun. Random staff member. Skip rate ~30%.",
-      "skip_rate": 0.3
+      "description": "Posted within ~20 minutes of a new hourly piece going up. Varies wildly in form: sometimes a sentence, sometimes a quote pulled from the piece, sometimes oblique reference, sometimes a single emoji or noun. Random staff member. Skip rate 50% — drops shouldn't be every single hour or the feed reads as bot-broadcast.",
+      "skip_rate": 0.5
     },
     "ambient": {
       "description": "Between-drop posts. Staff observations unrelated to any specific posting. 1-3 per day on average. Random staff member.",
