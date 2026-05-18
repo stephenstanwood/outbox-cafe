@@ -438,10 +438,22 @@ Exactly one line: the query string itself. No quotes, no explanation, no comment
 
 def _roll_wild_topic(rng: random.Random) -> str:
     """Ask Claude to invent a fresh search query. Falls back to a static list if it fails."""
+    prompt = WILD_TOPIC_ROLL_PROMPT
+    try:
+        from voice_weights import warm_wild_topics
+        warm = warm_wild_topics(limit=8)
+    except Exception:
+        warm = []
+    if warm:
+        prompt += (
+            "\n\nWHAT'S LANDED RECENTLY (use as inspiration, not a literal pick — these earned real conversation): "
+            + ", ".join(warm)
+            + ". Consider sibling topics in the same register; don't copy them verbatim."
+        )
     try:
         result = subprocess.run(
             ["claude", "--print", "--tools", "", "--model", "haiku"],
-            input=WILD_TOPIC_ROLL_PROMPT,
+            input=prompt,
             capture_output=True,
             text=True,
             timeout=60,
@@ -852,7 +864,8 @@ def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
 
     personas = _load_personas()
     staff_pool = personas["staff"]
-    weights = [s["weight"] for s in staff_pool]
+    from voice_weights import adjusted_weights
+    weights = adjusted_weights(staff_pool)
     rng = random.Random()
     actions = 0
 

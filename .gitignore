@@ -18,6 +18,12 @@ data/cat_signal_state.json
 # Bsky post log — per-Mini, append-only audit trail
 data/post_log.jsonl
 
+# Engagement snapshots captured by cleanup_bsky just before delete — per-Mini
+data/post_engagement.jsonl
+
+# Reflection output: persona + topic multipliers, regenerated nightly
+data/voice_weights.json
+
 # In-the-wild engagement state — daily cap + per-handle dedup
 data/wild_state.json
 

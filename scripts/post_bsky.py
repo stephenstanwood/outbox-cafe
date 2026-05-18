@@ -42,8 +42,8 @@ def _load_personas() -> dict[str, Any]:
 def _pick_staff(rng: random.Random) -> dict[str, Any]:
     data = _load_personas()
     staff = data["staff"]
-    weights = [s["weight"] for s in staff]
-    return rng.choices(staff, weights=weights, k=1)[0]
+    from voice_weights import adjusted_weights
+    return rng.choices(staff, weights=adjusted_weights(staff), k=1)[0]
 
 
 def _extract_snippet(html: str, max_chars: int = 400) -> str:
