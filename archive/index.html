@@ -436,9 +436,25 @@
   <div class="meta">
     <span>SET: 2026</span>
     <span>66 / ∞</span>
-    <a href="/">→ NEWEST CARD</a>
+    <a href="/">→ NEWEST</a>
+    <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
   </div>
 </header>
+
+<script>
+  // Stumble button: pick a random card and go there.
+  document.getElementById('cabinet-shuffle').addEventListener('click', function (e) {
+    e.preventDefault();
+    fetch('/archive/list.json', { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (list) {
+        if (Array.isArray(list) && list.length) {
+          location.href = '/archive/' + list[Math.floor(Math.random() * list.length)];
+        }
+      })
+      .catch(function () {});
+  });
+</script>
 
 <main class="grid">
 
