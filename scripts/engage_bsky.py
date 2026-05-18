@@ -312,6 +312,11 @@ def _maybe_ambient_post(
     try:
         resp = _create_plain_post(did, jwt, text)
         print(f"[engage/ambient] posted as {staff['name']}: {resp.get('uri','?')}")
+        try:
+            from post_log import log as post_log
+            post_log("ambient", persona=staff["name"], uri=resp.get("uri"), text=text)
+        except Exception:
+            pass
         return True
     except urllib.error.HTTPError as e:
         print(f"[engage/ambient] HTTP {e.code}: {e.read().decode()[:200]}", file=sys.stderr)
@@ -334,7 +339,7 @@ def _fetch_post(uri: str, jwt: str) -> dict | None:
     return posts[0] if posts else None
 
 
-def run() -> int:
+def run(skip_ambient: bool = False) -> int:
     handle = os.environ.get("BSKY_HANDLE")
     pw = os.environ.get("BSKY_APP_PASSWORD")
     if not handle or not pw:
@@ -420,6 +425,11 @@ def run() -> int:
                         did, jwt, text, parent_uri, parent_cid, root_uri_ref, root_cid_ref
                     )
                     print(f"[engage] replied as {staff['name']} to @{author}: {resp.get('uri','?')}")
+                    try:
+                        from post_log import log as post_log
+                        post_log("reply", persona=staff["name"], uri=resp.get("uri"), subject=f"@{author}", text=text)
+                    except Exception:
+                        pass
                     actions += 1
                 except urllib.error.HTTPError as e:
                     print(f"[engage] reply post HTTP {e.code}: {e.read().decode()[:200]}", file=sys.stderr)
@@ -430,6 +440,11 @@ def run() -> int:
             try:
                 _create_like(did, jwt, n_uri, n.get("cid"))
                 print(f"[engage] liked quote from @{author}")
+                try:
+                    from post_log import log as post_log
+                    post_log("like", uri=n_uri, subject=f"@{author}")
+                except Exception:
+                    pass
                 actions += 1
             except Exception as e:
                 print(f"[engage] like failed: {e}", file=sys.stderr)
@@ -450,8 +465,10 @@ def run() -> int:
             state["last_indexedAt"] = idx_at
         _save_state(state)
 
-    # Roll for an ambient between-drop post (low probability per run)
-    if _maybe_ambient_post(did, jwt, staff_pool, weights, rng):
+    # Roll for an ambient between-drop post (low probability per run).
+    # Skipped when called from inside the hourly gen cron — that run already
+    # produced a drop announcement, no need to also fire an ambient observation.
+    if not skip_ambient and _maybe_ambient_post(did, jwt, staff_pool, weights, rng):
         actions += 1
 
     if actions == 0:

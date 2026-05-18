@@ -14,3 +14,6 @@ data/engage_state.json
 
 # Cat-signal dedup state — per-Mini, ephemeral
 data/cat_signal_state.json
+
+# Bsky post log — per-Mini, append-only audit trail
+data/post_log.jsonl
