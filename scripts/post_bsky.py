@@ -386,8 +386,12 @@ if __name__ == "__main__":
     html_path = Path(args.html)
     thumb_path = Path(args.thumb) if args.thumb else None
     if thumb_path is None:
-        guessed = ROOT / "archive" / "thumbs" / (html_path.stem + ".png")
-        if guessed.exists():
-            thumb_path = guessed
+        for candidate in (
+            ROOT / "archive" / "social" / (html_path.stem + ".png"),
+            ROOT / "archive" / "thumbs" / (html_path.stem + ".png"),
+        ):
+            if candidate.exists():
+                thumb_path = candidate
+                break
     ok = post_drop(html_path, thumb_path, seed=args.seed)
     sys.exit(0 if ok else 1)

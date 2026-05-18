@@ -25,11 +25,12 @@ from spec import (
     roll_spec_via_llm,
 )
 from images import fetch_images, derive_query
-from images_ai import fetch_ai_images
+from images_ai import fetch_ai_images, fetch_poster_image
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
 THUMBS_DIR = ARCHIVE_DIR / "thumbs"
+SOCIAL_DIR = ARCHIVE_DIR / "social"
 INDEX_PATH = ROOT / "index.html"
 CABINET_PATH = ARCHIVE_DIR / "index.html"
 SHOT_SCRIPT = ROOT / "scripts" / "screenshot.js"
@@ -1357,6 +1358,15 @@ def main() -> int:
     if take_screenshot(archive_file, shot_path):
         print(f"  thumbnail → {shot_path.name}")
 
+    # Dedicated social poster — purpose-built cover image for bsky/tumblr, distinct
+    # from the on-site screenshot (which can land on a weird crop of the page).
+    social_path = SOCIAL_DIR / (archive_file.stem + ".png")
+    try:
+        if fetch_poster_image(spec, social_path):
+            print(f"  social poster → {social_path.name}")
+    except Exception as e:
+        print(f"  social poster errored (non-fatal): {e}", file=sys.stderr)
+
     append_history(spec)
     rebuild_cabinet()
     rebuild_feed()
@@ -1370,10 +1380,13 @@ def main() -> int:
         git_commit_and_push(msg)
         print("✓ committed and pushed")
 
+    # Prefer the dedicated social poster over the page screenshot for social cards.
+    social_thumb = social_path if social_path.exists() else (shot_path if shot_path.exists() else None)
+
     # Best-effort Bluesky drop announcement. Never blocks the gen.
     try:
         from post_bsky import post_drop
-        if post_drop(archive_file, shot_path if shot_path.exists() else None):
+        if post_drop(archive_file, social_thumb):
             print("✓ posted to bluesky")
     except Exception as e:
         print(f"bluesky post errored (non-fatal): {e}", file=sys.stderr)
@@ -1398,7 +1411,7 @@ def main() -> int:
                      else spec.get("format"))
         if post_tumblr_drop(
             archive_file,
-            shot_path if shot_path.exists() else None,
+            social_thumb,
             spec_format=fmt_value,
         ):
             print("✓ posted to tumblr")

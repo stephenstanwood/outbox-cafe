@@ -32,6 +32,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
 THUMBS_DIR = ARCHIVE_DIR / "thumbs"
+SOCIAL_DIR = ARCHIVE_DIR / "social"
 PERSONAS_PATH = ROOT / "data" / "personas.json"
 STATE_PATH = ROOT / "data" / "engage_state.json"
 WILD_STATE_PATH = ROOT / "data" / "wild_state.json"
@@ -707,11 +708,13 @@ def _maybe_throwback_post(rng: random.Random) -> bool:
     pool = fresh if fresh else candidates  # eventually we'll have thrown everything; recycle
 
     target = rng.choice(pool)
-    thumb = THUMBS_DIR / (target.stem + ".png")
+    social_thumb = SOCIAL_DIR / (target.stem + ".png")
+    shot_thumb = THUMBS_DIR / (target.stem + ".png")
+    thumb = social_thumb if social_thumb.exists() else (shot_thumb if shot_thumb.exists() else None)
 
     try:
         from post_bsky import post_drop
-        posted = post_drop(target, thumb if thumb.exists() else None, kind="throwback")
+        posted = post_drop(target, thumb, kind="throwback")
     except Exception as e:
         print(f"[throwback] post errored: {e}", file=sys.stderr)
         return False
