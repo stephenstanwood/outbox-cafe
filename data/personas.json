@@ -131,7 +131,11 @@
 
   "post_types": {
     "drop_announcement": {
-      "description": "Posted within ~20 minutes of a new hourly piece going up. Varies wildly in form: sometimes a sentence, sometimes a quote pulled from the piece, sometimes oblique reference, sometimes a single emoji or noun. Random staff member. Skip rate 50% — drops shouldn't be every single hour or the feed reads as bot-broadcast.",
+      "description": "Bsky: posted within ~20 minutes of a new hourly piece going up. Varies wildly in form: sometimes a sentence, sometimes a quote pulled from the piece, sometimes oblique reference, sometimes a single emoji or noun. Random staff member. Skip rate 50% — drops shouldn't be every single hour or the feed reads as bot-broadcast.",
+      "skip_rate": 0.5
+    },
+    "tumblr_drop": {
+      "description": "Tumblr cross-post of a fresh gen. Photo post with thumbnail + cat-voice caption + 'read →' link out + tags. Tumblr likes links and tags so we use both freely. Skip rate 50% — same cadence as bsky for now.",
       "skip_rate": 0.5
     },
     "ambient": {
