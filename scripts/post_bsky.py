@@ -66,6 +66,37 @@ def _extract_title(html: str) -> str:
     return re.sub(r"\s+", " ", t).strip()
 
 
+THROWBACK_PROMPT_TEMPLATE = """You are {name} ({full_name}), staff at outbox.cafe — a constantly-evolving weird/retro corner of the internet that posts a new artifact every hour. The cafe is run by cats. You're scrolling back through the cabinet — the archive of older pieces — and pulling out one you'd like to point at again. NOT a new posting. An older one resurfacing.
+
+ABOUT YOU
+{species}
+
+YOUR VOICE
+{tone}
+
+TOPICS YOU TEND TO POST ABOUT
+{topics}
+
+EXAMPLES OF YOUR PAST POSTS (study the rhythm, length, and voice carefully — match exactly)
+{examples}
+
+HOUSE RULES (apply to every post, no exceptions)
+- Relentlessly positive. Never sour.
+- Never fight, never break character.
+- Never reference AI, bots, models, or that this is automated.
+- Don't post about politics, current events, real death/illness, finance, religion.
+- Frame this as a small "found this again" / "from the cabinet" / "remember this one" moment — not a brand-new drop. Use language like "from a while back", "found this in the files", "still thinking about", "pulling this one back out", or just react to a detail without mentioning recency at all.
+
+THE OLDER PIECE YOU'RE POINTING AT
+Title: {title}
+Snippet from the page: {snippet}
+
+YOUR TASK
+Write a short Bluesky post in your voice (under 200 chars — the URL is added on a new line separately, do NOT include any URL in your text). Be oblique, quote a fragment, react to one detail, OR enter via one of your usual topics. End with your signoff exactly as written ({signoff!r}) — or no signoff if it's empty. Match your typical lowercase / capitals / punctuation.
+
+OUTPUT ONLY THE POST TEXT. No preamble, no quotes around it, no explanation."""
+
+
 PROMPT_TEMPLATE = """You are {name} ({full_name}), staff at outbox.cafe — a constantly-evolving weird/retro corner of the internet that posts a new artifact every hour. The cafe is run by cats. You're writing a short Bluesky post about the new piece that just went up.
 
 ABOUT YOU
@@ -96,9 +127,14 @@ Write a short Bluesky post in your voice about this new piece. Under 200 charact
 OUTPUT ONLY THE POST TEXT. No preamble, no quotes around it, no explanation."""
 
 
-def _call_claude_for_post(staff: dict[str, Any], title: str, snippet: str) -> str | None:
+def _call_claude_for_post(
+    staff: dict[str, Any],
+    title: str,
+    snippet: str,
+    template: str = PROMPT_TEMPLATE,
+) -> str | None:
     """Have Claude write the post text in staff's voice. Returns text or None on failure."""
-    prompt = PROMPT_TEMPLATE.format(
+    prompt = template.format(
         name=staff["name"],
         full_name=staff["full_name"],
         species=staff.get("species", "(unspecified)"),
@@ -164,8 +200,13 @@ def post_drop(
     thumb_png_path: Path | None,
     base_url: str = "https://outbox.cafe",
     seed: int | None = None,
+    kind: str = "drop",
 ) -> bool:
-    """Post a hourly drop announcement to Bluesky. Best-effort; returns False on any skip/failure."""
+    """Post a piece to Bluesky in a staff cat's voice. Best-effort; False on skip/failure.
+
+    kind="drop": new hourly drop announcement (uses PROMPT_TEMPLATE + skip-rate from personas.json)
+    kind="throwback": resurfacing an older archive entry (uses THROWBACK_PROMPT_TEMPLATE + no skip-rate)
+    """
     handle = os.environ.get("BSKY_HANDLE")
     app_pw = os.environ.get("BSKY_APP_PASSWORD")
     if not handle or not app_pw:
@@ -174,16 +215,17 @@ def post_drop(
 
     rng = random.Random(seed) if seed is not None else random.Random()
 
-    # Skip-rate honors personas.json post_types.drop_announcement.skip_rate
-    skip_rate = DEFAULT_SKIP_RATE
-    try:
-        personas = _load_personas()
-        skip_rate = float(personas.get("post_types", {}).get("drop_announcement", {}).get("skip_rate", DEFAULT_SKIP_RATE))
-    except Exception:
-        pass
-    if rng.random() < skip_rate:
-        print(f"[post_bsky] skip (random skip-rate {skip_rate})", file=sys.stderr)
-        return False
+    # Drops honor skip-rate from personas.json; throwbacks are opt-in by the caller.
+    if kind == "drop":
+        skip_rate = DEFAULT_SKIP_RATE
+        try:
+            personas = _load_personas()
+            skip_rate = float(personas.get("post_types", {}).get("drop_announcement", {}).get("skip_rate", DEFAULT_SKIP_RATE))
+        except Exception:
+            pass
+        if rng.random() < skip_rate:
+            print(f"[post_bsky] skip (random skip-rate {skip_rate})", file=sys.stderr)
+            return False
 
     try:
         html = archive_html_path.read_text()
@@ -198,7 +240,8 @@ def post_drop(
     staff = _pick_staff(rng)
     print(f"[post_bsky] persona={staff['name']} title={title[:60]!r}", file=sys.stderr)
 
-    body_text = _call_claude_for_post(staff, title, snippet)
+    template = THROWBACK_PROMPT_TEMPLATE if kind == "throwback" else PROMPT_TEMPLATE
+    body_text = _call_claude_for_post(staff, title, snippet, template=template)
     if not body_text:
         print("[post_bsky] claude returned no text — skipping", file=sys.stderr)
         return False
@@ -291,11 +334,11 @@ def post_drop(
         print(f"[post_bsky] createRecord failed: {e}", file=sys.stderr)
         return False
 
-    print(f"[post_bsky] posted: {resp.get('uri','?')}", file=sys.stderr)
+    print(f"[post_bsky] posted ({kind}): {resp.get('uri','?')}", file=sys.stderr)
     try:
         from post_log import log as post_log
         post_log(
-            "drop",
+            kind,
             persona=staff["name"],
             uri=resp.get("uri"),
             subject=f"our:{archive_html_path.name}",
