@@ -1390,6 +1390,22 @@ def main() -> int:
     except Exception as e:
         print(f"engage pass errored (non-fatal): {e}", file=sys.stderr)
 
+    # Cross-post to Tumblr. Different texture from bsky — outbound links OK,
+    # archive lives forever, tags drive discovery. Same cat-staff voice.
+    try:
+        from post_tumblr import post_drop as post_tumblr_drop
+        fmt_value = ((spec.get("format") or {}).get("value")
+                     if isinstance(spec.get("format"), dict)
+                     else spec.get("format"))
+        if post_tumblr_drop(
+            archive_file,
+            shot_path if shot_path.exists() else None,
+            spec_format=fmt_value,
+        ):
+            print("✓ posted to tumblr")
+    except Exception as e:
+        print(f"tumblr post errored (non-fatal): {e}", file=sys.stderr)
+
     return 0
 
 
