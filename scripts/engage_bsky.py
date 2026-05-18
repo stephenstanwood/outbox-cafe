@@ -588,12 +588,7 @@ def _maybe_wild_reply(
         if rec.get("reply"):  # top-level only
             continue
         # Skip if the post itself contains common controversy/news markers
-        lower = text.lower()
-        if any(t in lower for t in [
-            "trump", "biden", "election", "war", "shooting", "shooter",
-            "rip", "passed away", "died", "obituary",
-            "bitcoin", "crypto", "stock", "etf",
-        ]):
+        if any(t in text.lower() for t in CONTROVERSY_KEYWORDS):
             continue
         target = p
         break
@@ -732,6 +727,78 @@ def _maybe_throwback_post(rng: random.Random) -> bool:
     return True
 
 
+CONTROVERSY_KEYWORDS = [
+    "trump", "biden", "election", "war", "shooting", "shooter",
+    "rip", "passed away", "died", "obituary",
+    "bitcoin", "crypto", "stock", "etf", "nft",
+]
+
+
+def _acknowledge_follower(
+    did: str,
+    jwt: str,
+    follower_did: str,
+    follower_handle: str,
+    rng: random.Random,
+) -> bool:
+    """Quiet 'noticed you' gesture on a new follow — like one of their safe recent posts.
+
+    Not a follow-back, not a reply. Just a cat at the corner booth catching their eye.
+    Filters out replies/reposts/empty posts/posts touching controversy keywords.
+    Silently skips if nothing suitable is in the last ~20 posts.
+    """
+    try:
+        feed = _bsky(
+            f"/app.bsky.feed.getAuthorFeed?actor={urllib.parse.quote(follower_did)}&limit=20",
+            headers={"Authorization": f"Bearer {jwt}"},
+        )
+    except Exception as e:
+        print(f"[follow-ack] couldn't fetch @{follower_handle}'s feed: {e}", file=sys.stderr)
+        return False
+
+    candidates = []
+    for item in feed.get("feed", []) or []:
+        p = item.get("post") or {}
+        author = (p.get("author") or {}).get("did", "")
+        if author != follower_did:
+            continue  # skip reposts surfaced in their feed
+        rec = p.get("record") or {}
+        text = (rec.get("text") or "").strip()
+        if len(text) < 12:
+            continue
+        if rec.get("reply"):
+            continue  # top-level only — feels less intrusive
+        lower = text.lower()
+        if any(t in lower for t in CONTROVERSY_KEYWORDS):
+            continue
+        candidates.append(p)
+
+    if not candidates:
+        print(f"[follow-ack] no safe candidate post for @{follower_handle} — silent skip")
+        return False
+
+    target = rng.choice(candidates)
+    target_uri = target.get("uri")
+    target_cid = target.get("cid")
+    if not target_uri or not target_cid:
+        return False
+
+    try:
+        _create_like(did, jwt, target_uri, target_cid)
+        print(f"[follow-ack] liked @{follower_handle}'s post: {target_uri}")
+        try:
+            from post_log import log as post_log
+            post_log("follow_ack_like", uri=target_uri, subject=f"@{follower_handle}")
+        except Exception:
+            pass
+        return True
+    except urllib.error.HTTPError as e:
+        print(f"[follow-ack] like HTTP {e.code}: {e.read().decode()[:200]}", file=sys.stderr)
+    except Exception as e:
+        print(f"[follow-ack] like failed: {e}", file=sys.stderr)
+    return False
+
+
 def _fetch_post(uri: str, jwt: str) -> dict | None:
     encoded = urllib.parse.quote(uri, safe="")
     try:
@@ -858,7 +925,11 @@ def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
                 print(f"[engage] like failed: {e}", file=sys.stderr)
 
         elif reason == "follow":
-            print(f"[engage] new follower @{author} — noted, no action")
+            follower_did = (n.get("author") or {}).get("did", "")
+            if follower_did and _acknowledge_follower(did, jwt, follower_did, author, rng):
+                actions += 1
+            else:
+                print(f"[engage] new follower @{author} — no ack (no suitable recent post)")
 
         else:
             # like / repost / others: nothing to do
