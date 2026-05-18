@@ -58,6 +58,9 @@ def _dm(token: str, body: str) -> bool:
         headers={
             "Authorization": f"Bot {token}",
             "Content-Type": "application/json",
+            # Discord requires a real DiscordBot UA on all bot requests —
+            # without it, Cloudflare 1010s the urllib default.
+            "User-Agent": "DiscordBot (https://outbox.cafe, 0.1)",
         },
         method="POST",
     )
