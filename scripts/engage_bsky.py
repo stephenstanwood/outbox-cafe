@@ -30,9 +30,12 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
+ARCHIVE_DIR = ROOT / "archive"
+THUMBS_DIR = ARCHIVE_DIR / "thumbs"
 PERSONAS_PATH = ROOT / "data" / "personas.json"
 STATE_PATH = ROOT / "data" / "engage_state.json"
 WILD_STATE_PATH = ROOT / "data" / "wild_state.json"
+THROWBACK_STATE_PATH = ROOT / "data" / "throwback_state.json"
 BSKY_BASE = "https://bsky.social/xrpc"
 MAX_REPLIES_PER_RUN = 10  # safety cap so a backlog doesn't fire 50 replies at once
 HANDLED_URI_CAP = 500
@@ -44,6 +47,14 @@ WILD_RUN_PROBABILITY = 0.08   # per */15 firing → expected ~7-8 attempts/day, 
 WILD_DAILY_CAP = 5            # max wild replies in any 24h window
 WILD_REPLIED_HISTORY_CAP = 200
 WILD_RECENT_HANDLE_WINDOW = 7 * 24 * 3600  # don't reply to the same handle twice in 7 days
+# Curated topic list is the FALLBACK only. Default path: Claude rolls a fresh search query
+# each run (see _roll_wild_topic). Same anti-static-list pattern we use for spec rolling.
+# Throwback posts — pull a random gen from >N days ago and re-surface it in cat voice.
+# Cron firings = 96/day; probability 0.012 ≈ ~1.15 throwbacks/day on average.
+THROWBACK_PROBABILITY = 0.012
+THROWBACK_MIN_AGE_DAYS = 7
+THROWBACK_RECENT_CAP = 100   # don't throwback any of the last 100 we already resurfaced
+
 WILD_SEARCH_TOPICS = [
     "neocities",
     "small web",
@@ -393,6 +404,54 @@ OUTPUT FORMAT
 """
 
 
+WILD_TOPIC_ROLL_PROMPT = """You are picking a single Bluesky search query for outbox.cafe — a cat-staffed corner of the weird/retro/small/old/handmade web — to use as a way to find a stranger's post we might gently reply to. The goal is to land on adjacent communities the cafe would love: people who make their own personal sites, neocities, zines, fan pages, hobby blogs, generative art, web1.0/2.0 nostalgia, the small-internet movement, paper crafts, indie booksellers, animation fans, weird-museum fans, cat-shaped corners of the internet.
+
+You may invent the query. Reach for an UNEXPECTED corner each time — don't keep returning to the obvious "neocities" / "smallweb" defaults. Try things like:
+- a small subculture name ("garage zine", "mail art", "ham radio", "soda bottle collector")
+- a craft term ("riso print", "spiral binding", "letterpress")
+- a website class ("guestbook", "webring", "fan page", "geocities")
+- a hobby + medium ("model train", "cassette label", "amateur radio QSL")
+- an aesthetic word ("cozy", "handmade", "low-tech", "analog")
+- an object the cafe would love ("rotary phone", "rolodex", "library card", "stamp")
+
+AVOID:
+- anything political, news-y, controversial
+- "AI" / "LLM" / "ChatGPT" / "Claude" — those threads are too charged
+- crypto / NFT / monetization terms
+- too-broad single words ("art", "design") — those return brand-account spam
+- queries you'd expect a marketing intern to pick
+
+OUTPUT FORMAT
+Exactly one line: the query string itself. No quotes, no explanation, no commentary. 1-3 words ideally. Plain text only."""
+
+
+def _roll_wild_topic(rng: random.Random) -> str:
+    """Ask Claude to invent a fresh search query. Falls back to a static list if it fails."""
+    try:
+        result = subprocess.run(
+            ["claude", "--print", "--tools", "", "--permission-mode", "plan", "--model", "haiku"],
+            input=WILD_TOPIC_ROLL_PROMPT,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"claude exit {result.returncode}")
+        out = (result.stdout or "").strip()
+        # First non-empty line, strip quotes/fences
+        for line in out.splitlines():
+            line = line.strip()
+            line = re.sub(r"^[\"'`]+|[\"'`]+$", "", line)
+            line = re.sub(r"^```[a-z]*\s*", "", line)
+            line = re.sub(r"\s*```\s*$", "", line)
+            if line and len(line) <= 60:
+                return line
+        raise ValueError("no usable line in output")
+    except Exception as e:
+        print(f"[wild] LLM topic roll failed ({e}); falling back to static list", file=sys.stderr)
+        return rng.choice(WILD_SEARCH_TOPICS)
+
+
 def _load_wild_state() -> dict[str, Any]:
     if not WILD_STATE_PATH.exists():
         return {"replied": []}
@@ -492,7 +551,7 @@ def _maybe_wild_reply(
     recent_handles = _wild_recent_handles(state)
     our_handle = os.environ.get("BSKY_HANDLE", "")
 
-    topic = rng.choice(WILD_SEARCH_TOPICS)
+    topic = _roll_wild_topic(rng)
     try:
         search = _bsky(
             f"/app.bsky.feed.searchPosts?q={urllib.parse.quote(topic)}&sort=latest&limit=20",
@@ -585,6 +644,82 @@ def _maybe_wild_reply(
     except Exception as e:
         print(f"[wild] reply failed: {e}", file=sys.stderr)
     return False
+
+
+def _load_throwback_state() -> dict[str, Any]:
+    if not THROWBACK_STATE_PATH.exists():
+        return {"thrown": []}
+    try:
+        return json.loads(THROWBACK_STATE_PATH.read_text())
+    except Exception:
+        return {"thrown": []}
+
+
+def _save_throwback_state(state: dict[str, Any]) -> None:
+    THROWBACK_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    THROWBACK_STATE_PATH.write_text(json.dumps(state, indent=2))
+
+
+def _maybe_throwback_post(rng: random.Random) -> bool:
+    """Pick a random archive entry from >7 days ago and post a 'from the cabinet' note about it.
+
+    Reuses post_bsky.post_drop with kind='throwback' so the image/URL/facet plumbing
+    is the same as a fresh drop. Returns True if posted.
+    """
+    if rng.random() > THROWBACK_PROBABILITY:
+        return False
+
+    from zoneinfo import ZoneInfo
+    from datetime import datetime as _dt, timedelta as _td
+    pt = ZoneInfo("America/Los_Angeles")
+    cutoff = _dt.now(tz=pt) - _td(days=THROWBACK_MIN_AGE_DAYS)
+
+    candidates: list[Path] = []
+    for f in ARCHIVE_DIR.glob("*.html"):
+        if f.name == "index.html":
+            continue
+        m = re.match(r"(\d{4}-\d{2}-\d{2})T(\d{2})-(\d{2})", f.stem)
+        if not m:
+            continue
+        try:
+            dt = _dt.strptime(
+                f"{m.group(1)} {m.group(2)}:{m.group(3)}",
+                "%Y-%m-%d %H:%M",
+            ).replace(tzinfo=pt)
+        except Exception:
+            continue
+        if dt > cutoff:
+            continue
+        candidates.append(f)
+
+    if not candidates:
+        print("[throwback] no archive entries old enough yet — skip")
+        return False
+
+    state = _load_throwback_state()
+    recently_thrown = {r.get("file") for r in state.get("thrown", []) if isinstance(r, dict)}
+    fresh = [c for c in candidates if c.name not in recently_thrown]
+    pool = fresh if fresh else candidates  # eventually we'll have thrown everything; recycle
+
+    target = rng.choice(pool)
+    thumb = THUMBS_DIR / (target.stem + ".png")
+
+    try:
+        from post_bsky import post_drop
+        posted = post_drop(target, thumb if thumb.exists() else None, kind="throwback")
+    except Exception as e:
+        print(f"[throwback] post errored: {e}", file=sys.stderr)
+        return False
+
+    if not posted:
+        return False
+
+    import time
+    state.setdefault("thrown", []).append({"file": target.name, "ts": time.time()})
+    state["thrown"] = state["thrown"][-THROWBACK_RECENT_CAP:]
+    _save_throwback_state(state)
+    print(f"[throwback] resurfaced {target.name}")
+    return True
 
 
 def _fetch_post(uri: str, jwt: str) -> dict | None:
@@ -739,6 +874,11 @@ def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
     # so the cafe feels like it's quietly out in the world, not piggy-backed
     # on its own drop firehose.
     if not skip_ambient and _maybe_wild_reply(did, jwt, staff_pool, weights, rng):
+        actions += 1
+
+    # Roll for a throwback — resurface an older archive entry, ~1.15/day expected.
+    # Same skip-on-gen rule — the hourly drop already covers "new content" for this run.
+    if not skip_ambient and _maybe_throwback_post(rng):
         actions += 1
 
     if actions == 0:
