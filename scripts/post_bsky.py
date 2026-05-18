@@ -292,6 +292,17 @@ def post_drop(
         return False
 
     print(f"[post_bsky] posted: {resp.get('uri','?')}", file=sys.stderr)
+    try:
+        from post_log import log as post_log
+        post_log(
+            "drop",
+            persona=staff["name"],
+            uri=resp.get("uri"),
+            subject=f"our:{archive_html_path.name}",
+            text=body_text,
+        )
+    except Exception:
+        pass
     return True
 
 

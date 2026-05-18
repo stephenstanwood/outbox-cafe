@@ -1363,6 +1363,15 @@ def main() -> int:
     except Exception as e:
         print(f"bluesky post errored (non-fatal): {e}", file=sys.stderr)
 
+    # Engagement pass — process mentions/replies/quotes right after a drop so
+    # the cafe reacts within seconds, not up to 15 min later. Ambient skipped
+    # because the drop announcement is already today's hourly voice.
+    try:
+        from engage_bsky import run as run_engage
+        run_engage(skip_ambient=True)
+    except Exception as e:
+        print(f"engage pass errored (non-fatal): {e}", file=sys.stderr)
+
     return 0
 
 
