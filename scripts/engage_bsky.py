@@ -41,10 +41,12 @@ MAX_REPLIES_PER_RUN = 10  # safety cap so a backlog doesn't fire 50 replies at o
 HANDLED_URI_CAP = 500
 AMBIENT_PROBABILITY = 0.04  # at every-15-min cron firings = ~3-4 ambient posts/day
 
-# In-the-wild engagement — reply to strangers' posts about small-web / weird-internet
-# topics. Cafe never pitches its own site; just leaves a small in-character observation.
-WILD_RUN_PROBABILITY = 0.08   # per */15 firing → expected ~7-8 attempts/day, hit cap most days
-WILD_DAILY_CAP = 5            # max wild replies in any 24h window
+# In-the-wild engagement — reply to strangers' posts. Aperture is WIDE — anything a
+# cat at a cafe might notice: someone joking about screen time, a person posting their
+# morning espresso, a window-plant photo, a small observation. Not just small-web nerds.
+# Cafe never pitches its own site; just leaves a small in-character observation.
+WILD_RUN_PROBABILITY = 0.18   # per */15 firing → expected ~17/day, hit cap most days
+WILD_DAILY_CAP = 15           # max wild replies in any 24h window
 WILD_REPLIED_HISTORY_CAP = 200
 WILD_RECENT_HANDLE_WINDOW = 7 * 24 * 3600  # don't reply to the same handle twice in 7 days
 # Curated topic list is the FALLBACK only. Default path: Claude rolls a fresh search query
@@ -56,20 +58,18 @@ THROWBACK_MIN_AGE_DAYS = 7
 THROWBACK_RECENT_CAP = 100   # don't throwback any of the last 100 we already resurfaced
 
 WILD_SEARCH_TOPICS = [
-    "neocities",
-    "small web",
-    "weird web",
-    "weird internet",
-    "old web",
-    "indie web",
-    "personal site",
-    "geocities",
-    "zine",
-    "web art",
-    "homepage",
-    "smallweb",
-    "weirdweb",
-    "html zine",
+    # Small-web / craft (the original niche)
+    "neocities", "zine", "personal site", "geocities", "indie web",
+    # Cafe / coffee / drinks
+    "espresso", "latte art", "coffee shop", "matcha", "iced coffee",
+    # Cat-relatable everyday
+    "sunbeam", "cat nap", "windowsill", "rainy day", "first sip",
+    # Mundane observation moods
+    "screens", "good morning", "monday", "weather", "sleep",
+    # Small joys / appreciation
+    "library card", "houseplant", "stamp", "paperback", "doorway",
+    # General observation
+    "small things", "tuesday", "noticed", "today's mood", "yes",
 ]
 
 
@@ -409,21 +409,26 @@ OUTPUT FORMAT
 """
 
 
-WILD_TOPIC_ROLL_PROMPT = """Pick a single Bluesky search query for a small cat-run cafe to use as a way to find a stranger's post worth gently replying to. The goal is to land on adjacent communities the cafe would love: people who make their own personal sites, neocities, zines, fan pages, hobby blogs, generative art, web1.0/2.0 nostalgia, the small-internet movement, paper crafts, indie booksellers, animation fans, weird-museum fans, cat-shaped corners of the internet.
+WILD_TOPIC_ROLL_PROMPT = """Pick a single Bluesky search query for a small cat-run cafe to use as a way to find a stranger's post worth gently replying to. The aperture is WIDE — the cafe is curious about anything a cat at a cafe might notice. There are infinite posts a cat could weigh in on. Look broadly.
 
-You may invent the query. Reach for an UNEXPECTED corner each time — don't keep returning to the obvious "neocities" / "smallweb" defaults. Try things like:
-- a small subculture name ("garage zine", "mail art", "ham radio", "soda bottle collector")
-- a craft term ("riso print", "spiral binding", "letterpress")
-- a website class ("guestbook", "webring", "fan page", "geocities")
-- a hobby + medium ("model train", "cassette label", "amateur radio QSL")
-- an aesthetic word ("cozy", "handmade", "low-tech", "analog")
-- an object the cafe would love ("rotary phone", "rolodex", "library card", "stamp")
+REACH ACROSS REGISTERS — rotate between these flavors session to session, don't keep picking the same kind of query:
+- mundane shared-experience moments ("screens", "good morning", "monday", "first sip", "rainy day", "noticed today", "tuesday")
+- cafe-and-coffee adjacent ("espresso", "matcha", "morning routine", "americano", "iced coffee", "tea time")
+- cat-relatable everyday ("sunbeam", "cat nap", "windowsill", "loaf", "small loaf", "purring")
+- small joys and appreciations ("houseplant", "library card", "fresh notebook", "paperback", "good light", "porch")
+- weather + season ("the wind today", "first rain", "warm jacket", "sweater weather", "humidity")
+- niche/craft (the original cafe vibe — still good): zines, mail art, neocities, riso print, letterpress, garage band, model trains
+- web aesthetics + small-web: guestbook, geocities, webring, html zine, indie web
+- objects the cafe would love: rotary phone, rolodex, stamp, postcard, key, envelope
+- aesthetic words that pull in mood posts: cozy, slow, gentle, handmade, soft
+
+YOU MAY INVENT a query that's not on this list. Be specific and unexpected — surprise yourself.
 
 AVOID:
-- anything political, news-y, controversial
+- politics, news, election, war, anything controversial
 - "AI" / "LLM" / "ChatGPT" / "Claude" — those threads are too charged
-- crypto / NFT / monetization terms
-- too-broad single words ("art", "design") — those return brand-account spam
+- crypto / NFT / "to the moon" / stocks
+- too-broad single words like "art" or "design" — return brand-account spam
 - queries you'd expect a marketing intern to pick
 
 OUTPUT FORMAT
