@@ -339,12 +339,13 @@ def _fetch_post(uri: str, jwt: str) -> dict | None:
     return posts[0] if posts else None
 
 
-def run(skip_ambient: bool = False) -> int:
+def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
     handle = os.environ.get("BSKY_HANDLE")
     pw = os.environ.get("BSKY_APP_PASSWORD")
     if not handle or not pw:
         print("[engage] BSKY_HANDLE / BSKY_APP_PASSWORD missing — exiting", file=sys.stderr)
         return 1
+    cap = max_replies if max_replies is not None else MAX_REPLIES_PER_RUN
 
     state = _load_state()
     handled: set[str] = set(state.get("handled_uris", []))
@@ -385,8 +386,8 @@ def run(skip_ambient: bool = False) -> int:
             continue
         if n_uri in handled:
             continue
-        if actions >= MAX_REPLIES_PER_RUN:
-            print(f"[engage] hit cap of {MAX_REPLIES_PER_RUN} replies — stopping for this run")
+        if actions >= cap:
+            print(f"[engage] hit cap of {cap} replies — stopping for this run")
             break
 
         reason = n.get("reason", "")
