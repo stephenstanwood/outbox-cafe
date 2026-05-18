@@ -68,7 +68,7 @@ def build_prompt(spec: dict[str, Any], photos: list[dict[str, Any]] | None = Non
     photos = photos or []
     photos_block = _format_photos_block(photos)
 
-    return f"""You are generating an hourly artifact for outbox.cafe, a weird/retro corner of the web. Every hour a new self-contained HTML page goes up at the root and gets archived. The site values genuine variety, retro-optimism, and texture over polish. People should want to look at this for a few minutes, then look at it again later and notice new details.
+    return f"""You are generating an hourly artifact for outbox.cafe. Every hour a new self-contained HTML page goes up at the root and gets archived. The cafe values genuine variety, care, and texture over polish. Some pieces are weird. Some are beautiful. Some are quiet. Some are playful. Some are maximalist. The goal is breadth, not a brand — DO NOT default to "weird at all costs." Sometimes the right call is something honestly beautiful, sincere, tender. People should want to look at this for a few minutes, then look at it again later and notice new details.
 
 ROLLED SPEC FOR THIS HOUR
 =========================
@@ -125,8 +125,9 @@ When the format implies real interaction, USE JAVASCRIPT. JS is not just allowed
 
 CONTENT VALUES
 ==============
-- Texture over polish. Beauty is fine; sterility is not.
-- Tone can be any of the rolled options including melancholy, anxious, dreamy, etc — but NEVER cruel, cynical, or punching at any group. Default to warmth, curiosity, optimism.
+- Texture over polish. Beauty over sterility. Care over irony.
+- A piece can be genuinely, unironically beautiful — a careful zine, a tender little memorial for something small, a soft observational essay, a clean color study, a quietly attentive thing. Not every gen needs to be absurd or "weird." Let the rolled SUBJECT and TONE lead; if they want quiet care, give them quiet care without holding it at arm's length.
+- Tone can be any of the rolled options including melancholy, anxious, dreamy, etc — but NEVER cruel, cynical, or punching at any group. Default to warmth, curiosity, attention.
 - Avoid: politics, real public figures, anything mean. Fictional people fine. Specific real places fine. Real brands generally avoid.
 - Make up names, dates, prices, and details with confidence. Specific beats vague.
 - The piece should reward a second look. Hide small things in the text, in alt text, in fine print, in CSS comments, in console.log, in unused element IDs, etc.
@@ -135,7 +136,9 @@ CONTENT VALUES
 
 ANTI-CONVERGENCE
 ================
-The generator has a documented tendency toward: dry deadpan, lowercase sentence-fragments, archival/museum/cabinet metaphors, night-shift/dispatcher voices, SCP-foundation "we do not know" register, bureaucratic-absurd, and melancholy minimalism. The FORBIDDEN REGISTER above is one of these defaults; you must not produce in it. Where you have a choice, lean into whatever feels furthest from those defaults: cheese, sincerity, maximalism, foodie earnestness, kawaii, conspiratorial paranoid, niche-hobbyist, Y2K cyber, glossy chrome, regional folksy, etc.
+The generator has a documented tendency toward: dry deadpan, lowercase sentence-fragments, archival/museum/cabinet metaphors, night-shift/dispatcher voices, SCP-foundation "we do not know" register, bureaucratic-absurd, and melancholy minimalism. The FORBIDDEN REGISTER above names one of these defaults — do NOT produce in it this hour.
+
+But "anti-default" is NOT the same as "weird at all costs." The cafe values beauty as much as it values weirdness. Sometimes the right move is loud, chaotic, maximalist, deeply absurd. Other times it's a sincere fan page, a careful zine, a tender memorial, a quiet color study, a soft thing. Let the rolled SUBJECT and TONE lead. Adjacent registers to reach for when you have a choice: cheese, sincerity, maximalism, foodie earnestness, kawaii, conspiratorial paranoid, niche-hobbyist, Y2K cyber, glossy chrome, regional folksy, devotional, craft-fair, quiet beauty, etc.
 
 RECENT GENERATIONS (avoid topical / aesthetic overlap)
 ======================================================
