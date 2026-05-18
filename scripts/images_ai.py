@@ -61,6 +61,94 @@ def derive_ai_prompts(spec: dict[str, Any]) -> list[str]:
     ]
 
 
+def derive_poster_prompt(spec: dict[str, Any]) -> str:
+    """A single bold composition for the social thumbnail — distinct from inline page art."""
+    era = _v(spec, "era")
+    subject = _v(spec, "subject")
+    palette = _v(spec, "palette")
+    tone = _v(spec, "tone")
+    subj = _clean_subject(subject)
+
+    style_bits = []
+    if era:
+        style_bits.append(era)
+    if palette:
+        style_bits.append(f"palette of {palette}")
+    if tone:
+        style_bits.append(f"{tone} mood")
+    style = ". ".join(style_bits)
+
+    suffix = "single strong central subject, bold confident composition, square format, suitable as a cover image. no text, no captions, no watermarks, no logos."
+    parts = [f"Poster artwork for {subj}"]
+    if style:
+        parts.append(style)
+    parts.append(suffix)
+    return ". ".join(parts)
+
+
+def fetch_poster_image(
+    spec: dict[str, Any],
+    out_path: "Path",
+    timeout: int = 60,
+) -> bool:
+    """Generate a dedicated social-poster image and save as PNG to `out_path`.
+
+    Returns True on success. Best-effort: any failure logs and returns False.
+    """
+    from io import BytesIO
+    from pathlib import Path  # noqa: F401  (typing-only above)
+
+    key = os.environ.get("FAL_KEY")
+    if not key:
+        return False
+
+    prompt = derive_poster_prompt(spec)
+    body = json.dumps({
+        "prompt": prompt,
+        "image_size": "square_hd",
+        "num_images": 1,
+        "num_inference_steps": 4,
+        "enable_safety_checker": False,
+    }).encode()
+    req = urllib.request.Request(
+        f"{FAL_BASE}{FLUX_SCHNELL}",
+        data=body,
+        headers={"Authorization": f"Key {key}", "Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            data = json.load(r)
+    except Exception as e:
+        print(f"[images_ai/poster] fal call failed: {e}")
+        return False
+
+    url = (data.get("images") or [{}])[0].get("url")
+    if not url:
+        print(f"[images_ai/poster] no image url in response: {json.dumps(data)[:200]}")
+        return False
+
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as r:
+            img_bytes = r.read()
+    except Exception as e:
+        print(f"[images_ai/poster] download failed: {e}")
+        return False
+
+    try:
+        from PIL import Image
+        img = Image.open(BytesIO(img_bytes))
+        if img.mode not in ("RGB", "L"):
+            img = img.convert("RGB")
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        img.save(out_path, format="PNG", optimize=True)
+    except Exception as e:
+        print(f"[images_ai/poster] save failed: {e}")
+        return False
+
+    return True
+
+
 def fetch_ai_images(
     spec: dict[str, Any],
     count: int = 3,
