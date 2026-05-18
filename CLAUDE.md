@@ -49,3 +49,16 @@ Affects `scripts/cat_signal.py` and any other direct Discord API call we add.
 ## Voice / content guardrails
 
 The cafe is the brand — multiple inconsistent staff voices under one handle. Three rules: relentlessly positive, never fight people, very very random. No politics, no real public figures, no real brands generally. Spec rolls across seven dimensions with anti-bias mechanics; forbidden register pushes against the generator's documented defaults (dry deadpan, archival/museum metaphors, dispatcher voice, SCP register).
+
+## Social posting philosophy (carried from SBT)
+
+> "We give people the most useful info possible, not just try to drive straight back to our site at every turn. If we consistently deliver, they trust us and seek us out." — Stephen, on SBS social
+
+Translated for outbox.cafe (all our content is ours, so the rule isn't "link out" but "let the post be the post"):
+
+- **The post is the point.** Posts stand alone as content — quotes, fragments, specific details, the thumbnail. A follower scrolling should get something whole without clicking.
+- **No "read →" CTA, no clickable funnel photo.** Tumblr profile bio carries the cafe URL for anyone curious.
+- **No URLs in body text.** Bluesky comment is right: outbound links kill engagement. The thumb is the visual.
+- **No meta-announcement phrasing.** "Found this", "from the archive", "new piece is up", "just dropped" — all banned. The post is content, not a teaser for content elsewhere.
+- **Excerpts and images are the inspiration source.** Cats are sharing what they're noticing, not advertising the cafe.
+- **Exception (not the default):** a truly interactive piece (game/puzzle/toy/tuner) that can't live in a post form — those CAN link. Add a heuristic on the spec format if/when we want to surface that.
