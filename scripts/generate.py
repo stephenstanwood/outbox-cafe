@@ -1321,17 +1321,27 @@ def main() -> int:
         return 0
 
     print("calling claude (this may take 30-90s for larger pieces) ...")
-    raw = call_claude(prompt, model=args.model)
-    html = extract_html(raw)
-
-    if not looks_like_html(html):
-        # Save to a debug file but don't overwrite index
+    MAX_ATTEMPTS = 3
+    raw = ""
+    html = ""
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        raw = call_claude(prompt, model=args.model)
+        html = extract_html(raw)
+        if looks_like_html(html):
+            if attempt > 1:
+                print(f"  (looks-like-html passed on attempt {attempt}/{MAX_ATTEMPTS})")
+            break
+        print(f"  attempt {attempt}/{MAX_ATTEMPTS}: output did not look like HTML — retrying", file=sys.stderr)
+    else:
+        # All attempts produced non-HTML output. Save both the raw response and
+        # the prompt so the failure mode is debuggable next time.
         debug = ROOT / "data" / "last_bad_output.txt"
         debug.write_text(raw)
-        print(f"output did not look like HTML; raw saved to {debug}", file=sys.stderr)
+        (ROOT / "data" / "last_bad_prompt.txt").write_text(prompt)
+        print(f"output did not look like HTML after {MAX_ATTEMPTS} attempts; raw saved to {debug}", file=sys.stderr)
         try:
             from cat_signal import signal
-            signal("gen-bad-output", f"claude returned non-HTML output. raw saved to data/last_bad_output.txt", priority="high")
+            signal("gen-bad-output", f"claude returned non-HTML output ({MAX_ATTEMPTS}x). raw saved to data/last_bad_output.txt", priority="high")
         except Exception:
             pass
         return 2
