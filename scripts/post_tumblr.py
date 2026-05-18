@@ -110,7 +110,7 @@ def _call_claude(staff: dict[str, Any], title: str, snippet: str) -> str | None:
     )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--permission-mode", "plan", "--model", "haiku"],
+            ["claude", "--print", "--tools", "", "--model", "haiku"],
             input=prompt,
             capture_output=True,
             text=True,

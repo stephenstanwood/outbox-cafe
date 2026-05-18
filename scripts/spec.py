@@ -259,7 +259,7 @@ def roll_spec_via_llm(
 
     # Spec rolling is just JSON output — haiku is plenty smart and much faster
     # than the default model. Falls back to static roller on any failure anyway.
-    cmd = ["claude", "--print", "--tools", "", "--permission-mode", "plan"]
+    cmd = ["claude", "--print", "--tools", ""]
     cmd += ["--model", model or "haiku"]
 
     try:

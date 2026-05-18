@@ -146,7 +146,7 @@ def _call_claude_for_post(
     try:
         result = subprocess.run(
             # Short persona-voiced post — haiku is plenty fast and smart enough
-            ["claude", "--print", "--tools", "", "--permission-mode", "plan", "--model", "haiku"],
+            ["claude", "--print", "--tools", "", "--model", "haiku"],
             input=prompt,
             capture_output=True,
             text=True,
