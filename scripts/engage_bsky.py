@@ -179,7 +179,7 @@ def _generate_reply(
     )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--permission-mode", "plan", "--model", "haiku"],
+            ["claude", "--print", "--tools", "", "--model", "haiku"],
             input=prompt,
             capture_output=True,
             text=True,
@@ -294,7 +294,7 @@ def _generate_ambient(staff: dict[str, Any]) -> str | None:
     )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--permission-mode", "plan", "--model", "haiku"],
+            ["claude", "--print", "--tools", "", "--model", "haiku"],
             input=prompt,
             capture_output=True,
             text=True,
@@ -439,7 +439,7 @@ def _roll_wild_topic(rng: random.Random) -> str:
     """Ask Claude to invent a fresh search query. Falls back to a static list if it fails."""
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--permission-mode", "plan", "--model", "haiku"],
+            ["claude", "--print", "--tools", "", "--model", "haiku"],
             input=WILD_TOPIC_ROLL_PROMPT,
             capture_output=True,
             text=True,
@@ -511,7 +511,7 @@ def _generate_wild_reply(
     )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--permission-mode", "plan", "--model", "haiku"],
+            ["claude", "--print", "--tools", "", "--model", "haiku"],
             input=prompt,
             capture_output=True,
             text=True,
