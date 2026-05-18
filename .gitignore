@@ -23,3 +23,7 @@ data/wild_state.json
 
 # Throwback dedup — last 100 archive files we've resurfaced
 data/throwback_state.json
+
+# Debug artifact written when a gen returns non-HTML — runtime-only, must
+# not be tracked or it blocks subsequent rebase pulls on the Mini
+data/last_bad_output.txt
