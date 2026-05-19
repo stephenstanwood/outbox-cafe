@@ -69,38 +69,21 @@ def call_claude(prompt: str, model: str | None = None, timeout: int = 600) -> st
 RELOAD_SCRIPT = """
 <script>
 (function () {
-  // At the next top-of-hour, poll for new content (title change) every 12s.
-  // Reload as soon as it changes, or after 3 min if it didn't.
-  // UTC top-of-hour == PT top-of-hour (PT offset is a whole number).
-  function msUntilNextHour() {
-    var now = new Date();
-    var next = new Date(now);
-    next.setUTCMinutes(0, 0, 0);
-    next.setUTCHours(next.getUTCHours() + 1);
-    return next - now;
-  }
+  // Poll every 90s for new content. Reload when the title changes.
+  // Cron sets the cadence (every 10 min in stash mode, hourly otherwise);
+  // the JS just notices whenever new content lands.
   var initialTitle = document.title;
-  setTimeout(function () {
-    var attempts = 0;
-    var iv = setInterval(function () {
-      attempts++;
-      if (attempts > 15) {
-        clearInterval(iv);
-        window.location.reload();
-        return;
-      }
-      fetch(window.location.pathname + '?_t=' + Date.now(), { cache: 'no-store' })
-        .then(function (r) { return r.text(); })
-        .then(function (text) {
-          var m = text.match(/<title>([^<]+)<\\/title>/);
-          if (m && m[1] !== initialTitle) {
-            clearInterval(iv);
-            window.location.reload();
-          }
-        })
-        .catch(function () {});
-    }, 12000);
-  }, msUntilNextHour());
+  setInterval(function () {
+    fetch(window.location.pathname + '?_t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.text(); })
+      .then(function (text) {
+        var m = text.match(/<title>([^<]+)<\\/title>/);
+        if (m && m[1] !== initialTitle) {
+          window.location.reload();
+        }
+      })
+      .catch(function () {});
+  }, 90000);
 })();
 </script>
 """
