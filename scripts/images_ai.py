@@ -27,15 +27,14 @@ FAL_BASE = "https://fal.run"
 FLUX_SCHNELL = "/fal-ai/flux/schnell"
 RECRAFT_V3 = "/fal-ai/recraft-v3"
 
-# Recraft styles to rotate the poster through. All of them respect "no text"
-# better than FLUX and read as illustrated posters (not stock photos).
+# Recraft styles to rotate the poster through. Raster only — the
+# `vector_illustration/*` styles return SVG, which PIL can't open and which
+# Tumblr/Bluesky don't accept as raster thumbnails.
 RECRAFT_POSTER_STYLES = [
     "digital_illustration",
-    "vector_illustration",
     "digital_illustration/pixel_art",
     "digital_illustration/hand_drawn",
     "digital_illustration/grain",
-    "vector_illustration/engraving",
 ]
 
 
