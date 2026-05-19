@@ -1,13 +1,13 @@
 # outbox.cafe — project context
 
-Hourly weird/retro generative site. Mac Mini cron rolls a spec, hands to Claude, writes HTML, commits, pushes, Vercel deploys.
+Weird/retro generative site, 4 gens/day. Mac Mini cron rolls a spec, hands to Claude, writes HTML, commits, pushes, Vercel deploys.
 
 ## Where things live
 
 - **Source of truth: Mac Mini.** Cron, OAuth token, logs, locks all live on Mini.
   - SSH: `stephenstanwood@10.0.0.234` (local) / `100.117.24.89` (Tailscale)
   - Logs: `~/logs/outbox-cafe.log` (appended forever — `tail -100` for recent)
-  - Cron entry: `crontab -l` — currently in `*/10` stash mode, flip-to-hourly.sh promotes it
+  - Cron entry: `crontab -l` — currently `0 4,8,12,16 * * *` (4am, 8am, 12pm, 4pm PT)
   - Lock: `/tmp/outbox-cafe-run.lock` (mkdir-based, stale after 15 min)
 - **Hosting: Vercel.** Auto-deploys on push to `main`. No vercel.ts/.json — it's static.
 - **OAuth token:** sourced from `~/Projects/mini-claude-proxy/.env` (`CLAUDE_CODE_OAUTH_TOKEN`).
@@ -34,9 +34,9 @@ Bare `urllib` UA (`Python-urllib/3.x`) trips Cloudflare's browser-fingerprint bl
 
 Affects `scripts/cat_signal.py` and any other direct Discord API call we add.
 
-### Cron stash mode vs hourly mode
+### Cron schedule
 
-`*/10 * * * *` = stash mode (used during Max usage cycles to throttle). `0 * * * *` = hourly. `scripts/flip-to-hourly.sh` is a one-shot scheduled to fire Monday 04:00 PT to flip back. Single-flight lock prevents pileup either way.
+Currently `0 4,8,12,16 * * *` on the Mini — 4 gens/day at 4am, 8am, 12pm, 4pm PT. Single-flight lock prevents pileup. `scripts/flip-to-hourly.sh` is now dormant (no cron entry calls it) — leftover from when we ran `*/10` stash mode during Max usage cycles and auto-flipped back to hourly each Monday. Past schedules used: `*/10 * * * *` (stash), `0 * * * *` (hourly).
 
 ## Common ops
 
