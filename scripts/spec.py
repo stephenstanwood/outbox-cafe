@@ -34,6 +34,166 @@ FORBIDDEN_PROBABILITY = 0.65
 # Length tier weights (favor medium, occasional tiny/large for variety)
 LENGTH_WEIGHTS = {"tiny": 30, "medium": 50, "large": 20}
 
+# Format buckets — picked in code (not by the LLM) so games/puzzles/art actually
+# get rotation. Without this, the LLM defaults to "interactive [X] logbook browser"
+# for ~70% of gens regardless of how the prompt nudges it. Bucket is chosen with
+# anti-bias on recent history, then handed to the LLM as a hard constraint.
+FORMAT_BUCKETS: dict[str, dict[str, Any]] = {
+    "game_toy": {
+        "label": "TINY BROWSER GAME / INTERACTIVE TOY",
+        "description": "A small, real, playable thing. The visitor clicks, taps, types, drags, or steers and something actually happens. Build a working game/toy, not a description of one — the button must do the thing, the maze must navigate, the dice must roll.",
+        "examples": [
+            "a one-button game (click increases something, that's the whole loop)",
+            "a tiny clickable garden you plant in (click cells, things grow)",
+            "a hidden-object scene (find the cat / find five matchbooks)",
+            "a magic 8-ball or fortune machine that gives one answer per click",
+            "a pet you can pet (click it, it responds — purrs, wiggles, blooms)",
+            "a small maze steered with arrow keys (real, playable)",
+            "a sliding-tile puzzle (3x3) that reveals a hidden picture",
+            "a memory-match grid with 6-8 pairs",
+            "a feed-the-creature game (drag food onto a creature, it reacts)",
+            "a rotary-phone dial toy (each digit plays a tone or reveals a word)",
+            "a tap-the-bell game where each ring slightly changes the world",
+            "a click-to-summon-a-firework or click-to-pop-a-bubble button",
+            "a tiny terrarium you can shake or tilt with mouse movement",
+            "a coin-flip oracle: ask, click, get answer",
+        ],
+    },
+    "puzzle": {
+        "label": "REAL SOLVABLE PUZZLE",
+        "description": "A genuine puzzle the visitor can solve in-browser. Provide a reveal mechanism (button, key combo, inspect-element easter egg) but don't give the answer upfront.",
+        "examples": [
+            "a real cryptogram you can solve in-browser (with reveal button)",
+            "a riddle whose answer is hidden (click-reveal, inspect-element, or keyboard cue)",
+            "a 4x4 Sudoku-lite you can fill in",
+            "a spot-the-difference between two near-identical scenes",
+            "a word ladder from one word to another, 4-6 steps",
+            "a logic grid puzzle: 3 items, 3 traits, fill in the truth",
+            "a maze you trace with the cursor (no clicking, just following)",
+            "a 'what comes next' visual sequence puzzle",
+            "a find-the-hidden-word puzzle: word camouflaged in dense text",
+            "a treasure hunt where clicked clues lead to hidden divs across the page",
+        ],
+    },
+    "gen_art": {
+        "label": "GENERATIVE / CSS ART PIECE",
+        "description": "A pure visual or sensory piece. Minimal or no text. CSS, SVG, JS animation. The piece IS the visual — beauty over information.",
+        "examples": [
+            "a CSS-only generative wallpaper that slowly morphs",
+            "a kaleidoscope (CSS conic gradient + slow rotation)",
+            "an ASCII rain or snow animation that runs forever",
+            "a CSS landscape painting (mountain, lake, sky — pure shapes, no images)",
+            "a constellation map of fictional stars with named asterisms",
+            "a particle-system snow globe you can shake with the cursor",
+            "a music box you wind by scrolling — mechanical shapes turn",
+            "a window with parallax weather happening 'outside'",
+            "a single drop of light pulsing in the dark, breathing",
+            "a quilt pattern that's also a map of somewhere",
+            "a flipbook (click to advance, 8-12 frames of a small scene)",
+            "a slow ink-drop expanding across the page",
+            "a sun-and-moon clock without numbers — only color and shadow",
+            "a hand-drawn-feeling cursor trail you paint with",
+            "a CSS art portrait of a fictional person, framed like a museum tag",
+        ],
+    },
+    "structural": {
+        "label": "STRUCTURALLY WEIRD PAGE",
+        "description": "The strangeness IS the point. Form-as-content. Don't explain the joke; let the visitor sit in it.",
+        "examples": [
+            "a page that pretends to be loading forever (the loading IS the content)",
+            "a page that's just one very long footer (no header, no body)",
+            "a page that's a single modal dialog you can't close",
+            "a 404 that isn't actually a 404",
+            "a comments section with no original post",
+            "a transcript of a phone call where one side is just static",
+            "a typewriter that types its own page out, one character at a time",
+            "a page that's only an iframe of itself, recursive",
+            "a page that's a directory listing of files that don't exist",
+            "a page that's the same sentence repeated 30 times, slightly different each time",
+            "a page that's a single map legend with no map",
+            "a page that's a Russian-doll of nested boxes you click into",
+            "a page that's the closing credits for nothing",
+            "a page that is a single very long word with internal structure",
+            "a page that's an unsolved equation written as a poem",
+        ],
+    },
+    "document": {
+        "label": "TRADITIONAL CONTENT SHAPE",
+        "description": "The page LOOKS LIKE a real-world document — a thing with specific physical-object texture. Receipt, menu, flyer, card, letter, ad, ticket, package label. Read like the object it imitates.",
+        "examples": [
+            "shop receipt with itemized list",
+            "restaurant menu",
+            "yard sale flyer",
+            "missing pet flyer",
+            "real estate listing",
+            "classified ads page",
+            "recipe card",
+            "back of a cereal box",
+            "fan letter (one side only)",
+            "spam email (artisanal)",
+            "horoscope page (12 signs, all weird)",
+            "voicemail transcript",
+            "set list from a concert that didn't happen",
+            "manifesto / open letter",
+            "instruction manual (page 47 of 200)",
+            "wedding registry for fictional people",
+            "ringtone download page",
+            "auction listing for a single weird item",
+            "product review",
+            "FAQ page",
+            "church bulletin",
+            "HOA newsletter",
+            "obituary for something that did not die",
+        ],
+    },
+    "archive_browser": {
+        "label": "BROWSEABLE ARCHIVE / DIRECTORY",
+        "description": "A logbook, ledger, registry, catalog, or member directory the visitor browses. USED HEAVILY in recent gens — only pick this when truly fresh, and never with a radio/broadcast/operator subject.",
+        "examples": [
+            "BBS login screen and main menu",
+            "library card with stamped due dates",
+            "field guide entry (one species)",
+            "museum exhibit placard",
+            "corkboard / community bulletin board",
+            "mailing list digest",
+            "magazine spread / center fold",
+        ],
+    },
+}
+
+# Bucket selection weights — heavily downweight archive_browser (current attractor),
+# upweight the categories that are starved (game_toy, puzzle, gen_art).
+FORMAT_BUCKET_WEIGHTS = {
+    "game_toy":        25,
+    "puzzle":          18,
+    "gen_art":         25,
+    "structural":      14,
+    "document":        20,
+    "archive_browser": 5,
+}
+
+
+def _pick_format_bucket(history: list[dict], rng: random.Random) -> str:
+    """Pick a format bucket with anti-bias on recent history.
+
+    Hard-blocks buckets used in the last 3 rolls so the next gen lands in a
+    fresh category. Falls back to weighted choice over all buckets if every
+    bucket happens to be blocked (only possible with a tiny pool).
+    """
+    recent_buckets: list[str] = []
+    for h in history:
+        b = h.get("format_bucket")
+        if isinstance(b, str):
+            recent_buckets.append(b)
+
+    HARD_BLOCK_RECENT = 3
+    blocked = set(recent_buckets[-HARD_BLOCK_RECENT:]) if recent_buckets else set()
+    pool = [k for k in FORMAT_BUCKETS if k not in blocked]
+    if not pool:
+        pool = list(FORMAT_BUCKETS)
+    weights = [FORMAT_BUCKET_WEIGHTS.get(k, 10) for k in pool]
+    return rng.choices(pool, weights=weights, k=1)[0]
+
 
 def load_dimensions() -> dict[str, Any]:
     return json.loads(DIMENSIONS_PATH.read_text())
@@ -166,7 +326,23 @@ SPEC_LLM_PROMPT = """You are rolling a spec for outbox.cafe — a constantly-evo
 
 The dimension pools are bottomless — don't think of yourself as picking from a list. INVENT. Reach into untouched corners of internet history, hobby subcultures, regional weirdness, fictional ephemera, art movements, mechanical curiosities, kitchen objects, weather phenomena, defunct industries.
 
+FORMAT BUCKET FOR THIS HOUR (HARD CONSTRAINT)
+=============================================
+The format bucket has been pre-chosen for you to force category rotation. Invent your `format` value WITHIN THIS BUCKET ONLY:
+
+>>> {format_bucket_label} <<<
+{format_bucket_description}
+
+Examples from this bucket (texture only — invent something fresh, don't copy verbatim):
+{format_bucket_examples}
+
+Your `format` value MUST be a {format_bucket_label}. Do NOT produce a logbook / ledger / registry / catalog / directory browser unless the bucket above is BROWSEABLE ARCHIVE / DIRECTORY. Do NOT produce a "this site IS a [physical document]" answer unless the bucket above is TRADITIONAL CONTENT SHAPE. Stay inside the bucket.
+
 AVOID THESE PATTERNS THE ENGINE OVERUSES (no exceptions, regardless of how cleverly you'd phrase them):
+- "Interactive [X] logbook / ledger / registry / catalog / directory / archive browser" format pattern. ~70% of recent gens have been this shape. Hard-banned unless the bucket above explicitly says BROWSEABLE ARCHIVE / DIRECTORY.
+- Radio, CB radio, ham radio, BBS, telephone exchange, switchboard, broadcast station, TV station, telegraph, dispatcher, taxi-dispatch, operator-shift, transmission, signal, frequency-tuner subjects. Heavily overused. Off-limits for at least the next several rounds, regardless of bucket.
+- Reused fictional proper nouns: "Millbrook", "Whitmore", "Riverside [Society]", "the [town] [Society/Club] of [thing]". Pick fresh names, settings, and scaffolding — and where possible, avoid the "fictional small-town society/club of hobbyists" frame entirely.
+- "Society / club / cabinet / observatory / parlor / salon of [niche hobby]" as the subject scaffolding — pattern is exhausted.
 - Day-of-the-week themes — no Wednesdays, Tuesdays, Mondays, weekends-as-concept, "a regular [day]", etc. Days as throwaway specifics in a piece are fine; days as the SUBJECT are off-limits.
 - "Fictional baseball team" / minor-league-anything subjects.
 - "One specific X" framing (one specific cloud, one specific Tuesday, one specific intersection) — the construction has been used too much.
@@ -239,7 +415,14 @@ def roll_spec_via_llm(
     def example_str(field: str) -> str:
         return "; ".join(_examples_from_dimensions(dims, field, n=5, rng=rng))
 
+    bucket_key = _pick_format_bucket(history, rng)
+    bucket = FORMAT_BUCKETS[bucket_key]
+    bucket_examples = rng.sample(bucket["examples"], min(6, len(bucket["examples"])))
+
     prompt = SPEC_LLM_PROMPT.format(
+        format_bucket_label=bucket["label"],
+        format_bucket_description=bucket["description"],
+        format_bucket_examples="\n".join(f"  - {e}" for e in bucket_examples),
         era_recent=recent_str("era"),
         format_recent=recent_str("format"),
         subject_recent=recent_str("subject"),
@@ -305,6 +488,7 @@ def roll_spec_via_llm(
     spec["generated_at"] = datetime.now(timezone.utc).isoformat()
     spec["seed"] = seed
     spec["rolled_by"] = "llm"
+    spec["format_bucket"] = bucket_key
     return spec
 
 
@@ -328,6 +512,8 @@ def format_spec_for_human(spec: dict[str, Any]) -> str:
         f"  wildcard         {v('wildcard')}",
         f"  forbidden        {v('forbidden_register')}",
     ]
+    if spec.get("format_bucket"):
+        lines.insert(2, f"  format_bucket    {spec['format_bucket']}")
     return "\n".join(lines)
 
 
