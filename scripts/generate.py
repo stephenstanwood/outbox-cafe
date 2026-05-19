@@ -1,4 +1,4 @@
-"""Main hourly entry point for outbox.cafe.
+"""Main entry point for outbox.cafe — runs on the 4x/day cron (4am, 8am, noon, 4pm PT).
 
 Rolls a spec, calls Claude via the local `claude` CLI (uses Max OAuth, no API $),
 writes the HTML to archive/ and copies to index.html, refreshes the cabinet
@@ -70,7 +70,7 @@ RELOAD_SCRIPT = """
 <script>
 (function () {
   // Poll every 90s for new content. Reload when the title changes.
-  // Cron sets the cadence (every 10 min in stash mode, hourly otherwise);
+  // Cron currently fires 4x/day (4am, 8am, noon, 4pm PT);
   // the JS just notices whenever new content lands.
   var initialTitle = document.title;
   setInterval(function () {
@@ -90,7 +90,7 @@ RELOAD_SCRIPT = """
 
 
 def inject_reload(html: str) -> str:
-    """Insert the hourly reload script before </body>."""
+    """Insert the auto-reload script before </body>."""
     if re.search(r"</body\s*>", html, re.IGNORECASE):
         return re.sub(
             r"(</body\s*>)",
@@ -674,7 +674,7 @@ def rebuild_cabinet() -> None:
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/rss+xml" title="outbox.cafe" href="/feed.xml">
 <meta property="og:title" content="THE COLLECTION · outbox.cafe">
-<meta property="og:description" content="every hour another piece. browse the cabinet.">
+<meta property="og:description" content="a new piece four times a day. browse the cabinet.">
 <meta property="og:url" content="https://outbox.cafe/archive/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="outbox.cafe">
@@ -1100,7 +1100,7 @@ def rebuild_cabinet() -> None:
 
 <header class="hero">
   <h1>THE&nbsp;COLLECTION</h1>
-  <div class="sub">everything we've put up at outbox.cafe · cards drop hourly · gotta look at 'em all</div>
+  <div class="sub">everything we've put up at outbox.cafe · cards drop 4x/day · gotta look at 'em all</div>
   <div class="meta">
     <span>SET: 2026</span>
     <span>{count} / ∞</span>
@@ -1125,11 +1125,11 @@ def rebuild_cabinet() -> None:
 </script>
 
 <main class="grid">
-{cards_html if entries else '<p style="text-align:center;color:var(--dim);font-size:14px;padding:40px;">no cards yet. the first one drops at the top of the hour.</p>'}
+{cards_html if entries else '<p style="text-align:center;color:var(--dim);font-size:14px;padding:40px;">no cards yet. fresh cards drop four times a day.</p>'}
 </main>
 
 <footer>
-  outbox.cafe · trading cards mint themselves at the top of every hour<br>
+  outbox.cafe · trading cards mint themselves four times a day<br>
   <small>rarity is randomly assigned at mint. 1st-edition cards have a gold border. holographics shimmer in the dark.</small><br>
   <small><a href="/about/">about</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
 </footer>
@@ -1149,8 +1149,8 @@ def rebuild_sitemap() -> None:
     sitemap_path = ROOT / "sitemap.xml"
     base = "https://outbox.cafe"
     urls = [
-        (f"{base}/", "1.0", "hourly"),
-        (f"{base}/archive/", "0.8", "hourly"),
+        (f"{base}/", "1.0", "daily"),
+        (f"{base}/archive/", "0.8", "daily"),
         (f"{base}/about/", "0.5", "monthly"),
     ]
     files = sorted(ARCHIVE_DIR.glob("*.html"), reverse=True)
@@ -1221,7 +1221,7 @@ def rebuild_feed() -> None:
         '<channel>\n'
         '  <title>outbox.cafe</title>\n'
         '  <link>https://outbox.cafe</link>\n'
-        '  <description>a small place on the internet. a new posting at the top of every hour.</description>\n'
+        '  <description>a small place on the internet. a new posting four times a day.</description>\n'
         '  <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>\n'
         '  <language>en-us</language>\n'
         '  <generator>outbox-cafe generator</generator>\n'
@@ -1234,7 +1234,7 @@ def rebuild_feed() -> None:
 
 def git_commit_and_push(message: str) -> None:
     """Stage everything, commit, push. Retry once with a pull --rebase if push
-    fails (the remote moved during the long gen — a real race for hourly cron)."""
+    fails (the remote moved during the long gen — a real race for any frequent cron)."""
     subprocess.run(["git", "-C", str(ROOT), "add", "-A"], check=True)
     diff = subprocess.run(
         ["git", "-C", str(ROOT), "diff", "--cached", "--quiet"],
@@ -1276,7 +1276,7 @@ def main() -> int:
         print("rolling spec via llm ...")
         spec = roll_spec_via_llm(seed=args.seed, model=args.model)
     print("=" * 60)
-    print(f"hourly generation @ {datetime.now(tz=PT).isoformat()}")
+    print(f"scheduled generation @ {datetime.now(tz=PT).isoformat()}")
     print("=" * 60)
     print(format_spec_for_human(spec))
     print()
@@ -1368,7 +1368,7 @@ def main() -> int:
     print(f"\n✓ wrote {archive_file.name} — {title}")
 
     if args.commit:
-        msg = f"hourly: {title}"[:72]
+        msg = f"drop: {title}"[:72]
         git_commit_and_push(msg)
         print("✓ committed and pushed")
 

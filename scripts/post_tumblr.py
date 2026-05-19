@@ -15,7 +15,7 @@ Tumblr-specific differences from Bluesky:
 
 Stays in cat-staff voice via personas.json. Per-gen skip rate honors
 `post_types.tumblr_drop.skip_rate` (default 0.5) so the feed isn't an
-hourly bot firehose. OAuth 1.0a, photo post with binary thumb upload.
+cafe drop firehose. OAuth 1.0a, photo post with binary thumb upload.
 """
 from __future__ import annotations
 

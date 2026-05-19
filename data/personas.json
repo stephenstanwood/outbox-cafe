@@ -131,12 +131,12 @@
 
   "post_types": {
     "drop_announcement": {
-      "description": "Bsky: posted within ~20 minutes of a new hourly piece going up. Varies wildly in form: sometimes a sentence, sometimes a quote pulled from the piece, sometimes oblique reference, sometimes a single emoji or noun. Random staff member. Skip rate 50% — drops shouldn't be every single hour or the feed reads as bot-broadcast.",
-      "skip_rate": 0.5
+      "description": "Bsky: posted within ~20 minutes of a new piece going up (cafe drops 4x/day at 4am, 8am, noon, 4pm PT). Varies wildly in form: sometimes a sentence, sometimes a quote pulled from the piece, sometimes oblique reference, sometimes a single emoji or noun. Random staff member. Skip rate 0% — at 4 drops/day every gen gets posted; no bot-broadcast worry.",
+      "skip_rate": 0.0
     },
     "tumblr_drop": {
-      "description": "Tumblr cross-post of a fresh gen. Photo post with thumbnail + cat-voice caption + 'read →' link out + tags. Tumblr likes links and tags so we use both freely. Skip rate 50% — same cadence as bsky for now.",
-      "skip_rate": 0.5
+      "description": "Tumblr cross-post of a fresh gen. Photo post with thumbnail + cat-voice caption + 'read →' link out + tags. Tumblr likes links and tags so we use both freely. Skip rate 0% — same cadence as bsky; every gen posts.",
+      "skip_rate": 0.0
     },
     "ambient": {
       "description": "Between-drop posts. Staff observations unrelated to any specific posting. 1-3 per day on average. Random staff member.",
