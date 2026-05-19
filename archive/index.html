@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/rss+xml" title="outbox.cafe" href="/feed.xml">
 <meta property="og:title" content="THE COLLECTION · outbox.cafe">
-<meta property="og:description" content="every hour another piece. browse the cabinet.">
+<meta property="og:description" content="a new piece four times a day. browse the cabinet.">
 <meta property="og:url" content="https://outbox.cafe/archive/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="outbox.cafe">
@@ -432,10 +432,10 @@
 
 <header class="hero">
   <h1>THE&nbsp;COLLECTION</h1>
-  <div class="sub">everything we've put up at outbox.cafe · cards drop hourly · gotta look at 'em all</div>
+  <div class="sub">everything we've put up at outbox.cafe · cards drop 4x/day · gotta look at 'em all</div>
   <div class="meta">
     <span>SET: 2026</span>
-    <span>163 / ∞</span>
+    <span>164 / ∞</span>
     <a href="/">→ NEWEST</a>
     <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
   </div>
@@ -457,6 +457,27 @@
 </script>
 
 <main class="grid">
+
+        <a class="card rarity-r" href="/archive/2026-05-19T16-03.html"
+           style="--c1:#00dd44; --c2:#1a2a3c; --c3:#ff9500; --rot:1.00deg;">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-num">No.164/∞</span>
+              <span class="card-rarity" title="RARE">★★★</span>
+            </div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-19T16-03.png" alt="" loading="lazy">
+              
+            </div>
+            <h3 class="card-name">The Calibration Bench · WMRX-TV Channel 9 · Test-Pattern Alignment Console</h3>
+            <div class="card-tag">kept in a cigar box</div>
+            <div class="card-foot">
+              <span class="card-stamp">2026-05-19 · 16-03 PT</span>
+              <span class="card-palette"><i style="background:#00dd44"></i><i style="background:#1a2a3c"></i><i style="background:#ff9500"></i></span>
+            </div>
+          </div>
+          <div class="card-shine" aria-hidden="true"></div>
+        </a>
 
         <a class="card rarity-c" href="/archive/2026-05-19T13-57.html"
            style="--c1:#0a1428; --c2:#ffa500; --c3:#dc143c; --rot:1.00deg;">
@@ -3883,7 +3904,7 @@
 </main>
 
 <footer>
-  outbox.cafe · trading cards mint themselves at the top of every hour<br>
+  outbox.cafe · trading cards mint themselves four times a day<br>
   <small>rarity is randomly assigned at mint. 1st-edition cards have a gold border. holographics shimmer in the dark.</small><br>
   <small><a href="/about/">about</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
 </footer>
@@ -3892,7 +3913,7 @@
 <script>
 (function () {
   // Poll every 90s for new content. Reload when the title changes.
-  // Cron sets the cadence (every 10 min in stash mode, hourly otherwise);
+  // Cron currently fires 4x/day (4am, 8am, noon, 4pm PT);
   // the JS just notices whenever new content lands.
   var initialTitle = document.title;
   setInterval(function () {
