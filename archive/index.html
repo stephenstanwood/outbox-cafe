@@ -435,7 +435,7 @@
   <div class="sub">everything we've put up at outbox.cafe · cards drop hourly · gotta look at 'em all</div>
   <div class="meta">
     <span>SET: 2026</span>
-    <span>153 / ∞</span>
+    <span>154 / ∞</span>
     <a href="/">→ NEWEST</a>
     <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
   </div>
@@ -457,6 +457,27 @@
 </script>
 
 <main class="grid">
+
+        <a class="card rarity-u" href="/archive/2026-05-19T09-25.html"
+           style="--c1:#b7410e; --c2:#6b8e23; --c3:#f5e6d3; --rot:1.50deg;">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-num">No.154/∞</span>
+              <span class="card-rarity" title="UNCOMMON">★★</span>
+            </div>
+            <div class="card-art">
+              <img class="card-art-img" src="/archive/thumbs/2026-05-19T09-25.png" alt="" loading="lazy">
+              <span class="sticker stk-price" style="top:6px; right:6px; transform:rotate(8deg);">$0.99</span>
+            </div>
+            <h3 class="card-name">Your Cosmic Type — Inner Compass, Autumn 1972</h3>
+            <div class="card-tag">do not read in mirror</div>
+            <div class="card-foot">
+              <span class="card-stamp">2026-05-19 · 09-25 PT</span>
+              <span class="card-palette"><i style="background:#b7410e"></i><i style="background:#6b8e23"></i><i style="background:#f5e6d3"></i></span>
+            </div>
+          </div>
+          <div class="card-shine" aria-hidden="true"></div>
+        </a>
 
         <a class="card rarity-c" href="/archive/2026-05-19T09-08.html"
            style="--c1:#00dd44; --c2:#1a2a3c; --c3:#ff9500; --rot:0.00deg;">
@@ -3681,38 +3702,21 @@
 
 <script>
 (function () {
-  // At the next top-of-hour, poll for new content (title change) every 12s.
-  // Reload as soon as it changes, or after 3 min if it didn't.
-  // UTC top-of-hour == PT top-of-hour (PT offset is a whole number).
-  function msUntilNextHour() {
-    var now = new Date();
-    var next = new Date(now);
-    next.setUTCMinutes(0, 0, 0);
-    next.setUTCHours(next.getUTCHours() + 1);
-    return next - now;
-  }
+  // Poll every 90s for new content. Reload when the title changes.
+  // Cron sets the cadence (every 10 min in stash mode, hourly otherwise);
+  // the JS just notices whenever new content lands.
   var initialTitle = document.title;
-  setTimeout(function () {
-    var attempts = 0;
-    var iv = setInterval(function () {
-      attempts++;
-      if (attempts > 15) {
-        clearInterval(iv);
-        window.location.reload();
-        return;
-      }
-      fetch(window.location.pathname + '?_t=' + Date.now(), { cache: 'no-store' })
-        .then(function (r) { return r.text(); })
-        .then(function (text) {
-          var m = text.match(/<title>([^<]+)<\/title>/);
-          if (m && m[1] !== initialTitle) {
-            clearInterval(iv);
-            window.location.reload();
-          }
-        })
-        .catch(function () {});
-    }, 12000);
-  }, msUntilNextHour());
+  setInterval(function () {
+    fetch(window.location.pathname + '?_t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.text(); })
+      .then(function (text) {
+        var m = text.match(/<title>([^<]+)<\/title>/);
+        if (m && m[1] !== initialTitle) {
+          window.location.reload();
+        }
+      })
+      .catch(function () {});
+  }, 90000);
 })();
 </script>
 </body>
