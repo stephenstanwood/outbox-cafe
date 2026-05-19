@@ -1,16 +1,23 @@
-"""Generate per-gen images via fal.ai FLUX schnell, given a rolled spec.
+"""Generate per-gen images via fal.ai, given a rolled spec.
+
+Two models in play:
+- FLUX schnell ($0.003/image) for the 3 inline page-art images. Fast, cheap,
+  and these are small page filler — occasional mangled "text" inside an
+  illustration isn't a big deal.
+- Recraft v3 ($0.04/image) for the dedicated social poster. This is the
+  thumb that hits Tumblr/Bluesky timelines, so text-mangling here is very
+  visible. Recraft is purpose-built for posters and actually respects
+  "no text" instructions in a way FLUX schnell does not.
 
 Returns image dicts in the same shape as images.py's fetch_images() so the
-prompt block treats them interchangeably — but with source='ai' so the
-prompt template can skip the photographer-credit requirement.
-
-FLUX schnell ($0.003/image) is plenty for inline page art and finishes in
-a few seconds per image.
+prompt block treats them interchangeably — source='ai' tells the template
+to skip the photographer-credit requirement.
 """
 from __future__ import annotations
 
 import json
 import os
+import random
 import re
 import urllib.error
 import urllib.request
@@ -18,6 +25,18 @@ from typing import Any
 
 FAL_BASE = "https://fal.run"
 FLUX_SCHNELL = "/fal-ai/flux/schnell"
+RECRAFT_V3 = "/fal-ai/recraft-v3"
+
+# Recraft styles to rotate the poster through. All of them respect "no text"
+# better than FLUX and read as illustrated posters (not stock photos).
+RECRAFT_POSTER_STYLES = [
+    "digital_illustration",
+    "vector_illustration",
+    "digital_illustration/pixel_art",
+    "digital_illustration/hand_drawn",
+    "digital_illustration/grain",
+    "vector_illustration/engraving",
+]
 
 
 def _v(spec: dict[str, Any], field: str) -> str:
@@ -78,7 +97,10 @@ def derive_poster_prompt(spec: dict[str, Any]) -> str:
         style_bits.append(f"{tone} mood")
     style = ". ".join(style_bits)
 
-    suffix = "single strong central subject, bold confident composition, square format, suitable as a cover image. no text, no captions, no watermarks, no logos."
+    # Recraft respects "no text" reliably; FLUX does not. Both get the
+    # explicit instruction so the prompt is the same regardless of which
+    # model handles it.
+    suffix = "single strong central subject, bold confident composition, square format, suitable as a cover image. absolutely no text, no captions, no letters, no typography, no words, no signs, no titles, no watermarks, no logos."
     parts = [f"Poster artwork for {subj}"]
     if style:
         parts.append(style)
@@ -93,6 +115,10 @@ def fetch_poster_image(
 ) -> bool:
     """Generate a dedicated social-poster image and save as PNG to `out_path`.
 
+    Uses Recraft v3 (better text suppression than FLUX schnell, ~$0.04/gen).
+    Falls back to FLUX schnell if Recraft errors out, so a Recraft outage
+    doesn't drop the social poster entirely.
+
     Returns True on success. Best-effort: any failure logs and returns False.
     """
     from io import BytesIO
@@ -103,6 +129,65 @@ def fetch_poster_image(
         return False
 
     prompt = derive_poster_prompt(spec)
+    img_bytes = _recraft_poster(prompt, key, timeout)
+    if img_bytes is None:
+        print("[images_ai/poster] recraft failed — falling back to FLUX schnell")
+        img_bytes = _flux_poster(prompt, key, timeout)
+    if img_bytes is None:
+        return False
+
+    try:
+        from PIL import Image
+        img = Image.open(BytesIO(img_bytes))
+        if img.mode not in ("RGB", "L"):
+            img = img.convert("RGB")
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        img.save(out_path, format="PNG", optimize=True)
+    except Exception as e:
+        print(f"[images_ai/poster] save failed: {e}")
+        return False
+
+    return True
+
+
+def _recraft_poster(prompt: str, key: str, timeout: int) -> bytes | None:
+    style = random.choice(RECRAFT_POSTER_STYLES)
+    body = json.dumps({
+        "prompt": prompt,
+        "image_size": "square_hd",
+        "style": style,
+    }).encode()
+    req = urllib.request.Request(
+        f"{FAL_BASE}{RECRAFT_V3}",
+        data=body,
+        headers={"Authorization": f"Key {key}", "Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            data = json.load(r)
+    except urllib.error.HTTPError as e:
+        err = e.read().decode("utf-8", errors="ignore")[:200]
+        print(f"[images_ai/poster] recraft HTTP {e.code}: {err}")
+        return None
+    except Exception as e:
+        print(f"[images_ai/poster] recraft call failed: {e}")
+        return None
+
+    url = (data.get("images") or [{}])[0].get("url")
+    if not url:
+        print(f"[images_ai/poster] no image url in recraft response: {json.dumps(data)[:200]}")
+        return None
+    print(f"[images_ai/poster] recraft style={style}")
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as r:
+            return r.read()
+    except Exception as e:
+        print(f"[images_ai/poster] download failed: {e}")
+        return None
+
+
+def _flux_poster(prompt: str, key: str, timeout: int) -> bytes | None:
     body = json.dumps({
         "prompt": prompt,
         "image_size": "square_hd",
@@ -120,33 +205,17 @@ def fetch_poster_image(
         with urllib.request.urlopen(req, timeout=timeout) as r:
             data = json.load(r)
     except Exception as e:
-        print(f"[images_ai/poster] fal call failed: {e}")
-        return False
-
+        print(f"[images_ai/poster] flux fallback failed: {e}")
+        return None
     url = (data.get("images") or [{}])[0].get("url")
     if not url:
-        print(f"[images_ai/poster] no image url in response: {json.dumps(data)[:200]}")
-        return False
-
+        return None
     try:
         with urllib.request.urlopen(url, timeout=timeout) as r:
-            img_bytes = r.read()
+            return r.read()
     except Exception as e:
-        print(f"[images_ai/poster] download failed: {e}")
-        return False
-
-    try:
-        from PIL import Image
-        img = Image.open(BytesIO(img_bytes))
-        if img.mode not in ("RGB", "L"):
-            img = img.convert("RGB")
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        img.save(out_path, format="PNG", optimize=True)
-    except Exception as e:
-        print(f"[images_ai/poster] save failed: {e}")
-        return False
-
-    return True
+        print(f"[images_ai/poster] flux download failed: {e}")
+        return None
 
 
 def fetch_ai_images(
