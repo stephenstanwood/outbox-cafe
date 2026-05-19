@@ -45,15 +45,14 @@ def call_claude(prompt: str, model: str | None = None, timeout: int = 600) -> st
     and modifies files itself rather than printing the result. We want pure
     text-out: prompt in, HTML out.
 
-    Default model is sonnet: opus was timing out on hourly cron firings (10+ min
-    page gens for 200-600 line HTML). Sonnet is plenty creative for the brief.
-    Override with --model on the CLI if a specific gen needs more horsepower.
+    Default model is opus: this is the site's creative payload and Max OAuth
+    means no per-token cost. Override with --model on the CLI for testing.
     """
     cmd = [
         "claude",
         "--print",
         "--tools", "",
-        "--model", model or "sonnet",
+        "--model", model or "opus",
     ]
     result = subprocess.run(
         cmd,
