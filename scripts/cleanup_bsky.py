@@ -1,7 +1,7 @@
 """Auto-delete the cafe's old Bluesky posts.
 
 Stephen's call (2026-05-18): the cafe is meant to be ephemeral. Posts get
-deleted after ~36h so the feed is always fresh and nothing accumulates. The
+deleted after 24h so the feed is always fresh and nothing accumulates. The
 pinned welcome post is exempt; everything else (drops, ambient, throwbacks,
 replies, wild replies) gets purged.
 
@@ -20,7 +20,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 BSKY_BASE = "https://bsky.social/xrpc"
-DEFAULT_DELETE_AFTER_HOURS = 36
+DEFAULT_DELETE_AFTER_HOURS = 24
 MAX_DELETES_PER_RUN = 50    # safety cap so a runaway loop can't nuke everything
 ENGAGEMENT_SNAPSHOT = Path(__file__).resolve().parent.parent / "data" / "post_engagement.jsonl"
 
