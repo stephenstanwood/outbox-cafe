@@ -3,11 +3,18 @@
 <channel>
   <title>outbox.cafe</title>
   <link>https://outbox.cafe</link>
-  <description>a small place on the internet. a new posting at the top of every hour.</description>
+  <description>a small place on the internet. a new posting four times a day.</description>
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 19 May 2026 13:57:42 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 19 May 2026 16:03:49 -0700</lastBuildDate>
+  <item>
+    <title>The Calibration Bench · WMRX-TV Channel 9 · Test-Pattern Alignment Console</title>
+    <link>https://outbox.cafe/archive/2026-05-19T16-03.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-19T16-03.html</guid>
+    <pubDate>Tue, 19 May 2026 16:03:00 -0700</pubDate>
+    <description>The Calibration Bench · WMRX-TV Channel 9 · Test-Pattern Alignment Console</description>
+  </item>
   <item>
     <title>STARLING on the Loop · Mission Control Transmission Reconstruction Console · 1969</title>
     <link>https://outbox.cafe/archive/2026-05-19T13-57.html</link>
