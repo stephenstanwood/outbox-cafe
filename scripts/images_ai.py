@@ -80,8 +80,15 @@ def derive_ai_prompts(spec: dict[str, Any]) -> list[str]:
     ]
 
 
-def derive_poster_prompt(spec: dict[str, Any]) -> str:
-    """A single bold composition for the social thumbnail — distinct from inline page art."""
+def derive_poster_prompt(spec: dict[str, Any], max_chars: int | None = None) -> str:
+    """A single bold composition for the social thumbnail — distinct from inline page art.
+
+    If `max_chars` is set, the result is trimmed to fit. Recraft's API rejects
+    prompts >1000 chars (HTTP 422), and spec dimensions can be verbose, so the
+    Recraft path passes max_chars=990. Head ("Poster artwork for X") and the
+    "no text" suffix are preserved; the style descriptors in the middle are
+    truncated at a word boundary if needed.
+    """
     era = _v(spec, "era")
     subject = _v(spec, "subject")
     palette = _v(spec, "palette")
@@ -101,7 +108,18 @@ def derive_poster_prompt(spec: dict[str, Any]) -> str:
     # explicit instruction so the prompt is the same regardless of which
     # model handles it.
     suffix = "single strong central subject, bold confident composition, square format, suitable as a cover image. absolutely no text, no captions, no letters, no typography, no words, no signs, no titles, no watermarks, no logos."
-    parts = [f"Poster artwork for {subj}"]
+    head = f"Poster artwork for {subj}"
+
+    if max_chars is not None:
+        # Reserve room for head + suffix (and ". " joiners) — trim style to fit.
+        overhead = len(head) + len(suffix) + 4
+        remaining = max_chars - overhead
+        if remaining <= 0:
+            return ". ".join([head, suffix])
+        if len(style) > remaining:
+            style = style[:remaining].rsplit(" ", 1)[0]
+
+    parts = [head]
     if style:
         parts.append(style)
     parts.append(suffix)
@@ -128,11 +146,14 @@ def fetch_poster_image(
     if not key:
         return False
 
-    prompt = derive_poster_prompt(spec)
-    img_bytes = _recraft_poster(prompt, key, timeout)
+    # Recraft caps prompts at 1000 chars (HTTP 422 otherwise); FLUX has no
+    # such limit, so the fallback gets the untrimmed version.
+    recraft_prompt = derive_poster_prompt(spec, max_chars=990)
+    flux_prompt = derive_poster_prompt(spec)
+    img_bytes = _recraft_poster(recraft_prompt, key, timeout)
     if img_bytes is None:
         print("[images_ai/poster] recraft failed — falling back to FLUX schnell")
-        img_bytes = _flux_poster(prompt, key, timeout)
+        img_bytes = _flux_poster(flux_prompt, key, timeout)
     if img_bytes is None:
         return False
 
