@@ -980,7 +980,7 @@ def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
         _save_state(state)
 
     # Roll for an ambient between-drop post (low probability per run).
-    # Skipped when called from inside the hourly gen cron — that run already
+    # Skipped when called from inside the gen cron — that run already
     # produced a drop announcement, no need to also fire an ambient observation.
     if not skip_ambient and _maybe_ambient_post(did, jwt, staff_pool, weights, rng):
         actions += 1
@@ -993,7 +993,7 @@ def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
         actions += 1
 
     # Roll for a throwback — resurface an older archive entry, ~1.15/day expected.
-    # Same skip-on-gen rule — the hourly drop already covers "new content" for this run.
+    # Same skip-on-gen rule — the fresh drop already covers "new content" for this run.
     if not skip_ambient and _maybe_throwback_post(rng):
         actions += 1
 

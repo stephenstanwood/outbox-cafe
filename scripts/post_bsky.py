@@ -1,4 +1,4 @@
-"""Post a hourly gen to Bluesky in the voice of a randomly-picked staff persona.
+"""Post a fresh gen to Bluesky in the voice of a randomly-picked staff persona.
 
 Each post:
 - Picks a staff member (weighted)
@@ -241,7 +241,7 @@ def post_drop(
 ) -> bool:
     """Post a piece to Bluesky in a staff cat's voice. Best-effort; False on skip/failure.
 
-    kind="drop": new hourly drop announcement (uses PROMPT_TEMPLATE + skip-rate from personas.json)
+    kind="drop": new drop announcement (uses PROMPT_TEMPLATE + skip-rate from personas.json)
     kind="throwback": resurfacing an older archive entry (uses THROWBACK_PROMPT_TEMPLATE + no skip-rate)
     """
     handle = os.environ.get("BSKY_HANDLE")

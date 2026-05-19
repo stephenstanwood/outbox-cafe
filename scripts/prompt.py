@@ -50,7 +50,7 @@ def _format_photos_block(photos: list[dict[str, Any]]) -> str:
 
 
 def build_prompt(spec: dict[str, Any], photos: list[dict[str, Any]] | None = None) -> str:
-    """Build the prompt that gets handed to Claude to generate the hourly page."""
+    """Build the prompt that gets handed to Claude to generate the scheduled page."""
 
     def v(field: str) -> str:
         item = spec.get(field, {})
@@ -68,7 +68,7 @@ def build_prompt(spec: dict[str, Any], photos: list[dict[str, Any]] | None = Non
     photos = photos or []
     photos_block = _format_photos_block(photos)
 
-    return f"""You are generating an hourly artifact for outbox.cafe. Every hour a new self-contained HTML page goes up at the root and gets archived. The cafe values genuine variety, care, and texture over polish. Some pieces are weird. Some are beautiful. Some are quiet. Some are playful. Some are maximalist. The goal is breadth, not a brand — DO NOT default to "weird at all costs." Sometimes the right call is something honestly beautiful, sincere, tender. People should want to look at this for a few minutes, then look at it again later and notice new details.
+    return f"""You are generating a scheduled artifact for outbox.cafe. Four times a day (4am, 8am, noon, 4pm PT) a new self-contained HTML page goes up at the root and gets archived. The cafe values genuine variety, care, and texture over polish. Some pieces are weird. Some are beautiful. Some are quiet. Some are playful. Some are maximalist. The goal is breadth, not a brand — DO NOT default to "weird at all costs." Sometimes the right call is something honestly beautiful, sincere, tender. People should want to look at this for a few minutes, then look at it again later and notice new details.
 
 ROLLED SPEC FOR THIS HOUR
 =========================

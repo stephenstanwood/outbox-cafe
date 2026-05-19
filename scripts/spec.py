@@ -1,4 +1,4 @@
-"""Spec roller for outbox.cafe hourly generations.
+"""Spec roller for outbox.cafe scheduled generations (4x/day).
 
 Picks across seven dimensions with anti-bias mechanics so the generator
 doesn't converge to Claude's defaults or repeat itself within a short window.
@@ -247,7 +247,7 @@ def _weighted_choice(options: list[str], recent_values: list[str], rng: random.R
 
 
 def roll_spec(seed: int | None = None) -> dict[str, Any]:
-    """Roll a complete spec for one hourly generation.
+    """Roll a complete spec for one scheduled generation.
 
     Returns a dict with all dimensions populated, anti-bias applied,
     and a generated_at timestamp.
@@ -322,7 +322,7 @@ def _examples_from_dimensions(dims: dict, field: str, n: int, rng: random.Random
     return [str(p) for p in picks]
 
 
-SPEC_LLM_PROMPT = """You are rolling a spec for outbox.cafe — a constantly-evolving, weird/retro corner of the internet. Each hour a new self-contained HTML page goes up. Your job: invent a fresh spec across these dimensions. Push HARD for variety. NEVER converge to your own defaults (dry deadpan, lowercase fragments, archival/museum/cabinet metaphors, melancholy minimalism, night-shift dispatcher voice).
+SPEC_LLM_PROMPT = """You are rolling a spec for outbox.cafe — a constantly-evolving, weird/retro corner of the internet. A new self-contained HTML page goes up four times a day. Your job: invent a fresh spec across these dimensions. Push HARD for variety. NEVER converge to your own defaults (dry deadpan, lowercase fragments, archival/museum/cabinet metaphors, melancholy minimalism, night-shift dispatcher voice).
 
 The dimension pools are bottomless — don't think of yourself as picking from a list. INVENT. Reach into untouched corners of internet history, hobby subcultures, regional weirdness, fictional ephemera, art movements, mechanical curiosities, kitchen objects, weather phenomena, defunct industries.
 

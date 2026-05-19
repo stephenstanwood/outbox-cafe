@@ -1,15 +1,15 @@
 #!/bin/bash
-# Wrapper for the hourly (or more frequent) generation task on the Mac Mini.
+# Wrapper for the scheduled generation task on the Mac Mini.
 # Source claude OAuth token from the proxy env, ensure PATH includes claude,
 # pull any external changes, run one generation, commit+push.
 #
-# Cron entry (hourly, 24/7):
-#   0 * * * * /Users/stephenstanwood/Projects/outbox-cafe/scripts/run-on-mini.sh >> /Users/stephenstanwood/logs/outbox-cafe.log 2>&1
+# Cron entry (4x/day at 4am, 8am, noon, 4pm PT):
+#   0 4,8,12,16 * * * /Users/stephenstanwood/Projects/outbox-cafe/scripts/run-on-mini.sh >> /Users/stephenstanwood/logs/outbox-cafe.log 2>&1
 
 set -eo pipefail
 
 # Single-flight: if another run is in progress, skip this firing rather than
-# pile up (gens take 1-4 min; cron fires every 10 min in stash mode).
+# pile up (gens take 1-4 min; cron currently fires 4x/day, well separated).
 # Atomic mkdir lock (macOS doesn't ship flock). Stale locks (>15 min) get cleared.
 LOCK_DIR="/tmp/outbox-cafe-run.lock"
 if [ -d "$LOCK_DIR" ]; then
