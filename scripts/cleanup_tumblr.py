@@ -126,9 +126,11 @@ def _delete_post(blog: str, post_id: int) -> bool:
 def cleanup() -> int:
     """Delete every post on the cafe's Tumblr blog (skipping any pinned post).
 
-    Re-fetches offset=0 each loop iteration since deletions shift the list.
-    Terminates when a page returns only pinned posts (no eligible deletes) or
-    when the API returns empty. Returns count deleted.
+    Re-fetches offset=0 each iteration since deletions shift the list. Tracks
+    attempted IDs so the loop terminates cleanly even when Tumblr's listing
+    endpoint serves a stale cache that includes already-deleted posts (observed
+    on the very first run — the API returned the same 11 IDs we'd just deleted,
+    then 404'd on every delete). Returns count deleted.
     """
     blog = os.environ.get("TUMBLR_BLOG_NAME")
     if not blog or not all(
@@ -142,6 +144,7 @@ def cleanup() -> int:
         return 0
 
     deleted = 0
+    attempted: set[int] = set()
     pages = 0
     while pages < 50:  # defensive bound: 50 * 20 = 1000 candidate posts max
         pages += 1
@@ -151,24 +154,36 @@ def cleanup() -> int:
         if not posts:
             break
 
-        any_deleted_this_page = False
+        new_targets = []
         for p in posts:
             if p.get("is_pinned"):
                 continue
             pid = p.get("id")
             if pid is None:
                 continue
+            if int(pid) in attempted:
+                continue
+            new_targets.append(p)
+
+        if not new_targets:
+            # Listing has only pinned + already-attempted IDs. Either we're done
+            # or the cache is lagging; either way there's nothing new to do.
+            break
+
+        for p in new_targets:
+            pid = int(p["id"])
+            attempted.add(pid)
             _snapshot_engagement(p)
-            if _delete_post(blog, int(pid)):
+            if _delete_post(blog, pid):
                 deleted += 1
-                any_deleted_this_page = True
                 print(f"[cleanup_tumblr] deleted {pid} ({p.get('post_url','')})")
             if deleted >= MAX_DELETES_PER_RUN:
                 print(f"[cleanup_tumblr] hit per-run cap {MAX_DELETES_PER_RUN} — stop", file=sys.stderr)
                 return deleted
 
-        if not any_deleted_this_page:
-            break
+        # Brief pause so Tumblr's posts cache has a moment to refresh before
+        # the next listing call. Cheap insurance against re-attempting IDs.
+        time.sleep(1)
 
     if deleted == 0:
         print("[cleanup_tumblr] nothing to delete")
