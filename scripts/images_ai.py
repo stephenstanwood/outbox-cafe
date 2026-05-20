@@ -37,6 +37,15 @@ RECRAFT_POSTER_STYLES = [
     "digital_illustration/grain",
 ]
 
+# Pixel art has a strong prior to render the subject AS faux-text (game-UI
+# labels, sprite signage). The generic "no text" suffix in derive_poster_prompt
+# gets ignored at that resolution, so for pixel_art we lead with a louder
+# negative — "SILVERHAND CLUB" mangled to "SIWFFHANO CLUE" is the failure mode.
+PIXEL_ART_NO_TEXT_PREFIX = (
+    "Pixel art illustration with absolutely no text, no letters, no words, "
+    "no titles, no labels, no signs, no UI elements. "
+)
+
 
 def _v(spec: dict[str, Any], field: str) -> str:
     item = spec.get(field, {})
@@ -147,12 +156,10 @@ def fetch_poster_image(
 
     # Recraft caps prompts at 1000 chars (HTTP 422 otherwise); FLUX has no
     # such limit, so the fallback gets the untrimmed version.
-    recraft_prompt = derive_poster_prompt(spec, max_chars=990)
-    flux_prompt = derive_poster_prompt(spec)
-    img_bytes = _recraft_poster(recraft_prompt, key, timeout)
+    img_bytes = _recraft_poster(spec, key, timeout)
     if img_bytes is None:
         print("[images_ai/poster] recraft failed — falling back to FLUX schnell")
-        img_bytes = _flux_poster(flux_prompt, key, timeout)
+        img_bytes = _flux_poster(derive_poster_prompt(spec), key, timeout)
     if img_bytes is None:
         return False
 
@@ -170,8 +177,10 @@ def fetch_poster_image(
     return True
 
 
-def _recraft_poster(prompt: str, key: str, timeout: int) -> bytes | None:
+def _recraft_poster(spec: dict[str, Any], key: str, timeout: int) -> bytes | None:
     style = random.choice(RECRAFT_POSTER_STYLES)
+    prefix = PIXEL_ART_NO_TEXT_PREFIX if style == "digital_illustration/pixel_art" else ""
+    prompt = prefix + derive_poster_prompt(spec, max_chars=990 - len(prefix))
     body = json.dumps({
         "prompt": prompt,
         "image_size": "square_hd",
