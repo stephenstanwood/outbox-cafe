@@ -20,6 +20,7 @@ import json
 import os
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -168,7 +169,6 @@ def _post_tumblr(text: str, archive_url: str, thumb_path: Path | None,
                 "body": caption_html,
                 "tags": tags,
             }
-            import urllib.parse
             body = urllib.parse.urlencode(fields).encode()
             ctype = "application/x-www-form-urlencoded"
         req = urllib.request.Request(
