@@ -1,12 +1,12 @@
-"""Auto-delete the cafe's old Bluesky posts.
+"""Auto-delete the cafe's Bluesky posts.
 
-Stephen's call (2026-05-18): the cafe is meant to be ephemeral. Posts get
-deleted after 24h so the feed is always fresh and nothing accumulates. The
-pinned welcome post is exempt; everything else (drops, ambient, throwbacks,
-replies, wild replies) gets purged.
+Stephen's call (2026-05-19): every day is a new day. The midnight cleanup
+cron passes `--hours 0` to wipe everything (drops, ambient, throwbacks,
+replies, wild replies) so the morning starts with a fresh feed. The pinned
+welcome post is always exempt. Idempotent.
 
-Runs from the standalone engage cron (`*/15 * * * *`) at low probability
-per firing — getAuthorFeed + maybe a few deleteRecord calls. Idempotent.
+Manual `python3 scripts/cleanup_bsky.py` (no args) keeps the older 24h
+default in case Stephen ever wants graceful rollover instead of a wipe.
 """
 from __future__ import annotations
 
