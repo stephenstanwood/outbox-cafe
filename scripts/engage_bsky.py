@@ -997,16 +997,8 @@ def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
     if not skip_ambient and _maybe_throwback_post(rng):
         actions += 1
 
-    # Roll for an auto-cleanup pass. Deletes our posts older than 36h so the cafe
-    # stays ephemeral / always-fresh. 25% per */15 firing = ~24 sweeps/day, well
-    # over the rate at which old posts accrue. Skipped on gen-time path so a drop
-    # doesn't have to wait on a deleteRecord storm.
-    if not skip_ambient and rng.random() < 0.25:
-        try:
-            from cleanup_bsky import cleanup
-            cleanup()
-        except Exception as e:
-            print(f"[engage] cleanup pass errored (non-fatal): {e}", file=sys.stderr)
+    # Cleanup lives in the midnight cron (scripts/run-cleanup.sh) so the wipe is
+    # sharp — wake to a fresh feed instead of a rolling 24h window.
 
     if actions == 0:
         print("[engage] nothing new")
