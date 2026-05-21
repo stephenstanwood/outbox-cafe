@@ -3,6 +3,9 @@
 // no arrows there. Wraps at the ends (oldest's prev → newest, etc.)
 //
 // Keyboard: ArrowLeft / ArrowRight also navigate. 'p' copies permalink.
+// Bottom-left 'about' link mirrors the bottom-right permalink — points
+// to /about/ so visitors who notice the rotating sign-offs can find
+// out who's who.
 (function () {
   fetch('/archive/list.json', { cache: 'no-store' })
     .then(function (r) { return r.json(); })
@@ -60,11 +63,23 @@
         '  mix-blend-mode: difference; }',
         '.outbox-perma:hover { opacity: 0.65; background: rgba(127,127,127,0.08); }',
         '.outbox-perma.outbox-copied { opacity: 0.65; }',
+        '.outbox-about { position: fixed; left: 6px; bottom: 6px;',
+        '  z-index: 99999; padding: 4px 7px; background: transparent;',
+        '  color: currentColor; border: 0;',
+        '  font: 500 10px/1 ui-monospace, "SF Mono", "Menlo", monospace;',
+        '  letter-spacing: 0.04em; text-transform: lowercase;',
+        '  cursor: pointer; text-decoration: none !important;',
+        '  opacity: 0.12;',
+        '  transition: opacity 0.25s ease, background 0.25s ease;',
+        '  -webkit-tap-highlight-color: transparent;',
+        '  mix-blend-mode: difference; }',
+        '.outbox-about:hover { opacity: 0.65; background: rgba(127,127,127,0.08); }',
         '@media (max-width: 540px) {',
         '  .outbox-nav { width: 16px; height: 36px; font-size: 12px; opacity: 0.18; }',
         '  .outbox-perma { opacity: 0.2; font-size: 11px; padding: 6px 9px; }',
+        '  .outbox-about { opacity: 0.2; font-size: 11px; padding: 6px 9px; }',
         '}',
-        '@media print { .outbox-nav, .outbox-perma { display: none; } }',
+        '@media print { .outbox-nav, .outbox-perma, .outbox-about { display: none; } }',
       ].join('\n');
       document.head.appendChild(style);
 
@@ -122,6 +137,18 @@
         if (copyPerma()) e.preventDefault();
       });
       document.body.appendChild(perma);
+
+      // About link — mirrors permalink on the opposite corner. Points to the
+      // staff roster so visitors who see rotating sign-offs (—Robin, -j, etc.)
+      // can find out who's who. Skip on the /about page itself.
+      if (!/^\/about\/?$/.test(location.pathname)) {
+        var about = document.createElement('a');
+        about.className = 'outbox-about';
+        about.href = '/about/';
+        about.textContent = 'about';
+        about.setAttribute('aria-label', 'about the cafe');
+        document.body.appendChild(about);
+      }
 
       document.addEventListener('keydown', function (e) {
         var t = e.target;
