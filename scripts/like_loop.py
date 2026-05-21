@@ -110,24 +110,25 @@ def _bsky_auth() -> tuple[str, str]:
     return sess["did"], sess["accessJwt"]
 
 
-def _bsky_search(query: str, limit: int = 25) -> list[dict]:
+def _bsky_search(query: str, jwt: str, limit: int = 25) -> list[dict]:
+    """searchPosts requires auth (returns 401 without). Pass the session JWT."""
     qs = urllib.parse.urlencode({"q": query, "limit": str(limit), "sort": "latest"})
     try:
-        d = _bsky_req(f"/app.bsky.feed.searchPosts?{qs}")
+        d = _bsky_req(f"/app.bsky.feed.searchPosts?{qs}", headers={"Authorization": f"Bearer {jwt}"})
     except Exception as e:
         print(f"[like/bsky] search {query!r} failed: {e}", file=sys.stderr)
         return []
     return d.get("posts", []) or []
 
 
-def _bsky_like_candidates(state: dict, our_did: str) -> list[dict]:
+def _bsky_like_candidates(state: dict, our_did: str, jwt: str) -> list[dict]:
     """Return a shuffled list of bsky posts that match cafe interests and aren't already liked."""
     liked = {e.get("uri") for e in state.get("bsky", []) if isinstance(e, dict)}
     rng = random.Random()
     rng.shuffle(BSKY_SEARCH_TERMS)
     candidates: list[dict] = []
     for term in BSKY_SEARCH_TERMS[:5]:  # 5 search terms per run
-        for p in _bsky_search(term, limit=20):
+        for p in _bsky_search(term, jwt, limit=20):
             uri = p.get("uri")
             if not uri or uri in liked:
                 continue
@@ -194,7 +195,7 @@ def run_bsky_likes(state: dict) -> int:
         print(f"[like/bsky] auth failed: {e}", file=sys.stderr)
         return 0
 
-    candidates = _bsky_like_candidates(state, did)
+    candidates = _bsky_like_candidates(state, did, jwt)
     if not candidates:
         print("[like/bsky] no candidates")
         return 0
