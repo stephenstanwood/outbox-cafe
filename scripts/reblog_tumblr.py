@@ -125,8 +125,9 @@ def _oauth_header(method: str, url: str, *, query_params: dict[str, str] | None 
     For GETs with query params (e.g. /v2/tagged), pass the query string params
     via `query_params` so they're included in the signature base string. For
     POSTs with form-urlencoded bodies, the body params should ALSO be passed
-    via query_params (Tumblr signs them the same way). For pure POSTs with no
-    extra params, omit `query_params`.
+    via query_params (Tumblr signs them the same way). For POSTs with a JSON
+    body (NPF /posts endpoint), the body is NOT part of the signature base
+    string — omit query_params.
     """
     oauth = {
         "oauth_consumer_key": os.environ["TUMBLR_CONSUMER_KEY"],
@@ -249,6 +250,8 @@ Post excerpt (HTML stripped):
 {post_text}
 \"\"\"
 
+If the excerpt says "(no text — possibly image-only)" or is mostly empty, the post is image-only. Decide based on the TAGS and blogger handle alone. Don't ask for the image — you can't see it; just SKIP or SILENT (lean SILENT if tags look on-brand).
+
 == ASSIGNED CAT ==
 Name: {name}
 Role: {full_name}
@@ -335,25 +338,33 @@ def _moderate_and_draft(post: dict, staff: dict[str, Any]) -> tuple[str, str | N
 
 # ---------- Reblog action ----------
 
-def _reblog(blog: str, post_id: int, reblog_key: str, comment: str | None) -> str | None:
-    """POST a reblog to Tumblr. Returns the new post URL on success, None on failure."""
-    url = f"{TUMBLR_BASE}/blog/{blog}.tumblr.com/post"
-    # Build form body
-    fields = {
-        "type": "reblog",
-        "id": str(post_id),
-        "reblog_key": reblog_key,
-        "tags": "outbox cafe,the cafe,reblog",
-    }
+def _reblog(blog: str, parent_post_id: int, parent_uuid: str, reblog_key: str, comment: str | None) -> str | None:
+    """POST a reblog to Tumblr via the NPF /posts endpoint. Returns new post URL on success.
+
+    The legacy /post endpoint with type=reblog returns HTTP 400 "Post cannot be empty"
+    for everything as of 2026 — Tumblr's reblog action moved to the NPF /posts endpoint
+    which takes a JSON body with parent_post_id + parent_tumblelog_uuid + reblog_key.
+    """
+    url = f"{TUMBLR_BASE}/blog/{blog}.tumblr.com/posts"
+    # NPF content blocks. Empty content = silent reblog; one text block = commented reblog.
+    content: list[dict] = []
     if comment:
-        fields["comment"] = f"<p>{_html.escape(comment)}</p>"
-    body = urllib.parse.urlencode(fields).encode()
-    # POST body params must be in the OAuth signature base string.
-    auth = _oauth_header("POST", url, query_params=fields)
+        content.append({"type": "text", "text": comment})
+    payload = {
+        "content": content,
+        "state": "published",
+        "tags": "outbox cafe,the cafe,reblog",
+        "parent_post_id": str(parent_post_id),
+        "parent_tumblelog_uuid": parent_uuid,
+        "reblog_key": reblog_key,
+    }
+    body = json.dumps(payload).encode()
+    # NPF endpoint takes JSON body — signature base string doesn't include the body params.
+    auth = _oauth_header("POST", url)
     req = urllib.request.Request(
         url,
         data=body,
-        headers={"Authorization": auth, "Content-Type": "application/x-www-form-urlencoded"},
+        headers={"Authorization": auth, "Content-Type": "application/json"},
         method="POST",
     )
     try:
@@ -446,7 +457,11 @@ def main():
             print(f"[reblog] SKIP @{their} ({pid}, tag={cand.get('_source_tag')}): {payload}")
             continue
         comment = payload if action == "COMMENT" else None
-        url = _reblog(blog, pid, cand["reblog_key"], comment)
+        parent_uuid = (cand.get("blog") or {}).get("uuid", "")
+        if not parent_uuid:
+            print(f"[reblog] SKIP @{their} ({pid}): no parent uuid", file=sys.stderr)
+            continue
+        url = _reblog(blog, pid, parent_uuid, cand["reblog_key"], comment)
         if not url:
             skips.append((their, pid, "reblog API failed"))
             continue
