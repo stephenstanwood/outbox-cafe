@@ -158,11 +158,14 @@ def cleanup() -> int:
         for p in posts:
             if p.get("is_pinned"):
                 continue
-            # Mr. Quiet's weekly slips are the cafe's accumulating archive on
-            # Tumblr — they get reblog tail and shouldn't be wiped. Bsky still
-            # sweeps them with everything else (ephemeral by design).
+            # Recurring rituals accumulate on Tumblr as the cafe's quiet
+            # archive (reblog-tail growth). Bsky still sweeps them with
+            # everything else (ephemeral by design). Exemption is by tag:
+            # - Mr. Quiet's weekly slips ("mr quiet" / "weekly slip")
+            # - Doris's muffin column ("doris" / "muffin column" / "weekly column")
             tags = [t.lower() for t in (p.get("tags") or [])]
-            if "weekly slip" in tags or "mr quiet" in tags:
+            keep_tags = {"weekly slip", "mr quiet", "doris", "muffin column", "weekly column"}
+            if any(t in keep_tags for t in tags):
                 continue
             pid = p.get("id")
             if pid is None:
