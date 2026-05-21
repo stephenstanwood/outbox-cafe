@@ -72,7 +72,7 @@ CANDIDATE_TAGS = [
 # Filter hard limits.
 MAX_NOTE_COUNT = 5000        # already-viral posts don't need our boost
 MAX_AGE_HOURS = 48           # don't reblog stale posts
-MIN_AGE_MINUTES = 30         # avoid reblogging seconds-old posts (creepy)
+MIN_AGE_MINUTES = 5          # tiny window so we're not literal-seconds-after-post (mildly creepy)
 CANDIDATES_PER_TAG = 12      # how many posts to consider per tag
 PROMPT_SNIPPET_CHARS = 800   # how much post text to send to Claude
 
@@ -119,8 +119,16 @@ def _q(s: Any) -> str:
     return urllib.parse.quote(str(s), safe="-._~")
 
 
-def _oauth_header(method: str, url: str, *, extra_params: dict[str, str] | None = None) -> str:
-    params = {
+def _oauth_header(method: str, url: str, *, query_params: dict[str, str] | None = None) -> str:
+    """Build an OAuth 1.0a Authorization header.
+
+    For GETs with query params (e.g. /v2/tagged), pass the query string params
+    via `query_params` so they're included in the signature base string. For
+    POSTs with form-urlencoded bodies, the body params should ALSO be passed
+    via query_params (Tumblr signs them the same way). For pure POSTs with no
+    extra params, omit `query_params`.
+    """
+    oauth = {
         "oauth_consumer_key": os.environ["TUMBLR_CONSUMER_KEY"],
         "oauth_nonce": secrets.token_hex(16),
         "oauth_signature_method": "HMAC-SHA1",
@@ -128,19 +136,17 @@ def _oauth_header(method: str, url: str, *, extra_params: dict[str, str] | None 
         "oauth_token": os.environ["TUMBLR_OAUTH_TOKEN"],
         "oauth_version": "1.0",
     }
-    if extra_params:
-        params.update(extra_params)
+    all_params = dict(query_params or {})
+    all_params.update(oauth)
     base_string = "&".join([
         method.upper(),
         _q(url),
-        _q("&".join(f"{k}={_q(v)}" for k, v in sorted(params.items()))),
+        _q("&".join(f"{k}={_q(v)}" for k, v in sorted(all_params.items()))),
     ])
     key = f"{_q(os.environ['TUMBLR_CONSUMER_SECRET'])}&{_q(os.environ['TUMBLR_OAUTH_TOKEN_SECRET'])}"
     sig = hmac.new(key.encode(), base_string.encode(), hashlib.sha1).digest()
-    params["oauth_signature"] = base64.b64encode(sig).decode()
-    # Strip non-oauth params back out — they go in the form body, not the header.
-    oauth_only = {k: v for k, v in params.items() if k.startswith("oauth_")}
-    return "OAuth " + ", ".join(f'{k}="{_q(v)}"' for k, v in oauth_only.items())
+    oauth["oauth_signature"] = base64.b64encode(sig).decode()
+    return "OAuth " + ", ".join(f'{k}="{_q(v)}"' for k, v in oauth.items())
 
 
 # ---------- Candidate fetching ----------
@@ -173,11 +179,16 @@ def _post_text(post: dict) -> str:
     return text[:PROMPT_SNIPPET_CHARS]
 
 
-def _fetch_tag(tag: str, key: str) -> list[dict]:
-    qs = urllib.parse.urlencode({"tag": tag, "limit": CANDIDATES_PER_TAG, "api_key": key})
-    url = f"{TUMBLR_BASE}/tagged?{qs}"
+def _fetch_tag(tag: str) -> list[dict]:
+    """OAuth-authenticated /v2/tagged fetch. api_key-only mode returns
+    can_reblog=False for everything, so we must auth as the cafe."""
+    url = f"{TUMBLR_BASE}/tagged"
+    params = {"tag": tag, "limit": str(CANDIDATES_PER_TAG)}
+    auth = _oauth_header("GET", url, query_params=params)
+    full_url = url + "?" + urllib.parse.urlencode(params)
+    req = urllib.request.Request(full_url, headers={"Authorization": auth})
     try:
-        with urllib.request.urlopen(url, timeout=30) as r:
+        with urllib.request.urlopen(req, timeout=30) as r:
             d = json.load(r)
     except Exception as e:
         print(f"[reblog] fetch tag {tag!r} failed: {e}", file=sys.stderr)
@@ -337,7 +348,8 @@ def _reblog(blog: str, post_id: int, reblog_key: str, comment: str | None) -> st
     if comment:
         fields["comment"] = f"<p>{_html.escape(comment)}</p>"
     body = urllib.parse.urlencode(fields).encode()
-    auth = _oauth_header("POST", url)
+    # POST body params must be in the OAuth signature base string.
+    auth = _oauth_header("POST", url, query_params=fields)
     req = urllib.request.Request(
         url,
         data=body,
@@ -392,7 +404,7 @@ def main():
 
     candidates: list[dict] = []
     for tag in tags:
-        posts = _fetch_tag(tag, consumer_key)
+        posts = _fetch_tag(tag)
         for p in posts:
             if _filter_candidate(p, blog, already):
                 p["_source_tag"] = tag
