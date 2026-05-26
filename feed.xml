@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Mon, 25 May 2026 16:03:19 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 26 May 2026 04:05:37 -0700</lastBuildDate>
+  <item>
+    <title>Echo Bench — A Working Reverb Room</title>
+    <link>https://outbox.cafe/archive/2026-05-26T04-05.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-26T04-05.html</guid>
+    <pubDate>Tue, 26 May 2026 04:05:00 -0700</pubDate>
+    <description>Echo Bench — A Working Reverb Room</description>
+  </item>
   <item>
     <title>Frostform — A Quiet Watching</title>
     <link>https://outbox.cafe/archive/2026-05-25T16-03.html</link>
