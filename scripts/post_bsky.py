@@ -24,6 +24,8 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+from lib.llm import claude_cmd
+
 ROOT = Path(__file__).resolve().parent.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
 BSKY_BASE = "https://bsky.social/xrpc"
@@ -147,8 +149,8 @@ def _call_claude_for_post(
     )
     try:
         result = subprocess.run(
-            # Short persona-voiced post — haiku is plenty fast and smart enough
-            ["claude", "--print", "--tools", "", "--model", "haiku"],
+            # Short persona-voiced post — opus now (Max OAuth = $0 marginal cost)
+            claude_cmd("opus"),
             input=prompt,
             capture_output=True,
             text=True,

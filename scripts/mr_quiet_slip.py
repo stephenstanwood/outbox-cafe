@@ -43,6 +43,8 @@ sys.path.insert(0, str(SCRIPT_DIR))
 
 ROOT = SCRIPT_DIR.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
+
+from lib.llm import claude_cmd
 SLIPS_DIR = ROOT / "archive" / "slips"
 SLIPS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -88,7 +90,7 @@ def _generate_aphorism(model: str = "opus", max_tries: int = 3) -> str | None:
     for attempt in range(max_tries):
         try:
             result = subprocess.run(
-                ["claude", "--print", "--tools", "", "--model", model],
+                claude_cmd(model),
                 input=APHORISM_PROMPT,
                 capture_output=True,
                 text=True,

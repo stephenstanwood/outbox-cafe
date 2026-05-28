@@ -34,6 +34,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from lib.llm import claude_cmd
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 COLUMNS_DIR = ROOT / "archive" / "columns"
@@ -82,7 +84,7 @@ def _generate_column(model: str = "opus", max_tries: int = 3) -> str | None:
     for attempt in range(max_tries):
         try:
             result = subprocess.run(
-                ["claude", "--print", "--tools", "", "--model", model],
+                claude_cmd(model),
                 input=COLUMN_PROMPT,
                 capture_output=True,
                 text=True,

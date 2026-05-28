@@ -47,6 +47,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from lib.llm import claude_cmd
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 PERSONAS_PATH = DATA / "personas.json"
@@ -308,7 +310,7 @@ def _moderate_and_draft(post: dict, staff: dict[str, Any]) -> tuple[str, str | N
     )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--model", "haiku"],
+            claude_cmd("opus"),
             input=prompt,
             capture_output=True,
             text=True,
