@@ -166,7 +166,7 @@ def _gen_health_last_24h() -> dict:
             bsky_fail += 1
         if e.get("tumblr") is False:
             tumblr_fail += 1
-        if isinstance(e.get("attempts"), int) and e["attempts"] > 1:
+        if isinstance(e.get("fallback_attempts"), int) and e["fallback_attempts"] >= 1:
             retried += 1
     return {"logged": logged, "bsky_fail": bsky_fail, "tumblr_fail": tumblr_fail, "retried": retried}
 
@@ -227,7 +227,7 @@ def main() -> int:
         if health["tumblr_fail"]:
             bits.append(f"{health['tumblr_fail']} tumblr post(s) failed")
         if health["retried"]:
-            bits.append(f"{health['retried']} gen(s) needed a retry")
+            bits.append(f"{health['retried']} gen(s) fell back to single-shot")
         if bits:
             parts.append("")
             parts.append(f"⚠️ **gen health:** {', '.join(bits)} (of {health['logged']} logged)")
