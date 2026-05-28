@@ -67,6 +67,23 @@ def build_prompt(spec: dict[str, Any], photos: list[dict[str, Any]] | None = Non
     )
     photos = photos or []
     photos_block = _format_photos_block(photos)
+    n_photos = len(photos)
+    if n_photos == 0:
+        images_intro = (
+            "No images were pre-fetched this time (the image services were skipped or "
+            "unavailable). Build a piece that needs none — pure CSS/SVG/text. Do not "
+            "reference missing or broken images."
+        )
+    else:
+        _count_word = {1: "One image has", 2: "Two images have", 3: "Three images have"}.get(
+            n_photos, f"{n_photos} images have"
+        )
+        images_intro = (
+            f"{_count_word} been pre-fetched for this piece. Each is labeled with its source: "
+            "either real photos from UNSPLASH (real strangers and real places — they need credit) "
+            "or AI-GENERATED artwork (custom-made for this spec, no attribution needed, modify "
+            "freely). You may use any, all, or none — pick what fits the format you're building."
+        )
 
     return f"""You are generating a scheduled artifact for outbox.cafe. Four times a day (4am, 8am, noon, 4pm PT) a new self-contained HTML page goes up at the root and gets archived. The cafe values genuine variety, care, and texture over polish. Some pieces are weird. Some are beautiful. Some are quiet. Some are playful. Some are maximalist. The goal is breadth, not a brand — DO NOT default to "weird at all costs." Sometimes the right call is something honestly beautiful, sincere, tender. People should want to look at this for a few minutes, then look at it again later and notice new details.
 
@@ -86,7 +103,7 @@ Make a single self-contained HTML file that fully inhabits the rolled spec.
 
 AVAILABLE IMAGES
 ================
-Three images have been pre-fetched for this piece. Each is labeled with its source: either real photos from UNSPLASH (real strangers and real places — they need credit) or AI-GENERATED artwork (custom-made for this spec, no attribution needed, modify freely). You may use any, all, or none — pick what fits the format you're building.
+{images_intro}
 
 {photos_block}
 

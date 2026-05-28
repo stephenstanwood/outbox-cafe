@@ -29,6 +29,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from lib.io import atomic_write_json
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 STATE_PATH = DATA / "like_state.json"
@@ -78,7 +80,7 @@ def _save_state(state: dict) -> None:
     # Trim history to last 1000 per platform
     for k in ("bsky", "tumblr"):
         state[k] = (state.get(k) or [])[-1000:]
-    STATE_PATH.write_text(json.dumps(state, indent=2))
+    atomic_write_json(STATE_PATH, state)
 
 
 def _today_count(state: dict, platform: str) -> int:
