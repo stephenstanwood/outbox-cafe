@@ -141,6 +141,36 @@ def _signals_last_24h() -> list[str]:
     return [k for k, v in state.items() if isinstance(v, (int, float)) and v > cutoff]
 
 
+def _gen_health_last_24h() -> dict:
+    """Summarize data/runs.jsonl over the last 24h: gens logged + failed posts + retries."""
+    runs_path = ROOT / "data" / "runs.jsonl"
+    if not runs_path.exists():
+        return {}
+    cutoff = datetime.now(tz=PT) - timedelta(hours=24)
+    logged = bsky_fail = tumblr_fail = retried = 0
+    for line in runs_path.read_text(errors="ignore").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            e = json.loads(line)
+            dt = datetime.fromisoformat(e.get("ts", ""))
+        except Exception:
+            continue
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=PT)
+        if dt < cutoff:
+            continue
+        logged += 1
+        if e.get("bsky") is False:
+            bsky_fail += 1
+        if e.get("tumblr") is False:
+            tumblr_fail += 1
+        if isinstance(e.get("attempts"), int) and e["attempts"] > 1:
+            retried += 1
+    return {"logged": logged, "bsky_fail": bsky_fail, "tumblr_fail": tumblr_fail, "retried": retried}
+
+
 def main() -> int:
     # Run the reflection pass first so its summary lands in tonight's digest and
     # tomorrow's posts already use the updated weights.
@@ -183,6 +213,24 @@ def main() -> int:
     if signals:
         parts.append("")
         parts.append(f"**signals fired in last 24h:** {', '.join('`' + s + '`' for s in signals)}")
+
+    # Gen health from runs.jsonl — only surface a line when something's off, so a
+    # healthy day stays quiet. (runs.jsonl is written per-gen by generate.py.)
+    try:
+        health = _gen_health_last_24h()
+    except Exception:
+        health = {}
+    if health.get("logged"):
+        bits = []
+        if health["bsky_fail"]:
+            bits.append(f"{health['bsky_fail']} bsky post(s) failed")
+        if health["tumblr_fail"]:
+            bits.append(f"{health['tumblr_fail']} tumblr post(s) failed")
+        if health["retried"]:
+            bits.append(f"{health['retried']} gen(s) needed a retry")
+        if bits:
+            parts.append("")
+            parts.append(f"⚠️ **gen health:** {', '.join(bits)} (of {health['logged']} logged)")
 
     if reflection:
         parts.append("")
