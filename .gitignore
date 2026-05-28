@@ -36,9 +36,14 @@ data/like_state.json
 # Tumblr reblog state — per-Mini, dedup + cooldown
 data/reblog_state.json
 
-# Debug artifact written when a gen returns non-HTML — runtime-only, must
-# not be tracked or it blocks subsequent rebase pulls on the Mini
+# Debug artifacts written when a gen returns non-HTML — runtime-only, must
+# not be tracked or they block subsequent rebase pulls on the Mini
 data/last_bad_output.txt
+data/last_bad_prompt.txt
+
+# Social poster images — ephemeral. Posted to bsky/tumblr (both wiped nightly),
+# then never needed again. Generated fresh each gen; not worth committing.
+archive/social/
 
 
 # Per-worktree harness state (scheduled_tasks.lock etc.)

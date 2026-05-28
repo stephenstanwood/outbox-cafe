@@ -11,6 +11,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from lib.llm import claude_cmd
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 DIMENSIONS_PATH = DATA_DIR / "dimensions.json"
@@ -440,10 +442,9 @@ def roll_spec_via_llm(
         forbidden_examples=example_str("forbidden_register"),
     )
 
-    # Spec rolling is just JSON output — haiku is plenty smart and much faster
-    # than the default model. Falls back to static roller on any failure anyway.
-    cmd = ["claude", "--print", "--tools", ""]
-    cmd += ["--model", model or "haiku"]
+    # Spec rolling is just JSON output. Runs on opus like everything else now
+    # (Max OAuth = $0); falls back to the static roller on any failure anyway.
+    cmd = claude_cmd(model or "opus")
 
     try:
         result = subprocess.run(

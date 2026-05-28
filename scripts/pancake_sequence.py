@@ -42,6 +42,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from lib.llm import claude_cmd
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 POST_LOG = DATA / "post_log.jsonl"
@@ -135,11 +137,11 @@ def _act_posted_today(act: int) -> bool:
 
 def _generate_act(act: int, max_tries: int = 3) -> str | None:
     prompt = ACT_PROMPTS[act]
-    # haiku is plenty here — these are short, low-stakes outputs
+    # opus now (Max OAuth = $0) — short outputs, but the best model is free
     for attempt in range(max_tries):
         try:
             result = subprocess.run(
-                ["claude", "--print", "--tools", "", "--model", "haiku"],
+                claude_cmd("opus"),
                 input=prompt,
                 capture_output=True,
                 text=True,
