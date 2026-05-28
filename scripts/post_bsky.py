@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Any
 
 from lib.llm import claude_cmd
+from lib.net import with_retry
 
 ROOT = Path(__file__).resolve().parent.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
@@ -294,15 +295,20 @@ def post_drop(
     if len(full_text.encode("utf-8")) > POST_MAX_CHARS * 4:
         full_text = body_text[:POST_MAX_CHARS].rstrip()
 
-    # Authenticate
+    # Authenticate. bsky's createSession periodically times out transiently (a
+    # platform quirk, not a creds problem) — retry rides out a brief blip. Safe
+    # to retry: creating a session is idempotent.
     try:
-        sess = _bsky_request(
-            "/com.atproto.server.createSession",
-            data={"identifier": handle, "password": app_pw},
-            method="POST",
+        sess = with_retry(
+            lambda: _bsky_request(
+                "/com.atproto.server.createSession",
+                data={"identifier": handle, "password": app_pw},
+                method="POST",
+            ),
+            label="bsky auth",
         )
     except Exception as e:
-        print(f"[post_bsky] auth failed: {e}", file=sys.stderr)
+        print(f"[post_bsky] auth failed after retries: {e}", file=sys.stderr)
         return False
     did = sess["did"]
     jwt = sess["accessJwt"]

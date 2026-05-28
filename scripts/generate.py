@@ -1249,6 +1249,14 @@ def git_commit_and_push(message: str) -> None:
         raise subprocess.CalledProcessError(push2.returncode, push2.args if hasattr(push2, "args") else "git push")
 
 
+def _append_run_log(entry: dict) -> None:
+    """Append one JSON line per gen to data/runs.jsonl (gitignored, per-Mini)."""
+    log_path = ROOT / "data" / "runs.jsonl"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with log_path.open("a") as f:
+        f.write(json.dumps(entry) + "\n")
+
+
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--seed", type=int, default=None)
@@ -1372,9 +1380,11 @@ def main() -> int:
     social_thumb = social_path if social_path.exists() else (shot_path if shot_path.exists() else None)
 
     # Best-effort Bluesky drop announcement. Never blocks the gen.
+    posted_bsky = False
     try:
         from post_bsky import post_drop
-        if post_drop(archive_file, social_thumb):
+        posted_bsky = bool(post_drop(archive_file, social_thumb))
+        if posted_bsky:
             print("✓ posted to bluesky")
     except Exception as e:
         print(f"bluesky post errored (non-fatal): {e}", file=sys.stderr)
@@ -1392,19 +1402,39 @@ def main() -> int:
 
     # Cross-post to Tumblr. Different texture from bsky — outbound links OK,
     # archive lives forever, tags drive discovery. Same cat-staff voice.
+    posted_tumblr = False
     try:
         from post_tumblr import post_drop as post_tumblr_drop
         fmt_value = ((spec.get("format") or {}).get("value")
                      if isinstance(spec.get("format"), dict)
                      else spec.get("format"))
-        if post_tumblr_drop(
+        posted_tumblr = bool(post_tumblr_drop(
             archive_file,
             social_thumb,
             spec_format=fmt_value,
-        ):
+        ))
+        if posted_tumblr:
             print("✓ posted to tumblr")
     except Exception as e:
         print(f"tumblr post errored (non-fatal): {e}", file=sys.stderr)
+
+    # Per-run observability — one JSON line per gen (gitignored, per-Mini), so the
+    # nightly digest can spot failed posts / retries without an SSH log dive.
+    try:
+        _append_run_log({
+            "ts": datetime.now(tz=PT).isoformat(),
+            "file": archive_file.name,
+            "title": title,
+            "model": gen_model,
+            "attempts": attempt,
+            "html_bytes": len(html),
+            "poster": social_path.exists(),
+            "thumb": shot_path.exists(),
+            "bsky": posted_bsky,
+            "tumblr": posted_tumblr,
+        })
+    except Exception as e:
+        print(f"run-log write failed (non-fatal): {e}", file=sys.stderr)
 
     return 0
 

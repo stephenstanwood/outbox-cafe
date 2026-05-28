@@ -48,6 +48,7 @@ from pathlib import Path
 from typing import Any
 
 from lib.llm import claude_cmd
+from lib.io import atomic_write_json
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -91,8 +92,7 @@ def _load_state() -> dict[str, Any]:
 
 
 def _save_state(state: dict[str, Any]) -> None:
-    DATA.mkdir(parents=True, exist_ok=True)
-    STATE_PATH.write_text(json.dumps(state, indent=2))
+    atomic_write_json(STATE_PATH, state)
 
 
 def _reblog_count_today(state: dict[str, Any]) -> int:

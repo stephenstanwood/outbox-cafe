@@ -45,6 +45,10 @@ data/last_bad_prompt.txt
 # then never needed again. Generated fresh each gen; not worth committing.
 archive/social/
 
+# Per-gen run log — one JSON line per gen (outcomes, retries, post status).
+# Per-Mini observability for the nightly digest; not worth committing.
+data/runs.jsonl
+
 
 # Per-worktree harness state (scheduled_tasks.lock etc.)
 .claude/
