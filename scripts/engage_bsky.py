@@ -30,6 +30,7 @@ from pathlib import Path
 from typing import Any
 
 from lib.llm import claude_cmd, is_nopost
+from lib.io import atomic_write_json
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
@@ -91,7 +92,7 @@ def _load_state() -> dict[str, Any]:
 
 def _save_state(state: dict[str, Any]) -> None:
     STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    STATE_PATH.write_text(json.dumps(state, indent=2))
+    atomic_write_json(STATE_PATH, state)
 
 
 def _bsky(path: str, *, data=None, headers=None, method=None) -> dict:
@@ -500,7 +501,7 @@ def _load_wild_state() -> dict[str, Any]:
 
 def _save_wild_state(state: dict[str, Any]) -> None:
     WILD_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    WILD_STATE_PATH.write_text(json.dumps(state, indent=2))
+    atomic_write_json(WILD_STATE_PATH, state)
 
 
 def _wild_count_24h(state: dict[str, Any]) -> int:
@@ -689,7 +690,7 @@ def _load_throwback_state() -> dict[str, Any]:
 
 def _save_throwback_state(state: dict[str, Any]) -> None:
     THROWBACK_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    THROWBACK_STATE_PATH.write_text(json.dumps(state, indent=2))
+    atomic_write_json(THROWBACK_STATE_PATH, state)
 
 
 def _maybe_throwback_post(rng: random.Random) -> bool:
