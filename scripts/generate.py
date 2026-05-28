@@ -1249,6 +1249,76 @@ def git_commit_and_push(message: str) -> None:
         raise subprocess.CalledProcessError(push2.returncode, push2.args if hasattr(push2, "args") else "git push")
 
 
+JUDGE_PROMPT = """You are the editor of outbox.cafe. {n} candidate HTML pages were generated for the SAME brief. Pick the ONE most worth publishing.
+
+THE BRIEF
+{spec_human}
+
+JUDGE ON (in order):
+1. Inhabits the spec — era, format, subject, tone, palette, and the mandatory element are actually present and functional, not merely gestured at.
+2. Worth a few minutes — interesting, specific, textured; rewards a second look. Care over polish.
+3. Honors the forbidden register — does NOT drift into the aesthetic it was told to avoid.
+4. Complete and well-formed — no obviously broken HTML, no placeholder TODOs, no leaked spec/metadata visible on the page.
+
+Beauty, sincerity, and craft count as much as strangeness — do not reward "weird for its own sake."
+
+CANDIDATES (HTML source, may be truncated):
+{candidates}
+
+Respond with ONLY the number (1-{n}) of the best candidate. No other text."""
+
+
+def generate_candidates(prompt: str, model: str, n: int, timeout: int = 600) -> list[str]:
+    """Generate n candidate pages IN PARALLEL; return those that look like HTML.
+
+    Max OAuth = $0/token, so breadth is free; running them concurrently keeps
+    wall-clock ~one gen instead of n. Each candidate (after the first) is nudged
+    toward a distinct interpretation so they actually differ.
+    """
+    import concurrent.futures
+
+    def _one(i: int) -> "str | None":
+        p = prompt if i == 0 else prompt + (
+            f"\n\n(Variant {i + 1}: commit to a distinct, non-obvious interpretation "
+            "of the brief.)"
+        )
+        try:
+            raw = call_claude(p, model=model, timeout=timeout)
+        except Exception as e:
+            print(f"  candidate {i + 1}/{n} failed: {e}", file=sys.stderr)
+            return None
+        html = extract_html(raw)
+        return html if looks_like_html(html) else None
+
+    out: list[str] = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=n) as ex:
+        for r in ex.map(_one, range(n)):
+            if r:
+                out.append(r)
+    return out
+
+
+def pick_best_candidate(candidates: list[str], spec: dict, model: str = "opus") -> str:
+    """Have an opus judge pick the best candidate. Falls back to candidate 1 on any failure."""
+    blocks = [f"=== CANDIDATE {i} ===\n{html[:14000]}" for i, html in enumerate(candidates, 1)]
+    judge_prompt = JUDGE_PROMPT.format(
+        n=len(candidates),
+        spec_human=format_spec_for_human(spec),
+        candidates="\n\n".join(blocks),
+    )
+    try:
+        raw = call_claude(judge_prompt, model=model, timeout=180)
+    except Exception as e:
+        print(f"  judge failed ({e}) — using candidate 1", file=sys.stderr)
+        return candidates[0]
+    m = re.search(r"\b([1-9][0-9]?)\b", raw)
+    idx = (int(m.group(1)) - 1) if m else 0
+    if not (0 <= idx < len(candidates)):
+        idx = 0
+    print(f"  judge picked candidate {idx + 1}/{len(candidates)}")
+    return candidates[idx]
+
+
 def _append_run_log(entry: dict) -> None:
     """Append one JSON line per gen to data/runs.jsonl (gitignored, per-Mini)."""
     log_path = ROOT / "data" / "runs.jsonl"
@@ -1264,6 +1334,8 @@ def main() -> int:
     p.add_argument("--dry-run", action="store_true", help="roll spec + print prompt, don't call Claude")
     p.add_argument("--model", default=None, help="override claude model (default: account default)")
     p.add_argument("--static-spec", action="store_true", help="use the deterministic static spec roller instead of the LLM roller")
+    p.add_argument("--candidates", type=int, default=3, help="generate N candidates in parallel and judge-pick the best (default 3; 1 = single-shot)")
+    p.add_argument("--no-post", action="store_true", help="skip all social posting (bsky/tumblr/engage) — for safe manual/test gens")
     args = p.parse_args()
 
     if args.static_spec:
@@ -1299,39 +1371,52 @@ def main() -> int:
         print(prompt)
         return 0
 
-    print("calling claude (this may take 30-90s for larger pieces) ...")
     gen_model = args.model or "opus"
-    MAX_ATTEMPTS = 3
-    # Appended after a miss: a model that derailed into prose/planning on the
-    # first try gets pushed back to raw HTML rather than handed the same prompt
-    # three identical times (which is what the old loop did).
     NUDGE = (
         "\n\n---\nIMPORTANT: Output ONLY the raw HTML document, beginning with "
         "<!DOCTYPE html>. No preamble, no explanation, no planning, no code "
         "fences — just the HTML, starting at the very first character."
     )
+
+    # Multi-candidate generation: spin up N candidates IN PARALLEL and let an opus
+    # judge pick the one that best inhabits the spec. Max OAuth = $0, so breadth
+    # is free; parallel keeps wall-clock ~one gen. --candidates 1 = single-shot.
+    n_want = max(1, args.candidates)
+    print(f"generating {n_want} candidate(s) in parallel (opus) — this may take a few min ...")
+    valid = generate_candidates(prompt, gen_model, n_want) if n_want > 1 else []
+    n_candidates = len(valid)
+    fb_attempts = 0
     raw = ""
-    html = ""
-    for attempt in range(1, MAX_ATTEMPTS + 1):
-        attempt_prompt = prompt if attempt == 1 else prompt + NUDGE
-        raw = call_claude(attempt_prompt, model=gen_model, timeout=600)
-        html = extract_html(raw)
-        if looks_like_html(html):
-            if attempt > 1:
-                print(f"  (looks-like-html passed on attempt {attempt}/{MAX_ATTEMPTS})")
-            break
-        # Always snapshot the most recent miss so the failure stays debuggable.
-        (ROOT / "data" / "last_bad_output.txt").write_text(raw)
-        (ROOT / "data" / "last_bad_prompt.txt").write_text(attempt_prompt)
-        print(f"  attempt {attempt}/{MAX_ATTEMPTS}: output did not look like HTML — retrying with raw-HTML nudge", file=sys.stderr)
+    if len(valid) >= 2:
+        html = pick_best_candidate(valid, spec, model=gen_model)
+    elif len(valid) == 1:
+        print(f"  only 1/{n_want} candidates was valid HTML — using it")
+        html = valid[0]
     else:
-        print(f"output did not look like HTML after {MAX_ATTEMPTS} attempts; raw saved to data/last_bad_output.txt", file=sys.stderr)
-        try:
-            from cat_signal import signal
-            signal("gen-bad-output", f"claude returned non-HTML output ({MAX_ATTEMPTS}x). raw saved to data/last_bad_output.txt", priority="high")
-        except Exception:
-            pass
-        return 2
+        # 0 valid candidates (or single-shot mode): adaptive nudge-retry, up to 3.
+        if n_want > 1:
+            print("  no valid candidates — falling back to single-shot with nudge", file=sys.stderr)
+        html = ""
+        for fb_attempts in range(1, 4):
+            attempt_prompt = prompt if fb_attempts == 1 else prompt + NUDGE
+            raw = call_claude(attempt_prompt, model=gen_model, timeout=600)
+            html = extract_html(raw)
+            if looks_like_html(html):
+                if fb_attempts > 1:
+                    print(f"  (looks-like-html passed on fallback attempt {fb_attempts}/3)")
+                break
+            # Always snapshot the most recent miss so the failure stays debuggable.
+            (ROOT / "data" / "last_bad_output.txt").write_text(raw)
+            (ROOT / "data" / "last_bad_prompt.txt").write_text(attempt_prompt)
+            print(f"  fallback attempt {fb_attempts}/3: output not HTML — retrying with nudge", file=sys.stderr)
+        else:
+            print("output did not look like HTML after candidates + 3 fallback attempts; raw saved to data/last_bad_output.txt", file=sys.stderr)
+            try:
+                from cat_signal import signal
+                signal("gen-bad-output", "claude returned non-HTML output (candidates + 3 retries). raw saved to data/last_bad_output.txt", priority="high")
+            except Exception:
+                pass
+            return 2
 
     # Inject the canonical spec as meta tags so the cabinet can read it reliably
     html = inject_spec_meta(html, spec)
@@ -1379,44 +1464,46 @@ def main() -> int:
     # Prefer the dedicated social poster over the page screenshot for social cards.
     social_thumb = social_path if social_path.exists() else (shot_path if shot_path.exists() else None)
 
-    # Best-effort Bluesky drop announcement. Never blocks the gen.
     posted_bsky = False
-    try:
-        from post_bsky import post_drop
-        posted_bsky = bool(post_drop(archive_file, social_thumb))
-        if posted_bsky:
-            print("✓ posted to bluesky")
-    except Exception as e:
-        print(f"bluesky post errored (non-fatal): {e}", file=sys.stderr)
-
-    # Engagement pass — process mentions/replies/quotes right after a drop so
-    # the cafe reacts within seconds, not up to 15 min later. Ambient + wild
-    # are skipped on this path because the drop announcement is already this
-    # hour's outward voice. Full reply cap; the gen wrapper lock is 15 min
-    # which is plenty for ~10 replies.
-    try:
-        from engage_bsky import run as run_engage
-        run_engage(skip_ambient=True)
-    except Exception as e:
-        print(f"engage pass errored (non-fatal): {e}", file=sys.stderr)
-
-    # Cross-post to Tumblr. Different texture from bsky — outbound links OK,
-    # archive lives forever, tags drive discovery. Same cat-staff voice.
     posted_tumblr = False
-    try:
-        from post_tumblr import post_drop as post_tumblr_drop
-        fmt_value = ((spec.get("format") or {}).get("value")
-                     if isinstance(spec.get("format"), dict)
-                     else spec.get("format"))
-        posted_tumblr = bool(post_tumblr_drop(
-            archive_file,
-            social_thumb,
-            spec_format=fmt_value,
-        ))
-        if posted_tumblr:
-            print("✓ posted to tumblr")
-    except Exception as e:
-        print(f"tumblr post errored (non-fatal): {e}", file=sys.stderr)
+    if args.no_post:
+        print("--no-post: skipping bluesky / tumblr / engagement")
+    else:
+        # Best-effort Bluesky drop announcement. Never blocks the gen.
+        try:
+            from post_bsky import post_drop
+            posted_bsky = bool(post_drop(archive_file, social_thumb))
+            if posted_bsky:
+                print("✓ posted to bluesky")
+        except Exception as e:
+            print(f"bluesky post errored (non-fatal): {e}", file=sys.stderr)
+
+        # Engagement pass — process mentions/replies/quotes right after a drop so
+        # the cafe reacts within seconds, not up to 15 min later. Ambient + wild
+        # are skipped on this path because the drop announcement is already this
+        # hour's outward voice.
+        try:
+            from engage_bsky import run as run_engage
+            run_engage(skip_ambient=True)
+        except Exception as e:
+            print(f"engage pass errored (non-fatal): {e}", file=sys.stderr)
+
+        # Cross-post to Tumblr. Different texture from bsky — outbound links OK,
+        # archive lives forever, tags drive discovery. Same cat-staff voice.
+        try:
+            from post_tumblr import post_drop as post_tumblr_drop
+            fmt_value = ((spec.get("format") or {}).get("value")
+                         if isinstance(spec.get("format"), dict)
+                         else spec.get("format"))
+            posted_tumblr = bool(post_tumblr_drop(
+                archive_file,
+                social_thumb,
+                spec_format=fmt_value,
+            ))
+            if posted_tumblr:
+                print("✓ posted to tumblr")
+        except Exception as e:
+            print(f"tumblr post errored (non-fatal): {e}", file=sys.stderr)
 
     # Per-run observability — one JSON line per gen (gitignored, per-Mini), so the
     # nightly digest can spot failed posts / retries without an SSH log dive.
@@ -1426,7 +1513,8 @@ def main() -> int:
             "file": archive_file.name,
             "title": title,
             "model": gen_model,
-            "attempts": attempt,
+            "candidates": n_candidates,
+            "fallback_attempts": fb_attempts,
             "html_bytes": len(html),
             "poster": social_path.exists(),
             "thumb": shot_path.exists(),
