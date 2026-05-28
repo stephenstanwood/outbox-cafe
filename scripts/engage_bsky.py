@@ -29,6 +29,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from lib.llm import claude_cmd, is_nopost
+
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
 THUMBS_DIR = ARCHIVE_DIR / "thumbs"
@@ -192,7 +194,7 @@ def _generate_reply(
     )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--model", "haiku"],
+            claude_cmd("opus"),
             input=prompt,
             capture_output=True,
             text=True,
@@ -205,7 +207,7 @@ def _generate_reply(
         print(f"[engage] claude exit {result.returncode}: {result.stderr[:200]}", file=sys.stderr)
         return None
     text = (result.stdout or "").strip()
-    if "NOPOST" in text.upper()[:40]:
+    if is_nopost(text):
         return None
     text = re.sub(r"^```[a-z]*\s*", "", text).strip()
     text = re.sub(r"\s*```\s*$", "", text).strip()
@@ -307,7 +309,7 @@ def _generate_ambient(staff: dict[str, Any]) -> str | None:
     )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--model", "haiku"],
+            claude_cmd("opus"),
             input=prompt,
             capture_output=True,
             text=True,
@@ -464,7 +466,7 @@ def _roll_wild_topic(rng: random.Random) -> str:
         )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--model", "haiku"],
+            claude_cmd("opus"),
             input=prompt,
             capture_output=True,
             text=True,
@@ -536,7 +538,7 @@ def _generate_wild_reply(
     )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--model", "haiku"],
+            claude_cmd("opus"),
             input=prompt,
             capture_output=True,
             text=True,
@@ -549,7 +551,7 @@ def _generate_wild_reply(
         print(f"[wild] claude exit {result.returncode}", file=sys.stderr)
         return None
     text = (result.stdout or "").strip()
-    if "NOPOST" in text.upper()[:40]:
+    if is_nopost(text):
         return None
     text = re.sub(r"^```[a-z]*\s*", "", text).strip()
     text = re.sub(r"\s*```\s*$", "", text).strip()
@@ -613,7 +615,7 @@ def _maybe_wild_reply(
         if rec.get("reply"):  # top-level only
             continue
         # Skip if the post itself contains common controversy/news markers
-        if any(t in text.lower() for t in CONTROVERSY_KEYWORDS):
+        if touches_controversy(text):
             continue
         target = p
         break
@@ -755,10 +757,29 @@ def _maybe_throwback_post(rng: random.Random) -> bool:
 
 
 CONTROVERSY_KEYWORDS = [
-    "trump", "biden", "election", "war", "shooting", "shooter",
-    "rip", "passed away", "died", "obituary",
-    "bitcoin", "crypto", "stock", "etf", "nft",
+    # politics / public figures / government
+    "trump", "biden", "putin", "musk", "election", "congress", "senate",
+    # conflict / war / violence
+    "war", "shooting", "shooter", "gaza", "israel", "ukraine", "hamas",
+    # grief / loss
+    "rip", "passed away", "died", "obituary", "funeral",
+    # hot-button
+    "covid", "vaccine", "abortion",
+    # finance / crypto
+    "bitcoin", "crypto", "stock", "etf", "nft", "tariff",
 ]
+
+# Word-boundary match so "war" doesn't fire on "warm" and "rip" doesn't fire on
+# "ripe"/"scripture". Multi-word entries ("passed away") match as a unit.
+_CONTROVERSY_RE = re.compile(
+    r"\b(" + "|".join(re.escape(k) for k in dict.fromkeys(CONTROVERSY_KEYWORDS)) + r")\b",
+    re.IGNORECASE,
+)
+
+
+def touches_controversy(text: str) -> bool:
+    """True if the text trips the off-brand topic filter (word-boundary match)."""
+    return bool(_CONTROVERSY_RE.search(text or ""))
 
 
 def _acknowledge_follower(
@@ -795,8 +816,7 @@ def _acknowledge_follower(
             continue
         if rec.get("reply"):
             continue  # top-level only — feels less intrusive
-        lower = text.lower()
-        if any(t in lower for t in CONTROVERSY_KEYWORDS):
+        if touches_controversy(text):
             continue
         candidates.append(p)
 

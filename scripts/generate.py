@@ -26,6 +26,7 @@ from spec import (
 )
 from images import fetch_images, derive_query
 from images_ai import fetch_ai_images, fetch_poster_image
+from lib.llm import call_claude
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
@@ -38,32 +39,7 @@ SHOT_SCRIPT = ROOT / "scripts" / "screenshot.js"
 PT = ZoneInfo("America/Los_Angeles")
 
 
-def call_claude(prompt: str, model: str | None = None, timeout: int = 600) -> str:
-    """Call the local claude CLI in --print mode with tools disabled.
-
-    Without --tools "", claude operates agentically — it picks up Write/Edit
-    and modifies files itself rather than printing the result. We want pure
-    text-out: prompt in, HTML out.
-
-    Default model is opus: this is the site's creative payload and Max OAuth
-    means no per-token cost. Override with --model on the CLI for testing.
-    """
-    cmd = [
-        "claude",
-        "--print",
-        "--tools", "",
-        "--model", model or "opus",
-    ]
-    result = subprocess.run(
-        cmd,
-        input=prompt,
-        capture_output=True,
-        text=True,
-        timeout=timeout,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"claude failed (exit {result.returncode}): {result.stderr[:500]}")
-    return result.stdout
+# call_claude now lives in lib/llm.py — shared, MCP-isolated, opus by default.
 
 
 RELOAD_SCRIPT = """
@@ -200,16 +176,28 @@ def extract_html(raw: str) -> str:
         s = re.sub(r"^```[a-zA-Z]*\n", "", s)
         s = re.sub(r"\n```\s*$", "", s)
         s = s.strip()
-    # Trim anything before <!DOCTYPE or <html
-    m = re.search(r"<!doctype html|<html", s, re.IGNORECASE)
+    # Trim any leading prose before the document actually starts. Accept the
+    # common structural openers, not just <!DOCTYPE/<html — gens sometimes emit
+    # a page that opens straight into <head>/<body> with no <html> wrapper.
+    m = re.search(r"<!doctype html|<html|<head|<body", s, re.IGNORECASE)
     if m:
         s = s[m.start():]
     return s.strip()
 
 
 def looks_like_html(s: str) -> bool:
-    head = s[:300].lower()
-    return "<html" in head and "</html>" in s.lower()
+    """Did the model return an HTML document (vs. prose / planning text)?
+
+    Tolerant on purpose. Accept any real structural opener and require enough
+    markup to be a page — but do NOT require a closing </html>: a perfectly good
+    page can open with <body> (no <html> wrapper) or be truncated at the tail.
+    The old check demanded '<html' in the first 300 chars AND '</html>' somewhere,
+    which falsely rejected those and burned retries.
+    """
+    head = s[:400].lower()
+    has_opener = any(tag in head for tag in ("<!doctype", "<html", "<head", "<body"))
+    enough_markup = s.count("<") >= 8 and len(s) >= 400
+    return has_opener and enough_markup
 
 
 def filename_for_now() -> str:
@@ -1304,24 +1292,32 @@ def main() -> int:
         return 0
 
     print("calling claude (this may take 30-90s for larger pieces) ...")
+    gen_model = args.model or "opus"
     MAX_ATTEMPTS = 3
+    # Appended after a miss: a model that derailed into prose/planning on the
+    # first try gets pushed back to raw HTML rather than handed the same prompt
+    # three identical times (which is what the old loop did).
+    NUDGE = (
+        "\n\n---\nIMPORTANT: Output ONLY the raw HTML document, beginning with "
+        "<!DOCTYPE html>. No preamble, no explanation, no planning, no code "
+        "fences — just the HTML, starting at the very first character."
+    )
     raw = ""
     html = ""
     for attempt in range(1, MAX_ATTEMPTS + 1):
-        raw = call_claude(prompt, model=args.model)
+        attempt_prompt = prompt if attempt == 1 else prompt + NUDGE
+        raw = call_claude(attempt_prompt, model=gen_model, timeout=600)
         html = extract_html(raw)
         if looks_like_html(html):
             if attempt > 1:
                 print(f"  (looks-like-html passed on attempt {attempt}/{MAX_ATTEMPTS})")
             break
-        print(f"  attempt {attempt}/{MAX_ATTEMPTS}: output did not look like HTML — retrying", file=sys.stderr)
+        # Always snapshot the most recent miss so the failure stays debuggable.
+        (ROOT / "data" / "last_bad_output.txt").write_text(raw)
+        (ROOT / "data" / "last_bad_prompt.txt").write_text(attempt_prompt)
+        print(f"  attempt {attempt}/{MAX_ATTEMPTS}: output did not look like HTML — retrying with raw-HTML nudge", file=sys.stderr)
     else:
-        # All attempts produced non-HTML output. Save both the raw response and
-        # the prompt so the failure mode is debuggable next time.
-        debug = ROOT / "data" / "last_bad_output.txt"
-        debug.write_text(raw)
-        (ROOT / "data" / "last_bad_prompt.txt").write_text(prompt)
-        print(f"output did not look like HTML after {MAX_ATTEMPTS} attempts; raw saved to {debug}", file=sys.stderr)
+        print(f"output did not look like HTML after {MAX_ATTEMPTS} attempts; raw saved to data/last_bad_output.txt", file=sys.stderr)
         try:
             from cat_signal import signal
             signal("gen-bad-output", f"claude returned non-HTML output ({MAX_ATTEMPTS}x). raw saved to data/last_bad_output.txt", priority="high")

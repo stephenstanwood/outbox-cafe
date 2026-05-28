@@ -37,6 +37,8 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+from lib.llm import claude_cmd
+
 ROOT = Path(__file__).resolve().parent.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
 
@@ -120,7 +122,7 @@ def _call_claude(staff: dict[str, Any], title: str, snippet: str) -> str | None:
     )
     try:
         result = subprocess.run(
-            ["claude", "--print", "--tools", "", "--model", "haiku"],
+            claude_cmd("opus"),
             input=prompt,
             capture_output=True,
             text=True,
