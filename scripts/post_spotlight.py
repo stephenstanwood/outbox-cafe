@@ -72,7 +72,8 @@ def _post_bluesky(text: str, archive_url: str, thumb_path: Path | None, title: s
             )["blob"]
             image_embed = {
                 "$type": "app.bsky.embed.images",
-                "images": [{"image": blob, "alt": title[:300] if title else "outbox.cafe"}],
+                "images": [{"image": blob, "alt": (f"Illustrated cover for {title}"[:300]
+                                                   if title else "An illustrated cover from outbox.cafe")}],
             }
         except Exception as e:
             print(f"[spotlight/bsky] image upload failed (continuing without): {e}", file=sys.stderr)

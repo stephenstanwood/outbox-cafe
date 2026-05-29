@@ -331,7 +331,8 @@ def post_drop(
                 "images": [
                     {
                         "image": blob,
-                        "alt": title[:300] if title else "the corkboard",
+                        "alt": (f"Illustrated cover for {title}"[:300] if title
+                                else "An illustrated cover from outbox.cafe"),
                     }
                 ],
             }
