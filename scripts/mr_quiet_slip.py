@@ -45,7 +45,7 @@ ROOT = SCRIPT_DIR.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
 
 from lib.llm import claude_cmd
-from lib import bsky
+from lib import bsky, tumblr
 SLIPS_DIR = ROOT / "archive" / "slips"
 SLIPS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -331,23 +331,7 @@ def _q(s: str) -> str:
 
 
 def _oauth_header(method: str, url: str, oauth_token_secret: str) -> str:
-    params = {
-        "oauth_consumer_key": os.environ["TUMBLR_CONSUMER_KEY"],
-        "oauth_nonce": secrets.token_hex(16),
-        "oauth_signature_method": "HMAC-SHA1",
-        "oauth_timestamp": str(int(_time.time())),
-        "oauth_token": os.environ["TUMBLR_OAUTH_TOKEN"],
-        "oauth_version": "1.0",
-    }
-    base_string = "&".join([
-        method.upper(),
-        _q(url),
-        _q("&".join(f"{k}={_q(v)}" for k, v in sorted(params.items()))),
-    ])
-    key = f"{_q(os.environ['TUMBLR_CONSUMER_SECRET'])}&{_q(oauth_token_secret)}"
-    sig = hmac.new(key.encode(), base_string.encode(), hashlib.sha1).digest()
-    params["oauth_signature"] = base64.b64encode(sig).decode()
-    return "OAuth " + ", ".join(f'{k}="{_q(v)}"' for k, v in params.items())
+    return tumblr.oauth_header(method, url, token_secret=oauth_token_secret)
 
 
 def _tumblr_multipart(fields: dict, image_bytes: bytes, image_name: str) -> tuple[bytes, str]:

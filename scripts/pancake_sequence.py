@@ -43,7 +43,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from lib.llm import claude_cmd
-from lib import bsky
+from lib import bsky, tumblr
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -222,20 +222,7 @@ def _q(s) -> str:
 
 
 def _tumblr_auth_header(method: str, url: str, *, query_params: dict | None = None) -> str:
-    oauth = {
-        "oauth_consumer_key": os.environ["TUMBLR_CONSUMER_KEY"],
-        "oauth_nonce": secrets.token_hex(16),
-        "oauth_signature_method": "HMAC-SHA1",
-        "oauth_timestamp": str(int(time.time())),
-        "oauth_token": os.environ["TUMBLR_OAUTH_TOKEN"],
-        "oauth_version": "1.0",
-    }
-    ap = dict(query_params or {}); ap.update(oauth)
-    base = "&".join([method.upper(), _q(url), _q("&".join(f"{k}={_q(v)}" for k, v in sorted(ap.items())))])
-    key = f"{_q(os.environ['TUMBLR_CONSUMER_SECRET'])}&{_q(os.environ['TUMBLR_OAUTH_TOKEN_SECRET'])}"
-    sig = hmac.new(key.encode(), base.encode(), hashlib.sha1).digest()
-    oauth["oauth_signature"] = base64.b64encode(sig).decode()
-    return "OAuth " + ", ".join(f'{k}="{_q(v)}"' for k, v in oauth.items())
+    return tumblr.oauth_header(method, url, params=query_params)
 
 
 def post_to_tumblr(text: str, act: int) -> str | None:
