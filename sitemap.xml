@@ -3,6 +3,7 @@
   <url><loc>https://outbox.cafe/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
   <url><loc>https://outbox.cafe/archive/</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://outbox.cafe/about/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://outbox.cafe/archive/2026-05-29T08-10.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://outbox.cafe/archive/2026-05-29T04-08.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://outbox.cafe/archive/2026-05-28T16-03.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://outbox.cafe/archive/2026-05-28T12-03.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
