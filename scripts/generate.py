@@ -27,6 +27,7 @@ from spec import (
 from images import fetch_images, derive_query
 from images_ai import fetch_ai_images, fetch_poster_image
 from lib.llm import call_claude
+from lib import blob
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
@@ -112,7 +113,7 @@ def inject_og_tags(html: str, title: str, archive_filename: str, description: st
     on social have a card, and the tab gets an icon."""
     base = "https://outbox.cafe"
     page_url = f"{base}/archive/{archive_filename}"
-    image_url = f"{base}/archive/thumbs/{Path(archive_filename).stem}.png"
+    image_url = blob.thumb_url(Path(archive_filename).stem)
     safe_title = (title or "outbox.cafe").replace('"', '&quot;')
     safe_desc = (description or "an artifact from outbox.cafe — a constantly-evolving weird corner of the internet").replace('"', '&quot;')
     block = (
@@ -533,8 +534,6 @@ def rebuild_cabinet() -> None:
         h = int.from_bytes(digest[:4], "big")
         rot = ((digest[4] % 7) - 3) * 0.5  # -1.5..+1.5 (subtler than corkboard)
         rarity_label, rarity_stars, rarity_cls = _pick_rarity(h)
-        thumb = THUMBS_DIR / (f.stem + ".png")
-        has_thumb = thumb.exists()
         entries.append({
             "file": f.name,
             "title": title,
@@ -547,10 +546,8 @@ def rebuild_cabinet() -> None:
             "rarity_label": rarity_label,
             "rarity_stars": rarity_stars,
             "rarity_cls": rarity_cls,
-            "has_thumb": has_thumb,
-            # absolute paths so the browser resolves correctly when Vercel
-            # serves /archive without a trailing slash
-            "thumb_path": f"/archive/thumbs/{f.stem}.png" if has_thumb else "",
+            # thumbnails live on Vercel Blob (off-repo); URL is deterministic by stem
+            "thumb_path": blob.thumb_url(f.stem),
             "page_path": f"/archive/{f.name}",
             "hash": h,
         })
@@ -600,10 +597,10 @@ def rebuild_cabinet() -> None:
         palette_dots = "".join(
             f'<i style="background:{c}"></i>' for c in e["palette"]
         )
-        if e["has_thumb"]:
-            art = f'<img class="card-art-img" src="{e["thumb_path"]}" alt="" loading="lazy">'
-        else:
-            art = '<div class="card-art-placeholder">no preview yet</div>'
+        # Thumbnails are on Blob; hide the <img> if a rare one is missing rather
+        # than show a broken-image icon.
+        art = (f'<img class="card-art-img" src="{e["thumb_path"]}" alt="" loading="lazy" '
+               f'onerror="this.onerror=null;this.style.display=&quot;none&quot;">')
         stamp_pretty = e["stamp"].replace("T", " · ") + " PT"
         tagline = TAGLINES[e["hash"] % len(TAGLINES)]
         stickers_html = "".join(
@@ -1319,6 +1316,23 @@ def pick_best_candidate(candidates: list[str], spec: dict, model: str = "opus") 
     return candidates[idx]
 
 
+def upload_thumb_to_blob(png_path: "Path", stem: str) -> bool:
+    """Convert a PNG screenshot to a compact WebP and upload it to Vercel Blob
+    (thumbs/<stem>.webp). Best-effort: returns False (non-fatal) on any failure."""
+    try:
+        import io
+        from PIL import Image
+        im = Image.open(png_path).convert("RGB")
+        im.thumbnail((800, 800))
+        buf = io.BytesIO()
+        im.save(buf, format="WEBP", quality=80, method=6)
+        blob.put_bytes(f"thumbs/{stem}.webp", buf.getvalue(), "image/webp")
+        return True
+    except Exception as e:
+        print(f"  thumb→blob failed (non-fatal): {e}", file=sys.stderr)
+        return False
+
+
 def _append_run_log(entry: dict) -> None:
     """Append one JSON line per gen to data/runs.jsonl (gitignored, per-Mini)."""
     log_path = ROOT / "data" / "runs.jsonl"
@@ -1437,7 +1451,10 @@ def main() -> int:
     # Screenshot for the cabinet — non-fatal on failure
     shot_path = THUMBS_DIR / (archive_file.stem + ".png")
     if take_screenshot(archive_file, shot_path):
-        print(f"  thumbnail → {shot_path.name}")
+        if upload_thumb_to_blob(shot_path, archive_file.stem):
+            print(f"  thumbnail → blob (thumbs/{archive_file.stem}.webp)")
+        else:
+            print("  thumbnail rendered (blob upload failed — card may lack preview)", file=sys.stderr)
 
     # Dedicated social poster — purpose-built cover image for bsky/tumblr, distinct
     # from the on-site screenshot (which can land on a weird crop of the page).
