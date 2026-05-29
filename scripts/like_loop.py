@@ -30,6 +30,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from lib.io import atomic_write_json
+from lib import bsky
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -91,25 +92,11 @@ def _today_count(state: dict, platform: str) -> int:
 # ---------- Bsky ----------
 
 def _bsky_req(path: str, *, data=None, headers=None, method="GET"):
-    h = {"Accept": "application/json"}
-    if headers:
-        h.update(headers)
-    body = None
-    if isinstance(data, (dict, list)):
-        body = json.dumps(data).encode()
-        h.setdefault("Content-Type", "application/json")
-    req = urllib.request.Request(f"{BSKY_BASE}{path}", data=body, headers=h, method=method)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+    return bsky.request(path, data=data, headers=headers, method=method)
 
 
 def _bsky_auth() -> tuple[str, str]:
-    sess = _bsky_req(
-        "/com.atproto.server.createSession",
-        data={"identifier": os.environ["BSKY_HANDLE"], "password": os.environ["BSKY_APP_PASSWORD"]},
-        method="POST",
-    )
-    return sess["did"], sess["accessJwt"]
+    return bsky.login()
 
 
 def _bsky_search(query: str, jwt: str, limit: int = 25) -> list[dict]:

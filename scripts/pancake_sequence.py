@@ -43,6 +43,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from lib.llm import claude_cmd
+from lib import bsky
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -178,15 +179,7 @@ def _generate_act(act: int, max_tries: int = 3) -> str | None:
 # ---------- Bsky ----------
 
 def _bsky_req(path: str, *, data=None, headers=None, method="GET"):
-    h = {"Accept": "application/json"}
-    if headers: h.update(headers)
-    body = None
-    if isinstance(data, (dict, list)):
-        body = json.dumps(data).encode()
-        h.setdefault("Content-Type", "application/json")
-    req = urllib.request.Request(f"{BSKY_BASE}{path}", data=body, headers=h, method=method)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+    return bsky.request(path, data=data, headers=headers, method=method)
 
 
 def post_to_bsky(text: str) -> str | None:

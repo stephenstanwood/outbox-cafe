@@ -25,7 +25,7 @@ from pathlib import Path
 from typing import Any
 
 from lib.llm import claude_cmd
-from lib.net import with_retry
+from lib import bsky
 
 ROOT = Path(__file__).resolve().parent.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
@@ -174,18 +174,7 @@ def _call_claude_for_post(
 
 
 def _bsky_request(path: str, *, data=None, headers=None, method=None) -> dict:
-    h = {"Accept": "application/json"}
-    if headers:
-        h.update(headers)
-    body = None
-    if isinstance(data, (dict, list)):
-        body = json.dumps(data).encode()
-        h.setdefault("Content-Type", "application/json")
-    elif isinstance(data, bytes):
-        body = data
-    req = urllib.request.Request(f"{BSKY_BASE}{path}", data=body, headers=h, method=method)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+    return bsky.request(path, data=data, headers=headers, method=method)
 
 
 def _find_url_byterange(text: str, url: str) -> tuple[int, int] | None:
@@ -295,23 +284,13 @@ def post_drop(
     if len(full_text.encode("utf-8")) > POST_MAX_CHARS * 4:
         full_text = body_text[:POST_MAX_CHARS].rstrip()
 
-    # Authenticate. bsky's createSession periodically times out transiently (a
-    # platform quirk, not a creds problem) — retry rides out a brief blip. Safe
-    # to retry: creating a session is idempotent.
+    # Authenticate. bsky.login retries transient timeouts (the platform's periodic
+    # createSession blips) and re-raises HTTPError (bad creds won't fix on retry).
     try:
-        sess = with_retry(
-            lambda: _bsky_request(
-                "/com.atproto.server.createSession",
-                data={"identifier": handle, "password": app_pw},
-                method="POST",
-            ),
-            label="bsky auth",
-        )
+        did, jwt = bsky.login(handle, app_pw)
     except Exception as e:
         print(f"[post_bsky] auth failed after retries: {e}", file=sys.stderr)
         return False
-    did = sess["did"]
-    jwt = sess["accessJwt"]
     auth = {"Authorization": f"Bearer {jwt}"}
 
     # Upload thumb as image blob (if present)
