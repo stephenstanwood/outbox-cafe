@@ -61,8 +61,13 @@ def _clean_subject(subject: str) -> str:
     return s
 
 
-def derive_ai_prompts(spec: dict[str, Any]) -> list[str]:
-    """Build 3 distinct image prompts from the spec dimensions."""
+def derive_ai_prompts(spec: dict[str, Any]) -> list[tuple[str, str]]:
+    """Build 3 (prompt, alt) pairs from the spec dimensions.
+
+    `prompt` is the generation instruction (with the "no text/watermark"
+    boilerplate); `alt` is a clean human-readable description for screen readers
+    — none of that boilerplate, just what the image depicts.
+    """
     era = _v(spec, "era")
     subject = _v(spec, "subject")
     palette = _v(spec, "palette")
@@ -81,11 +86,15 @@ def derive_ai_prompts(spec: dict[str, Any]) -> list[str]:
 
     suffix = "illustrated artwork, no text or captions, no watermarks, no logos"
 
-    return [
-        f"Wide establishing illustration of {subj}. {style}. {suffix}",
-        f"Close-up evocative detail relating to {subj}. {style}. {suffix}",
-        f"Abstract symbolic interpretation of {subj}. {style}. {suffix}",
+    # alt: era's leading short token only (eras can be a paragraph) + the scene.
+    era_short = re.split(r"[—,(]", era, maxsplit=1)[0].strip() if era else ""
+    alt_tail = f" ({era_short})" if era_short else ""
+    descs = [
+        f"Wide establishing illustration of {subj}",
+        f"Close-up evocative detail relating to {subj}",
+        f"Abstract symbolic interpretation of {subj}",
     ]
+    return [(f"{d}. {style}. {suffix}", f"{d}{alt_tail}") for d in descs]
 
 
 def derive_poster_prompt(spec: dict[str, Any], max_chars: int | None = None) -> str:
@@ -259,7 +268,7 @@ def fetch_ai_images(
 
     prompts = derive_ai_prompts(spec)[:count]
     out: list[dict[str, Any]] = []
-    for prompt in prompts:
+    for prompt, alt in prompts:
         body = json.dumps({
             "prompt": prompt,
             "image_size": "square_hd",
@@ -292,7 +301,7 @@ def fetch_ai_images(
             continue
         out.append({
             "url": url,
-            "alt": prompt[:240],
+            "alt": alt[:240],
             "credit_name": "",
             "credit_username": "",
             "credit_link": "",
@@ -313,8 +322,9 @@ if __name__ == "__main__":
             "palette": {"value": "burnt orange and deep teal"},
             "tone": {"value": "earnest"},
         }
-    for p in derive_ai_prompts(spec):
+    for p, a in derive_ai_prompts(spec):
         print(" prompt:", p)
+        print(" alt:   ", a)
     print()
     imgs = fetch_ai_images(spec)
     print(f"{len(imgs)} image(s)")

@@ -31,6 +31,7 @@ from typing import Any
 
 from lib.llm import claude_cmd, is_nopost
 from lib.io import atomic_write_json
+from lib import bsky
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
@@ -96,41 +97,11 @@ def _save_state(state: dict[str, Any]) -> None:
 
 
 def _bsky(path: str, *, data=None, headers=None, method=None) -> dict:
-    h = {"Accept": "application/json"}
-    if headers:
-        h.update(headers)
-    body = None
-    if isinstance(data, (dict, list)):
-        body = json.dumps(data).encode()
-        h.setdefault("Content-Type", "application/json")
-    elif isinstance(data, bytes):
-        body = data
-    req = urllib.request.Request(f"{BSKY_BASE}{path}", data=body, headers=h, method=method)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+    return bsky.request(path, data=data, headers=headers, method=method)
 
 
 def _auth() -> tuple[str, str]:
-    handle = os.environ["BSKY_HANDLE"]
-    pw = os.environ["BSKY_APP_PASSWORD"]
-    last_err: Exception | None = None
-    for attempt in range(3):
-        try:
-            sess = _bsky(
-                "/com.atproto.server.createSession",
-                data={"identifier": handle, "password": pw},
-                method="POST",
-            )
-            return sess["did"], sess["accessJwt"]
-        except urllib.error.HTTPError:
-            raise
-        except Exception as e:
-            last_err = e
-            if attempt < 2:
-                import time
-                time.sleep(2 * (attempt + 1))
-    assert last_err is not None
-    raise last_err
+    return bsky.login()
 
 
 REPLY_PROMPT = """You are {name}, staff at outbox.cafe. The cafe is a small place on the internet, run by cats. Someone has {action} on Bluesky, and you might respond.

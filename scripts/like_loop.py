@@ -30,6 +30,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from lib.io import atomic_write_json
+from lib import bsky, tumblr
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -91,25 +92,11 @@ def _today_count(state: dict, platform: str) -> int:
 # ---------- Bsky ----------
 
 def _bsky_req(path: str, *, data=None, headers=None, method="GET"):
-    h = {"Accept": "application/json"}
-    if headers:
-        h.update(headers)
-    body = None
-    if isinstance(data, (dict, list)):
-        body = json.dumps(data).encode()
-        h.setdefault("Content-Type", "application/json")
-    req = urllib.request.Request(f"{BSKY_BASE}{path}", data=body, headers=h, method=method)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+    return bsky.request(path, data=data, headers=headers, method=method)
 
 
 def _bsky_auth() -> tuple[str, str]:
-    sess = _bsky_req(
-        "/com.atproto.server.createSession",
-        data={"identifier": os.environ["BSKY_HANDLE"], "password": os.environ["BSKY_APP_PASSWORD"]},
-        method="POST",
-    )
-    return sess["did"], sess["accessJwt"]
+    return bsky.login()
 
 
 def _bsky_search(query: str, jwt: str, limit: int = 25) -> list[dict]:
@@ -228,20 +215,7 @@ def _q(s) -> str:
 
 
 def _tumblr_oauth_header(method: str, url: str, *, query_params: dict | None = None) -> str:
-    oauth = {
-        "oauth_consumer_key": os.environ["TUMBLR_CONSUMER_KEY"],
-        "oauth_nonce": secrets.token_hex(16),
-        "oauth_signature_method": "HMAC-SHA1",
-        "oauth_timestamp": str(int(time.time())),
-        "oauth_token": os.environ["TUMBLR_OAUTH_TOKEN"],
-        "oauth_version": "1.0",
-    }
-    ap = dict(query_params or {}); ap.update(oauth)
-    base = "&".join([method.upper(), _q(url), _q("&".join(f"{k}={_q(v)}" for k, v in sorted(ap.items())))])
-    key = f"{_q(os.environ['TUMBLR_CONSUMER_SECRET'])}&{_q(os.environ['TUMBLR_OAUTH_TOKEN_SECRET'])}"
-    sig = hmac.new(key.encode(), base.encode(), hashlib.sha1).digest()
-    oauth["oauth_signature"] = base64.b64encode(sig).decode()
-    return "OAuth " + ", ".join(f'{k}="{_q(v)}"' for k, v in oauth.items())
+    return tumblr.oauth_header(method, url, params=query_params)
 
 
 def _tumblr_search_tag(tag: str, limit: int = 15) -> list[dict]:

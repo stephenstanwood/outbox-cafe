@@ -25,6 +25,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from lib import tumblr
+
 ROOT = Path(__file__).resolve().parent.parent
 ENGAGEMENT_SNAPSHOT = ROOT / "data" / "post_engagement.jsonl"
 
@@ -40,22 +42,7 @@ def _q(s: Any) -> str:
 def _oauth_header(method: str, url: str, *, extra_params: dict[str, str] | None = None) -> str:
     """OAuth 1.0a header. For x-www-form-urlencoded bodies, pass body params via
     extra_params so they're folded into the signature base (required by spec)."""
-    oauth_params = {
-        "oauth_consumer_key": os.environ["TUMBLR_CONSUMER_KEY"],
-        "oauth_nonce": secrets.token_hex(16),
-        "oauth_signature_method": "HMAC-SHA1",
-        "oauth_timestamp": str(int(time.time())),
-        "oauth_token": os.environ["TUMBLR_OAUTH_TOKEN"],
-        "oauth_version": "1.0",
-    }
-    all_params: dict[str, str] = {**oauth_params, **(extra_params or {})}
-    param_str = "&".join(f"{_q(k)}={_q(v)}" for k, v in sorted(all_params.items()))
-    base = f"{method.upper()}&{_q(url)}&{_q(param_str)}"
-    key = f"{_q(os.environ['TUMBLR_CONSUMER_SECRET'])}&{_q(os.environ['TUMBLR_OAUTH_TOKEN_SECRET'])}"
-    oauth_params["oauth_signature"] = base64.b64encode(
-        hmac.new(key.encode(), base.encode(), hashlib.sha1).digest()
-    ).decode()
-    return "OAuth " + ", ".join(f'{k}="{_q(v)}"' for k, v in oauth_params.items())
+    return tumblr.oauth_header(method, url, params=extra_params)
 
 
 def _snapshot_engagement(post: dict[str, Any]) -> None:
