@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 03 Jun 2026 12:12:29 -0700</lastBuildDate>
+  <lastBuildDate>Wed, 03 Jun 2026 16:03:29 -0700</lastBuildDate>
+  <item>
+    <title>Bay No. 2 — 11:47 P.M.</title>
+    <link>https://outbox.cafe/archive/2026-06-03T16-03.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-03T16-03.html</guid>
+    <pubDate>Wed, 03 Jun 2026 16:03:00 -0700</pubDate>
+    <description>Bay No. 2 — 11:47 P.M.</description>
+  </item>
   <item>
     <title>Fortune No. 04-39971 — A Card from the Mansfield Greyhound</title>
     <link>https://outbox.cafe/archive/2026-06-03T12-12.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T07-04.html</guid>
     <pubDate>Sun, 17 May 2026 07:04:00 -0700</pubDate>
     <description>★彡 WEDNESDAYCORE!!!! ・゚✧ THE OFFICIAL FAN CATALOG ・゚✧ NEW STOCK EVERY WEEK FOREVER!!!!!!!</description>
-  </item>
-  <item>
-    <title>YONDER</title>
-    <link>https://outbox.cafe/archive/2026-05-17T06-54.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T06-54.html</guid>
-    <pubDate>Sun, 17 May 2026 06:54:00 -0700</pubDate>
-    <description>YONDER</description>
   </item>
 </channel>
 </rss>
