@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Thu, 04 Jun 2026 04:06:01 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 04 Jun 2026 08:12:36 -0700</lastBuildDate>
+  <item>
+    <title>Route 14-B — Spring Cycle 1967 — A. Cernava, Rep.</title>
+    <link>https://outbox.cafe/archive/2026-06-04T08-12.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-04T08-12.html</guid>
+    <pubDate>Thu, 04 Jun 2026 08:12:00 -0700</pubDate>
+    <description>Route 14-B — Spring Cycle 1967 — A. Cernava, Rep.</description>
+  </item>
   <item>
     <title>PETRICHOR QUARTERLY — Issue 14 — The Smell Issue</title>
     <link>https://outbox.cafe/archive/2026-06-04T04-05.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T07-27.html</guid>
     <pubDate>Sun, 17 May 2026 07:27:00 -0700</pubDate>
     <description>Headlight Municipal Videotex — Screensaver Review Subcommittee, Winter Session</description>
-  </item>
-  <item>
-    <title>★ AUCTION: BAYBROOK TOWNSHIP RECYCLING GUIDE (2007 ED.) — A PIECE OF MY ACTUAL SOUL — bidshack.org ★</title>
-    <link>https://outbox.cafe/archive/2026-05-17T07-15.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T07-15.html</guid>
-    <pubDate>Sun, 17 May 2026 07:15:00 -0700</pubDate>
-    <description>★ AUCTION: BAYBROOK TOWNSHIP RECYCLING GUIDE (2007 ED.) — A PIECE OF MY ACTUAL SOUL — bidshack.org ★</description>
   </item>
 </channel>
 </rss>
