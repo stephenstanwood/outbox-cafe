@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 03 Jun 2026 16:03:29 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 04 Jun 2026 04:06:01 -0700</lastBuildDate>
+  <item>
+    <title>PETRICHOR QUARTERLY — Issue 14 — The Smell Issue</title>
+    <link>https://outbox.cafe/archive/2026-06-04T04-05.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-04T04-05.html</guid>
+    <pubDate>Thu, 04 Jun 2026 04:05:00 -0700</pubDate>
+    <description>PETRICHOR QUARTERLY — Issue 14 — The Smell Issue</description>
+  </item>
   <item>
     <title>Bay No. 2 — 11:47 P.M.</title>
     <link>https://outbox.cafe/archive/2026-06-03T16-03.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T07-15.html</guid>
     <pubDate>Sun, 17 May 2026 07:15:00 -0700</pubDate>
     <description>★ AUCTION: BAYBROOK TOWNSHIP RECYCLING GUIDE (2007 ED.) — A PIECE OF MY ACTUAL SOUL — bidshack.org ★</description>
-  </item>
-  <item>
-    <title>★彡 WEDNESDAYCORE!!!! ・゚✧ THE OFFICIAL FAN CATALOG ・゚✧ NEW STOCK EVERY WEEK FOREVER!!!!!!!</title>
-    <link>https://outbox.cafe/archive/2026-05-17T07-04.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T07-04.html</guid>
-    <pubDate>Sun, 17 May 2026 07:04:00 -0700</pubDate>
-    <description>★彡 WEDNESDAYCORE!!!! ・゚✧ THE OFFICIAL FAN CATALOG ・゚✧ NEW STOCK EVERY WEEK FOREVER!!!!!!!</description>
   </item>
 </channel>
 </rss>
