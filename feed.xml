@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Mon, 08 Jun 2026 04:11:37 -0700</lastBuildDate>
+  <lastBuildDate>Mon, 08 Jun 2026 08:07:21 -0700</lastBuildDate>
+  <item>
+    <title>The Daniels of #bread-hours · Quarantine Block 047/313</title>
+    <link>https://outbox.cafe/archive/2026-06-08T08-07.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-08T08-07.html</guid>
+    <pubDate>Mon, 08 Jun 2026 08:07:00 -0700</pubDate>
+    <description>The Daniels of #bread-hours · Quarantine Block 047/313</description>
+  </item>
   <item>
     <title>The Missing Square — A Valentine for the Patient Solver</title>
     <link>https://outbox.cafe/archive/2026-06-08T04-11.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T08-01.html</guid>
     <pubDate>Sun, 17 May 2026 08:01:00 -0700</pubDate>
     <description>BROWNERS-L DIGEST · Vol. 4 No. 87 · The Umber Question</description>
-  </item>
-  <item>
-    <title>NINETY-SIX REGULAR — a specimen sheet for a typeface that remembers being nine</title>
-    <link>https://outbox.cafe/archive/2026-05-17T07-52.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T07-52.html</guid>
-    <pubDate>Sun, 17 May 2026 07:52:00 -0700</pubDate>
-    <description>NINETY-SIX REGULAR — a specimen sheet for a typeface that remembers being nine</description>
   </item>
 </channel>
 </rss>
