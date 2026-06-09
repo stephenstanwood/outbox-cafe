@@ -36,7 +36,7 @@ Affects `scripts/cat_signal.py` and any other direct Discord API call we add.
 
 ### Cron schedule
 
-Currently `0 4,8,12,16 * * *` on the Mini — 4 gens/day at 4am, 8am, 12pm, 4pm PT. Single-flight lock prevents pileup. `scripts/flip-to-hourly.sh` is now dormant (no cron entry calls it) — leftover from when we ran `*/10` stash mode during Max usage cycles and auto-flipped back to hourly each Monday. Past schedules used: `*/10 * * * *` (stash), `0 * * * *` (hourly).
+Currently `0 4,8,12,16 * * *` on the Mini — 4 gens/day at 4am, 8am, 12pm, 4pm PT. Single-flight lock prevents pileup. Past schedules used: `*/10 * * * *` (stash mode during Max usage cycles), `0 * * * *` (hourly); the flip-to-hourly helper script from that era has been deleted.
 
 ### Midnight cleanup (2026-05-19)
 

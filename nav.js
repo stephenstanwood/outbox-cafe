@@ -161,12 +161,14 @@
           e.preventDefault();
           copyPerma();
         }
-        // 'r' = random gen — stumble-upon mode
+        // 'r' = random gen — stumble-upon mode. Never re-pick the entry
+        // you're already on (list[currentIdx] covers homepage too, where
+        // the URL match `m` is undefined).
         else if ((e.key === 'r' || e.key === 'R') && list.length > 1) {
           e.preventDefault();
           var pick;
           do { pick = list[Math.floor(Math.random() * list.length)]; }
-          while (pick === (m && m[1]));
+          while (pick === list[currentIdx]);
           location.href = '/archive/' + pick;
         }
       });

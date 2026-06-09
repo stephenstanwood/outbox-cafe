@@ -56,3 +56,8 @@ data/runs.jsonl
 
 # Per-worktree harness state (scheduled_tasks.lock etc.)
 .claude/
+
+# Agent-CLI pointer (symlink → CLAUDE.md, local convenience). Untracked on
+# purpose: everything tracked in this repo deploys to outbox.cafe as a public
+# file, and the Mini's gen cron commits with `git add -A`.
+/AGENTS.md

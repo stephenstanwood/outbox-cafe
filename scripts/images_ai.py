@@ -21,6 +21,7 @@ import random
 import re
 import urllib.error
 import urllib.request
+from pathlib import Path
 from typing import Any
 
 FAL_BASE = "https://fal.run"
@@ -143,9 +144,42 @@ def derive_poster_prompt(spec: dict[str, Any], max_chars: int | None = None) -> 
     return ". ".join(parts)
 
 
+# Human-readable names for the Recraft styles, used in alt text.
+_STYLE_HUMAN = {
+    "digital_illustration": "digital illustration",
+    "digital_illustration/pixel_art": "pixel-art illustration",
+    "digital_illustration/hand_drawn": "hand-drawn illustration",
+    "digital_illustration/grain": "grainy digital illustration",
+}
+
+
+def derive_poster_alt(spec: dict[str, Any], style: str | None = None) -> str:
+    """Real alt text for the social poster: what the image actually depicts.
+
+    Built from the same spec the generation prompt came from, minus all the
+    "no text / no watermark" boilerplate — a screen-reader user should hear
+    the scene, not the prompt engineering.
+    """
+    subj = _clean_subject(_v(spec, "subject")) or "the cafe's latest posting"
+    era = _v(spec, "era")
+    palette = _v(spec, "palette")
+    era_short = re.split(r"[—,(]", era, maxsplit=1)[0].strip() if era else ""
+    style_name = _STYLE_HUMAN.get(style or "", "illustration")
+    parts = [f"Poster-style {style_name} of {subj}"]
+    if era_short:
+        parts.append(f"in a {era_short} style")
+    desc = " ".join(parts)
+    if palette:
+        # First palette segment only — palettes can be long prose
+        pal_short = re.split(r"[—,(;]", palette, maxsplit=1)[0].strip()
+        if pal_short:
+            desc += f", palette of {pal_short}"
+    return desc[:290] + "."
+
+
 def fetch_poster_image(
     spec: dict[str, Any],
-    out_path: "Path",
+    out_path: Path,
     timeout: int = 60,
 ) -> bool:
     """Generate a dedicated social-poster image and save as PNG to `out_path`.
@@ -154,10 +188,14 @@ def fetch_poster_image(
     Falls back to FLUX schnell if Recraft errors out, so a Recraft outage
     doesn't drop the social poster entirely.
 
+    Also writes a `<stem>.alt.txt` sidecar next to the PNG with a real
+    description of the image (derived from the spec), so the social posters
+    can ship descriptive alt text long after this process exits (throwbacks,
+    spotlights). Best-effort like the image itself.
+
     Returns True on success. Best-effort: any failure logs and returns False.
     """
     from io import BytesIO
-    from pathlib import Path  # noqa: F401  (typing-only above)
 
     key = os.environ.get("FAL_KEY")
     if not key:
@@ -165,10 +203,14 @@ def fetch_poster_image(
 
     # Recraft caps prompts at 1000 chars (HTTP 422 otherwise); FLUX has no
     # such limit, so the fallback gets the untrimmed version.
-    img_bytes = _recraft_poster(spec, key, timeout)
-    if img_bytes is None:
+    style: str | None
+    result = _recraft_poster(spec, key, timeout)
+    if result is None:
         print("[images_ai/poster] recraft failed — falling back to FLUX schnell")
         img_bytes = _flux_poster(derive_poster_prompt(spec), key, timeout)
+        style = None
+    else:
+        img_bytes, style = result
     if img_bytes is None:
         return False
 
@@ -183,10 +225,16 @@ def fetch_poster_image(
         print(f"[images_ai/poster] save failed: {e}")
         return False
 
+    try:
+        alt_path = out_path.with_suffix(".alt.txt")
+        alt_path.write_text(derive_poster_alt(spec, style))
+    except Exception as e:
+        print(f"[images_ai/poster] alt sidecar failed (non-fatal): {e}")
+
     return True
 
 
-def _recraft_poster(spec: dict[str, Any], key: str, timeout: int) -> bytes | None:
+def _recraft_poster(spec: dict[str, Any], key: str, timeout: int) -> "tuple[bytes, str] | None":
     style = random.choice(RECRAFT_POSTER_STYLES)
     prefix = PIXEL_ART_NO_TEXT_PREFIX if style == "digital_illustration/pixel_art" else ""
     prompt = prefix + derive_poster_prompt(spec, max_chars=990 - len(prefix))
@@ -219,7 +267,7 @@ def _recraft_poster(spec: dict[str, Any], key: str, timeout: int) -> bytes | Non
     print(f"[images_ai/poster] recraft style={style}")
     try:
         with urllib.request.urlopen(url, timeout=timeout) as r:
-            return r.read()
+            return r.read(), style
     except Exception as e:
         print(f"[images_ai/poster] download failed: {e}")
         return None

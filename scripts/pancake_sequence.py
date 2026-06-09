@@ -24,18 +24,12 @@ Saturday-only Schelling thing, not an accumulating archive.
 
 from __future__ import annotations
 
-import base64
-import hashlib
-import hmac
 import html as _html
 import json
 import os
-import random
 import re
-import secrets
 import subprocess
 import sys
-import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -48,10 +42,6 @@ from lib import bsky, tumblr
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 POST_LOG = DATA / "post_log.jsonl"
-
-BSKY_BASE = "https://bsky.social/xrpc"
-TUMBLR_BASE = "https://api.tumblr.com/v2"
-
 
 ACT_PROMPTS = {
     1: """You are Pancake, the cafe cat at outbox.cafe — calico, lives in the window. You are posting on Bluesky right now.
@@ -187,15 +177,10 @@ def post_to_bsky(text: str) -> str | None:
         print("[pancake] bsky creds missing", file=sys.stderr)
         return None
     try:
-        sess = _bsky_req(
-            "/com.atproto.server.createSession",
-            data={"identifier": os.environ["BSKY_HANDLE"], "password": os.environ["BSKY_APP_PASSWORD"]},
-            method="POST",
-        )
+        did, jwt = bsky.login()
     except Exception as e:
         print(f"[pancake] bsky auth failed: {e}", file=sys.stderr)
         return None
-    did, jwt = sess["did"], sess["accessJwt"]
     record = {
         "$type": "app.bsky.feed.post",
         "text": text,
@@ -217,21 +202,13 @@ def post_to_bsky(text: str) -> str | None:
 
 # ---------- Tumblr ----------
 
-def _q(s) -> str:
-    return urllib.parse.quote(str(s), safe="-._~")
-
-
-def _tumblr_auth_header(method: str, url: str, *, query_params: dict | None = None) -> str:
-    return tumblr.oauth_header(method, url, params=query_params)
-
-
-def post_to_tumblr(text: str, act: int) -> str | None:
+def post_to_tumblr(text: str) -> str | None:
     needed = ("TUMBLR_CONSUMER_KEY", "TUMBLR_CONSUMER_SECRET",
               "TUMBLR_OAUTH_TOKEN", "TUMBLR_OAUTH_TOKEN_SECRET", "TUMBLR_BLOG_NAME")
     if not all(os.environ.get(k) for k in needed):
         return None
     blog = os.environ["TUMBLR_BLOG_NAME"]
-    url = f"{TUMBLR_BASE}/blog/{blog}.tumblr.com/post"
+    url = f"{tumblr.BASE}/blog/{blog}.tumblr.com/post"
     tags = ["pancake", "the cafe", "outbox cafe", "saturday"]
     fields = {
         "type": "text",
@@ -239,7 +216,7 @@ def post_to_tumblr(text: str, act: int) -> str | None:
         "tags": ",".join(tags),
     }
     body = urllib.parse.urlencode(fields).encode()
-    auth = _tumblr_auth_header("POST", url, query_params=fields)
+    auth = tumblr.oauth_header("POST", url, params=fields)
     req = urllib.request.Request(url, data=body,
         headers={"Authorization": auth, "Content-Type": "application/x-www-form-urlencoded"},
         method="POST",
@@ -284,7 +261,7 @@ def main():
     print(f"[pancake] text: {text!r}")
 
     bsky_uri = post_to_bsky(text)
-    tumblr_url = post_to_tumblr(text, act)
+    tumblr_url = post_to_tumblr(text)
 
     try:
         from post_log import log as plog

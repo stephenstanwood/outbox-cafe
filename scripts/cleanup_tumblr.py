@@ -10,12 +10,8 @@ Tumblr later, we don't want to nuke it). Caps deletes per run at 200.
 """
 from __future__ import annotations
 
-import base64
-import hashlib
-import hmac
 import json
 import os
-import secrets
 import sys
 import time
 import urllib.error
@@ -33,10 +29,6 @@ ENGAGEMENT_SNAPSHOT = ROOT / "data" / "post_engagement.jsonl"
 TUMBLR_BASE = "https://api.tumblr.com/v2"
 MAX_DELETES_PER_RUN = 200
 LIST_LIMIT = 20  # Tumblr posts endpoint caps at 20
-
-
-def _q(s: Any) -> str:
-    return urllib.parse.quote(str(s), safe="")
 
 
 def _oauth_header(method: str, url: str, *, extra_params: dict[str, str] | None = None) -> str:

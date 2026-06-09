@@ -17,11 +17,11 @@ import os
 import re
 import subprocess
 import sys
-import urllib.error
-import urllib.request
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
+
+from lib import bsky
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
@@ -29,7 +29,6 @@ HISTORY_PATH = ROOT / "data" / "history.jsonl"
 SIGNAL_STATE = ROOT / "data" / "cat_signal_state.json"
 HELPER = Path(os.path.expanduser("~/.claude/scripts/post-to-tasks.sh"))
 PT = ZoneInfo("America/Los_Angeles")
-BSKY_BASE = "https://bsky.social/xrpc"
 
 
 def _post_discord(text: str) -> None:
@@ -80,28 +79,13 @@ def _bsky_summary() -> dict:
     if not handle or not pw:
         return {"error": "BSKY_* env not set"}
 
-    def req(path, *, data=None, headers=None, method=None):
-        h = {"Accept": "application/json"}
-        if headers:
-            h.update(headers)
-        body = None
-        if isinstance(data, (dict, list)):
-            body = json.dumps(data).encode()
-            h.setdefault("Content-Type", "application/json")
-        r = urllib.request.Request(f"{BSKY_BASE}{path}", data=body, headers=h, method=method)
-        with urllib.request.urlopen(r, timeout=15) as resp:
-            return json.load(resp)
+    def req(path, *, headers=None):
+        return bsky.request(path, headers=headers, timeout=15)
 
     try:
-        sess = req(
-            "/com.atproto.server.createSession",
-            data={"identifier": handle, "password": pw},
-            method="POST",
-        )
+        did, jwt = bsky.login(handle, pw, timeout=15)
     except Exception as e:
         return {"error": f"auth failed: {e}"}
-    did = sess["did"]
-    jwt = sess["accessJwt"]
     auth = {"Authorization": f"Bearer {jwt}"}
 
     out: dict = {"did": did}

@@ -27,14 +27,13 @@ from pathlib import Path
 
 # Reuse the network plumbing already proven in the existing posters.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lib import bsky, tumblr  # noqa: E402
 from post_bsky import (  # noqa: E402
-    BSKY_BASE,
-    _bsky_request,
     _extract_title,
     _find_url_byterange,
     _prepare_image_for_bsky,
+    image_alt_text,
 )
-from post_tumblr import _build_multipart_legacy, _oauth_header  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE_URL = "https://outbox.cafe"
@@ -49,22 +48,17 @@ def _post_bluesky(text: str, archive_url: str, thumb_path: Path | None, title: s
         return False
 
     try:
-        sess = _bsky_request(
-            "/com.atproto.server.createSession",
-            data={"identifier": handle, "password": app_pw},
-            method="POST",
-        )
+        did, jwt = bsky.login(handle, app_pw)
     except Exception as e:
         print(f"[spotlight/bsky] auth failed: {e}", file=sys.stderr)
         return False
-    did = sess["did"]
-    auth = {"Authorization": f"Bearer {sess['accessJwt']}"}
+    auth = {"Authorization": f"Bearer {jwt}"}
 
     image_embed = None
     if thumb_path and thumb_path.exists():
         try:
             img_bytes, content_type = _prepare_image_for_bsky(thumb_path)
-            blob = _bsky_request(
+            blob = bsky.request(
                 "/com.atproto.repo.uploadBlob",
                 data=img_bytes,
                 headers={**auth, "Content-Type": content_type},
@@ -72,8 +66,7 @@ def _post_bluesky(text: str, archive_url: str, thumb_path: Path | None, title: s
             )["blob"]
             image_embed = {
                 "$type": "app.bsky.embed.images",
-                "images": [{"image": blob, "alt": (f"Illustrated cover for {title}"[:300]
-                                                   if title else "An illustrated cover from outbox.cafe")}],
+                "images": [{"image": blob, "alt": image_alt_text(thumb_path, title)}],
             }
         except Exception as e:
             print(f"[spotlight/bsky] image upload failed (continuing without): {e}", file=sys.stderr)
@@ -99,7 +92,7 @@ def _post_bluesky(text: str, archive_url: str, thumb_path: Path | None, title: s
         record["embed"] = image_embed
 
     try:
-        resp = _bsky_request(
+        resp = bsky.request(
             "/com.atproto.repo.createRecord",
             data={"repo": did, "collection": "app.bsky.feed.post", "record": record},
             headers=auth,
@@ -147,8 +140,7 @@ def _post_tumblr(text: str, archive_url: str, thumb_path: Path | None,
         body_parts.append(f"<p>{safe}</p>")
     caption_html = "".join(body_parts)
 
-    url = f"https://api.tumblr.com/v2/blog/{blog}.tumblr.com/post"
-    auth_header = _oauth_header("POST", url, os.environ["TUMBLR_OAUTH_TOKEN_SECRET"])
+    url = f"{tumblr.BASE}/blog/{blog}.tumblr.com/post"
 
     try:
         if thumb_path and thumb_path.exists():
@@ -160,9 +152,10 @@ def _post_tumblr(text: str, archive_url: str, thumb_path: Path | None,
                 # back to the gen — desirable for spotlights (unlike daily drops).
                 "link": archive_url,
             }
-            body, ctype = _build_multipart_legacy(
+            body, ctype = tumblr.build_multipart(
                 fields, thumb_path.read_bytes(), thumb_path.name
             )
+            auth_header = tumblr.oauth_header("POST", url)  # multipart: fields NOT in signature
         else:
             fields = {
                 "type": "text",
@@ -172,6 +165,7 @@ def _post_tumblr(text: str, archive_url: str, thumb_path: Path | None,
             }
             body = urllib.parse.urlencode(fields).encode()
             ctype = "application/x-www-form-urlencoded"
+            auth_header = tumblr.oauth_header("POST", url, params=fields)
         req = urllib.request.Request(
             url,
             data=body,

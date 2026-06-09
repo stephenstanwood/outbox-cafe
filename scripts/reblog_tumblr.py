@@ -28,15 +28,11 @@ Safety stack:
 
 from __future__ import annotations
 
-import base64
-import hashlib
-import hmac
 import html as _html
 import json
 import os
 import random
 import re
-import secrets
 import subprocess
 import sys
 import time
@@ -49,6 +45,7 @@ from typing import Any
 
 from lib.llm import claude_cmd
 from lib.io import atomic_write_json
+from lib import tumblr
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -115,41 +112,12 @@ def _already_reblogged_ids(state: dict[str, Any]) -> set[int]:
     return out
 
 
-# ---------- Tumblr OAuth (same pattern as post_tumblr.py) ----------
-
-def _q(s: Any) -> str:
-    return urllib.parse.quote(str(s), safe="-._~")
-
+# ---------- Tumblr OAuth (shared signer in lib/tumblr.py) ----------
 
 def _oauth_header(method: str, url: str, *, query_params: dict[str, str] | None = None) -> str:
-    """Build an OAuth 1.0a Authorization header.
-
-    For GETs with query params (e.g. /v2/tagged), pass the query string params
-    via `query_params` so they're included in the signature base string. For
-    POSTs with form-urlencoded bodies, the body params should ALSO be passed
-    via query_params (Tumblr signs them the same way). For POSTs with a JSON
-    body (NPF /posts endpoint), the body is NOT part of the signature base
-    string — omit query_params.
-    """
-    oauth = {
-        "oauth_consumer_key": os.environ["TUMBLR_CONSUMER_KEY"],
-        "oauth_nonce": secrets.token_hex(16),
-        "oauth_signature_method": "HMAC-SHA1",
-        "oauth_timestamp": str(int(time.time())),
-        "oauth_token": os.environ["TUMBLR_OAUTH_TOKEN"],
-        "oauth_version": "1.0",
-    }
-    all_params = dict(query_params or {})
-    all_params.update(oauth)
-    base_string = "&".join([
-        method.upper(),
-        _q(url),
-        _q("&".join(f"{k}={_q(v)}" for k, v in sorted(all_params.items()))),
-    ])
-    key = f"{_q(os.environ['TUMBLR_CONSUMER_SECRET'])}&{_q(os.environ['TUMBLR_OAUTH_TOKEN_SECRET'])}"
-    sig = hmac.new(key.encode(), base_string.encode(), hashlib.sha1).digest()
-    oauth["oauth_signature"] = base64.b64encode(sig).decode()
-    return "OAuth " + ", ".join(f'{k}="{_q(v)}"' for k, v in oauth.items())
+    """GETs with query params (/v2/tagged) fold them into the signature; POSTs
+    with a JSON body (NPF /posts endpoint) omit query_params (body not signed)."""
+    return tumblr.oauth_header(method, url, params=query_params)
 
 
 # ---------- Candidate fetching ----------
@@ -290,8 +258,10 @@ COMMENT: <the comment>"""
 def _staff_for(rng: random.Random) -> dict[str, Any]:
     personas = json.loads(PERSONAS_PATH.read_text())
     staff = personas["staff"]
-    weights = [int(s.get("weight", 1)) for s in staff]
-    return rng.choices(staff, weights=weights, k=1)[0]
+    # Same reflection-adjusted weights as every other persona picker, so the
+    # nightly engagement loop steers reblog voices too.
+    from voice_weights import adjusted_weights
+    return rng.choices(staff, weights=adjusted_weights(staff), k=1)[0]
 
 
 def _moderate_and_draft(post: dict, staff: dict[str, Any]) -> tuple[str, str | None]:

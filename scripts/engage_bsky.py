@@ -977,7 +977,7 @@ def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
     if not skip_ambient and _maybe_ambient_post(did, jwt, staff_pool, weights, rng):
         actions += 1
 
-    # Roll for an in-the-wild reply (low probability per run, daily cap of 5).
+    # Roll for an in-the-wild reply (low probability per run, WILD_DAILY_CAP/day).
     # Same skip-on-gen rule — wild engagement belongs to between-drop hours
     # so the cafe feels like it's quietly out in the world, not piggy-backed
     # on its own drop firehose.

@@ -14,13 +14,9 @@ Same OAuth + auth pattern as reblog_tumblr.py and engage_bsky.py.
 
 from __future__ import annotations
 
-import base64
-import hashlib
-import hmac
 import json
 import os
 import random
-import secrets
 import sys
 import time
 import urllib.error
@@ -209,10 +205,6 @@ def run_bsky_likes(state: dict) -> int:
 
 
 # ---------- Tumblr ----------
-
-def _q(s) -> str:
-    return urllib.parse.quote(str(s), safe="-._~")
-
 
 def _tumblr_oauth_header(method: str, url: str, *, query_params: dict | None = None) -> str:
     return tumblr.oauth_header(method, url, params=query_params)

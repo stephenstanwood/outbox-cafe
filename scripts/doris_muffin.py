@@ -17,17 +17,12 @@ Run from scripts/run-doris-muffin.sh; cron `0 15 * * 0`.
 
 from __future__ import annotations
 
-import base64
-import hashlib
-import hmac
 import html as _html
 import json
 import os
 import re
-import secrets
 import subprocess
 import sys
-import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -42,8 +37,6 @@ DATA = ROOT / "data"
 COLUMNS_DIR = ROOT / "archive" / "columns"
 COLUMNS_DIR.mkdir(parents=True, exist_ok=True)
 POST_LOG = DATA / "post_log.jsonl"
-
-TUMBLR_BASE = "https://api.tumblr.com/v2"
 
 
 # Doris voice — pulled from personas.json + sharpened for the column format.
@@ -121,14 +114,6 @@ def _split_title_and_body(text: str) -> tuple[str, str]:
 
 # ---------- Tumblr OAuth + post ----------
 
-def _q(s) -> str:
-    return urllib.parse.quote(str(s), safe="-._~")
-
-
-def _oauth_header(method: str, url: str, *, query_params: dict | None = None) -> str:
-    return tumblr.oauth_header(method, url, params=query_params)
-
-
 def post_text_to_tumblr(title: str, body: str) -> str | None:
     needed = ("TUMBLR_CONSUMER_KEY", "TUMBLR_CONSUMER_SECRET",
               "TUMBLR_OAUTH_TOKEN", "TUMBLR_OAUTH_TOKEN_SECRET", "TUMBLR_BLOG_NAME")
@@ -136,7 +121,7 @@ def post_text_to_tumblr(title: str, body: str) -> str | None:
         print("[muffin] tumblr creds missing — abort", file=sys.stderr)
         return None
     blog = os.environ["TUMBLR_BLOG_NAME"]
-    url = f"{TUMBLR_BASE}/blog/{blog}.tumblr.com/post"
+    url = f"{tumblr.BASE}/blog/{blog}.tumblr.com/post"
     # Convert paragraph breaks to <p> tags
     paragraphs = [p.strip() for p in body.split("\n\n") if p.strip()]
     body_html = "\n".join(f"<p>{_html.escape(p).replace(chr(10), '<br>')}</p>" for p in paragraphs)
@@ -148,7 +133,7 @@ def post_text_to_tumblr(title: str, body: str) -> str | None:
         "tags": ",".join(tags),
     }
     body_enc = urllib.parse.urlencode(fields).encode()
-    auth = _oauth_header("POST", url, query_params=fields)
+    auth = tumblr.oauth_header("POST", url, params=fields)
     req = urllib.request.Request(url, data=body_enc, headers={
         "Authorization": auth,
         "Content-Type": "application/x-www-form-urlencoded",

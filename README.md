@@ -56,7 +56,7 @@ python3 scripts/generate.py --commit    # generate + commit + push
 ├── index.html              latest generation
 ├── archive/                all past generations
 │   ├── index.html          the cabinet (browseable list)
-│   ├── thumbs/             cabinet thumbnails
+│   ├── thumbs/             transient screenshots (untracked; cabinet thumbs live on Vercel Blob)
 │   └── YYYY-MM-DDTHH-MM.html
 ├── scripts/
 │   ├── generate.py         entry point (gen → archive → cabinet/feed → commit → post)

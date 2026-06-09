@@ -3,7 +3,7 @@
 
 Run on the Mini with the usual env sourced:
 
-  set -a && . ~/Projects/mini-Codex-proxy/.env && . ~/Projects/outbox-cafe/.env && set +a
+  set -a && . ~/Projects/mini-claude-proxy/.env && . ~/Projects/outbox-cafe/.env && set +a
   python3 scripts/update_bsky_avatar.py favicon.png
 """
 from __future__ import annotations

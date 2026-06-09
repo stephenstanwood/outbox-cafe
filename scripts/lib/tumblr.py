@@ -1,14 +1,18 @@
-"""Shared Tumblr OAuth 1.0a signer.
+"""Shared Tumblr OAuth 1.0a signer + multipart builder.
 
-Replaces 5 near-identical inline signers (cleanup_tumblr, doris_muffin, like_loop,
-pancake_sequence, mr_quiet_slip). The algorithm is HMAC-SHA1 over the standard
-OAuth 1.0a base string; a wrong signature is a silent 401, so this is proved
-byte-identical to each original before migrating (see the equivalence test).
+Replaces the near-identical inline signers that used to live in cleanup_tumblr,
+doris_muffin, like_loop, pancake_sequence, mr_quiet_slip, post_tumblr and
+reblog_tumblr. The algorithm is HMAC-SHA1 over the standard OAuth 1.0a base
+string; a wrong signature is a silent 401, so this was proved byte-identical
+to each original before migrating.
 
 Creds from env (TUMBLR_CONSUMER_KEY/SECRET, TUMBLR_OAUTH_TOKEN/_SECRET).
-`params` = extra params (query string or x-www-form-urlencoded body) folded into
-the signature base, per spec. `token_secret` overrides the env token secret
-(mr_quiet passes it explicitly).
+`params` = extra params folded into the signature base, per spec:
+- GET query params: fold them in.
+- x-www-form-urlencoded POST bodies: fold them in.
+- multipart/form-data POST bodies: do NOT fold (only oauth_* params sign).
+- JSON POST bodies (NPF /posts): do NOT fold.
+`token_secret` overrides the env token secret (mr_quiet passes it explicitly).
 """
 from __future__ import annotations
 
@@ -46,3 +50,27 @@ def oauth_header(method: str, url: str, *, params: dict | None = None,
         hmac.new(key.encode(), base.encode(), hashlib.sha1).digest()
     ).decode()
     return "OAuth " + ", ".join(f'{k}="{_q(v)}"' for k, v in oauth.items())
+
+
+def build_multipart(
+    fields: dict[str, str],
+    image_bytes: bytes,
+    image_name: str = "thumb.png",
+) -> tuple[bytes, str]:
+    """Multipart body for the legacy /post endpoint: simple form fields + a `data`
+    image file part. Returns (body, content_type). Sign the request WITHOUT
+    folding `fields` into the signature (multipart bodies are excluded per spec)."""
+    boundary = "----outboxcafe" + secrets.token_hex(12)
+    parts: list[bytes] = []
+    for name, value in fields.items():
+        parts.append(f"--{boundary}\r\n".encode())
+        parts.append(f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode())
+        parts.append(value.encode("utf-8"))
+        parts.append(b"\r\n")
+    parts.append(f"--{boundary}\r\n".encode())
+    parts.append(f'Content-Disposition: form-data; name="data"; filename="{image_name}"\r\n'.encode())
+    parts.append(b"Content-Type: image/png\r\n\r\n")
+    parts.append(image_bytes)
+    parts.append(b"\r\n")
+    parts.append(f"--{boundary}--\r\n".encode())
+    return b"".join(parts), f"multipart/form-data; boundary={boundary}"

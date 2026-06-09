@@ -9,7 +9,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import shutil
 import subprocess
 import sys
 from datetime import datetime
@@ -20,7 +19,6 @@ from prompt import build_prompt
 from spec import (
     append_history,
     format_spec_for_human,
-    load_dimensions,
     roll_spec,
     roll_spec_via_llm,
 )
@@ -1127,10 +1125,6 @@ def rebuild_cabinet() -> None:
 
 def rebuild_sitemap() -> None:
     """Build /sitemap.xml from the archive."""
-    from datetime import datetime
-    from zoneinfo import ZoneInfo
-    pt = ZoneInfo("America/Los_Angeles")
-
     sitemap_path = ROOT / "sitemap.xml"
     base = "https://outbox.cafe"
     urls = [

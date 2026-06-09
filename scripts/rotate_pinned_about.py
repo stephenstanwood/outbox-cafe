@@ -14,14 +14,12 @@ Run on the Mini with both env files sourced:
 
 from __future__ import annotations
 
-import json
 import os
 import sys
 import urllib.error
-import urllib.request
 from datetime import datetime, timezone
 
-BSKY_BASE = "https://bsky.social/xrpc"
+from lib import bsky
 
 
 NEW_PINNED_TEXT = (
@@ -39,17 +37,8 @@ NEW_DESCRIPTION = (
 
 
 def req(path: str, *, data=None, headers=None, method="GET"):
-    h = {"Accept": "application/json"}
-    if headers:
-        h.update(headers)
-    body = None
-    if isinstance(data, (dict, list)):
-        body = json.dumps(data).encode()
-        h.setdefault("Content-Type", "application/json")
-    r = urllib.request.Request(f"{BSKY_BASE}{path}", data=body, headers=h, method=method)
     try:
-        with urllib.request.urlopen(r, timeout=30) as resp:
-            return json.load(resp)
+        return bsky.request(path, data=data, headers=headers, method=method)
     except urllib.error.HTTPError as e:
         sys.stderr.write(f"HTTP {e.code} on {path}: {e.read().decode('utf-8','ignore')[:500]}\n")
         raise
@@ -58,7 +47,6 @@ def req(path: str, *, data=None, headers=None, method="GET"):
 def link_facets(text: str) -> list[dict]:
     """Return facets array for every http(s) URL in `text`. Byte-indexed."""
     out = []
-    enc = text.encode("utf-8")
     i = 0
     while True:
         # search for http
@@ -88,14 +76,9 @@ def main():
     if not handle or not pw:
         sys.exit("missing BSKY_HANDLE / BSKY_APP_PASSWORD")
 
-    # 1. auth
-    sess = req(
-        "/com.atproto.server.createSession",
-        data={"identifier": handle, "password": pw},
-        method="POST",
-    )
-    did = sess["did"]
-    auth = {"Authorization": f"Bearer {sess['accessJwt']}"}
+    # 1. auth (retries transient bsky auth-endpoint timeouts)
+    did, jwt = bsky.login(handle, pw)
+    auth = {"Authorization": f"Bearer {jwt}"}
     print(f"auth ok: {handle} → {did}")
 
     # 2. fetch current profile (so we preserve avatar/banner/displayName)

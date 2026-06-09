@@ -177,6 +177,29 @@ def _bsky_request(path: str, *, data=None, headers=None, method=None) -> dict:
     return bsky.request(path, data=data, headers=headers, method=method)
 
 
+def image_alt_text(image_path: Path, title: str) -> str:
+    """Best available alt text for a social image.
+
+    The poster generator writes a `<stem>.alt.txt` sidecar describing what the
+    image actually depicts — use that when present. A page screenshot (from
+    archive/thumbs/) gets a screenshot-flavored line; anything else falls back
+    to the old generic cover line.
+    """
+    try:
+        sidecar = image_path.with_suffix(".alt.txt")
+        if sidecar.exists():
+            alt = sidecar.read_text().strip()
+            if alt:
+                return alt[:300]
+    except Exception:
+        pass
+    if image_path.parent.name == "thumbs":
+        return (f"Screenshot of the page {title!r}"[:300] if title
+                else "Screenshot of a page from outbox.cafe")
+    return (f"Illustrated cover for {title}"[:300] if title
+            else "An illustrated cover from outbox.cafe")
+
+
 def _find_url_byterange(text: str, url: str) -> tuple[int, int] | None:
     """Find the UTF-8 byte offsets of `url` in `text`. Bsky facets are byte-indexed."""
     idx = text.find(url)
@@ -227,7 +250,6 @@ def _prepare_image_for_bsky(path: Path) -> tuple[bytes, str]:
 def post_drop(
     archive_html_path: Path,
     thumb_png_path: Path | None,
-    base_url: str = "https://outbox.cafe",
     seed: int | None = None,
     kind: str = "drop",
 ) -> bool:
@@ -264,7 +286,6 @@ def post_drop(
 
     title = _extract_title(html) or "(untitled)"
     snippet = _extract_snippet(html, max_chars=400)
-    archive_url = f"{base_url}/archive/{archive_html_path.name}"
 
     staff = _pick_staff(rng)
     print(f"[post_bsky] persona={staff['name']} title={title[:60]!r}", file=sys.stderr)
@@ -310,8 +331,7 @@ def post_drop(
                 "images": [
                     {
                         "image": blob,
-                        "alt": (f"Illustrated cover for {title}"[:300] if title
-                                else "An illustrated cover from outbox.cafe"),
+                        "alt": image_alt_text(thumb_png_path, title),
                     }
                 ],
             }

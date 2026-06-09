@@ -15,11 +15,11 @@ import os
 import sys
 import urllib.error
 import urllib.parse
-import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BSKY_BASE = "https://bsky.social/xrpc"
+from lib import bsky
+
 DEFAULT_DELETE_AFTER_HOURS = 24
 MAX_DELETES_PER_RUN = 50    # safety cap so a runaway loop can't nuke everything
 ENGAGEMENT_SNAPSHOT = Path(__file__).resolve().parent.parent / "data" / "post_engagement.jsonl"
@@ -47,16 +47,7 @@ def _snapshot_engagement(post: dict) -> None:
 
 
 def _req(path: str, *, data=None, headers=None, method=None) -> dict:
-    h = {"Accept": "application/json"}
-    if headers:
-        h.update(headers)
-    body = None
-    if isinstance(data, (dict, list)):
-        body = json.dumps(data).encode()
-        h.setdefault("Content-Type", "application/json")
-    req = urllib.request.Request(f"{BSKY_BASE}{path}", data=body, headers=h, method=method)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+    return bsky.request(path, data=data, headers=headers, method=method)
 
 
 def cleanup(hours: int = DEFAULT_DELETE_AFTER_HOURS) -> int:
@@ -71,16 +62,12 @@ def cleanup(hours: int = DEFAULT_DELETE_AFTER_HOURS) -> int:
         return 0
 
     try:
-        sess = _req(
-            "/com.atproto.server.createSession",
-            data={"identifier": handle, "password": pw},
-            method="POST",
-        )
+        # bsky.login retries transient timeouts — a midnight auth blip otherwise
+        # skips the whole wipe and posts pile up visibly until the next night.
+        did, jwt = bsky.login(handle, pw)
     except Exception as e:
         print(f"[cleanup] auth failed: {e}", file=sys.stderr)
         return 0
-    did = sess["did"]
-    jwt = sess["accessJwt"]
     auth = {"Authorization": f"Bearer {jwt}"}
 
     # Pinned post — never delete (this is the welcome-to-the-cafe intro post).

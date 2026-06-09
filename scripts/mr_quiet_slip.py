@@ -28,11 +28,9 @@ import json
 import os
 import random
 import re
-import secrets
 import subprocess
 import sys
 import urllib.error
-import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -135,7 +133,6 @@ def _font_path() -> str:
 def _render_slip(line: str, out_path: Path) -> Path:
     """Render the aphorism onto a paper-slip image. Returns out_path."""
     from PIL import Image, ImageDraw, ImageFont, ImageFilter
-    import math
 
     W = H = 1200
 
@@ -268,15 +265,11 @@ def post_to_bsky(text: str, image_path: Path) -> str | None:
         print("[slip] bsky creds missing — skip bsky", file=sys.stderr)
         return None
     try:
-        sess = _bsky_request(
-            "/com.atproto.server.createSession",
-            data={"identifier": handle, "password": pw},
-        )
+        did, jwt = bsky.login(handle, pw)
     except Exception as e:
         print(f"[slip] bsky auth failed: {e}", file=sys.stderr)
         return None
-    did = sess["did"]
-    auth = {"Authorization": f"Bearer {sess['accessJwt']}"}
+    auth = {"Authorization": f"Bearer {jwt}"}
 
     try:
         img_bytes, ct = _prepare_for_bsky(image_path)
@@ -319,38 +312,6 @@ def post_to_bsky(text: str, image_path: Path) -> str | None:
 
 # ---------- Tumblr post ----------
 
-# OAuth 1.0a — same as post_tumblr.py
-import hashlib
-import hmac
-import base64
-import time as _time
-
-
-def _q(s: str) -> str:
-    return urllib.parse.quote(s, safe="-._~")
-
-
-def _oauth_header(method: str, url: str, oauth_token_secret: str) -> str:
-    return tumblr.oauth_header(method, url, token_secret=oauth_token_secret)
-
-
-def _tumblr_multipart(fields: dict, image_bytes: bytes, image_name: str) -> tuple[bytes, str]:
-    boundary = "----outboxcafe" + secrets.token_hex(12)
-    parts: list[bytes] = []
-    for name, value in fields.items():
-        parts.append(f"--{boundary}\r\n".encode())
-        parts.append(f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode())
-        parts.append(value.encode("utf-8"))
-        parts.append(b"\r\n")
-    parts.append(f"--{boundary}\r\n".encode())
-    parts.append(f'Content-Disposition: form-data; name="data"; filename="{image_name}"\r\n'.encode())
-    parts.append(b"Content-Type: image/png\r\n\r\n")
-    parts.append(image_bytes)
-    parts.append(b"\r\n")
-    parts.append(f"--{boundary}--\r\n".encode())
-    return b"".join(parts), f"multipart/form-data; boundary={boundary}"
-
-
 def post_to_tumblr(text: str, image_path: Path) -> str | None:
     blog = os.environ.get("TUMBLR_BLOG_NAME")
     needed = ("TUMBLR_CONSUMER_KEY", "TUMBLR_CONSUMER_SECRET",
@@ -359,8 +320,8 @@ def post_to_tumblr(text: str, image_path: Path) -> str | None:
         print("[slip] tumblr creds missing — skip tumblr", file=sys.stderr)
         return None
 
-    url = f"https://api.tumblr.com/v2/blog/{blog}.tumblr.com/post"
-    auth = _oauth_header("POST", url, os.environ["TUMBLR_OAUTH_TOKEN_SECRET"])
+    url = f"{tumblr.BASE}/blog/{blog}.tumblr.com/post"
+    auth = tumblr.oauth_header("POST", url)  # multipart: fields NOT in signature
 
     import html as _html
     caption_html = f"<p>{_html.escape(text)}</p>"
@@ -370,7 +331,7 @@ def post_to_tumblr(text: str, image_path: Path) -> str | None:
         "caption": caption_html,
         "tags": ",".join(tags),
     }
-    body, ctype = _tumblr_multipart(fields, image_path.read_bytes(), image_path.name)
+    body, ctype = tumblr.build_multipart(fields, image_path.read_bytes(), image_path.name)
     req = urllib.request.Request(
         url, data=body, headers={"Authorization": auth, "Content-Type": ctype}, method="POST"
     )

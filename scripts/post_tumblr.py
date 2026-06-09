@@ -19,18 +19,13 @@ cafe drop firehose. OAuth 1.0a, photo post with binary thumb upload.
 """
 from __future__ import annotations
 
-import base64
-import hashlib
-import hmac
 import html as _html
 import json
 import os
 import random
 import re
-import secrets
 import subprocess
 import sys
-import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -38,6 +33,7 @@ from pathlib import Path
 from typing import Any
 
 from lib.llm import claude_cmd
+from lib import tumblr
 
 ROOT = Path(__file__).resolve().parent.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
@@ -47,10 +43,6 @@ DEFAULT_TAGS = [
     "small web", "weird internet", "indie web", "generative",
     "html", "new on tumblr", "handmade web", "outbox cafe",
 ]
-
-
-def _q(s: Any) -> str:
-    return urllib.parse.quote(str(s), safe="")
 
 
 def _load_personas() -> dict[str, Any]:
@@ -146,52 +138,9 @@ def _call_claude(staff: dict[str, Any], title: str, snippet: str) -> str | None:
     return text or None
 
 
-def _oauth_header(method: str, url: str, oauth_token_secret: str = "") -> str:
-    """OAuth 1.0a Authorization header. For multipart requests, only oauth_* params
-    go into the signature base — form fields do NOT."""
-    params = {
-        "oauth_consumer_key": os.environ["TUMBLR_CONSUMER_KEY"],
-        "oauth_nonce": secrets.token_hex(16),
-        "oauth_signature_method": "HMAC-SHA1",
-        "oauth_timestamp": str(int(time.time())),
-        "oauth_token": os.environ["TUMBLR_OAUTH_TOKEN"],
-        "oauth_version": "1.0",
-    }
-    param_str = "&".join(f"{_q(k)}={_q(v)}" for k, v in sorted(params.items()))
-    base = f"{method.upper()}&{_q(url)}&{_q(param_str)}"
-    key = f"{_q(os.environ['TUMBLR_CONSUMER_SECRET'])}&{_q(oauth_token_secret)}"
-    params["oauth_signature"] = base64.b64encode(
-        hmac.new(key.encode(), base.encode(), hashlib.sha1).digest()
-    ).decode()
-    return "OAuth " + ", ".join(f'{k}="{_q(v)}"' for k, v in params.items())
-
-
-def _build_multipart_legacy(
-    fields: dict[str, str],
-    image_bytes: bytes,
-    image_name: str = "thumb.png",
-) -> tuple[bytes, str]:
-    """Multipart body for the legacy /post endpoint: simple form fields + a `data` image file."""
-    boundary = "----outboxcafe" + secrets.token_hex(12)
-    parts: list[bytes] = []
-    for name, value in fields.items():
-        parts.append(f"--{boundary}\r\n".encode())
-        parts.append(f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode())
-        parts.append(value.encode("utf-8"))
-        parts.append(b"\r\n")
-    parts.append(f"--{boundary}\r\n".encode())
-    parts.append(f'Content-Disposition: form-data; name="data"; filename="{image_name}"\r\n'.encode())
-    parts.append(b"Content-Type: image/png\r\n\r\n")
-    parts.append(image_bytes)
-    parts.append(b"\r\n")
-    parts.append(f"--{boundary}--\r\n".encode())
-    return b"".join(parts), f"multipart/form-data; boundary={boundary}"
-
-
 def post_drop(
     archive_html_path: Path,
     thumb_png_path: Path | None,
-    base_url: str = "https://outbox.cafe",
     seed: int | None = None,
     spec_format: str | None = None,
 ) -> bool:
@@ -227,7 +176,6 @@ def post_drop(
 
     title = _extract_title(html_text) or "(untitled)"
     snippet = _extract_snippet(html_text)
-    archive_url = f"{base_url}/archive/{archive_html_path.name}"
 
     staff = _pick_staff(rng)
     print(f"[post_tumblr] persona={staff['name']} title={title[:60]!r}", file=sys.stderr)
@@ -248,8 +196,7 @@ def post_drop(
     safe_text = _html.escape(body_text).replace("\n", "<br>")
     caption_html = f"<p>{safe_text}</p>"
 
-    url = f"https://api.tumblr.com/v2/blog/{blog}.tumblr.com/post"
-    auth = _oauth_header("POST", url, os.environ["TUMBLR_OAUTH_TOKEN_SECRET"])
+    url = f"{tumblr.BASE}/blog/{blog}.tumblr.com/post"
 
     try:
         if thumb_png_path and thumb_png_path.exists():
@@ -261,7 +208,8 @@ def post_drop(
                 "caption": caption_html,
                 "tags": ",".join(tags),
             }
-            body, ctype = _build_multipart_legacy(fields, thumb_png_path.read_bytes(), thumb_png_path.name)
+            body, ctype = tumblr.build_multipart(fields, thumb_png_path.read_bytes(), thumb_png_path.name)
+            auth = tumblr.oauth_header("POST", url)  # multipart: fields NOT in signature
         else:
             fields = {
                 "type": "text",
@@ -271,6 +219,7 @@ def post_drop(
             }
             body = urllib.parse.urlencode(fields).encode()
             ctype = "application/x-www-form-urlencoded"
+            auth = tumblr.oauth_header("POST", url, params=fields)  # urlencoded: fields sign
         req = urllib.request.Request(
             url,
             data=body,
