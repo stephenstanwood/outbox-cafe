@@ -19,7 +19,10 @@ Posts ride the daily-fresh-feed convention — Sunday's slip gets swept by
 the midnight cleanup. Each slip is also archived locally to
 archive/slips/YYYY-MM-DD.png so the cafe's repo keeps a record.
 
-Run on the Mini via scripts/run-slip.sh; cron `0 9 * * 0` (Sun 9am PT).
+Run on the Mini via scripts/run-slip.sh; cron `6 9 * * 0` (Sun 9:06am PT,
+staggered off the :00 grid the engage loop fires on).
+
+Every slip also lands in the on-site drawer at /slips/ (see ritual_pages.py).
 """
 
 from __future__ import annotations
@@ -84,9 +87,21 @@ Hard requirements:
 Output: just the line. Nothing else."""
 
 
-def _generate_aphorism(model: str = "opus", max_tries: int = 3) -> str | None:
+# Backoff between failed tries. The 5/24 + 6/7 Sunday-9am failures were
+# transient (`claude exit 1`, fine again later the same day) — three
+# back-to-back tries inside one minute all land in the same blip. Spreading
+# tries across ~6 minutes rides it out.
+RETRY_SLEEPS = (45, 90, 180)
+
+
+def _generate_aphorism(model: str = "opus", max_tries: int = 4) -> str | None:
     """Call Claude headless and return ONE clean aphorism line, or None."""
+    import time
     for attempt in range(max_tries):
+        if attempt > 0:
+            delay = RETRY_SLEEPS[min(attempt - 1, len(RETRY_SLEEPS) - 1)]
+            print(f"[slip] retrying in {delay}s", file=sys.stderr)
+            time.sleep(delay)
         try:
             result = subprocess.run(
                 claude_cmd(model),
@@ -99,7 +114,13 @@ def _generate_aphorism(model: str = "opus", max_tries: int = 3) -> str | None:
             print(f"[slip] claude call failed (try {attempt+1}): {e}", file=sys.stderr)
             continue
         if result.returncode != 0:
-            print(f"[slip] claude exit {result.returncode}: {result.stderr[:200]}", file=sys.stderr)
+            # Log BOTH streams — the CLI sometimes puts the real error on stdout,
+            # and `exit 1` with empty stderr is undebuggable (see 5/24, 6/7 logs).
+            print(
+                f"[slip] claude exit {result.returncode}"
+                f" stderr={result.stderr[:300]!r} stdout={result.stdout[:300]!r}",
+                file=sys.stderr,
+            )
             continue
         out = (result.stdout or "").strip()
         # Pull the first non-empty line, strip quotes/fences/sign-offs
@@ -395,6 +416,13 @@ def main():
     line = _generate_aphorism(model="opus")
     if not line:
         print("[slip] failed to generate aphorism — aborting", file=sys.stderr)
+        # Loud failure: the Sunday slip silently missed twice (5/24, 6/7)
+        # before anyone noticed. A skipped ritual deserves a DM.
+        try:
+            from cat_signal import signal
+            signal("ritual-slip", "Mr. Quiet's Sunday slip failed all generation retries — no slip posted today. Check ~/logs/outbox-slip.log on the Mini.", priority="high")
+        except Exception:
+            pass
         return 1
 
     print(f"[slip] line: {line!r}")
@@ -418,6 +446,14 @@ def main():
             post_log("slip_tumblr", persona="Mr. Quiet", uri=tumblr_url, subject="weekly_slip", text=line)
     except Exception as e:
         print(f"[slip] post_log failed (non-fatal): {e}", file=sys.stderr)
+
+    # Refresh the on-site slip drawer so the new slip appears at /slips/
+    try:
+        from ritual_pages import rebuild_slips_page
+        rebuild_slips_page()
+        print("[slip] rebuilt /slips/", file=sys.stderr)
+    except Exception as e:
+        print(f"[slip] slips page rebuild failed (non-fatal): {e}", file=sys.stderr)
 
     # Non-zero exit only if BOTH platforms failed — single-platform fails are best-effort.
     if not bsky_uri and not tumblr_url:

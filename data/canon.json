@@ -1,0 +1,53 @@
+{
+  "_note": "The cafe's small recurring universe. A low-probability prompt hook (see prompt.py) offers ONE of these per gen as an optional background easter egg — a name in a list, a line of fine print, a credit. Never the subject, never explained. Regulars notice; nobody else needs to. Add entries when a gen or a cat invents something worth keeping; keep hints short and usable in any era.",
+  "elements": [
+    {
+      "name": "Pepper",
+      "hint": "a shy cat, missing since roughly 1998, last seen behind the bus stop on 4th; answers to nothing; sightings are occasionally reported and never confirmed"
+    },
+    {
+      "name": "Eugene",
+      "hint": "a small spider who lives in a lobby corner; named by someone who had no authority to name him; unbothered; welcome"
+    },
+    {
+      "name": "Roy",
+      "hint": "a late husband, fondly remembered; had exactly one hobby at a time (woodworking, jam, model trains, birdhouses); believed simpler is best; understood a load-bearing seam"
+    },
+    {
+      "name": "Margot, age 4 ½",
+      "hint": "a child artist of local renown; signs everything with her age; her work has a sun in the corner; ask about Margot"
+    },
+    {
+      "name": "Frederick",
+      "hint": "somebody's cousin; claims to have been an extra in something; claims to detect flavors that are not there; claims a lot of things; sticks by every claim"
+    },
+    {
+      "name": "Mortimer",
+      "hint": "a kitten who dropped by once and is still talked about; whereabouts unknown; left an impression"
+    },
+    {
+      "name": "Deli Mustard",
+      "hint": "a band of unverifiable genre; plays $3 shows; no cover for birthdays; sometimes billed with Half Karen and the Eugene Eugenes"
+    },
+    {
+      "name": "The Good Wok",
+      "hint": "a takeout place; delivery 11–9, cash or check; menu item C4 is ??? and costs $0.00; the almond cookies come six to a bag"
+    },
+    {
+      "name": "429 Persimmon Ln",
+      "hint": "an address where everything is perpetually for sale — the chairs, the photos, the lamps, a kettle; please don't haggle on the kettle"
+    },
+    {
+      "name": "the sign above the door",
+      "hint": "reads 'if the door is open, you are welcome inside.' — est. ~1962; quoted occasionally, attributed inconsistently"
+    },
+    {
+      "name": "the 3:47 light",
+      "hint": "every day at 3:47 the light hits the second shelf exactly right; some schedules, timetables, and instructions quietly account for this"
+    },
+    {
+      "name": "555-PEPR",
+      "hint": "a phone number on tear-away tabs; calling it is never described; the tabs are always mostly taken"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+# Dead-man's switch for the cafe. Everything that can alert (cat-signal DMs,
+# nightly digest) runs ON the Mac Mini — if the Mini dies, wedges, or loses
+# power, the result is total silence. This action runs OFF the Mini and
+# checks that drops keep landing.
+#
+# Gens commit "drop: <title>" 4x/day (4am/8am/12pm/4pm PT). The longest
+# normal gap is overnight: 4pm → 4am = 12 hours. Threshold is 14h so a
+# healthy night never alarms but a missed morning gen (or a dead Mini)
+# alerts within hours.
+#
+# On staleness the job FAILS — GitHub emails the repo owner on scheduled-
+# workflow failure with default notification settings, no secrets needed.
+# Optionally, add a DISCORD_WEBHOOK_URL repo secret to also get a Discord ping.
+name: heartbeat
+
+on:
+  schedule:
+    # Every 6 hours, offset from :00 (GitHub delays top-of-hour crons heavily)
+    - cron: "47 1,7,13,19 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  check-pulse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 4 drops/day + ritual/maintenance commits — 150 covers weeks.
+          fetch-depth: 150
+
+      - name: check last drop age
+        id: pulse
+        run: |
+          set -euo pipefail
+          MAX_AGE_HOURS=14
+          last_ts=$(git log --grep='^drop:' -1 --format=%ct || true)
+          if [ -z "$last_ts" ]; then
+            echo "no drop commit found in the last 150 commits — treating as stale"
+            echo "age_msg=no drop commit found in recent history" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          now=$(date +%s)
+          age_h=$(( (now - last_ts) / 3600 ))
+          last_human=$(git log --grep='^drop:' -1 --format='%cI %s')
+          echo "newest drop: $last_human (${age_h}h ago, threshold ${MAX_AGE_HOURS}h)"
+          echo "age_msg=newest drop is ${age_h}h old: $last_human" >> "$GITHUB_OUTPUT"
+          if [ "$age_h" -ge "$MAX_AGE_HOURS" ]; then
+            echo "::error::outbox.cafe looks stalled — newest drop is ${age_h}h old"
+            exit 1
+          fi
+
+      - name: discord ping (optional, needs DISCORD_WEBHOOK_URL secret)
+        if: failure()
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          AGE_MSG: ${{ steps.pulse.outputs.age_msg }}
+        run: |
+          [ -z "$WEBHOOK" ] && { echo "no webhook secret set — relying on GitHub failure email"; exit 0; }
+          payload=$(printf '{"content":"🔴 **outbox.cafe heartbeat**: the cafe looks stalled. %s. Check the Mini."}' "$AGE_MSG")
+          curl -fsS -H 'Content-Type: application/json' -d "$payload" "$WEBHOOK" || true

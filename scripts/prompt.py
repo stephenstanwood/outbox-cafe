@@ -1,11 +1,46 @@
 """Build the generation prompt from a rolled spec."""
 from __future__ import annotations
 
+import json
+import random
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
+CANON_PATH = ROOT / "data" / "canon.json"
+
+# How often a gen is OFFERED one canon element as an optional easter egg.
+# Low on purpose: the cafe is "very very random" first — canon is seasoning,
+# not structure. At 4 gens/day this is ~5 offers/week, and the model is told
+# to skip the egg whenever it doesn't fit, so actual appearances are rarer.
+CANON_PROBABILITY = 0.18
+
+
+def _canon_block(rng: "random.Random | None" = None) -> str:
+    """Roll the optional canon easter egg. Returns '' most of the time."""
+    r = rng or random
+    if r.random() >= CANON_PROBABILITY:
+        return ""
+    try:
+        elements = json.loads(CANON_PATH.read_text()).get("elements") or []
+    except Exception:
+        return ""
+    if not elements:
+        return ""
+    el = r.choice(elements)
+    name, hint = el.get("name"), el.get("hint")
+    if not name or not hint:
+        return ""
+    return f"""
+CANON EASTER EGG (OPTIONAL)
+===========================
+The cafe's pages share a small recurring background universe. If — and ONLY if — it fits this piece naturally, you may slip in one tiny passing reference to:
+
+  {name} — {hint}
+
+As: a name in a list, a classified ad, a line of fine print, a credit, a menu item, a signature. NEVER the subject of the piece, never explained, never more than a passing detail, and never connected to the cafe itself. If it doesn't fit this piece's era and world, skip it entirely — most pieces should skip it.
+"""
 
 
 def _recent_titles(n: int = 20) -> list[str]:
@@ -66,6 +101,7 @@ def build_prompt(spec: dict[str, Any], photos: list[dict[str, Any]] | None = Non
     )
     photos = photos or []
     photos_block = _format_photos_block(photos)
+    canon_block = _canon_block()
     n_photos = len(photos)
     if n_photos == 0:
         images_intro = (
@@ -159,7 +195,7 @@ But "anti-default" is NOT the same as "weird at all costs." The cafe values beau
 RECENT GENERATIONS (avoid topical / aesthetic overlap)
 ======================================================
 {recent_titles_block}
-
+{canon_block}
 OUTPUT
 ======
 Return ONLY the HTML document. No prose before or after. No code fences. No commentary. Start with <!DOCTYPE html> and end with </html>.

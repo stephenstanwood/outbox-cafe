@@ -38,6 +38,16 @@ Affects `scripts/cat_signal.py` and any other direct Discord API call we add.
 
 Currently `0 4,8,12,16 * * *` on the Mini — 4 gens/day at 4am, 8am, 12pm, 4pm PT. Single-flight lock prevents pileup. Past schedules used: `*/10 * * * *` (stash mode during Max usage cycles), `0 * * * *` (hourly); the flip-to-hourly helper script from that era has been deleted.
 
+### Weekly ritual crons run at :06 (2026-06-09)
+
+Slip is `6 9 * * 0`, Doris is `6 15 * * 0` — staggered off the :00 grid the
+every-15-min engage loop fires on, after both rituals failed silently on two
+Sundays (5/24, 6/7) with `claude exit 1`. Ritual scripts now retry with
+backoff across ~6 min, log both output streams on failure, and cat-signal on
+final failure. An off-Mini GitHub Actions heartbeat
+(`.github/workflows/heartbeat.yml`) alerts if no `drop:` commit lands for 14h
+(threshold accommodates the 12h overnight gap).
+
 ### Midnight cleanup (2026-05-19)
 
 `0 0 * * * scripts/run-cleanup.sh` wipes every bsky + tumblr post nightly. Pinned welcome on each platform is exempt. New day = fresh feed. The bsky engage loop no longer does its own probabilistic cleanup — midnight is the single canonical wipe. If the cron misses a night, posts pile up visibly until the next firing; no rolling rescue.

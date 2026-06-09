@@ -126,10 +126,20 @@ def _act_posted_today(act: int) -> bool:
     return False
 
 
-def _generate_act(act: int, max_tries: int = 3) -> str | None:
+# Spread retries — transient claude blips outlast back-to-back tries
+# (see the slip/doris Sunday failures, 5/24 + 6/7).
+RETRY_SLEEPS = (45, 90, 180)
+
+
+def _generate_act(act: int, max_tries: int = 4) -> str | None:
+    import time
     prompt = ACT_PROMPTS[act]
     # opus now (Max OAuth = $0) — short outputs, but the best model is free
     for attempt in range(max_tries):
+        if attempt > 0:
+            delay = RETRY_SLEEPS[min(attempt - 1, len(RETRY_SLEEPS) - 1)]
+            print(f"[pancake-{act}] retrying in {delay}s", file=sys.stderr)
+            time.sleep(delay)
         try:
             result = subprocess.run(
                 claude_cmd("opus"),
@@ -142,6 +152,11 @@ def _generate_act(act: int, max_tries: int = 3) -> str | None:
             print(f"[pancake-{act}] claude failed try {attempt+1}: {e}", file=sys.stderr)
             continue
         if result.returncode != 0:
+            print(
+                f"[pancake-{act}] claude exit {result.returncode}"
+                f" stderr={result.stderr[:300]!r} stdout={result.stdout[:300]!r}",
+                file=sys.stderr,
+            )
             continue
         out = (result.stdout or "").strip()
         # First non-empty line; strip quotes
@@ -257,6 +272,11 @@ def main():
     text = _generate_act(act)
     if not text:
         print("[pancake] generation failed — abort", file=sys.stderr)
+        try:
+            from cat_signal import signal
+            signal("ritual-pancake", f"Pancake's Saturday act {act} failed all generation retries — sequence has a hole today. Check ~/logs/outbox-pancake.log on the Mini.", priority="high")
+        except Exception:
+            pass
         return 1
     print(f"[pancake] text: {text!r}")
 

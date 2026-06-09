@@ -12,7 +12,10 @@ Tumblr-only. Bsky's 300-char limit kills the format.
 Posts are tag-exempted from the midnight cleanup (tag "doris" /
 "muffin column"), so columns accumulate as the cafe's quiet archive.
 
-Run from scripts/run-doris-muffin.sh; cron `0 15 * * 0`.
+Run from scripts/run-doris-muffin.sh; cron `6 15 * * 0` (Sun 3:06pm PT,
+staggered off the :00 grid the engage loop fires on).
+
+Back issues are collected on-site at /columns/ (see ritual_pages.py).
 """
 
 from __future__ import annotations
@@ -74,8 +77,18 @@ Roll a flavor on your own — anything plausible for a small cafe. Common picks:
 OUTPUT THE COLUMN ONLY. No preamble. No "Sure, here's the column:". No quotes around it. No explanation."""
 
 
-def _generate_column(model: str = "opus", max_tries: int = 3) -> str | None:
+# Spread retries across ~6 minutes — the Sunday failures (5/24, 6/7) were
+# transient blips that three immediate tries couldn't outlast.
+RETRY_SLEEPS = (45, 90, 180)
+
+
+def _generate_column(model: str = "opus", max_tries: int = 4) -> str | None:
+    import time
     for attempt in range(max_tries):
+        if attempt > 0:
+            delay = RETRY_SLEEPS[min(attempt - 1, len(RETRY_SLEEPS) - 1)]
+            print(f"[muffin] retrying in {delay}s", file=sys.stderr)
+            time.sleep(delay)
         try:
             result = subprocess.run(
                 claude_cmd(model),
@@ -88,7 +101,11 @@ def _generate_column(model: str = "opus", max_tries: int = 3) -> str | None:
             print(f"[muffin] claude failed try {attempt+1}: {e}", file=sys.stderr)
             continue
         if result.returncode != 0:
-            print(f"[muffin] claude exit {result.returncode}", file=sys.stderr)
+            print(
+                f"[muffin] claude exit {result.returncode}"
+                f" stderr={result.stderr[:300]!r} stdout={result.stdout[:300]!r}",
+                file=sys.stderr,
+            )
             continue
         out = (result.stdout or "").strip()
         # Strip any wrapping fences
@@ -183,6 +200,11 @@ def main():
     column = _generate_column(model="opus")
     if not column:
         print("[muffin] failed to generate column — abort", file=sys.stderr)
+        try:
+            from cat_signal import signal
+            signal("ritual-doris", "Doris's Sunday muffin column failed all generation retries — no column posted today. Check ~/logs/outbox-doris.log on the Mini.", priority="high")
+        except Exception:
+            pass
         return 1
 
     title, body = _split_title_and_body(column)
@@ -209,6 +231,14 @@ def main():
         plog("muffin_column", persona="Doris", uri=url, subject="weekly_muffin", text=column[:500])
     except Exception as e:
         print(f"[muffin] post_log failed (non-fatal): {e}", file=sys.stderr)
+
+    # Refresh the on-site back-issues page so the new column appears at /columns/
+    try:
+        from ritual_pages import rebuild_columns_page
+        rebuild_columns_page()
+        print("[muffin] rebuilt /columns/", file=sys.stderr)
+    except Exception as e:
+        print(f"[muffin] columns page rebuild failed (non-fatal): {e}", file=sys.stderr)
 
     return 0
 

@@ -425,7 +425,35 @@
     .grid { gap: 16px 12px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
     .card-name { font-size: 13px; }
     .card:hover { transform: rotate(0) translateY(-2px) scale(1.01); }
+    .keep-btn { width: 34px; height: 34px; font-size: 17px; top: -8px; right: -6px; }
   }
+
+  /* BINDER — keep-a-card */
+  .card-wrap { position: relative; }
+  .keep-btn {
+    position: absolute; top: -10px; right: -8px; z-index: 11;
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 2px solid var(--ink); background: var(--paper);
+    color: var(--dim); font-size: 19px; line-height: 1; padding: 0;
+    cursor: pointer;
+    box-shadow: 1px 2px 0 rgba(0,0,0,0.25);
+    opacity: 0; transform: rotate(8deg) scale(0.9);
+    transition: opacity 0.18s ease, transform 0.18s ease, color 0.18s ease;
+  }
+  .card-wrap:hover .keep-btn, .keep-btn:focus-visible { opacity: 1; transform: rotate(8deg) scale(1); }
+  .card-wrap.kept .keep-btn {
+    opacity: 1; transform: rotate(8deg) scale(1);
+    color: var(--gold); background: var(--ink); border-color: var(--gold);
+  }
+  @media (hover: none) { .keep-btn { opacity: 0.85; transform: rotate(8deg) scale(1); } }
+  #binder-toggle.on { background: var(--gold); color: var(--ink); padding: 0 6px; }
+  body.binder-only .card-wrap:not(.kept) { display: none; }
+  #binder-empty {
+    display: none; text-align: center; color: var(--dim);
+    font-style: italic; font-size: 14px; padding: 40px 0;
+  }
+  body.binder-only #binder-empty.show { display: block; }
+
 </style>
 </head>
 <body>
@@ -438,6 +466,7 @@
     <span>221 / ∞</span>
     <a href="/">→ NEWEST</a>
     <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
+    <a href="#" id="binder-toggle" title="show only the cards you've kept">★ BINDER · <span id="binder-count">0</span></a>
   </div>
 </header>
 
@@ -458,6 +487,7 @@
 
 <main class="grid">
 
+        <div class="card-wrap" data-file="2026-06-09T12-06.html">
         <a class="card rarity-u" href="/archive/2026-06-09T12-06.html"
            style="--c1:#3a2818; --c2:#e8d8a8; --c3:#c8b478; --rot:-1.00deg;">
           <div class="card-inner">
@@ -478,7 +508,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-09T08-12.html">
         <a class="card rarity-c" href="/archive/2026-06-09T08-12.html"
            style="--c1:#f1e4c2; --c2:#c8b48a; --c3:#c8442e; --rot:1.00deg;">
           <div class="card-inner">
@@ -499,7 +532,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-09T04-12.html">
         <a class="card rarity-c" href="/archive/2026-06-09T04-12.html"
            style="--c1:#f3e2b8; --c2:#a08868; --c3:#a8312a; --rot:0.50deg;">
           <div class="card-inner">
@@ -520,7 +556,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-08T16-09.html">
         <a class="card rarity-r" href="/archive/2026-06-08T16-09.html"
            style="--c1:#f3e6c8; --c2:#c8b48a; --c3:#1c2a5e; --rot:-1.00deg;">
           <div class="card-inner">
@@ -541,7 +580,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-08T12-04.html">
         <a class="card rarity-r" href="/archive/2026-06-08T12-04.html"
            style="--c1:#0a1428; --c2:#1c2848; --c3:#0e1830; --rot:0.50deg;">
           <div class="card-inner">
@@ -562,7 +604,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-08T08-07.html">
         <a class="card rarity-c" href="/archive/2026-06-08T08-07.html"
            style="--c1:#ff8c69; --c2:#a3d8e6; --c3:#d96b4a; --rot:-0.50deg;">
           <div class="card-inner">
@@ -583,7 +628,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-08T04-11.html">
         <a class="card rarity-u" href="/archive/2026-06-08T04-11.html"
            style="--c1:#f0e3c2; --c2:#c8b48a; --c3:#a8312a; --rot:1.50deg;">
           <div class="card-inner">
@@ -604,7 +652,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-04T16-11.html">
         <a class="card rarity-c" href="/archive/2026-06-04T16-11.html"
            style="--c1:#1c4a5e; --c2:#0e3548; --c3:#d4a868; --rot:-0.50deg;">
           <div class="card-inner">
@@ -625,7 +676,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-04T12-08.html">
         <a class="card rarity-u" href="/archive/2026-06-04T12-08.html"
            style="--c1:#f1e2bc; --c2:#a8895a; --c3:#a8312a; --rot:-1.00deg;">
           <div class="card-inner">
@@ -646,7 +700,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-04T08-12.html">
         <a class="card rarity-c" href="/archive/2026-06-04T08-12.html"
            style="--c1:#1c2840; --c2:#a8624a; --c3:#f1e4c4; --rot:-1.00deg;">
           <div class="card-inner">
@@ -667,7 +724,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-04T04-05.html">
         <a class="card rarity-h" href="/archive/2026-06-04T04-05.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#0d4554; --rot:1.50deg;">
           <div class="card-inner">
@@ -688,7 +748,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-03T16-03.html">
         <a class="card rarity-c" href="/archive/2026-06-03T16-03.html"
            style="--c1:#5e2a1c; --c2:#6a3424; --c3:#4e2418; --rot:1.00deg;">
           <div class="card-inner">
@@ -709,7 +772,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-03T12-12.html">
         <a class="card rarity-u" href="/archive/2026-06-03T12-12.html"
            style="--c1:#f1e6c8; --c2:#a89878; --c3:#d4c4a0; --rot:-1.50deg;">
           <div class="card-inner">
@@ -730,7 +796,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-03T08-11.html">
         <a class="card rarity-u" href="/archive/2026-06-03T08-11.html"
            style="--c1:#a89a82; --c2:#f4d04a; --c3:#7a8a5a; --rot:0.00deg;">
           <div class="card-inner">
@@ -751,7 +820,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-03T04-06.html">
         <a class="card rarity-u" href="/archive/2026-06-03T04-06.html"
            style="--c1:#fdf5b1; --c2:#b8c8d8; --c3:#e8b8c4; --rot:-1.00deg;">
           <div class="card-inner">
@@ -772,7 +844,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-02T16-05.html">
         <a class="card rarity-r" href="/archive/2026-06-02T16-05.html"
            style="--c1:#5a3e26; --c2:#7a5638; --c3:#d4221a; --rot:0.00deg;">
           <div class="card-inner">
@@ -793,7 +868,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-02T12-08.html">
         <a class="card rarity-c" href="/archive/2026-06-02T12-08.html"
            style="--c1:#f1e4c4; --c2:#a08868; --c3:#a8352a; --rot:-1.00deg;">
           <div class="card-inner">
@@ -814,7 +892,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-02T08-11.html">
         <a class="card rarity-c" href="/archive/2026-06-02T08-11.html"
            style="--c1:#f1e7cf; --c2:#d4c6a2; --c3:#5e4a8c; --rot:1.00deg;">
           <div class="card-inner">
@@ -835,7 +916,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-02T04-08.html">
         <a class="card rarity-h" href="/archive/2026-06-02T04-08.html"
            style="--c1:#f3e7cf; --c2:#f7e0d4; --c3:#f0c8a8; --rot:1.00deg;">
           <div class="card-inner">
@@ -856,7 +940,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-01T16-11.html">
         <a class="card rarity-c" href="/archive/2026-06-01T16-11.html"
            style="--c1:#f3e7cf; --c2:#7a2c3a; --c3:#2d5a3a; --rot:1.00deg;">
           <div class="card-inner">
@@ -877,7 +964,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-01T12-06.html">
         <a class="card rarity-r" href="/archive/2026-06-01T12-06.html"
            style="--c1:#1c3a6e; --c2:#f3e6c8; --c3:#a8312a; --rot:1.00deg;">
           <div class="card-inner">
@@ -898,7 +988,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-01T08-11.html">
         <a class="card rarity-c" href="/archive/2026-06-01T08-11.html"
            style="--c1:#f1e7d4; --c2:#a08868; --c3:#1c2a5e; --rot:1.50deg;">
           <div class="card-inner">
@@ -919,7 +1012,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-06-01T04-02.html">
         <a class="card rarity-c" href="/archive/2026-06-01T04-02.html"
            style="--c1:#1a3a8c; --c2:#e8c84a; --c3:#7a3a8c; --rot:0.50deg;">
           <div class="card-inner">
@@ -940,7 +1036,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-31T16-11.html">
         <a class="card rarity-r" href="/archive/2026-05-31T16-11.html"
            style="--c1:#efe3c6; --c2:#f4d770; --c3:#a8895a; --rot:1.00deg;">
           <div class="card-inner">
@@ -961,7 +1060,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-31T12-05.html">
         <a class="card rarity-c" href="/archive/2026-05-31T12-05.html"
            style="--c1:#3a2e1a; --c2:#9ff04a; --c3:#5a8a3a; --rot:-0.50deg;">
           <div class="card-inner">
@@ -982,7 +1084,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-31T08-10.html">
         <a class="card rarity-u" href="/archive/2026-05-31T08-10.html"
            style="--c1:#d6b888; --c2:#2d5a2e; --c3:#a83c2a; --rot:1.50deg;">
           <div class="card-inner">
@@ -1003,7 +1108,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-31T04-04.html">
         <a class="card rarity-c" href="/archive/2026-05-31T04-04.html"
            style="--c1:#2c5aa0; --c2:#a83048; --c3:#d49538; --rot:1.00deg;">
           <div class="card-inner">
@@ -1024,7 +1132,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-30T16-09.html">
         <a class="card rarity-r" href="/archive/2026-05-30T16-09.html"
            style="--c1:#f1e4c4; --c2:#a83c2a; --c3:#d4a547; --rot:-1.50deg;">
           <div class="card-inner">
@@ -1045,7 +1156,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-30T12-05.html">
         <a class="card rarity-c" href="/archive/2026-05-30T12-05.html"
            style="--c1:#5c3a1e; --c2:#f3e6c4; --c3:#7a5a9c; --rot:1.00deg;">
           <div class="card-inner">
@@ -1066,7 +1180,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-30T08-05.html">
         <a class="card rarity-c" href="/archive/2026-05-30T08-05.html"
            style="--c1:#f3e6c4; --c2:#b8312a; --c3:#e8b347; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1087,7 +1204,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-30T04-09.html">
         <a class="card rarity-u" href="/archive/2026-05-30T04-09.html"
            style="--c1:#7a2c2c; --c2:#f5e6c8; --c3:#5c3a1e; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1108,7 +1228,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-29T16-07.html">
         <a class="card rarity-c" href="/archive/2026-05-29T16-07.html"
            style="--c1:#fdf5b1; --c2:#465775; --c3:#fff7c4; --rot:1.50deg;">
           <div class="card-inner">
@@ -1129,7 +1252,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-29T12-06.html">
         <a class="card rarity-c" href="/archive/2026-05-29T12-06.html"
            style="--c1:#f1e4c4; --c2:#b53a2a; --c3:#2d5a2e; --rot:1.50deg;">
           <div class="card-inner">
@@ -1150,7 +1276,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-29T08-10.html">
         <a class="card rarity-c" href="/archive/2026-05-29T08-10.html"
            style="--c1:#f3e7cf; --c2:#1a3a6e; --c3:#ff5a2c; --rot:1.50deg;">
           <div class="card-inner">
@@ -1171,7 +1300,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-29T04-08.html">
         <a class="card rarity-c" href="/archive/2026-05-29T04-08.html"
            style="--c1:#d6a86a; --c2:#b8312a; --c3:#f1e7cf; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1192,7 +1324,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-28T16-03.html">
         <a class="card rarity-c" href="/archive/2026-05-28T16-03.html"
            style="--c1:#f0e4cf; --c2:#a8631f; --c3:#f4c95d; --rot:0.00deg;">
           <div class="card-inner">
@@ -1213,7 +1348,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-28T12-03.html">
         <a class="card rarity-c" href="/archive/2026-05-28T12-03.html"
            style="--c1:#f5e6d3; --c2:#c87137; --c3:#7b9dc3; --rot:0.50deg;">
           <div class="card-inner">
@@ -1234,7 +1372,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-28T08-04.html">
         <a class="card rarity-c" href="/archive/2026-05-28T08-04.html"
            style="--c1:#3a4a5a; --c2:#ff9500; --c3:#6a9b8b; --rot:1.50deg;">
           <div class="card-inner">
@@ -1255,7 +1396,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-28T04-10.html">
         <a class="card rarity-c" href="/archive/2026-05-28T04-10.html"
            style="--c1:#f5e6d3; --c2:#2d5016; --c3:#8b6f47; --rot:0.50deg;">
           <div class="card-inner">
@@ -1276,7 +1420,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-27T16-05.html">
         <a class="card rarity-c" href="/archive/2026-05-27T16-05.html"
            style="--c1:#0a1428; --c2:#00dd99; --c3:#ff1493; --rot:1.00deg;">
           <div class="card-inner">
@@ -1297,7 +1444,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-27T12-06.html">
         <a class="card rarity-r" href="/archive/2026-05-27T12-06.html"
            style="--c1:#f5e6d3; --c2:#1a1a3a; --c3:#c83c3c; --rot:-1.50deg;">
           <div class="card-inner">
@@ -1318,7 +1468,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-27T08-03.html">
         <a class="card rarity-c" href="/archive/2026-05-27T08-03.html"
            style="--c1:#1a1a3a; --c2:#ff8a6b; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1339,7 +1492,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-27T04-09.html">
         <a class="card rarity-c" href="/archive/2026-05-27T04-09.html"
            style="--c1:#4a8b8b; --c2:#ffb366; --c3:#1a1f3a; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1360,7 +1516,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-26T16-04.html">
         <a class="card rarity-h" href="/archive/2026-05-26T16-04.html"
            style="--c1:#8b4555; --c2:#ffb366; --c3:#f5e8d0; --rot:0.50deg;">
           <div class="card-inner">
@@ -1381,7 +1540,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-26T08-03.html">
         <a class="card rarity-u" href="/archive/2026-05-26T08-03.html"
            style="--c1:#ff7d6f; --c2:#a3d8b4; --c3:#f5e6d3; --rot:-1.50deg;">
           <div class="card-inner">
@@ -1402,7 +1564,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-26T04-05.html">
         <a class="card rarity-c" href="/archive/2026-05-26T04-05.html"
            style="--c1:#00dd44; --c2:#ff9500; --c3:#005d22; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1423,7 +1588,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-25T16-03.html">
         <a class="card rarity-c" href="/archive/2026-05-25T16-03.html"
            style="--c1:#1a1a4a; --c2:#a8e6f0; --c3:#ff9500; --rot:0.50deg;">
           <div class="card-inner">
@@ -1444,7 +1612,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-25T12-06.html">
         <a class="card rarity-r" href="/archive/2026-05-25T12-06.html"
            style="--c1:#d4af37; --c2:#2a1a4a; --c3:#f5e6d3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1465,7 +1636,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-25T10-41.html">
         <a class="card rarity-c" href="/archive/2026-05-25T10-41.html"
            style="--c1:#6b8fa3; --c2:#c8bca8; --c3:#a85a4a; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1486,7 +1660,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-21T16-06.html">
         <a class="card rarity-u" href="/archive/2026-05-21T16-06.html"
            style="--c1:#f5e6d3; --c2:#e8a855; --c3:#ecd9bd; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1507,7 +1684,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-21T12-02.html">
         <a class="card rarity-u" href="/archive/2026-05-21T12-02.html"
            style="--c1:#9fb8a0; --c2:#d4c4a8; --c3:#6b8fa3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1528,7 +1708,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-21T08-09.html">
         <a class="card rarity-c" href="/archive/2026-05-21T08-09.html"
            style="--c1:#f5e6d3; --c2:#7b9dc3; --c3:#5c1a1a; --rot:1.50deg;">
           <div class="card-inner">
@@ -1549,7 +1732,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-21T04-07.html">
         <a class="card rarity-c" href="/archive/2026-05-21T04-07.html"
            style="--c1:#6b9b7d; --c2:#c87137; --c3:#7b9dc3; --rot:0.00deg;">
           <div class="card-inner">
@@ -1570,7 +1756,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-20T16-04.html">
         <a class="card rarity-r" href="/archive/2026-05-20T16-04.html"
            style="--c1:#d4af37; --c2:#f5e6d3; --c3:#3e2723; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1591,7 +1780,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-20T12-02.html">
         <a class="card rarity-u" href="/archive/2026-05-20T12-02.html"
            style="--c1:#ff4500; --c2:#ff3333; --c3:#00d9ff; --rot:-1.50deg;">
           <div class="card-inner">
@@ -1612,7 +1804,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-20T08-06.html">
         <a class="card rarity-f" href="/archive/2026-05-20T08-06.html"
            style="--c1:#ff9500; --c2:#f5e6d3; --c3:#efe2c6; --rot:0.50deg;">
           <div class="card-inner">
@@ -1633,7 +1828,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-20T04-06.html">
         <a class="card rarity-c" href="/archive/2026-05-20T04-06.html"
            style="--c1:#8b1a1a; --c2:#f5e6d3; --c3:#d4af37; --rot:0.00deg;">
           <div class="card-inner">
@@ -1654,7 +1852,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T16-03.html">
         <a class="card rarity-r" href="/archive/2026-05-19T16-03.html"
            style="--c1:#00dd44; --c2:#1a2a3c; --c3:#ff9500; --rot:1.00deg;">
           <div class="card-inner">
@@ -1675,7 +1876,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T13-57.html">
         <a class="card rarity-c" href="/archive/2026-05-19T13-57.html"
            style="--c1:#0a1428; --c2:#ffa500; --c3:#dc143c; --rot:1.00deg;">
           <div class="card-inner">
@@ -1696,7 +1900,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T13-48.html">
         <a class="card rarity-u" href="/archive/2026-05-19T13-48.html"
            style="--c1:#a0826d; --c2:#e8c4c4; --c3:#c5d9e8; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1717,7 +1924,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T13-29.html">
         <a class="card rarity-c" href="/archive/2026-05-19T13-29.html"
            style="--c1:#1a2f4a; --c2:#ff9500; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1738,7 +1948,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T12-50.html">
         <a class="card rarity-u" href="/archive/2026-05-19T12-50.html"
            style="--c1:#33ff66; --c2:#ff9500; --c3:#f5e6d3; --rot:0.50deg;">
           <div class="card-inner">
@@ -1759,7 +1972,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T12-09.html">
         <a class="card rarity-c" href="/archive/2026-05-19T12-09.html"
            style="--c1:#f5e6d3; --c2:#8b1a1a; --c3:#d4af37; --rot:0.00deg;">
           <div class="card-inner">
@@ -1780,7 +1996,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T11-52.html">
         <a class="card rarity-r" href="/archive/2026-05-19T11-52.html"
            style="--c1:#d94040; --c2:#ffb366; --c3:#f3d6a3; --rot:-1.50deg;">
           <div class="card-inner">
@@ -1801,7 +2020,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T11-48.html">
         <a class="card rarity-u" href="/archive/2026-05-19T11-48.html"
            style="--c1:#ff1493; --c2:#d4a373; --c3:#ebe2c2; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1822,7 +2044,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T11-29.html">
         <a class="card rarity-u" href="/archive/2026-05-19T11-29.html"
            style="--c1:#1a2a4a; --c2:#f5e6d3; --c3:#ff9500; --rot:0.50deg;">
           <div class="card-inner">
@@ -1843,7 +2068,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T09-51.html">
         <a class="card rarity-h" href="/archive/2026-05-19T09-51.html"
            style="--c1:#ff9500; --c2:#1a3a5a; --c3:#f5e6d3; --rot:0.00deg;">
           <div class="card-inner">
@@ -1864,7 +2092,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T09-25.html">
         <a class="card rarity-u" href="/archive/2026-05-19T09-25.html"
            style="--c1:#b7410e; --c2:#6b8e23; --c3:#f5e6d3; --rot:1.50deg;">
           <div class="card-inner">
@@ -1885,7 +2116,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T09-08.html">
         <a class="card rarity-c" href="/archive/2026-05-19T09-08.html"
            style="--c1:#00dd44; --c2:#1a2a3c; --c3:#ff9500; --rot:0.00deg;">
           <div class="card-inner">
@@ -1906,7 +2140,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T08-58.html">
         <a class="card rarity-r" href="/archive/2026-05-19T08-58.html"
            style="--c1:#ff9500; --c2:#3e2723; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1927,7 +2164,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T08-46.html">
         <a class="card rarity-u" href="/archive/2026-05-19T08-46.html"
            style="--c1:#ff8c42; --c2:#f5e6d3; --c3:#d4af37; --rot:0.00deg;">
           <div class="card-inner">
@@ -1948,7 +2188,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T08-37.html">
         <a class="card rarity-c" href="/archive/2026-05-19T08-37.html"
            style="--c1:#0066a3; --c2:#00568a; --c3:#003e64; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1969,7 +2212,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T08-18.html">
         <a class="card rarity-h" href="/archive/2026-05-19T08-18.html"
            style="--c1:#1a2f4a; --c2:#ff9500; --c3:#c9a961; --rot:-1.50deg;">
           <div class="card-inner">
@@ -1990,7 +2236,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T08-09.html">
         <a class="card rarity-c" href="/archive/2026-05-19T08-09.html"
            style="--c1:#8b7355; --c2:#3e2723; --c3:#f5e6d3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2011,7 +2260,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T07-56.html">
         <a class="card rarity-c" href="/archive/2026-05-19T07-56.html"
            style="--c1:#3e2723; --c2:#d4af37; --c3:#f5e6d3; --rot:0.50deg;">
           <div class="card-inner">
@@ -2032,7 +2284,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T07-39.html">
         <a class="card rarity-u" href="/archive/2026-05-19T07-39.html"
            style="--c1:#8b7355; --c2:#dc143c; --c3:#f5e6d3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2053,7 +2308,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T07-27.html">
         <a class="card rarity-u" href="/archive/2026-05-19T07-27.html"
            style="--c1:#ffb84d; --c2:#1a3a5a; --c3:#f5e6d3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2074,7 +2332,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T07-16.html">
         <a class="card rarity-r" href="/archive/2026-05-19T07-16.html"
            style="--c1:#2d5016; --c2:#f5e6d3; --c3:#b87333; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2095,7 +2356,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T07-00.html">
         <a class="card rarity-h" href="/archive/2026-05-19T07-00.html"
            style="--c1:#1a3a5a; --c2:#d4af37; --c3:#f5e6d3; --rot:1.00deg;">
           <div class="card-inner">
@@ -2116,7 +2380,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T06-47.html">
         <a class="card rarity-c" href="/archive/2026-05-19T06-47.html"
            style="--c1:#f5e6d3; --c2:#8b0000; --c3:#8b6f47; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2137,7 +2404,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T06-38.html">
         <a class="card rarity-u" href="/archive/2026-05-19T06-38.html"
            style="--c1:#8b1a1a; --c2:#f5e6d3; --c3:#d4af37; --rot:1.50deg;">
           <div class="card-inner">
@@ -2158,7 +2428,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T05-48.html">
         <a class="card rarity-r" href="/archive/2026-05-19T05-48.html"
            style="--c1:#f5e6d3; --c2:#ff9500; --c3:#e8d5b8; --rot:1.50deg;">
           <div class="card-inner">
@@ -2179,7 +2452,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T05-38.html">
         <a class="card rarity-c" href="/archive/2026-05-19T05-38.html"
            style="--c1:#c9a961; --c2:#3e2723; --c3:#2c3e50; --rot:0.50deg;">
           <div class="card-inner">
@@ -2200,7 +2476,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T05-27.html">
         <a class="card rarity-c" href="/archive/2026-05-19T05-27.html"
            style="--c1:#c81e1e; --c2:#ff6600; --c3:#1a2a3c; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2221,7 +2500,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T04-38.html">
         <a class="card rarity-u" href="/archive/2026-05-19T04-38.html"
            style="--c1:#ff9500; --c2:#2a4a5a; --c3:#1e3642; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2242,7 +2524,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T04-27.html">
         <a class="card rarity-c" href="/archive/2026-05-19T04-27.html"
            style="--c1:#704214; --c2:#f5e6d3; --c3:#ff8c42; --rot:0.00deg;">
           <div class="card-inner">
@@ -2263,7 +2548,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T03-57.html">
         <a class="card rarity-c" href="/archive/2026-05-19T03-57.html"
            style="--c1:#f5e6d3; --c2:#d4af37; --c3:#ead4b5; --rot:1.00deg;">
           <div class="card-inner">
@@ -2284,7 +2572,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T03-39.html">
         <a class="card rarity-c" href="/archive/2026-05-19T03-39.html"
            style="--c1:#33ff66; --c2:#ff9500; --c3:#1a8033; --rot:0.00deg;">
           <div class="card-inner">
@@ -2305,7 +2596,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T03-27.html">
         <a class="card rarity-c" href="/archive/2026-05-19T03-27.html"
            style="--c1:#5a7a9c; --c2:#ffa500; --c3:#2e3f5e; --rot:0.50deg;">
           <div class="card-inner">
@@ -2326,7 +2620,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T03-18.html">
         <a class="card rarity-r" href="/archive/2026-05-19T03-18.html"
            style="--c1:#1a2a4a; --c2:#ff9500; --c3:#0d1730; --rot:1.00deg;">
           <div class="card-inner">
@@ -2347,7 +2644,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T03-05.html">
         <a class="card rarity-r" href="/archive/2026-05-19T03-05.html"
            style="--c1:#3e2723; --c2:#f5e6d3; --c3:#ff8c42; --rot:0.50deg;">
           <div class="card-inner">
@@ -2368,7 +2668,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T02-56.html">
         <a class="card rarity-c" href="/archive/2026-05-19T02-56.html"
            style="--c1:#d4af37; --c2:#f5e6d3; --c3:#3e2723; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2389,7 +2692,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T02-48.html">
         <a class="card rarity-u" href="/archive/2026-05-19T02-48.html"
            style="--c1:#8b7355; --c2:#ff8c42; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2410,7 +2716,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T02-36.html">
         <a class="card rarity-u" href="/archive/2026-05-19T02-36.html"
            style="--c1:#8b9f7e; --c2:#f5e6d3; --c3:#4a5a6c; --rot:0.00deg;">
           <div class="card-inner">
@@ -2431,7 +2740,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T02-27.html">
         <a class="card rarity-c" href="/archive/2026-05-19T02-27.html"
            style="--c1:#2d5016; --c2:#b87333; --c3:#4a6b35; --rot:-1.50deg;">
           <div class="card-inner">
@@ -2452,7 +2764,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T02-09.html">
         <a class="card rarity-u" href="/archive/2026-05-19T02-09.html"
            style="--c1:#ff8c42; --c2:#b020f0; --c3:#f5e6d3; --rot:0.00deg;">
           <div class="card-inner">
@@ -2473,7 +2788,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T01-55.html">
         <a class="card rarity-f" href="/archive/2026-05-19T01-55.html"
            style="--c1:#3e2723; --c2:#d4af37; --c3:#f5e6d3; --rot:1.00deg;">
           <div class="card-inner">
@@ -2494,7 +2812,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T01-48.html">
         <a class="card rarity-c" href="/archive/2026-05-19T01-48.html"
            style="--c1:#8b3a3a; --c2:#d4af37; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2515,7 +2836,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T01-37.html">
         <a class="card rarity-c" href="/archive/2026-05-19T01-37.html"
            style="--c1:#483d8b; --c2:#f5e6d3; --c3:#d4af37; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2536,7 +2860,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T00-56.html">
         <a class="card rarity-c" href="/archive/2026-05-19T00-56.html"
            style="--c1:#ff9500; --c2:#3a6b9e; --c3:#f5e6d3; --rot:1.00deg;">
           <div class="card-inner">
@@ -2557,7 +2884,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T00-46.html">
         <a class="card rarity-h" href="/archive/2026-05-19T00-46.html"
            style="--c1:#ff9500; --c2:#8b6f47; --c3:#8b0000; --rot:0.50deg;">
           <div class="card-inner">
@@ -2578,7 +2908,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T00-37.html">
         <a class="card rarity-c" href="/archive/2026-05-19T00-37.html"
            style="--c1:#8b6f47; --c2:#f5e6d3; --c3:#b87333; --rot:0.50deg;">
           <div class="card-inner">
@@ -2599,7 +2932,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T00-25.html">
         <a class="card rarity-c" href="/archive/2026-05-19T00-25.html"
            style="--c1:#5c1a1a; --c2:#d4af37; --c3:#f5e6d3; --rot:-1.50deg;">
           <div class="card-inner">
@@ -2620,7 +2956,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T00-16.html">
         <a class="card rarity-u" href="/archive/2026-05-19T00-16.html"
            style="--c1:#ff8c42; --c2:#f5e6d3; --c3:#8b6f47; --rot:1.50deg;">
           <div class="card-inner">
@@ -2641,7 +2980,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-19T00-08.html">
         <a class="card rarity-u" href="/archive/2026-05-19T00-08.html"
            style="--c1:#3a4a5c; --c2:#4a9d6f; --c3:#2a3848; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2662,7 +3004,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T23-55.html">
         <a class="card rarity-c" href="/archive/2026-05-18T23-55.html"
            style="--c1:#6b4423; --c2:#f5e6d3; --c3:#5a7a4a; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2683,7 +3028,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T23-46.html">
         <a class="card rarity-f" href="/archive/2026-05-18T23-46.html"
            style="--c1:#704214; --c2:#f5e6d3; --c3:#d4af37; --rot:-1.50deg;">
           <div class="card-inner">
@@ -2704,7 +3052,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T23-35.html">
         <a class="card rarity-u" href="/archive/2026-05-18T23-35.html"
            style="--c1:#ff9500; --c2:#5c4033; --c3:#f5e6d3; --rot:0.00deg;">
           <div class="card-inner">
@@ -2725,7 +3076,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T23-24.html">
         <a class="card rarity-u" href="/archive/2026-05-18T23-24.html"
            style="--c1:#5a7a8c; --c2:#f5e6d3; --c3:#d4af37; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2746,7 +3100,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T23-18.html">
         <a class="card rarity-u" href="/archive/2026-05-18T23-18.html"
            style="--c1:#ff8c42; --c2:#f5e6d3; --c3:#8b6f47; --rot:-1.50deg;">
           <div class="card-inner">
@@ -2767,7 +3124,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T23-08.html">
         <a class="card rarity-h" href="/archive/2026-05-18T23-08.html"
            style="--c1:#8b6f47; --c2:#f5e6d3; --c3:#2d5016; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2788,7 +3148,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T22-55.html">
         <a class="card rarity-c" href="/archive/2026-05-18T22-55.html"
            style="--c1:#ff8c42; --c2:#00ffff; --c3:#a85a26; --rot:1.00deg;">
           <div class="card-inner">
@@ -2809,7 +3172,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T22-40.html">
         <a class="card rarity-c" href="/archive/2026-05-18T22-40.html"
            style="--c1:#0066ff; --c2:#ff1493; --c3:#f5e8dc; --rot:1.00deg;">
           <div class="card-inner">
@@ -2830,7 +3196,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T22-27.html">
         <a class="card rarity-h" href="/archive/2026-05-18T22-27.html"
            style="--c1:#00d4d4; --c2:#ff6b35; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2851,7 +3220,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T22-16.html">
         <a class="card rarity-c" href="/archive/2026-05-18T22-16.html"
            style="--c1:#483d8b; --c2:#ffd700; --c3:#f5e6d3; --rot:0.00deg;">
           <div class="card-inner">
@@ -2872,7 +3244,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T22-05.html">
         <a class="card rarity-r" href="/archive/2026-05-18T22-05.html"
            style="--c1:#8b6f47; --c2:#d4af77; --c3:#5e4a30; --rot:0.00deg;">
           <div class="card-inner">
@@ -2893,7 +3268,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T21-54.html">
         <a class="card rarity-c" href="/archive/2026-05-18T21-54.html"
            style="--c1:#c4a57b; --c2:#c41e3a; --c3:#d8bd97; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2914,7 +3292,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T21-43.html">
         <a class="card rarity-u" href="/archive/2026-05-18T21-43.html"
            style="--c1:#e8724f; --c2:#00a9b5; --c3:#d4af37; --rot:-1.50deg;">
           <div class="card-inner">
@@ -2935,7 +3316,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T21-36.html">
         <a class="card rarity-u" href="/archive/2026-05-18T21-36.html"
            style="--c1:#f5c6cb; --c2:#b3d4a8; --c3:#cc5500; --rot:0.50deg;">
           <div class="card-inner">
@@ -2956,7 +3340,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T21-26.html">
         <a class="card rarity-c" href="/archive/2026-05-18T21-26.html"
            style="--c1:#2d5016; --c2:#f5e6d3; --c3:#d4af37; --rot:1.50deg;">
           <div class="card-inner">
@@ -2977,7 +3364,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T21-14.html">
         <a class="card rarity-u" href="/archive/2026-05-18T21-14.html"
            style="--c1:#f5e6d3; --c2:#d4af37; --c3:#e8d4ba; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2998,7 +3388,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T21-07.html">
         <a class="card rarity-u" href="/archive/2026-05-18T21-07.html"
            style="--c1:#3d2645; --c2:#f5e6d3; --c3:#d4af37; --rot:1.00deg;">
           <div class="card-inner">
@@ -3019,7 +3412,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T20-55.html">
         <a class="card rarity-c" href="/archive/2026-05-18T20-55.html"
            style="--c1:#e8ddc0; --c2:#2d5016; --c3:#d4af37; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3040,7 +3436,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T20-44.html">
         <a class="card rarity-c" href="/archive/2026-05-18T20-44.html"
            style="--c1:#8b7355; --c2:#f5e6d3; --c3:#2d5016; --rot:1.00deg;">
           <div class="card-inner">
@@ -3061,7 +3460,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T20-24.html">
         <a class="card rarity-u" href="/archive/2026-05-18T20-24.html"
            style="--c1:#6b5344; --c2:#f5e6d3; --c3:#2d5016; --rot:0.00deg;">
           <div class="card-inner">
@@ -3082,7 +3484,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T20-15.html">
         <a class="card rarity-c" href="/archive/2026-05-18T20-15.html"
            style="--c1:#ffaa00; --c2:#e8d4a8; --c3:#c9a96e; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3103,7 +3508,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T20-04.html">
         <a class="card rarity-h" href="/archive/2026-05-18T20-04.html"
            style="--c1:#f5e6d3; --c2:#1a3a5c; --c3:#5c4033; --rot:1.00deg;">
           <div class="card-inner">
@@ -3124,7 +3532,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T19-56.html">
         <a class="card rarity-c" href="/archive/2026-05-18T19-56.html"
            style="--c1:#0066cc; --c2:#ffff00; --c3:#003d7a; --rot:1.00deg;">
           <div class="card-inner">
@@ -3145,7 +3556,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T19-43.html">
         <a class="card rarity-u" href="/archive/2026-05-18T19-43.html"
            style="--c1:#2d1b4e; --c2:#00d9ff; --c3:#ff006e; --rot:1.50deg;">
           <div class="card-inner">
@@ -3166,7 +3580,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T19-33.html">
         <a class="card rarity-c" href="/archive/2026-05-18T19-33.html"
            style="--c1:#d64045; --c2:#f5e8dc; --c3:#d4af37; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3187,7 +3604,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T19-27.html">
         <a class="card rarity-h" href="/archive/2026-05-18T19-27.html"
            style="--c1:#f5c6cb; --c2:#ffd966; --c3:#b3d4a8; --rot:0.00deg;">
           <div class="card-inner">
@@ -3208,7 +3628,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T19-19.html">
         <a class="card rarity-u" href="/archive/2026-05-18T19-19.html"
            style="--c1:#f5e6d3; --c2:#3e2723; --c3:#b87333; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3229,7 +3652,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T19-03.html">
         <a class="card rarity-u" href="/archive/2026-05-18T19-03.html"
            style="--c1:#8b7355; --c2:#f5e6d3; --c3:#dc143c; --rot:-1.50deg;">
           <div class="card-inner">
@@ -3250,7 +3676,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T18-58.html">
         <a class="card rarity-c" href="/archive/2026-05-18T18-58.html"
            style="--c1:#4db8a8; --c2:#e8d4b8; --c3:#f5d4d8; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3271,7 +3700,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T18-45.html">
         <a class="card rarity-c" href="/archive/2026-05-18T18-45.html"
            style="--c1:#33ff66; --c2:#1a8033; --c3:#1a8033; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3292,7 +3724,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T18-23.html">
         <a class="card rarity-c" href="/archive/2026-05-18T18-23.html"
            style="--c1:#ff1493; --c2:#ffb4dd; --c3:#ffe5f3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3313,7 +3748,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T18-13.html">
         <a class="card rarity-r" href="/archive/2026-05-18T18-13.html"
            style="--c1:#e8dcc0; --c2:#093540; --c3:#ff8c69; --rot:0.50deg;">
           <div class="card-inner">
@@ -3334,7 +3772,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T18-05.html">
         <a class="card rarity-r" href="/archive/2026-05-18T18-05.html"
            style="--c1:#00ff00; --c2:#00ffff; --c3:#ff6600; --rot:-1.50deg;">
           <div class="card-inner">
@@ -3355,7 +3796,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T17-54.html">
         <a class="card rarity-c" href="/archive/2026-05-18T17-54.html"
            style="--c1:#001f3f; --c2:#fffacd; --c3:#dc143c; --rot:-1.50deg;">
           <div class="card-inner">
@@ -3376,7 +3820,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T17-45.html">
         <a class="card rarity-c" href="/archive/2026-05-18T17-45.html"
            style="--c1:#c41e3a; --c2:#c41e3a; --c3:#c41e3a; --rot:0.00deg;">
           <div class="card-inner">
@@ -3397,7 +3844,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T17-16.html">
         <a class="card rarity-r" href="/archive/2026-05-18T17-16.html"
            style="--c1:#c41e3a; --c2:#9e1830; --c3:#9e1830; --rot:1.00deg;">
           <div class="card-inner">
@@ -3418,7 +3868,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T14-47.html">
         <a class="card rarity-c" href="/archive/2026-05-18T14-47.html"
            style="--c1:#8b7355; --c2:#f5e6d3; --c3:#d4af37; --rot:1.00deg;">
           <div class="card-inner">
@@ -3439,7 +3892,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T12-48.html">
         <a class="card rarity-c" href="/archive/2026-05-18T12-48.html"
            style="--c1:#ff6b35; --c2:#9d4edd; --c3:#c94e1f; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3460,7 +3916,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T12-37.html">
         <a class="card rarity-c" href="/archive/2026-05-18T12-37.html"
            style="--c1:#6b4423; --c2:#9a7050; --c3:#c4a882; --rot:1.50deg;">
           <div class="card-inner">
@@ -3481,7 +3940,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T11-29.html">
         <a class="card rarity-r" href="/archive/2026-05-18T11-29.html"
            style="--c1:#ff44cc; --c2:#1e0a2e; --c3:#ffc8f0; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3502,7 +3964,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T11-27.html">
         <a class="card rarity-h" href="/archive/2026-05-18T11-27.html"
            style="--c1:#00b4d8; --c2:#ff6b9d; --c3:#cc9f5c; --rot:1.00deg;">
           <div class="card-inner">
@@ -3523,7 +3988,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T06-28.html">
         <a class="card rarity-c" href="/archive/2026-05-18T06-28.html"
            style="--c1:#ff8c69; --c2:#a3d8e6; --c3:#1c4a57; --rot:1.50deg;">
           <div class="card-inner">
@@ -3544,7 +4012,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T05-27.html">
         <a class="card rarity-c" href="/archive/2026-05-18T05-27.html"
            style="--c1:#ffff66; --c2:#c8b6ff; --c3:#c8b6ff; --rot:0.50deg;">
           <div class="card-inner">
@@ -3565,7 +4036,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T05-17.html">
         <a class="card rarity-r" href="/archive/2026-05-18T05-17.html"
            style="--c1:#cb6446; --c2:#f4d4cb; --c3:#8b3f25; --rot:-1.50deg;">
           <div class="card-inner">
@@ -3586,7 +4060,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T02-38.html">
         <a class="card rarity-u" href="/archive/2026-05-18T02-38.html"
            style="--c1:#c66b3d; --c2:#828f4a; --c3:#f5e4c0; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3607,7 +4084,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T01-03.html">
         <a class="card rarity-r" href="/archive/2026-05-18T01-03.html"
            style="--c1:#dfb35d; --c2:#677c3c; --c3:#f0cc82; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3628,7 +4108,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-18T00-49.html">
         <a class="card rarity-c" href="/archive/2026-05-18T00-49.html"
            style="--c1:#00f0ff; --c2:#ff006e; --c3:#ccffff; --rot:1.00deg;">
           <div class="card-inner">
@@ -3649,7 +4132,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T23-16.html">
         <a class="card rarity-c" href="/archive/2026-05-17T23-16.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:1.50deg;">
           <div class="card-inner">
@@ -3670,7 +4156,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T22-18.html">
         <a class="card rarity-c" href="/archive/2026-05-17T22-18.html"
            style="--c1:#1c2b50; --c2:#f5ecd7; --c3:#b8912a; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3691,7 +4180,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T21-07.html">
         <a class="card rarity-h" href="/archive/2026-05-17T21-07.html"
            style="--c1:#33ff66; --c2:#33ff66; --c3:#33ff66; --rot:0.00deg;">
           <div class="card-inner">
@@ -3712,7 +4204,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T16-49.html">
         <a class="card rarity-u" href="/archive/2026-05-17T16-49.html"
            style="--c1:#f5b7b1; --c2:#9caf88; --c3:#5a3e3e; --rot:1.00deg;">
           <div class="card-inner">
@@ -3733,7 +4228,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T16-31.html">
         <a class="card rarity-u" href="/archive/2026-05-17T16-31.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#093540; --rot:1.50deg;">
           <div class="card-inner">
@@ -3754,7 +4252,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T16-18.html">
         <a class="card rarity-c" href="/archive/2026-05-17T16-18.html"
            style="--c1:#e8dcc0; --c2:#6b1f2a; --c3:#b89048; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3775,7 +4276,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T15-47.html">
         <a class="card rarity-r" href="/archive/2026-05-17T15-47.html"
            style="--c1:#f0e6cf; --c2:#e6dcc1; --c3:#d8cdb0; --rot:0.00deg;">
           <div class="card-inner">
@@ -3796,7 +4300,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T15-31.html">
         <a class="card rarity-c" href="/archive/2026-05-17T15-31.html"
            style="--c1:#ffd1a8; --c2:#ff9f5e; --c3:#ffe4cb; --rot:1.50deg;">
           <div class="card-inner">
@@ -3817,7 +4324,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T15-17.html">
         <a class="card rarity-r" href="/archive/2026-05-17T15-17.html"
            style="--c1:#f5e6c8; --c2:#704214; --c3:#fee900; --rot:1.00deg;">
           <div class="card-inner">
@@ -3838,7 +4348,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T15-08.html">
         <a class="card rarity-c" href="/archive/2026-05-17T15-08.html"
            style="--c1:#fdf5b1; --c2:#465775; --c3:#c5be84; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3859,7 +4372,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T14-56.html">
         <a class="card rarity-r" href="/archive/2026-05-17T14-56.html"
            style="--c1:#c8232c; --c2:#1c2a4e; --c3:#ffd6a5; --rot:0.00deg;">
           <div class="card-inner">
@@ -3880,7 +4396,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T14-45.html">
         <a class="card rarity-u" href="/archive/2026-05-17T14-45.html"
            style="--c1:#f5ead0; --c2:#4a2c1a; --c3:#3d7a82; --rot:1.50deg;">
           <div class="card-inner">
@@ -3901,7 +4420,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T14-40.html">
         <a class="card rarity-f" href="/archive/2026-05-17T14-40.html"
            style="--c1:#cb6446; --c2:#f4d4cb; --c3:#8a3d29; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3922,7 +4444,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T14-28.html">
         <a class="card rarity-c" href="/archive/2026-05-17T14-28.html"
            style="--c1:#f4c430; --c2:#c8392d; --c3:#f3ead0; --rot:0.00deg;">
           <div class="card-inner">
@@ -3943,7 +4468,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T14-04.html">
         <a class="card rarity-u" href="/archive/2026-05-17T14-04.html"
            style="--c1:#ffaa33; --c2:#7a4f10; --c3:#7a4f10; --rot:0.00deg;">
           <div class="card-inner">
@@ -3964,7 +4492,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T13-56.html">
         <a class="card rarity-c" href="/archive/2026-05-17T13-56.html"
            style="--c1:#c8924a; --c2:#a04030; --c3:#2d5a3a; --rot:1.00deg;">
           <div class="card-inner">
@@ -3985,7 +4516,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T13-45.html">
         <a class="card rarity-r" href="/archive/2026-05-17T13-45.html"
            style="--c1:#7d1f2f; --c2:#f0e6cf; --c3:#c9a23e; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4006,7 +4540,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T13-35.html">
         <a class="card rarity-r" href="/archive/2026-05-17T13-35.html"
            style="--c1:#a8c9e0; --c2:#0000ee; --c3:#551a8b; --rot:0.50deg;">
           <div class="card-inner">
@@ -4027,7 +4564,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T13-27.html">
         <a class="card rarity-c" href="/archive/2026-05-17T13-27.html"
            style="--c1:#ffc6df; --c2:#a8d8ea; --c3:#d56a96; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4048,7 +4588,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T13-13.html">
         <a class="card rarity-c" href="/archive/2026-05-17T13-13.html"
            style="--c1:#0a0a2a; --c2:#7a7a96; --c3:#14143d; --rot:0.50deg;">
           <div class="card-inner">
@@ -4069,7 +4612,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T13-08.html">
         <a class="card rarity-u" href="/archive/2026-05-17T13-08.html"
            style="--c1:#ffff66; --c2:#c8b6ff; --c3:#2b1e5a; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4090,7 +4636,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T12-56.html">
         <a class="card rarity-f" href="/archive/2026-05-17T12-56.html"
            style="--c1:#e6352b; --c2:#37c6d4; --c3:#fff1c1; --rot:0.50deg;">
           <div class="card-inner">
@@ -4111,7 +4660,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T12-46.html">
         <a class="card rarity-u" href="/archive/2026-05-17T12-46.html"
            style="--c1:#f5ecd9; --c2:#e7b4ae; --c3:#b5c7a4; --rot:1.00deg;">
           <div class="card-inner">
@@ -4132,7 +4684,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T12-39.html">
         <a class="card rarity-u" href="/archive/2026-05-17T12-39.html"
            style="--c1:#00f0ff; --c2:#ff006e; --c3:#c8004f; --rot:0.50deg;">
           <div class="card-inner">
@@ -4153,7 +4708,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T12-31.html">
         <a class="card rarity-c" href="/archive/2026-05-17T12-31.html"
            style="--c1:#2d5016; --c2:#f0e2c0; --c3:#d9c89e; --rot:0.50deg;">
           <div class="card-inner">
@@ -4174,7 +4732,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T12-17.html">
         <a class="card rarity-c" href="/archive/2026-05-17T12-17.html"
            style="--c1:#ff7e6b; --c2:#7fd4c1; --c3:#fff3d6; --rot:1.00deg;">
           <div class="card-inner">
@@ -4195,7 +4756,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T12-04.html">
         <a class="card rarity-c" href="/archive/2026-05-17T12-04.html"
            style="--c1:#ff6a1f; --c2:#f6e7a3; --c3:#c43a00; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4216,7 +4780,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T11-54.html">
         <a class="card rarity-r" href="/archive/2026-05-17T11-54.html"
            style="--c1:#f2b134; --c2:#9c2a2a; --c3:#6e1717; --rot:1.50deg;">
           <div class="card-inner">
@@ -4237,7 +4804,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T11-44.html">
         <a class="card rarity-c" href="/archive/2026-05-17T11-44.html"
            style="--c1:#ff44cc; --c2:#fff2da; --c3:#fff2da; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4258,7 +4828,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T11-26.html">
         <a class="card rarity-c" href="/archive/2026-05-17T11-26.html"
            style="--c1:#cc5500; --c2:#1d5b65; --c3:#f0e6c8; --rot:0.00deg;">
           <div class="card-inner">
@@ -4279,7 +4852,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T11-24.html">
         <a class="card rarity-c" href="/archive/2026-05-17T11-24.html"
            style="--c1:#0066a3; --c2:#fff7a8; --c3:#d9efff; --rot:1.50deg;">
           <div class="card-inner">
@@ -4300,7 +4876,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T11-15.html">
         <a class="card rarity-c" href="/archive/2026-05-17T11-15.html"
            style="--c1:#f1e7cf; --c2:#e8dcbe; --c3:#172847; --rot:0.00deg;">
           <div class="card-inner">
@@ -4321,7 +4900,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T11-06.html">
         <a class="card rarity-c" href="/archive/2026-05-17T11-06.html"
            style="--c1:#a8e6cf; --c2:#ff8b94; --c3:#8fd9b8; --rot:0.00deg;">
           <div class="card-inner">
@@ -4342,7 +4924,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T10-54.html">
         <a class="card rarity-u" href="/archive/2026-05-17T10-54.html"
            style="--c1:#dfb35d; --c2:#677c3c; --c3:#c89a44; --rot:0.00deg;">
           <div class="card-inner">
@@ -4363,7 +4948,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T10-44.html">
         <a class="card rarity-u" href="/archive/2026-05-17T10-44.html"
            style="--c1:#fdf5b1; --c2:#465775; --c3:#465775; --rot:1.50deg;">
           <div class="card-inner">
@@ -4384,7 +4972,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T10-42.html">
         <a class="card rarity-c" href="/archive/2026-05-17T10-42.html"
            style="--c1:#ff8c69; --c2:#a3d8e6; --c3:#7fc1d2; --rot:-0.50deg;">
           <div class="card-inner">
@@ -4405,7 +4996,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T10-34.html">
         <a class="card rarity-c" href="/archive/2026-05-17T10-34.html"
            style="--c1:#c66b3d; --c2:#828f4a; --c3:#9a4c25; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4426,7 +5020,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T10-27.html">
         <a class="card rarity-c" href="/archive/2026-05-17T10-27.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:1.50deg;">
           <div class="card-inner">
@@ -4447,7 +5044,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T10-22.html">
         <a class="card rarity-c" href="/archive/2026-05-17T10-22.html"
            style="--c1:#cb6446; --c2:#f4d4cb; --c3:#f4d4cb; --rot:1.00deg;">
           <div class="card-inner">
@@ -4468,7 +5068,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T10-12.html">
         <a class="card rarity-h" href="/archive/2026-05-17T10-12.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:0.00deg;">
           <div class="card-inner">
@@ -4489,7 +5092,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T10-03.html">
         <a class="card rarity-r" href="/archive/2026-05-17T10-03.html"
            style="--c1:#ffe300; --c2:#3a0ca3; --c3:#c9b400; --rot:0.50deg;">
           <div class="card-inner">
@@ -4510,7 +5116,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T09-53.html">
         <a class="card rarity-r" href="/archive/2026-05-17T09-53.html"
            style="--c1:#ff2a2a; --c2:#5a0d0d; --c3:#8f0f0f; --rot:1.50deg;">
           <div class="card-inner">
@@ -4531,7 +5140,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T09-43.html">
         <a class="card rarity-c" href="/archive/2026-05-17T09-43.html"
            style="--c1:#ff8c69; --c2:#a3d8e6; --c3:#d65f3e; --rot:0.50deg;">
           <div class="card-inner">
@@ -4552,7 +5164,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T09-34.html">
         <a class="card rarity-r" href="/archive/2026-05-17T09-34.html"
            style="--c1:#33ff66; --c2:#1f7a3a; --c3:#9fffb8; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4573,7 +5188,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T09-23.html">
         <a class="card rarity-c" href="/archive/2026-05-17T09-23.html"
            style="--c1:#f5e6c8; --c2:#704214; --c3:#e8d4a8; --rot:0.50deg;">
           <div class="card-inner">
@@ -4594,7 +5212,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T09-14.html">
         <a class="card rarity-r" href="/archive/2026-05-17T09-14.html"
            style="--c1:#ffff66; --c2:#c8b6ff; --c3:#c8b6ff; --rot:0.50deg;">
           <div class="card-inner">
@@ -4615,7 +5236,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T09-02.html">
         <a class="card rarity-u" href="/archive/2026-05-17T09-02.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#0b4757; --rot:1.00deg;">
           <div class="card-inner">
@@ -4636,7 +5260,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T08-54.html">
         <a class="card rarity-c" href="/archive/2026-05-17T08-54.html"
            style="--c1:#f5b7b1; --c2:#9caf88; --c3:#0000ee; --rot:0.50deg;">
           <div class="card-inner">
@@ -4657,7 +5284,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T08-42.html">
         <a class="card rarity-c" href="/archive/2026-05-17T08-42.html"
            style="--c1:#a8e6cf; --c2:#ff8b94; --c3:#ffdfe2; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4678,7 +5308,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T08-34.html">
         <a class="card rarity-r" href="/archive/2026-05-17T08-34.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:1.50deg;">
           <div class="card-inner">
@@ -4699,7 +5332,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T08-22.html">
         <a class="card rarity-u" href="/archive/2026-05-17T08-22.html"
            style="--c1:#ffaa33; --c2:#b87520; --c3:#ffd07a; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4720,7 +5356,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T08-14.html">
         <a class="card rarity-r" href="/archive/2026-05-17T08-14.html"
            style="--c1:#0a0a2a; --c2:#69db7c; --c3:#ffe066; --rot:0.50deg;">
           <div class="card-inner">
@@ -4741,7 +5380,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T08-01.html">
         <a class="card rarity-r" href="/archive/2026-05-17T08-01.html"
            style="--c1:#ffe300; --c2:#3a0ca3; --c3:#3a0ca3; --rot:0.00deg;">
           <div class="card-inner">
@@ -4762,7 +5404,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T07-52.html">
         <a class="card rarity-c" href="/archive/2026-05-17T07-52.html"
            style="--c1:#c66b3d; --c2:#828f4a; --c3:#9b4a26; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4783,7 +5428,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T07-47.html">
         <a class="card rarity-u" href="/archive/2026-05-17T07-47.html"
            style="--c1:#b8862b; --c2:#9c3a1f; --c3:#3a5a2a; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4804,7 +5452,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T07-35.html">
         <a class="card rarity-u" href="/archive/2026-05-17T07-35.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:0.00deg;">
           <div class="card-inner">
@@ -4825,7 +5476,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T07-27.html">
         <a class="card rarity-r" href="/archive/2026-05-17T07-27.html"
            style="--c1:#ffaa33; --c2:#ffd180; --c3:#b87a22; --rot:-0.50deg;">
           <div class="card-inner">
@@ -4846,7 +5500,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T07-15.html">
         <a class="card rarity-u" href="/archive/2026-05-17T07-15.html"
            style="--c1:#f5b7b1; --c2:#9caf88; --c3:#e89890; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4867,7 +5524,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T07-04.html">
         <a class="card rarity-c" href="/archive/2026-05-17T07-04.html"
            style="--c1:#cb6446; --c2:#f4d4cb; --c3:#7a3520; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4888,7 +5548,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T06-54.html">
         <a class="card rarity-c" href="/archive/2026-05-17T06-54.html"
            style="--c1:#00f0ff; --c2:#ff006e; --c3:#ff006e; --rot:-0.50deg;">
           <div class="card-inner">
@@ -4909,7 +5572,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T06-41.html">
         <a class="card rarity-c" href="/archive/2026-05-17T06-41.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#0c4250; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4930,7 +5596,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T06-23.html">
         <a class="card rarity-u" href="/archive/2026-05-17T06-23.html"
            style="--c1:#f5b7b1; --c2:#9caf88; --c3:#d68b85; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4951,7 +5620,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T06-18.html">
         <a class="card rarity-h" href="/archive/2026-05-17T06-18.html"
            style="--c1:#ffaa33; --c2:#ffd17a; --c3:#b97820; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4972,7 +5644,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T06-04.html">
         <a class="card rarity-u" href="/archive/2026-05-17T06-04.html"
            style="--c1:#0a0a2a; --c2:#15153a; --c3:#1a1a3a; --rot:0.00deg;">
           <div class="card-inner">
@@ -4993,7 +5668,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T05-56.html">
         <a class="card rarity-u" href="/archive/2026-05-17T05-56.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#d4cab5; --rot:0.00deg;">
           <div class="card-inner">
@@ -5014,7 +5692,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T05-42.html">
         <a class="card rarity-r" href="/archive/2026-05-17T05-42.html"
            style="--c1:#55ffff; --c2:#ff55ff; --c3:#ff55ff; --rot:1.50deg;">
           <div class="card-inner">
@@ -5035,7 +5716,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T05-35.html">
         <a class="card rarity-r" href="/archive/2026-05-17T05-35.html"
            style="--c1:#ffc6df; --c2:#a8d8ea; --c3:#4a2740; --rot:1.00deg;">
           <div class="card-inner">
@@ -5056,7 +5740,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T05-25.html">
         <a class="card rarity-h" href="/archive/2026-05-17T05-25.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:0.00deg;">
           <div class="card-inner">
@@ -5077,7 +5764,10 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 
+        <div class="card-wrap" data-file="2026-05-17T05-16.html">
         <a class="card rarity-c" href="/archive/2026-05-17T05-16.html"
            style="--c1:#ffc6df; --c2:#a8d8ea; --c3:#ff96c2; --rot:1.50deg;">
           <div class="card-inner">
@@ -5098,13 +5788,72 @@
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>
 </main>
+
+<p id="binder-empty">your binder is empty. tap the ☆ on a card to keep it.</p>
 
 <footer>
   outbox.cafe · trading cards mint themselves four times a day<br>
   <small>rarity is randomly assigned at mint. 1st-edition cards have a gold border. holographics shimmer in the dark.</small><br>
-  <small><a href="/about/">about</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
+  <small>tap the ☆ on a card to keep it in your binder. the binder lives in this browser — like a shoebox under your bed.</small><br>
+  <small><a href="/about/">about</a> · <a href="/slips/">the slip drawer</a> · <a href="/columns/">the muffin column</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
 </footer>
+
+
+<script>
+  // Binder: kept cards live in this browser's localStorage. No accounts,
+  // no server — a shoebox under your own bed.
+  (function () {
+    var KEY = 'outbox-binder';
+    function load() {
+      try {
+        var v = JSON.parse(localStorage.getItem(KEY) || '[]');
+        return Array.isArray(v) ? v : [];
+      } catch (e) { return []; }
+    }
+    function save(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+    var kept = load();
+    var countEl = document.getElementById('binder-count');
+    var emptyEl = document.getElementById('binder-empty');
+    var wraps = Array.prototype.slice.call(document.querySelectorAll('.card-wrap'));
+    function refresh() {
+      wraps.forEach(function (w) {
+        var on = kept.indexOf(w.getAttribute('data-file')) !== -1;
+        w.classList.toggle('kept', on);
+        var b = w.querySelector('.keep-btn');
+        if (b) {
+          b.textContent = on ? '\u2605' : '\u2606';
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        }
+      });
+      if (countEl) countEl.textContent = kept.length;
+      if (emptyEl) emptyEl.classList.toggle('show', kept.length === 0);
+    }
+    wraps.forEach(function (w) {
+      var b = w.querySelector('.keep-btn');
+      if (!b) return;
+      b.addEventListener('click', function (e) {
+        e.preventDefault();
+        var f = w.getAttribute('data-file');
+        var i = kept.indexOf(f);
+        if (i === -1) kept.push(f); else kept.splice(i, 1);
+        save(kept);
+        refresh();
+      });
+    });
+    var toggle = document.getElementById('binder-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        var on = document.body.classList.toggle('binder-only');
+        toggle.classList.toggle('on', on);
+      });
+    }
+    refresh();
+  })();
+</script>
 
 
 <script>

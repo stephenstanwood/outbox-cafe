@@ -29,6 +29,15 @@ sequence, a Tumblr reblog cycle, a likes loop). Bluesky + Tumblr feeds are
 wiped nightly at midnight PT — a fresh feed every day — with pinned welcomes
 and a few tagged ritual posts exempt.
 
+The rituals also live on the site: every slip is kept in [the slip
+drawer](https://outbox.cafe/slips/) and every column in [the muffin
+column's back issues](https://outbox.cafe/columns/). The archive cabinet
+has a binder — visitors can keep cards (localStorage, no accounts). Gens
+occasionally carry a tiny canon easter egg (`data/canon.json`) — recurring
+background figures that reward regulars and are never explained. A GitHub
+Actions heartbeat (`.github/workflows/heartbeat.yml`) watches drop-commit
+freshness from outside the Mini and fails loudly if the cafe stalls.
+
 ## Voice
 
 The cafe (the place) is the brand. Multiple inconsistent staff voices post under

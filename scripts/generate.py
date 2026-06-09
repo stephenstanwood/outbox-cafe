@@ -606,6 +606,7 @@ def rebuild_cabinet() -> None:
             for text, cls, pos in pick_stickers(e["hash"])
         )
         return f'''
+        <div class="card-wrap" data-file="{e["file"]}">
         <a class="card {e["rarity_cls"]}" href="{e["page_path"]}"
            style="--c1:{c1}; --c2:{c2}; --c3:{c3}; --rot:{e['rot']:.2f}deg;">
           <div class="card-inner">
@@ -625,10 +626,97 @@ def rebuild_cabinet() -> None:
             </div>
           </div>
           <div class="card-shine" aria-hidden="true"></div>
-        </a>'''
+        </a>
+        <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
+        </div>'''
 
     cards_html = "\n".join(render_card(i, e) for i, e in enumerate(entries))
     count = total
+
+    # Binder: visitors can "keep" cards (localStorage). Plain strings — not
+    # f-strings — so the CSS/JS braces don't need doubling.
+    binder_css = """
+  /* BINDER — keep-a-card */
+  .card-wrap { position: relative; }
+  .keep-btn {
+    position: absolute; top: -10px; right: -8px; z-index: 11;
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 2px solid var(--ink); background: var(--paper);
+    color: var(--dim); font-size: 19px; line-height: 1; padding: 0;
+    cursor: pointer;
+    box-shadow: 1px 2px 0 rgba(0,0,0,0.25);
+    opacity: 0; transform: rotate(8deg) scale(0.9);
+    transition: opacity 0.18s ease, transform 0.18s ease, color 0.18s ease;
+  }
+  .card-wrap:hover .keep-btn, .keep-btn:focus-visible { opacity: 1; transform: rotate(8deg) scale(1); }
+  .card-wrap.kept .keep-btn {
+    opacity: 1; transform: rotate(8deg) scale(1);
+    color: var(--gold); background: var(--ink); border-color: var(--gold);
+  }
+  @media (hover: none) { .keep-btn { opacity: 0.85; transform: rotate(8deg) scale(1); } }
+  #binder-toggle.on { background: var(--gold); color: var(--ink); padding: 0 6px; }
+  body.binder-only .card-wrap:not(.kept) { display: none; }
+  #binder-empty {
+    display: none; text-align: center; color: var(--dim);
+    font-style: italic; font-size: 14px; padding: 40px 0;
+  }
+  body.binder-only #binder-empty.show { display: block; }
+"""
+
+    binder_js = """
+<script>
+  // Binder: kept cards live in this browser's localStorage. No accounts,
+  // no server — a shoebox under your own bed.
+  (function () {
+    var KEY = 'outbox-binder';
+    function load() {
+      try {
+        var v = JSON.parse(localStorage.getItem(KEY) || '[]');
+        return Array.isArray(v) ? v : [];
+      } catch (e) { return []; }
+    }
+    function save(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+    var kept = load();
+    var countEl = document.getElementById('binder-count');
+    var emptyEl = document.getElementById('binder-empty');
+    var wraps = Array.prototype.slice.call(document.querySelectorAll('.card-wrap'));
+    function refresh() {
+      wraps.forEach(function (w) {
+        var on = kept.indexOf(w.getAttribute('data-file')) !== -1;
+        w.classList.toggle('kept', on);
+        var b = w.querySelector('.keep-btn');
+        if (b) {
+          b.textContent = on ? '\\u2605' : '\\u2606';
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        }
+      });
+      if (countEl) countEl.textContent = kept.length;
+      if (emptyEl) emptyEl.classList.toggle('show', kept.length === 0);
+    }
+    wraps.forEach(function (w) {
+      var b = w.querySelector('.keep-btn');
+      if (!b) return;
+      b.addEventListener('click', function (e) {
+        e.preventDefault();
+        var f = w.getAttribute('data-file');
+        var i = kept.indexOf(f);
+        if (i === -1) kept.push(f); else kept.splice(i, 1);
+        save(kept);
+        refresh();
+      });
+    });
+    var toggle = document.getElementById('binder-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        var on = document.body.classList.toggle('binder-only');
+        toggle.classList.toggle('on', on);
+      });
+    }
+    refresh();
+  })();
+</script>
+"""
 
     # Emit the chronological file list for nav.js (oldest first → newest last)
     chrono_files = sorted(
@@ -1076,7 +1164,9 @@ def rebuild_cabinet() -> None:
     .grid {{ gap: 16px 12px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }}
     .card-name {{ font-size: 13px; }}
     .card:hover {{ transform: rotate(0) translateY(-2px) scale(1.01); }}
+    .keep-btn {{ width: 34px; height: 34px; font-size: 17px; top: -8px; right: -6px; }}
   }}
+{binder_css}
 </style>
 </head>
 <body>
@@ -1089,6 +1179,7 @@ def rebuild_cabinet() -> None:
     <span>{count} / ∞</span>
     <a href="/">→ NEWEST</a>
     <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
+    <a href="#" id="binder-toggle" title="show only the cards you've kept">★ BINDER · <span id="binder-count">0</span></a>
   </div>
 </header>
 
@@ -1111,12 +1202,16 @@ def rebuild_cabinet() -> None:
 {cards_html if entries else '<p style="text-align:center;color:var(--dim);font-size:14px;padding:40px;">no cards yet. fresh cards drop four times a day.</p>'}
 </main>
 
+<p id="binder-empty">your binder is empty. tap the ☆ on a card to keep it.</p>
+
 <footer>
   outbox.cafe · trading cards mint themselves four times a day<br>
   <small>rarity is randomly assigned at mint. 1st-edition cards have a gold border. holographics shimmer in the dark.</small><br>
-  <small><a href="/about/">about</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
+  <small>tap the ☆ on a card to keep it in your binder. the binder lives in this browser — like a shoebox under your bed.</small><br>
+  <small><a href="/about/">about</a> · <a href="/slips/">the slip drawer</a> · <a href="/columns/">the muffin column</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
 </footer>
 
+{binder_js}
 </body>
 </html>
 """
@@ -1131,6 +1226,8 @@ def rebuild_sitemap() -> None:
         (f"{base}/", "1.0", "daily"),
         (f"{base}/archive/", "0.8", "daily"),
         (f"{base}/about/", "0.5", "monthly"),
+        (f"{base}/slips/", "0.5", "weekly"),
+        (f"{base}/columns/", "0.5", "weekly"),
     ]
     files = sorted(ARCHIVE_DIR.glob("*.html"), reverse=True)
     files = [f for f in files if f.name != "index.html"]
@@ -1463,6 +1560,13 @@ def main() -> int:
     rebuild_cabinet()
     rebuild_feed()
     rebuild_sitemap()
+    # Ritual pages (/slips/, /columns/) — cheap, keeps them fresh even if a
+    # ritual script's own rebuild was skipped or content was backfilled.
+    try:
+        from ritual_pages import rebuild_ritual_pages
+        rebuild_ritual_pages()
+    except Exception as e:
+        print(f"ritual pages rebuild failed (non-fatal): {e}", file=sys.stderr)
 
     title = extract_title(html)
     print(f"\n✓ wrote {archive_file.name} — {title}")

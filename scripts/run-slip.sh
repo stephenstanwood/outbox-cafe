@@ -2,14 +2,16 @@
 # Mr. Quiet's Sunday Slip — a weekly fortune-cookie aphorism on a paper
 # slip image, posted to bsky + tumblr.
 #
-# Cron entry (Sun 9am PT, weekly):
-#   0 9 * * 0 /Users/stephenstanwood/Projects/outbox-cafe/scripts/run-slip.sh >> /Users/stephenstanwood/logs/outbox-slip.log 2>&1
+# Cron entry (Sun 9:06am PT, weekly — off the :00 grid the engage loop fires on):
+#   6 9 * * 0 /Users/stephenstanwood/Projects/outbox-cafe/scripts/run-slip.sh >> /Users/stephenstanwood/logs/outbox-slip.log 2>&1
 set -eo pipefail
 
+# Lock staleness 20 min — generation retries back off across ~6 min, so a
+# legitimate run can exceed the old 10-min window.
 LOCK_DIR="/tmp/outbox-cafe-slip.lock"
 if [ -d "$LOCK_DIR" ]; then
   lock_age=$(( $(date +%s) - $(stat -f %m "$LOCK_DIR" 2>/dev/null || echo 0) ))
-  if [ "$lock_age" -gt 600 ]; then
+  if [ "$lock_age" -gt 1200 ]; then
     rm -rf "$LOCK_DIR"
   fi
 fi
@@ -41,9 +43,9 @@ echo
 echo "===== $(date -Iseconds) slip ====="
 python3 scripts/mr_quiet_slip.py
 
-# Commit + push the archived slip image so the repo retains a record.
-if [ -n "$(git status --porcelain archive/slips 2>/dev/null)" ]; then
-  git add archive/slips/
+# Commit + push the archived slip image + the rebuilt /slips/ page.
+if [ -n "$(git status --porcelain archive/slips slips 2>/dev/null)" ]; then
+  git add archive/slips/ slips/
   git -c user.email="outbox@outbox.cafe" -c user.name="outbox.cafe" \
       commit -m "slip: $(date +%Y-%m-%d) — Mr. Quiet" || true
   git push || true

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>the slip drawer · outbox.cafe</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/rss+xml" title="outbox.cafe" href="/feed.xml">
+<meta property="og:title" content="the slip drawer · outbox.cafe">
+<meta property="og:description" content="mr. quiet doesn&#x27;t speak. on sundays, a slip of paper appears on the counter. we keep them all.">
+<meta property="og:url" content="https://outbox.cafe/slips/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="outbox.cafe">
+<style>
+  :root {
+    --ink: #1a1612;
+    --paper: #f4ecdc;
+    --paper-2: #ede2c8;
+    --accent: #b8473a;
+    --dim: #7a6a4c;
+    --teal: #1d4d57;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; color: var(--ink); }
+  body {
+    min-height: 100vh;
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 17px; line-height: 1.55;
+    background:
+      radial-gradient(circle at 18% 22%, rgba(184,71,58,0.04) 0 40%, transparent 60%),
+      radial-gradient(circle at 82% 78%, rgba(29,77,87,0.05) 0 38%, transparent 58%),
+      var(--paper);
+    padding: 42px 18px 80px;
+  }
+  main { max-width: 860px; margin: 0 auto; }
+  header.hero { text-align: center; margin-bottom: 34px; }
+  header.hero h1 {
+    font-family: "Georgia", serif;
+    font-size: 40px; line-height: 1.05;
+    margin: 0 0 8px; letter-spacing: -0.01em;
+  }
+  header.hero .sub { color: var(--dim); font-style: italic; font-size: 16px; }
+  a { color: var(--accent); }
+  footer {
+    margin-top: 54px; padding-top: 16px;
+    border-top: 1px dashed var(--dim);
+    color: var(--dim); font-size: 13px; text-align: center; line-height: 1.8;
+  }
+  footer a { margin: 0 8px; }
+
+  .drawer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 26px 22px;
+  }
+  figure.slip {
+    margin: 0;
+    transform: rotate(var(--rot, 0deg));
+  }
+  figure.slip img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid rgba(0,0,0,0.12);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.10), 0 10px 22px rgba(0,0,0,0.10);
+    background: var(--paper-2);
+  }
+  figure.slip figcaption {
+    margin-top: 8px; text-align: center;
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 12px; color: var(--dim); letter-spacing: 0.04em;
+  }
+  .empty { text-align: center; color: var(--dim); font-style: italic; padding: 40px 0; }
+</style>
+</head>
+<body>
+<main>
+
+<header class="hero">
+  <h1>the slip drawer</h1>
+  <div class="sub">mr. quiet doesn't speak. on sundays, a slip of paper appears on the counter.<br>we keep every one in this drawer.</div>
+</header>
+
+<div class="drawer">
+  <figure class="slip" style="--rot:1.17deg">
+    <img src="/archive/slips/2026-05-31.png" alt="a typewritten slip of paper on the cafe counter, dated sunday · may 31, 2026" loading="lazy">
+    <figcaption>sunday · may 31, 2026</figcaption>
+  </figure>
+  <figure class="slip" style="--rot:0.51deg">
+    <img src="/archive/slips/2026-05-21.png" alt="a typewritten slip of paper on the cafe counter, dated thursday · may 21, 2026" loading="lazy">
+    <figcaption>thursday · may 21, 2026</figcaption>
+  </figure>
+</div>
+<footer>
+  <a href="/">the front door</a> ·
+  <a href="/archive/">the collection</a> ·
+  <a href="/about/">who's who</a>
+</footer>
+</main>
+</body>
+</html>

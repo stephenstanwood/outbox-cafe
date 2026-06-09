@@ -125,6 +125,51 @@ def _signals_last_24h() -> list[str]:
     return [k for k, v in state.items() if isinstance(v, (int, float)) and v > cutoff]
 
 
+def _top_drops_week(n: int = 3) -> list[tuple[str, str, float]]:
+    """Top archive drops of the last 7 days by bsky engagement.
+
+    Joins post_log drop entries (subject 'our:<file>') with the engagement
+    counts reflect.py already knows how to assemble (cleanup snapshots +
+    live API for posts still up). Returns [(file, title, score)] descending.
+    Feeds Stephen's flag-a-winner loop — see the liked-gens memory.
+    """
+    from collections import defaultdict
+    from reflect import _fetch_live, _load_log_window, _load_snapshots, engagement_score
+
+    drops = [
+        e for e in _load_log_window(7)
+        if e.get("type") in ("drop", "throwback") and (e.get("subject") or "").startswith("our:")
+    ]
+    if not drops:
+        return []
+    uris = list({e["uri"] for e in drops})
+    counts = _load_snapshots()
+    missing = [u for u in uris if u not in counts]
+    if missing:
+        counts.update(_fetch_live(missing))
+
+    by_file: dict[str, float] = defaultdict(float)
+    for e in drops:
+        c = counts.get(e["uri"])
+        if c is None:
+            continue
+        by_file[e["subject"][4:]] += engagement_score(c)
+
+    ranked = sorted(by_file.items(), key=lambda kv: kv[1], reverse=True)[:n]
+    out: list[tuple[str, str, float]] = []
+    for fname, score in ranked:
+        title = fname
+        try:
+            html = (ARCHIVE_DIR / fname).read_text(errors="ignore")
+            m = re.search(r"<title[^>]*>(.*?)</title>", html, re.IGNORECASE | re.DOTALL)
+            if m:
+                title = re.sub(r"\s+", " ", m.group(1).strip())
+        except Exception:
+            pass
+        out.append((fname, title, score))
+    return out
+
+
 def _gen_health_last_24h() -> dict:
     """Summarize data/runs.jsonl over the last 24h: gens logged + failed posts + retries."""
     runs_path = ROOT / "data" / "runs.jsonl"
@@ -219,6 +264,20 @@ def main() -> int:
     if reflection:
         parts.append("")
         parts.append(f"**reflection:** {reflection}")
+
+    # Sunday extra: the week's top drops by social engagement, so flagging a
+    # winner (→ spotlight / liked-gens log) doesn't require a log dive.
+    if datetime.now(tz=PT).weekday() == 6:
+        try:
+            top = _top_drops_week()
+        except Exception as e:
+            print(f"[digest] top-drops failed (non-fatal): {e}", file=sys.stderr)
+            top = []
+        if top:
+            parts.append("")
+            parts.append("**this week's top drops** (bsky engagement):")
+            for fname, title, score in top:
+                parts.append(f"  · {title[:70]} — {score:.0f} pts · https://outbox.cafe/archive/{fname}")
 
     text = "\n".join(parts)
     _post_discord(text)
