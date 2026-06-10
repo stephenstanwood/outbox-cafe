@@ -28,10 +28,11 @@ echo
 echo "===== $(date -Iseconds) guestbook ====="
 python3 scripts/guestbook_review.py
 
-# Publish approved notes: page + data file. Pull first so an hourly push
-# doesn't race the 4x/day gen commits.
+# Publish approved notes: page + data file. Pull first (autostash — the
+# rebuilt page is already dirty at this point) so an hourly push doesn't
+# race the 4x/day gen commits.
 if [ -n "$(git status --porcelain data/guestbook.jsonl guestbook 2>/dev/null)" ]; then
-  git pull --rebase --quiet || true
+  git pull --rebase --autostash --quiet || true
   git add data/guestbook.jsonl guestbook/
   git -c user.email="outbox@outbox.cafe" -c user.name="outbox.cafe" \
       commit -m "guestbook: $(date +%Y-%m-%d\ %H:%M)" || true

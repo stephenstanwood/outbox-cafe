@@ -12,7 +12,9 @@ The Mac Mini runs a scheduled task four times a day. The task:
 1. Rolls a random *spec* across several dimensions (era, format, subject, tone,
    length, palette, mandatory element, forbidden register) with anti-bias
    mechanics so it doesn't converge, plus a code-side format bucket so variety
-   is forced rather than hoped for.
+   is forced rather than hoped for. ~10% of the time the spec comes up *carte
+   blanche* — every dimension reads "builder's choice" and the generator makes
+   whatever it wants within the house rules.
 2. Hands the spec to Claude via the local `claude` CLI (Max OAuth → $0 marginal
    cost), in an MCP-isolated, settings-free context so the gen stays pure
    text-out. See `scripts/lib/llm.py`.
@@ -34,9 +36,14 @@ drawer](https://outbox.cafe/slips/) and every column in [the muffin
 column's back issues](https://outbox.cafe/columns/). The archive cabinet
 has a binder — visitors can keep cards (localStorage, no accounts). Gens
 occasionally carry a tiny canon easter egg (`data/canon.json`) — recurring
-background figures that reward regulars and are never explained. A GitHub
-Actions heartbeat (`.github/workflows/heartbeat.yml`) watches drop-commit
-freshness from outside the Mini and fails loudly if the cafe stalls.
+background figures that reward regulars and are never explained; a nightly
+scout may promote one new element from the day's gens. Visitors can [sign
+the guestbook](https://outbox.cafe/guestbook/): notes go to a moderation
+queue (`api/sign.js` → Vercel Blob), an hourly Mini cron reviews them, and
+approved notes appear on the page — sometimes with a reply from whichever
+cat read it. A GitHub Actions heartbeat (`.github/workflows/heartbeat.yml`)
+watches drop-commit freshness from outside the Mini and fails loudly if the
+cafe stalls.
 
 ## Voice
 
@@ -79,6 +86,7 @@ python3 scripts/generate.py --commit    # generate + commit + push
 └── data/
     ├── dimensions.json     all the dimension tables
     ├── personas.json       cafe staff voices
+    ├── canon.json          recurring-universe elements (easter eggs)
+    ├── guestbook.jsonl     approved guestbook entries
     └── history.jsonl       rolling log of past specs
-```
 ```

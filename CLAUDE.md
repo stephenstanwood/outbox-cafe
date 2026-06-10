@@ -9,9 +9,10 @@ Weird/retro generative site, 4 gens/day. Mac Mini cron rolls a spec, hands to Cl
   - Logs: `~/logs/outbox-cafe.log` (appended forever — `tail -100` for recent)
   - Cron entry: `crontab -l` — currently `0 4,8,12,16 * * *` (4am, 8am, 12pm, 4pm PT)
   - Lock: `/tmp/outbox-cafe-run.lock` (mkdir-based, stale after 15 min)
-- **Hosting: Vercel.** Auto-deploys on push to `main`. No vercel.ts/.json — it's static.
+- **Hosting: Vercel.** Auto-deploys on push to `main`. Static + one function (`api/sign.js`, guestbook intake). `vercel.json` sets `"installCommand": ""` so deploys skip npm install — `@vercel/blob` in package.json is a Mini-only dep (`scripts/blob_queue.js`).
 - **OAuth token:** sourced from `~/Projects/mini-claude-proxy/.env` (`CLAUDE_CODE_OAUTH_TOKEN`).
   The wrapper does `set -a; . $PROXY_ENV; . $REPO/.env; set +a` — must use `set -a` to actually export.
+- **Builder task (laptop):** Claude scheduled task `outbox-cafe-builder` runs Tue+Fri 1pm — health-checks the cafe, then ships one self-chosen improvement. Prompt: `~/.claude/scheduled-tasks/outbox-cafe-builder/SKILL.md`.
 
 ## Critical gotchas (each one cost real hours)
 
@@ -47,6 +48,14 @@ backoff across ~6 min, log both output streams on failure, and cat-signal on
 final failure. An off-Mini GitHub Actions heartbeat
 (`.github/workflows/heartbeat.yml`) alerts if no `drop:` commit lands for 14h
 (threshold accommodates the 12h overnight gap).
+
+### Guestbook (2026-06-09)
+
+The cafe's only UGC surface, pre-moderated. `/guestbook/` form → `api/sign.js` (honeypot, link-reject, length caps, 20s throttle, no IP stored) → unguessable JSON blob under `guestbook/queue/` on Vercel Blob. Mini cron `41 * * * * scripts/run-guestbook.sh` moderates the queue via LLM (injection-armored prompt, REJECT-when-unsure), appends approved notes to `data/guestbook.jsonl`, rebuilds the page, commits. Queue blobs are deleted only after a durable outcome; ≥50 queued = spam wave → cat-signal and hold. Never weaken the moderation gate or add UGC surfaces beyond this one.
+
+### Carte blanche + canon (2026-06-09)
+
+~10% of gens roll a carte-blanche spec (`scripts/spec.py`): every dimension reads "builder's choice", the prompt drops to only the rules that always apply, and image prefetch is skipped (screenshot fallback covers social). `data/canon.json` is the cafe's recurring universe (Pepper, The Good Wok, 429 Persimmon Ln, ...); 18% of prompts offer one element as an optional easter egg. The nightly digest's canon scout (`scripts/canon_scout.py`) reads the day's gens and may promote at most ONE new element per night (cap 40).
 
 ### Midnight cleanup (2026-05-19)
 
