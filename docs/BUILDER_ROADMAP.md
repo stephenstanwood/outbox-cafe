@@ -1,0 +1,58 @@
+# Builder Roadmap — outbox.cafe
+
+The improvement log for the cafe: what shipped, what's queued, what was decided
+against and why. The recurring `outbox-cafe-builder` scheduled task (Mini,
+Tue+Fri 1pm) reads this before building and appends a batch entry after every
+ship. Lives in the repo (not Claude project memory) so the Mini's updates
+survive — the laptop pushes its memory snapshot over the Mini's hourly, which
+would clobber Mini-side memory edits. Moved here 2026-06-10.
+
+2026-05-28 Stephen asked for an aggressive top-to-bottom review and approved the whole list. Standing decisions: engagement stays **fully auto** (no human review queue, no second-opinion model gate) — the whole thing is low-stakes, light-hearted, fun. Everything haiku→opus. Social posters are ephemeral (don't keep); on-site images (thumbnails) → Vercel Blob. The "Tailscale fire-a-gen button" was never built — cut, don't build.
+
+**Batch 1 — SHIPPED (PR #19, commit df73e7a, verified on Mini):** MCP/settings isolation via new `scripts/lib/llm.py` (root-caused the gen-failure mode, see [[project-headless-claude-isolation]]); haiku→opus everywhere [[feedback-opus-by-default]]; broadened HTML validation + adaptive retry [[project-bad-output-failure-mode]]; word-boundary controversy regex + robust `is_nopost`; untracked ephemeral `archive/social/`; deleted dead `post.py`/`_s.js`/empty `personas/`; rewrote stale README.
+
+**Batch 2 — SHIPPED (PR #20, commit 3b25028, verified on Mini):** atomic state writes (`scripts/lib/io.py`, temp+rename) for all 5 per-Mini state files; idempotent retry on bsky `createSession` (`scripts/lib/net.py`) so transient auth timeouts don't silently drop a drop; `data/runs.jsonl` per-gen observability; prompt no longer hardcodes "Three images" (reflects actual count incl. 0). Unit-tested.
+
+**Batch 3 — SHIPPED (PR #21, commit 8ed6a01, verified on Mini):** nightly digest reads `runs.jsonl` and surfaces failed bsky/tumblr posts + retried gens (only when something's off; healthy days stay quiet).
+
+**Batch 4 — SHIPPED (PR #22, commit 6f85114, verified on Mini):** multi-candidate generation, DEFAULT ON. Each gen makes N candidates (default 3) IN PARALLEL, opus judge picks the best (`generate_candidates`/`pick_best_candidate`/`JUDGE_PROMPT` in generate.py). Falls back to adaptive nudge-retry if all candidates fail. New `--candidates N` (1=single-shot) + `--no-post` (skip social, for safe manual/test gens). Verified with a real --no-post full run. Concurrent `claude` invocations confirmed working.
+
+**Batch 5 — SHIPPED (PR #23, commit 12b0b8b after purge, verified live):** thumbnails → Vercel Blob. See [[reference-vercel-blob-thumbnails]]. 188 thumbs migrated PNG→WebP (59MB→6.5MB), cabinet + OG use blob URLs, 128 old pages' og rewritten, `archive/thumbs/` untracked + gitignored. generate.py uploads each gen's thumb. Verified live cabinet (188 blob refs, HTTP 200) + Mini WebP/Blob upload works.
+
+**Git history purge — DONE (2026-05-29):** deleted all 9 stale `claude/*` branches (verified squash-merged leftovers; their work was all in main). filter-repo stripped `archive/social` (123MB) + `archive/thumbs` (59MB) from all history → force-pushed. **`.git`: 208MB → ~10MB** (proven via fresh clone = 9.7M). Reset laptop + Mini (`reset --hard` + `remote prune` + `reflog expire --expire-unreachable=now` + `gc --prune=now`; the pins were stale remote-tracking refs + a stray `refs/stash`). Origin = main only. Content intact everywhere, 0 image blobs reachable.
+
+**Batch 6 — SHIPPED (PR #24, commit c437bf7):** shared clients + alt-text.
+- `scripts/lib/bsky.py` — one request builder + one login (transient-retry, re-raise HTTPError), replacing ~6 inline `_bsky`/`_auth` helpers (engage, post_bsky, like_loop, pancake, mr_quiet; post_spotlight rides post_bsky's). Proved byte-identical Request construction before migrating.
+- `scripts/lib/tumblr.py` — one OAuth 1.0a signer replacing 5 inline signers (cleanup_tumblr, doris, like_loop, pancake, mr_quiet). PROVED byte-identical Authorization headers vs all 5 (frozen nonce/timestamp) before migrating — a wrong sig is a silent 401. Each file keeps its local wrapper name (call sites untouched); mr_quiet's explicit token_secret via the `token_secret` kwarg.
+- alt-text: `derive_ai_prompts` now returns (prompt, alt) with a clean description (no "no text/watermark" boilerplate); social poster alt = "Illustrated cover for <title>".
+
+**PRODUCTION CONFIRMED (2026-05-29 runs.jsonl):** 4am + 8am gens ran the new stack flawlessly — `candidates: 3, fallback_attempts: 0` each (3 parallel opus candidates judged, no fallback), bsky + tumblr posts landed. Multi-candidate + opus-everywhere + isolation all working in real prod gens.
+
+**Batch 7 — SHIPPED (2026-06-09, commit ef474dc, direct to main):** holistic top-to-bottom pass.
+- Shared-client migration FINISHED: cleanup_bsky / nightly_digest / rotate_pinned_about / post_spotlight / mr_quiet / pancake now on `bsky.login` (retry); reblog_tumblr + post_tumblr inline signers deleted → `lib/tumblr.py`; multipart builder deduped into `tumblr.build_multipart`. Signature byte-equivalence re-proved for all call shapes (GET+params, POST JSON, multipart, escaped params).
+- LATENT BUG FIXED: post_tumblr + post_spotlight type=text fallback signed WITHOUT folding form fields into the OAuth base (silent 401 path, only hit when the poster image is missing). Now folds, matching the proven doris/pancake pattern.
+- REAL ALT TEXT: poster gen writes `archive/social/<stem>.alt.txt` sidecar ("Poster-style pixel-art illustration of X in a Y style, palette of Z."); `post_bsky.image_alt_text` uses sidecar → screenshot-phrasing for thumbs/ → generic fallback. Covers drops, throwbacks, spotlights. Tumblr legacy photo endpoint has no alt field (NPF migration would be needed — not worth it).
+- reblog persona picks now use reflection-adjusted weights (was raw weights — only picker not wired to the reflection loop).
+- Site: /about/ cadence copy fixed (said "every hour", 2 spots); nav.js 'r' no longer re-picks current entry on homepage; favicon 298KB→117KB (512px quantized; 1024 master regenerable via make_social_avatar.py).
+- Repo hygiene: AGENTS.md (was a broken Claude→Codex sed copy, `mini-Codex-proxy` etc.) → symlink to CLAUDE.md + gitignored (tracked files deploy to outbox.cafe, and Mini commits `git add -A`); same sed damage fixed in update_bsky_avatar.py docstring; CLAUDE.md stale flip-to-hourly ref removed; pyflakes-clean sweep of dead imports.
+
+**Batch 8 — SHIPPED (2026-06-09, commit 7842b55, "bigger-picture" pass):** the site becomes a place.
+- FOUND + FIXED LIVE INCIDENT: slip + Doris failed silently on Sundays 5/24 AND 6/7 (`claude exit 1`, empty stderr ×3, zero alerting). All ritual generators now: 45/90/180s backoff retries, both-streams logging, cat-signal DM on final failure. Crons → :06 (off engage's :00 grid). Could not retro-root-cause (logs captured nothing); next failure will be loud.
+- /slips/ + /columns/ (scripts/ritual_pages.py): ritual content finally on-site, deterministic builds, refreshed by ritual scripts + every gen, linked from about roster + cabinet footer.
+- Cabinet binder: localStorage keep-a-card (★ toggle, count, binder-only filter). No backend.
+- Canon: data/canon.json (Pepper, Eugene, Roy, Margot 4½, Frederick, Mortimer, Deli Mustard, The Good Wok, 429 Persimmon Ln, the door sign, the 3:47 light, 555-PEPR). prompt.py offers ONE element ~18% of gens as optional never-explained easter egg (verified 0.189 over 5k rolls).
+- Heartbeat: .github/workflows/heartbeat.yml, every 6h off-Mini, fails if newest `drop:` commit ≥14h old (overnight gap is 12h) → GitHub failure email zero-config; DISCORD_WEBHOOK_URL secret optional. First run green.
+- Sunday digest: "this week's top drops" (post_log drops ⨝ engagement snapshots via reflect helpers) → feeds flag-a-winner loop.
+
+**Batch 9 — SHIPPED (2026-06-09, commits 7b5ca59 + docs, Stephen approved "go for it"):** the door opens + the cafe builds itself.
+- **Guestbook LIVE end-to-end** (https://outbox.cafe/guestbook/): `api/sign.js` Vercel web-handler function (honeypot, link-reject, 40/280 caps, 20s per-instance throttle, NO IP stored) → unguessable JSON blobs `guestbook/queue/<ts>-<rand32hex>.json` via proven Blob REST PUT shape → Mini hourly cron `41 * * * * scripts/run-guestbook.sh` → `scripts/guestbook_review.py` LLM moderation (injection-armored "UNTRUSTED VISITOR DATA" prompt, REJECT-when-unsure, ~⅓ get ≤160-char cat replies, MAX 20/run, ≥50 queued = spam-wave cat-signal + hold) → `data/guestbook.jsonl` → static page rebuild → commit. Queue blobs deleted only after durable outcome; dedup by note id. Live-tested: link rejected, honeypot swallowed, real note approved + published (commit e99a2ef). `vercel.json` `"installCommand": ""` keeps deploys static; `@vercel/blob` is Mini-only (`scripts/blob_queue.js` list/del helper). Wrapper uses `git pull --rebase --autostash` (page is already dirty pre-pull — plain rebase failed in live test).
+- **Carte-blanche gen slot**: 10% of specs roll all-dims-"builder's choice" (`spec.py CARTE_BLANCHE_PROBABILITY`), prompt collapses to only-the-house-rules + anti-convergence nudge (`prompt.py CARTE_BLANCHE_TEMPLATE`), image prefetch skipped.
+- **Canon scout**: `scripts/canon_scout.py` in nightly digest — reads day's gens, promotes ≤1 new {name, hint} into canon.json (cap 40, case-insensitive dedup), digest line announces it.
+- **Recurring builder task created**: Claude scheduled task `outbox-cafe-builder`, cron `0 13 * * 2,5` (Tue+Fri 1pm, VERIFIED both days via nextRunAt), SKILL.md at ~/.claude/scheduled-tasks/outbox-cafe-builder/. Health-check first (fixing breakage IS the run's build), then ships ONE self-chosen improvement. Hard guardrails baked in: no outreach, no logos without picker, no relitigating standing decisions, never weaken moderation/MCP isolation, no new UGC surfaces, don't touch creds/cadence, test gen-critical paths on Mini.
+- Considered + rejected for now: on-site analytics (off-brand), per-gen "coins" appreciation beacon (revisit with guestbook infra), spec-roller auto-tuning from engagement (conflicts with the don't-tune-until-patterns-emerge feedback memory).
+
+**STILL QUEUED (minor):**
+- per-platform image sizing (deferred).
+- Tumblr alt text would require moving post_tumblr off the legacy /post endpoint to NPF /posts with media blocks (alt_text supported there). Deferred — legacy works, bsky is where alt-text culture lives.
+- Decided NOT to do: cap the sitemap (uncapped is correct for SEO); untrack history.jsonl (tiny + rebase hazard); PT-aware caps (already correct — `.astimezone()` = system-local = PT on the Mini); mkdir lock on state (atomic writes cover the realistic race).
+- **Gotcha for next purge:** local clones keep old objects via stale remote-tracking refs + stashes; after a history rewrite run `git remote prune origin && git reflog expire --expire-unreachable=now --all && git stash clear && git gc --prune=now` on every clone (laptop + Mini). Don't re-clone the Mini (loses gitignored per-Mini state files in data/).
