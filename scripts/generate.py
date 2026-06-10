@@ -1208,7 +1208,7 @@ def rebuild_cabinet() -> None:
   outbox.cafe · trading cards mint themselves four times a day<br>
   <small>rarity is randomly assigned at mint. 1st-edition cards have a gold border. holographics shimmer in the dark.</small><br>
   <small>tap the ☆ on a card to keep it in your binder. the binder lives in this browser — like a shoebox under your bed.</small><br>
-  <small><a href="/about/">about</a> · <a href="/slips/">the slip drawer</a> · <a href="/columns/">the muffin column</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
+  <small><a href="/about/">about</a> · <a href="/guestbook/">sign the guestbook</a> · <a href="/slips/">the slip drawer</a> · <a href="/columns/">the muffin column</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
 </footer>
 
 {binder_js}
@@ -1228,6 +1228,7 @@ def rebuild_sitemap() -> None:
         (f"{base}/about/", "0.5", "monthly"),
         (f"{base}/slips/", "0.5", "weekly"),
         (f"{base}/columns/", "0.5", "weekly"),
+        (f"{base}/guestbook/", "0.5", "daily"),
     ]
     files = sorted(ARCHIVE_DIR.glob("*.html"), reverse=True)
     files = [f for f in files if f.name != "index.html"]
@@ -1457,17 +1458,20 @@ def main() -> int:
     # Fetch a small set of thematic images. Randomly pick between AI-generated
     # (custom to spec, no attribution needed) and Unsplash (real photos, real
     # photographers). Mix keeps variety high across the archive.
+    # Carte-blanche gens get none — there's no subject to fetch against, and
+    # the freeform brief asks for fully self-contained pieces.
     import random as _rng
     photos: list = []
-    if _rng.random() < 0.6:
-        photos = fetch_ai_images(spec, count=3)
-        if photos:
-            print(f"fal.ai: {len(photos)} ai image(s)")
-    if not photos:
-        img_query = derive_query(spec)
-        photos = fetch_images(img_query, count=3) if img_query else []
-        if photos:
-            print(f"unsplash: {len(photos)} image(s) for '{img_query}'")
+    if not spec.get("carte_blanche"):
+        if _rng.random() < 0.6:
+            photos = fetch_ai_images(spec, count=3)
+            if photos:
+                print(f"fal.ai: {len(photos)} ai image(s)")
+        if not photos:
+            img_query = derive_query(spec)
+            photos = fetch_images(img_query, count=3) if img_query else []
+            if photos:
+                print(f"unsplash: {len(photos)} image(s) for '{img_query}'")
 
     prompt = build_prompt(spec, photos=photos)
 
@@ -1549,12 +1553,15 @@ def main() -> int:
 
     # Dedicated social poster — purpose-built cover image for bsky/tumblr, distinct
     # from the on-site screenshot (which can land on a weird crop of the page).
+    # Carte-blanche gens skip it (no subject to illustrate pre-gen); the page
+    # screenshot covers social via the existing fallback, with screenshot alt.
     social_path = SOCIAL_DIR / (archive_file.stem + ".png")
-    try:
-        if fetch_poster_image(spec, social_path):
-            print(f"  social poster → {social_path.name}")
-    except Exception as e:
-        print(f"  social poster errored (non-fatal): {e}", file=sys.stderr)
+    if not spec.get("carte_blanche"):
+        try:
+            if fetch_poster_image(spec, social_path):
+                print(f"  social poster → {social_path.name}")
+        except Exception as e:
+            print(f"  social poster errored (non-fatal): {e}", file=sys.stderr)
 
     append_history(spec)
     rebuild_cabinet()

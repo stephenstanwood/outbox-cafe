@@ -2,11 +2,12 @@
   "name": "outbox-cafe",
   "version": "0.1.0",
   "private": true,
-  "description": "screenshot pipeline for outbox.cafe — single dep, just puppeteer for the cabinet thumbnails",
+  "description": "Mini-side deps for outbox.cafe: puppeteer (cabinet thumbnails), @vercel/blob (guestbook queue). Vercel deploys skip install entirely (vercel.json installCommand) — api/sign.js is dependency-free.",
   "scripts": {
     "shot": "node scripts/screenshot.js"
   },
   "dependencies": {
+    "@vercel/blob": "^2.0.0",
     "puppeteer": "^23.0.0"
   }
 }

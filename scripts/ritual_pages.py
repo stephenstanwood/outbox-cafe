@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import hashlib
 import html as _html
+import json
 import re
 from datetime import datetime
 from pathlib import Path
@@ -28,6 +29,8 @@ SLIPS_DIR = ROOT / "archive" / "slips"
 COLUMNS_DIR = ROOT / "archive" / "columns"
 SLIPS_PAGE = ROOT / "slips" / "index.html"
 COLUMNS_PAGE = ROOT / "columns" / "index.html"
+GUESTBOOK_DATA = ROOT / "data" / "guestbook.jsonl"
+GUESTBOOK_PAGE = ROOT / "guestbook" / "index.html"
 
 # Shared look — same paper/ink palette as /about/ so the cafe's non-gen pages
 # read as one room.
@@ -271,10 +274,169 @@ def rebuild_columns_page() -> None:
     COLUMNS_PAGE.write_text(page)
 
 
+_GUESTBOOK_CSS = """
+  .sign-card {
+    background: var(--paper-2);
+    border: 1px solid rgba(0,0,0,0.10);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+    padding: 22px 24px;
+    margin: 0 0 40px;
+    transform: rotate(-0.3deg);
+  }
+  .sign-card label {
+    display: block; font-size: 13px; color: var(--dim);
+    letter-spacing: 0.04em; margin: 12px 0 4px;
+    font-family: "Courier New", ui-monospace, monospace;
+  }
+  .sign-card input[type=text], .sign-card textarea {
+    width: 100%; border: 1px solid rgba(0,0,0,0.25); background: #fdf9ec;
+    color: var(--ink); font: 16px/1.5 "Georgia", serif; padding: 8px 10px;
+  }
+  .sign-card textarea { min-height: 84px; resize: vertical; }
+  .sign-card .hp { position: absolute; left: -9999px; height: 1px; overflow: hidden; }
+  .sign-card button {
+    margin-top: 14px; padding: 9px 22px; cursor: pointer;
+    background: var(--ink); color: var(--paper);
+    border: 2px solid var(--gold, #c89a3e);
+    font: 600 14px "Courier New", ui-monospace, monospace; letter-spacing: 0.08em;
+    box-shadow: 3px 3px 0 var(--gold, #c89a3e);
+  }
+  .sign-card button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--gold, #c89a3e); }
+  .sign-card .form-note { font-size: 13px; color: var(--dim); font-style: italic; margin-top: 10px; }
+  .sign-card .result { font-style: italic; margin-top: 12px; }
+  .entry {
+    border-bottom: 1px dashed rgba(0,0,0,0.18);
+    padding: 18px 4px;
+    transform: rotate(var(--rot, 0deg));
+  }
+  .entry .who {
+    font-weight: 700;
+  }
+  .entry .when {
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 12px; color: var(--dim); margin-left: 8px; letter-spacing: 0.04em;
+  }
+  .entry .said { margin: 6px 0 0; }
+  .entry .reply {
+    margin: 10px 0 0 22px; padding-left: 12px;
+    border-left: 3px solid var(--teal);
+    font-style: italic; color: #3c4a42;
+  }
+  .empty { text-align: center; color: var(--dim); font-style: italic; padding: 40px 0; }
+"""
+
+_GUESTBOOK_FORM = """
+<div class="sign-card">
+  <form id="sign-form">
+    <label for="gb-name">your name</label>
+    <input type="text" id="gb-name" name="name" maxlength="40" required>
+    <label for="gb-message">your note</label>
+    <textarea id="gb-message" name="message" maxlength="280" required></textarea>
+    <div class="hp" aria-hidden="true">
+      <label for="gb-website">website</label>
+      <input type="text" id="gb-website" name="website" tabindex="-1" autocomplete="off">
+    </div>
+    <button type="submit">leave it on the counter</button>
+    <div class="form-note">notes appear once a cat has read them — usually within the hour. words only, no links.</div>
+    <div class="result" id="sign-result" role="status"></div>
+  </form>
+</div>
+<script>
+  (function () {
+    var form = document.getElementById('sign-form');
+    var result = document.getElementById('sign-result');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      result.textContent = '…';
+      fetch('/api/sign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: document.getElementById('gb-name').value,
+          message: document.getElementById('gb-message').value,
+          website: document.getElementById('gb-website').value
+        })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d.ok) {
+          form.querySelectorAll('input,textarea,button').forEach(function (el) { el.disabled = true; });
+          result.textContent = d.note || 'your note is on the counter.';
+        } else {
+          result.textContent = d.error || 'something went sideways — try again?';
+        }
+      }).catch(function () {
+        result.textContent = 'the mail is having a moment — try again in a bit.';
+      });
+    });
+  })();
+</script>
+"""
+
+
+def rebuild_guestbook_page() -> None:
+    """Rebuild /guestbook/ from data/guestbook.jsonl (approved entries only —
+    the reviewer cron is the only writer of that file)."""
+    entries: list[dict] = []
+    if GUESTBOOK_DATA.exists():
+        for line in GUESTBOOK_DATA.read_text(errors="ignore").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                e = json.loads(line)
+            except Exception:
+                continue
+            if e.get("name") and e.get("message"):
+                entries.append(e)
+    entries.reverse()  # newest first
+    entries = entries[:300]
+
+    blocks = []
+    for e in entries:
+        name = _html.escape(str(e["name"]))
+        message = _html.escape(str(e["message"]))
+        when = ""
+        ts = str(e.get("ts", ""))
+        if ts[:10]:
+            when = f'<span class="when">{_pretty_date(ts[:10])}</span>'
+        reply_html = ""
+        if e.get("reply"):
+            reply_html = (
+                f'\n    <div class="reply">{_html.escape(str(e["reply"]))}</div>'
+            )
+        blocks.append(
+            f'  <div class="entry" style="--rot:{_rot(str(e.get("id", name)) , 0.5):.2f}deg">\n'
+            f'    <span class="who">{name}</span>{when}\n'
+            f'    <p class="said">{message}</p>{reply_html}\n'
+            f"  </div>"
+        )
+    body = "\n".join(blocks) if blocks else '<p class="empty">no notes yet. the pen is right there.</p>'
+
+    page = (
+        _head(
+            "the guestbook",
+            "the door is open. leave a note on the counter — a cat will read it.",
+            "/guestbook/",
+            _GUESTBOOK_CSS,
+        )
+        + """
+<header class="hero">
+  <h1>the guestbook</h1>
+  <div class="sub">the sign above the door says you're welcome inside.<br>leave a note. a cat reads every one.</div>
+</header>
+
+"""
+        + _GUESTBOOK_FORM
+        + body
+        + _FOOTER
+    )
+    GUESTBOOK_PAGE.parent.mkdir(parents=True, exist_ok=True)
+    GUESTBOOK_PAGE.write_text(page)
+
+
 def rebuild_ritual_pages() -> None:
-    """Rebuild both ritual pages. Best-effort per page."""
+    """Rebuild the ritual + guestbook pages. Best-effort per page."""
     import sys
-    for fn in (rebuild_slips_page, rebuild_columns_page):
+    for fn in (rebuild_slips_page, rebuild_columns_page, rebuild_guestbook_page):
         try:
             fn()
         except Exception as e:
@@ -283,4 +445,4 @@ def rebuild_ritual_pages() -> None:
 
 if __name__ == "__main__":
     rebuild_ritual_pages()
-    print(f"wrote {SLIPS_PAGE.relative_to(ROOT)} and {COLUMNS_PAGE.relative_to(ROOT)}")
+    print(f"wrote {SLIPS_PAGE.relative_to(ROOT)}, {COLUMNS_PAGE.relative_to(ROOT)}, {GUESTBOOK_PAGE.relative_to(ROOT)}")

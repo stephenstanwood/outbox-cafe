@@ -209,6 +209,14 @@ def main() -> int:
     except Exception as e:
         print(f"[digest] reflect pass errored (non-fatal): {e}", file=sys.stderr)
 
+    # Canon scout — maybe yesterday invented somebody worth keeping.
+    new_canon = None
+    try:
+        from canon_scout import run as run_scout
+        new_canon = run_scout()
+    except Exception as e:
+        print(f"[digest] canon scout errored (non-fatal): {e}", file=sys.stderr)
+
     count, titles = _gens_last_24h()
     bsky = _bsky_summary()
     signals = _signals_last_24h()
@@ -264,6 +272,10 @@ def main() -> int:
     if reflection:
         parts.append("")
         parts.append(f"**reflection:** {reflection}")
+
+    if new_canon:
+        parts.append("")
+        parts.append(f"**canon:** the universe welcomed _{new_canon}_ (see data/canon.json)")
 
     # Sunday extra: the week's top drops by social engagement, so flagging a
     # winner (→ spotlight / liked-gens log) doesn't require a log dive.

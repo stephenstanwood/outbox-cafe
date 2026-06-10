@@ -83,6 +83,38 @@ def _format_photos_block(photos: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+CARTE_BLANCHE_TEMPLATE = """You are generating a scheduled artifact for outbox.cafe. Four times a day a new self-contained HTML page goes up at the root and gets archived. Normally each page is built to a rolled brief — era, format, subject, tone, palette.
+
+NOT THIS TIME. This hour is carte blanche: there is no brief. The corkboard is yours.
+
+Build the page YOU most want to exist. The one you'd make if nobody had asked for anything. A tiny game you've been wanting to build, a beautiful useless instrument, a document from a world you want an excuse to visit, a piece of pure CSS light, a joke that takes the whole page to land, something tender, something loud — entirely your call, at {length_key} scale (~{length_lines} lines).
+
+THE ONLY RULES THAT SURVIVE
+===========================
+1. Single self-contained HTML file. All CSS and JS embedded — no external assets, no external fonts, no remote images.
+2. Mobile responsive — must read on a phone without horizontal scroll.
+3. <title> tag with a real, interesting title. Not "Untitled".
+4. <meta name="viewport" content="width=device-width, initial-scale=1"> in <head>.
+5. If you build something interactive, it must actually work. JavaScript must not throw.
+6. Include a small footer with a hyperlink to "/archive", labeled however fits the piece.
+7. NEVER explain that this page was a free choice, mention briefs/specs/generation, or reference AI. The page is a real thing on its own terms.
+8. Tone can be anything except cruel, cynical, or mean. No politics, no real public figures, no real brands.
+9. The piece should reward a second look — hide small things in fine print, alt text, CSS comments, console.log.
+
+ANTI-CONVERGENCE — READ TWICE, THIS MATTERS MORE THAN USUAL TODAY
+=================================================================
+Freedom is where you drift to your defaults. The generator's documented attractors: dry deadpan, lowercase melancholy fragments, archival/museum/cabinet metaphors, night-shift dispatcher voice, SCP "we do not know" register, bureaucratic-absurd, loading-screen jokes, eulogies for objects. Wanting to build "what you want" and then producing one of THOSE means you didn't actually choose — the groove chose. Reach for the thing you'd be slightly embarrassed to admit you wanted to make: sincere, maximalist, gorgeous, cheesy, joyful, meticulous, devotional. Surprise yourself for real.
+
+RECENT GENERATIONS (avoid topical / aesthetic overlap)
+======================================================
+{recent_titles_block}
+{canon_block}
+OUTPUT
+======
+Return ONLY the HTML document. No prose before or after. No code fences. No commentary. Start with <!DOCTYPE html> and end with </html>.
+"""
+
+
 def build_prompt(spec: dict[str, Any], photos: list[dict[str, Any]] | None = None) -> str:
     """Build the prompt that gets handed to Claude to generate the scheduled page."""
 
@@ -103,6 +135,14 @@ def build_prompt(spec: dict[str, Any], photos: list[dict[str, Any]] | None = Non
     photos_block = _format_photos_block(photos)
     canon_block = _canon_block()
     n_photos = len(photos)
+
+    if spec.get("carte_blanche"):
+        return CARTE_BLANCHE_TEMPLATE.format(
+            length_key=length["key"],
+            length_lines=length["lines"],
+            recent_titles_block=recent_titles_block,
+            canon_block=canon_block,
+        )
     if n_photos == 0:
         images_intro = (
             "No images were pre-fetched this time (the image services were skipped or "

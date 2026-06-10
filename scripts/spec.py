@@ -33,6 +33,12 @@ WILDCARD_PROBABILITY = 0.40
 # Probability a forbidden register is enforced
 FORBIDDEN_PROBABILITY = 0.65
 
+# Probability a gen gets NO spec at all — carte blanche, the model builds the
+# page it most wants to exist (Stephen, 2026-06-09: "so they can build what
+# they want"). ~2-3 gens/week at 4/day. Anti-convergence guardrails still
+# apply in the prompt; this skips the rolled dimensions, not the house rules.
+CARTE_BLANCHE_PROBABILITY = 0.10
+
 # Length tier weights (favor medium, occasional tiny/large for variety)
 LENGTH_WEIGHTS = {"tiny": 30, "medium": 50, "large": 20}
 
@@ -397,6 +403,24 @@ Start with {{ and end with }}. Nothing else.
 """
 
 
+def _carte_blanche_spec(rng: random.Random, dims: dict[str, Any]) -> dict[str, Any]:
+    """A no-brief spec: every dimension is the builder's call. Length still
+    rolls (an unconstrained gen otherwise always goes maximalist)."""
+    tier = rng.choices(list(LENGTH_WEIGHTS.keys()), weights=list(LENGTH_WEIGHTS.values()), k=1)[0]
+    spec: dict[str, Any] = {
+        f: {"value": "builder's choice"}
+        for f in ("era", "format", "subject", "tone", "palette", "mandatory_element")
+    }
+    spec["wildcard"] = {"value": "no wildcard this hour"}
+    spec["forbidden_register"] = {"value": "no register forbidden this hour"}
+    spec["length"] = next(L for L in dims["length"] if L["key"] == tier)
+    spec["carte_blanche"] = True
+    spec["format_bucket"] = "carte_blanche"
+    spec["rolled_by"] = "carte_blanche"
+    spec["generated_at"] = datetime.now(timezone.utc).isoformat()
+    return spec
+
+
 def roll_spec_via_llm(
     seed: int | None = None,
     model: str | None = None,
@@ -409,6 +433,11 @@ def roll_spec_via_llm(
     rng = random.Random(seed) if seed is not None else random.Random()
     dims = load_dimensions()
     history = load_recent_history(40)
+
+    # Carte blanche: occasionally there is no brief at all.
+    if rng.random() < CARTE_BLANCHE_PROBABILITY:
+        print("[spec] carte blanche this hour — no brief, the corkboard is theirs")
+        return _carte_blanche_spec(rng, dims)
 
     def recent_str(field: str) -> str:
         items = _recent_picks(field, history, n=25)
