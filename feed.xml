@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 13 Jun 2026 08:05:37 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 13 Jun 2026 12:11:16 -0700</lastBuildDate>
+  <item>
+    <title>Combo #3847 — Eastland Mall, 5:47 PM</title>
+    <link>https://outbox.cafe/archive/2026-06-13T12-11.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-13T12-11.html</guid>
+    <pubDate>Sat, 13 Jun 2026 12:11:00 -0700</pubDate>
+    <description>Combo #3847 — Eastland Mall, 5:47 PM</description>
+  </item>
   <item>
     <title>West Window, 414 South Cottonwood — 4:47 to 5:34</title>
     <link>https://outbox.cafe/archive/2026-06-13T08-05.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T09-53.html</guid>
     <pubDate>Sun, 17 May 2026 09:53:00 -0700</pubDate>
     <description>★ THE ALL-WEDNESDAY FAN STORE ★ midweek_marcie&#x27;s lj :: 4th season of operation</description>
-  </item>
-  <item>
-    <title>THE WINTERMERE SOCIETY · Member&#x27;s Manual · Page 47 / 200</title>
-    <link>https://outbox.cafe/archive/2026-05-17T09-43.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T09-43.html</guid>
-    <pubDate>Sun, 17 May 2026 09:43:00 -0700</pubDate>
-    <description>THE WINTERMERE SOCIETY · Member&#x27;s Manual · Page 47 / 200</description>
   </item>
 </channel>
 </rss>
