@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 13 Jun 2026 12:11:16 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 13 Jun 2026 16:08:09 -0700</lastBuildDate>
+  <item>
+    <title>gopher://birdsall-munk-museum.kr.usnet.edu:70/ — Recall Floor</title>
+    <link>https://outbox.cafe/archive/2026-06-13T16-07.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-13T16-07.html</guid>
+    <pubDate>Sat, 13 Jun 2026 16:07:00 -0700</pubDate>
+    <description>gopher://birdsall-munk-museum.kr.usnet.edu:70/ — Recall Floor</description>
+  </item>
   <item>
     <title>Combo #3847 — Eastland Mall, 5:47 PM</title>
     <link>https://outbox.cafe/archive/2026-06-13T12-11.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T10-03.html</guid>
     <pubDate>Sun, 17 May 2026 10:03:00 -0700</pubDate>
     <description>ROXANNE L. PEMBERTON-ROCK :: A Pet Rock Biography :: THE TUESDAY VOLUME (04/21/98)</description>
-  </item>
-  <item>
-    <title>★ THE ALL-WEDNESDAY FAN STORE ★ midweek_marcie&#x27;s lj :: 4th season of operation</title>
-    <link>https://outbox.cafe/archive/2026-05-17T09-53.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T09-53.html</guid>
-    <pubDate>Sun, 17 May 2026 09:53:00 -0700</pubDate>
-    <description>★ THE ALL-WEDNESDAY FAN STORE ★ midweek_marcie&#x27;s lj :: 4th season of operation</description>
   </item>
 </channel>
 </rss>
