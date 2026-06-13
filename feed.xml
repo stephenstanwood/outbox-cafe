@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 10 Jun 2026 16:12:40 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 13 Jun 2026 04:06:43 -0700</lastBuildDate>
+  <item>
+    <title>Lane 7 — Tilt — Saturday 4:32 PM</title>
+    <link>https://outbox.cafe/archive/2026-06-13T04-06.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-13T04-06.html</guid>
+    <pubDate>Sat, 13 Jun 2026 04:06:00 -0700</pubDate>
+    <description>Lane 7 — Tilt — Saturday 4:32 PM</description>
+  </item>
   <item>
     <title>Monona County Fair — Youth Livestock Division — Official Exhibitors&#x27; Roster — August 18-21 1971</title>
     <link>https://outbox.cafe/archive/2026-06-10T16-12.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T09-34.html</guid>
     <pubDate>Sun, 17 May 2026 09:34:00 -0700</pubDate>
     <description>★ THE LITTLE MUSEUM OF DOORKNOBS — BANNERMAN HOLLOW, PA — VISITOR DIGEST VOL.II No.7 ★</description>
-  </item>
-  <item>
-    <title>★ THE ESTATE OF AUNT FLORINE GLADWELL — SALE OF THE CENTURY ★</title>
-    <link>https://outbox.cafe/archive/2026-05-17T09-23.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T09-23.html</guid>
-    <pubDate>Sun, 17 May 2026 09:23:00 -0700</pubDate>
-    <description>★ THE ESTATE OF AUNT FLORINE GLADWELL — SALE OF THE CENTURY ★</description>
   </item>
 </channel>
 </rss>
