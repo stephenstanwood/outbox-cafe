@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sun, 14 Jun 2026 12:12:52 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 14 Jun 2026 16:12:23 -0700</lastBuildDate>
+  <item>
+    <title>The Sliding-Glass Door — 4218 Birchwood Drive — Saturday Morning</title>
+    <link>https://outbox.cafe/archive/2026-06-14T16-12.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-14T16-12.html</guid>
+    <pubDate>Sun, 14 Jun 2026 16:12:00 -0700</pubDate>
+    <description>The Sliding-Glass Door — 4218 Birchwood Drive — Saturday Morning</description>
+  </item>
   <item>
     <title>Westmark, Iowa — Frame by Frame at the Bandshell</title>
     <link>https://outbox.cafe/archive/2026-06-14T12-12.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T10-34.html</guid>
     <pubDate>Sun, 17 May 2026 10:34:00 -0700</pubDate>
     <description>TILE FOR TILE — Newsletter of the Wholegrain Glen HOA · Vol. III No. 5</description>
-  </item>
-  <item>
-    <title>FRANK FROM 11-B :: WX FROM THE LOBBY :: gopher.everwynn.hotel</title>
-    <link>https://outbox.cafe/archive/2026-05-17T10-27.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T10-27.html</guid>
-    <pubDate>Sun, 17 May 2026 10:27:00 -0700</pubDate>
-    <description>FRANK FROM 11-B :: WX FROM THE LOBBY :: gopher.everwynn.hotel</description>
   </item>
 </channel>
 </rss>
