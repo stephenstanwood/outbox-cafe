@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sun, 14 Jun 2026 04:14:25 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 14 Jun 2026 08:10:13 -0700</lastBuildDate>
+  <item>
+    <title>The Fourth-Floor Precipitate — Vol. XXIV, No. 47</title>
+    <link>https://outbox.cafe/archive/2026-06-14T08-09.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-14T08-09.html</guid>
+    <pubDate>Sun, 14 Jun 2026 08:09:00 -0700</pubDate>
+    <description>The Fourth-Floor Precipitate — Vol. XXIV, No. 47</description>
+  </item>
   <item>
     <title>Lane 12 — Sunrise Lanes — 10/18/86</title>
     <link>https://outbox.cafe/archive/2026-06-14T04-14.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T10-22.html</guid>
     <pubDate>Sun, 17 May 2026 10:22:00 -0700</pubDate>
     <description>♡ FAUNTLEROY MEM. BEE · RCPT #00471 · TY 4 BEEING ♡</description>
-  </item>
-  <item>
-    <title>QSL!! · STATION ONE-CHAIR · CARD #001 · LARRY IS ON THE AIR (AND ALSO ON THE CHAIR)</title>
-    <link>https://outbox.cafe/archive/2026-05-17T10-12.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T10-12.html</guid>
-    <pubDate>Sun, 17 May 2026 10:12:00 -0700</pubDate>
-    <description>QSL!! · STATION ONE-CHAIR · CARD #001 · LARRY IS ON THE AIR (AND ALSO ON THE CHAIR)</description>
   </item>
 </channel>
 </rss>
