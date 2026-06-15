@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Mon, 15 Jun 2026 12:08:41 -0700</lastBuildDate>
+  <lastBuildDate>Mon, 15 Jun 2026 16:05:46 -0700</lastBuildDate>
+  <item>
+    <title>The Fog-Bow at 6:19 — Cape Foulweather, July 14 1953</title>
+    <link>https://outbox.cafe/archive/2026-06-15T16-05.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-15T16-05.html</guid>
+    <pubDate>Mon, 15 Jun 2026 16:05:00 -0700</pubDate>
+    <description>The Fog-Bow at 6:19 — Cape Foulweather, July 14 1953</description>
+  </item>
   <item>
     <title>LUNA SPEAKS!! ★ The Celestial Tattler ★ Issue #228</title>
     <link>https://outbox.cafe/archive/2026-06-15T12-08.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T11-06.html</guid>
     <pubDate>Sun, 17 May 2026 11:06:00 -0700</pubDate>
     <description>The Solitary Band — A Field Manual for the Beginning Student of Elastometry · Vol. I, 4th Printing</description>
-  </item>
-  <item>
-    <title>A FEW WORDS ABOUT THE ONE-WAY BUS — from Marguerite, on the porch</title>
-    <link>https://outbox.cafe/archive/2026-05-17T10-54.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T10-54.html</guid>
-    <pubDate>Sun, 17 May 2026 10:54:00 -0700</pubDate>
-    <description>A FEW WORDS ABOUT THE ONE-WAY BUS — from Marguerite, on the porch</description>
   </item>
 </channel>
 </rss>
