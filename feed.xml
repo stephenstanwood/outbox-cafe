@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 16 Jun 2026 04:11:04 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 16 Jun 2026 08:10:17 -0700</lastBuildDate>
+  <item>
+    <title>A Bushel of Autumn — Eagle Food Centers Test Kitchen Pamphlet No. 47 — October 1962</title>
+    <link>https://outbox.cafe/archive/2026-06-16T08-10.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-16T08-10.html</guid>
+    <pubDate>Tue, 16 Jun 2026 08:10:00 -0700</pubDate>
+    <description>A Bushel of Autumn — Eagle Food Centers Test Kitchen Pamphlet No. 47 — October 1962</description>
+  </item>
   <item>
     <title>Bus 17 — The Forward Way · A Primer for Those Who Have Boarded</title>
     <link>https://outbox.cafe/archive/2026-06-16T04-10.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T11-24.html</guid>
     <pubDate>Sun, 17 May 2026 11:24:00 -0700</pubDate>
     <description>★ from ROCK to PACK ★ a word puzzle by Wendell P. (age 9¾)</description>
-  </item>
-  <item>
-    <title>THE INNER WHEEL · A Tarot-of-the-Hour for the Machine · Vol. III, No. 11</title>
-    <link>https://outbox.cafe/archive/2026-05-17T11-15.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T11-15.html</guid>
-    <pubDate>Sun, 17 May 2026 11:15:00 -0700</pubDate>
-    <description>THE INNER WHEEL · A Tarot-of-the-Hour for the Machine · Vol. III, No. 11</description>
   </item>
 </channel>
 </rss>
