@@ -605,8 +605,16 @@ def rebuild_cabinet() -> None:
             f'<span class="sticker {cls}" style="{pos}">{text}</span>'
             for text, cls, pos in pick_stickers(e["hash"])
         )
+        # Searchable text — title + the spec dims we already computed (era /
+        # format / tone) but otherwise never show. Lets the finder match on
+        # "puzzle", "1978", "refrigerator", "deadpan", etc.
+        search_blob = " ".join(
+            s for s in (e["title"], e["era"], e["format"], e["tone"]) if s
+        ).lower()
+        search_attr = (search_blob.replace("&", "&amp;").replace('"', "&quot;")
+                       .replace("<", "&lt;").replace(">", "&gt;"))
         return f'''
-        <div class="card-wrap" data-file="{e["file"]}">
+        <div class="card-wrap" data-file="{e["file"]}" data-search="{search_attr}">
         <a class="card {e["rarity_cls"]}" href="{e["page_path"]}"
            style="--c1:{c1}; --c2:{c2}; --c3:{c3}; --rot:{e['rot']:.2f}deg;">
           <div class="card-inner">
@@ -661,6 +669,38 @@ def rebuild_cabinet() -> None:
     font-style: italic; font-size: 14px; padding: 40px 0;
   }
   body.binder-only #binder-empty.show { display: block; }
+
+  /* FINDER — rummage the cabinet by title / era / format / tone */
+  .finder {
+    max-width: 1240px;
+    margin: 14px auto 0;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    flex-wrap: wrap;
+  }
+  #finder-input {
+    width: min(420px, 86vw);
+    padding: 8px 14px;
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 13px; letter-spacing: 0.5px;
+    color: var(--ink); background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    box-shadow: 3px 3px 0 var(--dim);
+    outline: none;
+  }
+  #finder-input:focus { box-shadow: 3px 3px 0 var(--gold); border-color: var(--gold); }
+  #finder-input::placeholder { color: var(--dim); font-style: italic; }
+  #finder-count {
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 12px; letter-spacing: 1px; color: var(--dim);
+    min-width: 0;
+  }
+  .card-wrap.hide-search { display: none; }
+  #finder-empty {
+    display: none; text-align: center; color: var(--dim);
+    font-style: italic; font-size: 14px; padding: 40px 0;
+  }
+  #finder-empty.show { display: block; }
 """
 
     binder_js = """
@@ -714,6 +754,33 @@ def rebuild_cabinet() -> None:
       });
     }
     refresh();
+  })();
+
+  // Finder: rummage the cabinet by title / era / format / tone. All terms
+  // must match (AND). Pure client-side — combines with binder-only via CSS
+  // (both add display:none, so they intersect).
+  (function () {
+    var input = document.getElementById('finder-input');
+    if (!input) return;
+    var countEl = document.getElementById('finder-count');
+    var emptyEl = document.getElementById('finder-empty');
+    var wraps = Array.prototype.slice.call(document.querySelectorAll('.card-wrap'));
+    var total = wraps.length;
+    function apply() {
+      var q = input.value.toLowerCase().trim();
+      var terms = q ? q.split(/\\s+/) : [];
+      var shown = 0;
+      wraps.forEach(function (w) {
+        var hay = w.getAttribute('data-search') || '';
+        var hit = terms.every(function (t) { return hay.indexOf(t) !== -1; });
+        w.classList.toggle('hide-search', !hit);
+        if (hit) shown++;
+      });
+      if (countEl) countEl.textContent = terms.length ? (shown + ' / ' + total) : '';
+      if (emptyEl) emptyEl.classList.toggle('show', terms.length > 0 && shown === 0);
+    }
+    input.addEventListener('input', apply);
+    apply();
   })();
 </script>
 """
@@ -1181,6 +1248,12 @@ def rebuild_cabinet() -> None:
     <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
     <a href="#" id="binder-toggle" title="show only the cards you've kept">★ BINDER · <span id="binder-count">0</span></a>
   </div>
+  <div class="finder">
+    <input id="finder-input" type="search" autocomplete="off" spellcheck="false"
+           placeholder="rummage the cabinet… (try: puzzle · 1978 · diner)"
+           aria-label="search the collection">
+    <span id="finder-count" aria-live="polite"></span>
+  </div>
 </header>
 
 <script>
@@ -1203,6 +1276,7 @@ def rebuild_cabinet() -> None:
 </main>
 
 <p id="binder-empty">your binder is empty. tap the ☆ on a card to keep it.</p>
+<p id="finder-empty">nothing in the cabinet matches that. try a looser word.</p>
 
 <footer>
   outbox.cafe · trading cards mint themselves four times a day<br>

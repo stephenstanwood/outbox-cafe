@@ -454,6 +454,38 @@
   }
   body.binder-only #binder-empty.show { display: block; }
 
+  /* FINDER — rummage the cabinet by title / era / format / tone */
+  .finder {
+    max-width: 1240px;
+    margin: 14px auto 0;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    flex-wrap: wrap;
+  }
+  #finder-input {
+    width: min(420px, 86vw);
+    padding: 8px 14px;
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 13px; letter-spacing: 0.5px;
+    color: var(--ink); background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    box-shadow: 3px 3px 0 var(--dim);
+    outline: none;
+  }
+  #finder-input:focus { box-shadow: 3px 3px 0 var(--gold); border-color: var(--gold); }
+  #finder-input::placeholder { color: var(--dim); font-style: italic; }
+  #finder-count {
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 12px; letter-spacing: 1px; color: var(--dim);
+    min-width: 0;
+  }
+  .card-wrap.hide-search { display: none; }
+  #finder-empty {
+    display: none; text-align: center; color: var(--dim);
+    font-style: italic; font-size: 14px; padding: 40px 0;
+  }
+  #finder-empty.show { display: block; }
+
 </style>
 </head>
 <body>
@@ -467,6 +499,12 @@
     <a href="/">→ NEWEST</a>
     <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
     <a href="#" id="binder-toggle" title="show only the cards you've kept">★ BINDER · <span id="binder-count">0</span></a>
+  </div>
+  <div class="finder">
+    <input id="finder-input" type="search" autocomplete="off" spellcheck="false"
+           placeholder="rummage the cabinet… (try: puzzle · 1978 · diner)"
+           aria-label="search the collection">
+    <span id="finder-count" aria-live="polite"></span>
   </div>
 </header>
 
@@ -487,7 +525,7 @@
 
 <main class="grid">
 
-        <div class="card-wrap" data-file="2026-06-16T12-07.html">
+        <div class="card-wrap" data-file="2026-06-16T12-07.html" data-search="antiphon for the hum — a small office for three in the morning 1978 zine xerox aesthetic a tiny rhythm tap: one key ecstatic-religious">
         <a class="card rarity-c" href="/archive/2026-06-16T12-07.html"
            style="--c1:#efe4cf; --c2:#e6d8bd; --c3:#b8731e; --rot:1.50deg;">
           <div class="card-inner">
@@ -511,7 +549,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-16T08-10.html">
+        <div class="card-wrap" data-file="2026-06-16T08-10.html" data-search="a bushel of autumn — eagle food centers test kitchen pamphlet no. 47 — october 1962 1962 — peak american postwar re… a single eagle food centers four-colo… warm">
         <a class="card rarity-c" href="/archive/2026-06-16T08-10.html"
            style="--c1:#f1e3bf; --c2:#c8b078; --c3:#7a2a2a; --rot:1.00deg;">
           <div class="card-inner">
@@ -535,7 +573,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-16T04-10.html">
+        <div class="card-wrap" data-file="2026-06-16T04-10.html" data-search="bus 17 — the forward way · a primer for those who have boarded 2011 early instagram filter a find-the-hidden-word puzzle: spot t… cult-y">
         <a class="card rarity-h" href="/archive/2026-06-16T04-10.html"
            style="--c1:#f3ead2; --c2:#f7f1de; --c3:#c2362b; --rot:-0.50deg;">
           <div class="card-inner">
@@ -559,7 +597,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-15T16-05.html">
+        <div class="card-wrap" data-file="2026-06-15T16-05.html" data-search="the fog-bow at 6:19 — cape foulweather, july 14 1953 1953 — peak american pacific no… a single full-viewport silent generat… no tone — there is no narra…">
         <a class="card rarity-c" href="/archive/2026-06-15T16-05.html"
            style="--c1:#1c1e3a; --c2:#7a5e74; --c3:#d49a48; --rot:0.00deg;">
           <div class="card-inner">
@@ -583,7 +621,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-15T12-08.html">
+        <div class="card-wrap" data-file="2026-06-15T12-08.html" data-search="luna speaks!! ★ the celestial tattler ★ issue #228 2005 myspace a constellation map of fictional star… proud">
         <a class="card rarity-u" href="/archive/2026-06-15T12-08.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#0d4a5a; --rot:-1.50deg;">
           <div class="card-inner">
@@ -607,7 +645,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-15T08-11.html">
+        <div class="card-wrap" data-file="2026-06-15T08-11.html" data-search="the crossing :: keeper_of_the_curb 2003 livejournal a tiny clickable garden you plant in… school crossing guard">
         <a class="card rarity-c" href="/archive/2026-06-15T08-11.html"
            style="--c1:#ff44cc; --c2:#c0339a; --c3:#6b1a55; --rot:0.00deg;">
           <div class="card-inner">
@@ -631,7 +669,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-15T04-12.html">
+        <div class="card-wrap" data-file="2026-06-15T04-12.html" data-search="the index card — 10:14 a.m., sunday feb 12 1978 1978 — peak american suburban s… a genuine fully solvable in-browser l… warm">
         <a class="card rarity-c" href="/archive/2026-06-15T04-12.html"
            style="--c1:#2a5a3a; --c2:#1c4628; --c3:#a89878; --rot:-1.00deg;">
           <div class="card-inner">
@@ -655,7 +693,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-14T16-12.html">
+        <div class="card-wrap" data-file="2026-06-14T16-12.html" data-search="the sliding-glass door — 4218 birchwood drive — saturday morning 1992 — peak american suburban f… a fully working tiny browser bird-ide… warm">
         <a class="card rarity-h" href="/archive/2026-06-14T16-12.html"
            style="--c1:#9e7e58; --c2:#3a2418; --c3:#c89878; --rot:-1.50deg;">
           <div class="card-inner">
@@ -679,7 +717,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-14T12-12.html">
+        <div class="card-wrap" data-file="2026-06-14T12-12.html" data-search="westmark, iowa — frame by frame at the bandshell 1999 pre-y2k millennium anxiety a flipbook (click to advance regional travel-show host">
         <a class="card rarity-r" href="/archive/2026-06-14T12-12.html"
            style="--c1:#0066a3; --c2:#0066a3; --c3:#0066a3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -703,7 +741,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-14T08-09.html">
+        <div class="card-wrap" data-file="2026-06-14T08-09.html" data-search="the fourth-floor precipitate — vol. xxiv, no. 47 2008 tumblr boot-up a feed-the-creature game (drag food o… deadpan">
         <a class="card rarity-c" href="/archive/2026-06-14T08-09.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:1.00deg;">
           <div class="card-inner">
@@ -727,7 +765,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-14T04-14.html">
+        <div class="card-wrap" data-file="2026-06-14T04-14.html" data-search="lane 12 — sunrise lanes — 10/18/86 1986 — peak american suburban b… a page that is exactly one scorekeepe… warm">
         <a class="card rarity-c" href="/archive/2026-06-14T04-14.html"
            style="--c1:#fce4d8; --c2:#e8b8a4; --c3:#a82c2a; --rot:-0.50deg;">
           <div class="card-inner">
@@ -751,7 +789,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-13T16-07.html">
+        <div class="card-wrap" data-file="2026-06-13T16-07.html" data-search="gopher://birdsall-munk-museum.kr.usnet.edu:70/ — recall floor 1991 gopher menus and ftp index… a memory-match grid with 6-8 pairs anxious">
         <a class="card rarity-r" href="/archive/2026-06-13T16-07.html"
            style="--c1:#00f0ff; --c2:#ff006e; --c3:#c4004f; --rot:1.00deg;">
           <div class="card-inner">
@@ -775,7 +813,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-13T12-11.html">
+        <div class="card-wrap" data-file="2026-06-13T12-11.html" data-search="combo #3847 — eastland mall, 5:47 pm 1978 — peak american suburban s… a single orange julius combo ticket f… warm">
         <a class="card rarity-u" href="/archive/2026-06-13T12-11.html"
            style="--c1:#e8732a; --c2:#c85a1e; --c3:#f5ecd4; --rot:0.50deg;">
           <div class="card-inner">
@@ -799,7 +837,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-13T08-05.html">
+        <div class="card-wrap" data-file="2026-06-13T08-05.html" data-search="west window, 414 south cottonwood — 4:47 to 5:34 1934 — peak american dust bowl… a single full-viewport silent generat… no tone — there is no narra…">
         <a class="card rarity-c" href="/archive/2026-06-13T08-05.html"
            style="--c1:#d49538; --c2:#c87a2a; --c3:#e8826a; --rot:0.00deg;">
           <div class="card-inner">
@@ -823,7 +861,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-13T04-06.html">
+        <div class="card-wrap" data-file="2026-06-13T04-06.html" data-search="lane 7 — tilt — saturday 4:32 pm 1987 — peak american mall arcad… a fully working tiny in-browser skee-… warm">
         <a class="card rarity-c" href="/archive/2026-06-13T04-06.html"
            style="--c1:#c89548; --c2:#a07838; --c3:#b08540; --rot:-1.50deg;">
           <div class="card-inner">
@@ -847,7 +885,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-10T16-12.html">
+        <div class="card-wrap" data-file="2026-06-10T16-12.html" data-search="monona county fair — youth livestock division — official exhibitors' roster — august 18-21 1971 1971 — peak american midwestern… a fully working browseable hand-print… warm">
         <a class="card rarity-u" href="/archive/2026-06-10T16-12.html"
            style="--c1:#f1e4c4; --c2:#a89878; --c3:#a8312a; --rot:-1.50deg;">
           <div class="card-inner">
@@ -871,7 +909,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-10T12-08.html">
+        <div class="card-wrap" data-file="2026-06-10T12-08.html" data-search="the longest standing contest ever!!!!! ⚝ 2014 peak tumblr soft-grunge a real riddle whose answer is hidden… breathless">
         <a class="card rarity-f" href="/archive/2026-06-10T12-08.html"
            style="--c1:#0a0a2a; --c2:#0a0a2a; --c3:#0a0a2a; --rot:1.00deg;">
           <div class="card-inner">
@@ -895,7 +933,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-10T04-05.html">
+        <div class="card-wrap" data-file="2026-06-10T04-05.html" data-search="cherry-7-4418 — saturday, november 17 1962, 9:48 a.m. 1962 — peak american suburban b… a single full-viewport silent generat… no tone — there is no narra…">
         <a class="card rarity-r" href="/archive/2026-06-10T04-05.html"
            style="--c1:#efe2c4; --c2:#c8b890; --c3:#3a2418; --rot:0.50deg;">
           <div class="card-inner">
@@ -919,7 +957,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-09T12-06.html">
+        <div class="card-wrap" data-file="2026-06-09T12-06.html" data-search="sabines lupe — sonnabend nachmittag, 14:23 1979 — peak soviet-bloc east ge… a single full-viewport silent generat… no tone — there is no narra…">
         <a class="card rarity-u" href="/archive/2026-06-09T12-06.html"
            style="--c1:#3a2818; --c2:#e8d8a8; --c3:#c8b478; --rot:-1.00deg;">
           <div class="card-inner">
@@ -943,7 +981,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-09T08-12.html">
+        <div class="card-wrap" data-file="2026-06-09T08-12.html" data-search="the cottontail's return home — the puzzle garden, sunday oct 18 1987 1987 — peak american suburban r… a genuine fully-traceable in-browser… warm">
         <a class="card rarity-c" href="/archive/2026-06-09T08-12.html"
            style="--c1:#f1e4c2; --c2:#c8b48a; --c3:#c8442e; --rot:1.00deg;">
           <div class="card-inner">
@@ -967,7 +1005,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-09T04-12.html">
+        <div class="card-wrap" data-file="2026-06-09T04-12.html" data-search="carnival midway pocket pinball — model 88 — wing hing toy mfy. ltd. 1973 — peak american small-town… a fully working pocket bagatelle-pinb… warm">
         <a class="card rarity-c" href="/archive/2026-06-09T04-12.html"
            style="--c1:#f3e2b8; --c2:#a08868; --c3:#a8312a; --rot:0.50deg;">
           <div class="card-inner">
@@ -991,7 +1029,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-08T16-09.html">
+        <div class="card-wrap" data-file="2026-06-08T16-09.html" data-search="jadzia's holy saturday basket — april 14, 1979 1978 — peak american suburban p… a single hand-lettered cream-cardstoc… warm">
         <a class="card rarity-r" href="/archive/2026-06-08T16-09.html"
            style="--c1:#f3e6c8; --c2:#c8b48a; --c3:#1c2a5e; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1015,7 +1053,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-08T12-04.html">
+        <div class="card-wrap" data-file="2026-06-08T12-04.html" data-search="414 linden street — wednesday, july 8, 1908 — 9:14 p.m. 1908 — peak american small-town… a single full-viewport silent generat… no tone — there is no narra…">
         <a class="card rarity-r" href="/archive/2026-06-08T12-04.html"
            style="--c1:#0a1428; --c2:#1c2848; --c3:#0e1830; --rot:0.50deg;">
           <div class="card-inner">
@@ -1039,7 +1077,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-08T08-07.html">
+        <div class="card-wrap" data-file="2026-06-08T08-07.html" data-search="the daniels of #bread-hours · quarantine block 047/313 2020 discord-server-as-community a magic-the-gathering-style fake coll… melancholy">
         <a class="card rarity-c" href="/archive/2026-06-08T08-07.html"
            style="--c1:#ff8c69; --c2:#a3d8e6; --c3:#d96b4a; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1063,7 +1101,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-08T04-11.html">
+        <div class="card-wrap" data-file="2026-06-08T04-11.html" data-search="the missing square — a valentine for the patient solver 1948 — peak american postwar ra… a fully working in-browser 4×4 deduct… warm">
         <a class="card rarity-u" href="/archive/2026-06-08T04-11.html"
            style="--c1:#f0e3c2; --c2:#c8b48a; --c3:#a8312a; --rot:1.50deg;">
           <div class="card-inner">
@@ -1087,7 +1125,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-04T16-11.html">
+        <div class="card-wrap" data-file="2026-06-04T16-11.html" data-search="wiggles.exe 1996 — peak american suburban b… a fully working real-time interactive… warm">
         <a class="card rarity-c" href="/archive/2026-06-04T16-11.html"
            style="--c1:#1c4a5e; --c2:#0e3548; --c3:#d4a868; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1111,7 +1149,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-04T12-08.html">
+        <div class="card-wrap" data-file="2026-06-04T12-08.html" data-search="tonight only — doc halloran's wonder tonic &amp;amp; marvels co. — waukarusa county fairgrounds, sept. 21 1934 1934 — peak american small-town… a single hand-printed two-color lette… warm">
         <a class="card rarity-u" href="/archive/2026-06-04T12-08.html"
            style="--c1:#f1e2bc; --c2:#a8895a; --c3:#a8312a; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1135,7 +1173,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-04T08-12.html">
+        <div class="card-wrap" data-file="2026-06-04T08-12.html" data-search="route 14-b — spring cycle 1967 — a. cernava, rep. 1967 — peak american suburban a… a working browseable hand-ruled terri… warm">
         <a class="card rarity-c" href="/archive/2026-06-04T08-12.html"
            style="--c1:#1c2840; --c2:#a8624a; --c3:#f1e4c4; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1159,7 +1197,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-04T04-05.html">
+        <div class="card-wrap" data-file="2026-06-04T04-05.html" data-search="petrichor quarterly — issue 14 — the smell issue 2008 tumblr boot-up newsletter enthusiastic-fan">
         <a class="card rarity-h" href="/archive/2026-06-04T04-05.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#0d4554; --rot:1.50deg;">
           <div class="card-inner">
@@ -1183,7 +1221,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-03T16-03.html">
+        <div class="card-wrap" data-file="2026-06-03T16-03.html" data-search="bay no. 2 — 11:47 p.m. 1923 — peak american small-town… a full-viewport silent generative pie… no tone — there is no narra…">
         <a class="card rarity-c" href="/archive/2026-06-03T16-03.html"
            style="--c1:#5e2a1c; --c2:#6a3424; --c3:#4e2418; --rot:1.00deg;">
           <div class="card-inner">
@@ -1207,7 +1245,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-03T12-12.html">
+        <div class="card-wrap" data-file="2026-06-03T12-12.html" data-search="fortune no. 04-39971 — a card from the mansfield greyhound 1979 — peak american mid-centur… a page that is the printed paper fort… warm">
         <a class="card rarity-u" href="/archive/2026-06-03T12-12.html"
            style="--c1:#f1e6c8; --c2:#a89878; --c3:#d4c4a0; --rot:-1.50deg;">
           <div class="card-inner">
@@ -1231,7 +1269,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-03T08-11.html">
+        <div class="card-wrap" data-file="2026-06-03T08-11.html" data-search="to ask joanne sunday — 1148 beechwood, thursday evening, october 21 1971 1971 — peak american suburban r… a genuine fully solvable in-browser c… warm">
         <a class="card rarity-u" href="/archive/2026-06-03T08-11.html"
            style="--c1:#a89a82; --c2:#f4d04a; --c3:#7a8a5a; --rot:0.00deg;">
           <div class="card-inner">
@@ -1255,7 +1293,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-03T04-06.html">
+        <div class="card-wrap" data-file="2026-06-03T04-06.html" data-search="a letter from lurlene — 47 riverbend ave., sunday afternoon 1958 — peak american post-war r… a single completed handwritten letter… warm">
         <a class="card rarity-u" href="/archive/2026-06-03T04-06.html"
            style="--c1:#fdf5b1; --c2:#b8c8d8; --c3:#e8b8c4; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1279,7 +1317,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-02T16-05.html">
+        <div class="card-wrap" data-file="2026-06-02T16-05.html" data-search="fortunatron 200 — serial #ft-19847 1987 — peak american mass-marke… a fully working in-browser simulation… warm">
         <a class="card rarity-r" href="/archive/2026-06-02T16-05.html"
            style="--c1:#5a3e26; --c2:#7a5638; --c3:#d4221a; --rot:0.00deg;">
           <div class="card-inner">
@@ -1303,7 +1341,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-02T12-08.html">
+        <div class="card-wrap" data-file="2026-06-02T12-08.html" data-search="235 east 39th — 2:40 p.m. 1936 — peak american federal ar… a full-viewport silent generative wea… no tone — there is no narra…">
         <a class="card rarity-c" href="/archive/2026-06-02T12-08.html"
            style="--c1:#f1e4c4; --c2:#a08868; --c3:#a8352a; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1327,7 +1365,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-02T08-11.html">
+        <div class="card-wrap" data-file="2026-06-02T08-11.html" data-search="mrs. pfaff's tuesday seat work — october 23, 1962 1962 — peak american grade-scho… a genuine warm">
         <a class="card rarity-c" href="/archive/2026-06-02T08-11.html"
            style="--c1:#f1e7cf; --c2:#d4c6a2; --c3:#5e4a8c; --rot:1.00deg;">
           <div class="card-inner">
@@ -1351,7 +1389,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-02T04-08.html">
+        <div class="card-wrap" data-file="2026-06-02T04-08.html" data-search="coronet color № 4471-c — kitchens that remember 1994 — peak american suburban b… a single full-viewport printed paint-… warm">
         <a class="card rarity-h" href="/archive/2026-06-02T04-08.html"
            style="--c1:#f3e7cf; --c2:#f7e0d4; --c3:#f0c8a8; --rot:1.00deg;">
           <div class="card-inner">
@@ -1375,7 +1413,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-01T16-11.html">
+        <div class="card-wrap" data-file="2026-06-01T16-11.html" data-search="starlite drive-in — saturday concession menu — july 16, 1955 1955 — peak american post-war d… a single printed paper concession-sta… warm">
         <a class="card rarity-c" href="/archive/2026-06-01T16-11.html"
            style="--c1:#f3e7cf; --c2:#7a2c3a; --c3:#2d5a3a; --rot:1.00deg;">
           <div class="card-inner">
@@ -1399,7 +1437,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-01T12-06.html">
+        <div class="card-wrap" data-file="2026-06-01T12-06.html" data-search="booth 7 — pearl's lunch counter — tuesday morning, march 1972 1972 — peak american mid-centur… a fully working chrome-and-glass tabl… warm">
         <a class="card rarity-r" href="/archive/2026-06-01T12-06.html"
            style="--c1:#1c3a6e; --c2:#f3e6c8; --c3:#a8312a; --rot:1.00deg;">
           <div class="card-inner">
@@ -1423,7 +1461,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-01T08-11.html">
+        <div class="card-wrap" data-file="2026-06-01T08-11.html" data-search="the register at krenzler &amp;amp; sons — wendell p. brusky, march 17–19, 1964 1964 — peak american mid-centur… a working browseable visitor register… warm">
         <a class="card rarity-c" href="/archive/2026-06-01T08-11.html"
            style="--c1:#f1e7d4; --c2:#a08868; --c3:#1c2a5e; --rot:1.50deg;">
           <div class="card-inner">
@@ -1447,7 +1485,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-06-01T04-02.html">
+        <div class="card-wrap" data-file="2026-06-01T04-02.html" data-search="a marble still turning in the long grass 1968 — peak handcrafted italian… a full-viewport silent generative pie… no tone — there is no narra…">
         <a class="card rarity-c" href="/archive/2026-06-01T04-02.html"
            style="--c1:#1a3a8c; --c2:#e8c84a; --c3:#7a3a8c; --rot:0.50deg;">
           <div class="card-inner">
@@ -1471,7 +1509,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-31T16-11.html">
+        <div class="card-wrap" data-file="2026-05-31T16-11.html" data-search="word detective no. 247 — buckeye weekly inquirer, week of april 19, 1973 1973 — peak american supermarke… a working in-browser word-ladder puzz… warm">
         <a class="card rarity-r" href="/archive/2026-05-31T16-11.html"
            style="--c1:#efe3c6; --c2:#f4d770; --c3:#a8895a; --rot:1.00deg;">
           <div class="card-inner">
@@ -1495,7 +1533,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-31T12-05.html">
+        <div class="card-wrap" data-file="2026-05-31T12-05.html" data-search="marisol's ceiling — larkspur court, july 1991 1991 — peak american suburban s… a working interactive constellation-b… warm">
         <a class="card rarity-c" href="/archive/2026-05-31T12-05.html"
            style="--c1:#3a2e1a; --c2:#9ff04a; --c3:#5a8a3a; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1519,7 +1557,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-31T08-10.html">
+        <div class="card-wrap" data-file="2026-05-31T08-10.html" data-search="a card left at 412 mulberry — pettigrew &amp;amp; sons seed &amp;amp; novelty, april 1937 1937 — peak american depression… a single tan-paper folded door-hanger… warm">
         <a class="card rarity-u" href="/archive/2026-05-31T08-10.html"
            style="--c1:#d6b888; --c2:#2d5a2e; --c3:#a83c2a; --rot:1.50deg;">
           <div class="card-inner">
@@ -1543,7 +1581,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-31T04-04.html">
+        <div class="card-wrap" data-file="2026-05-31T04-04.html" data-search="no. 47 — the drawing-room symmetricon 1888 — peak victorian-era kalei… full-viewport silent generative piece… no tone — there is no narra…">
         <a class="card rarity-c" href="/archive/2026-05-31T04-04.html"
            style="--c1:#2c5aa0; --c2:#a83048; --c3:#d49538; --rot:1.00deg;">
           <div class="card-inner">
@@ -1567,7 +1605,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-30T16-09.html">
+        <div class="card-wrap" data-file="2026-05-30T16-09.html" data-search="who landed the lunker? — lakeshore sentinel-dispatch sunday puzzle page, nov. 16, 1958 1958 — peak american newspaper… a genuine solvable in-browser logic-g… warm">
         <a class="card rarity-r" href="/archive/2026-05-30T16-09.html"
            style="--c1:#f1e4c4; --c2:#a83c2a; --c3:#d4a547; --rot:-1.50deg;">
           <div class="card-inner">
@@ -1591,7 +1629,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-30T12-05.html">
+        <div class="card-wrap" data-file="2026-05-30T12-05.html" data-search="skylark — gottlieb 1962 — verlin's tap, route 6 1962 — peak american mechanical… a working playable single-flipper min… warm">
         <a class="card rarity-c" href="/archive/2026-05-30T12-05.html"
            style="--c1:#5c3a1e; --c2:#f3e6c4; --c3:#7a5a9c; --rot:1.00deg;">
           <div class="card-inner">
@@ -1615,7 +1653,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-30T08-05.html">
+        <div class="card-wrap" data-file="2026-05-30T08-05.html" data-search="vernon's thrift mart cream-style sweet corn — label no. 04-241-b 1978 — peak american supermarke… a single oversized wraparound paper l… warm">
         <a class="card rarity-c" href="/archive/2026-05-30T08-05.html"
            style="--c1:#f3e6c4; --c2:#b8312a; --c3:#e8b347; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1639,7 +1677,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-30T04-09.html">
+        <div class="card-wrap" data-file="2026-05-30T04-09.html" data-search="closing set — hagerstown — d. vellner &amp;amp; mr. tatum (transcribed from tape) 1979 — peak amateur ventriloqui… a page that is a single bound spiral-… warm">
         <a class="card rarity-u" href="/archive/2026-05-30T04-09.html"
            style="--c1:#7a2c2c; --c2:#f5e6c8; --c3:#5c3a1e; --rot:-1.00deg;">
           <div class="card-inner">
@@ -1663,7 +1701,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-29T16-07.html">
+        <div class="card-wrap" data-file="2026-05-29T16-07.html" data-search="the long table at mable street — a menu for stones, spring &amp;amp; summer 2026 2026 present day restaurant menu school crossing guard">
         <a class="card rarity-c" href="/archive/2026-05-29T16-07.html"
            style="--c1:#fdf5b1; --c2:#465775; --c3:#fff7c4; --rot:1.50deg;">
           <div class="card-inner">
@@ -1687,7 +1725,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-29T12-06.html">
+        <div class="card-wrap" data-file="2026-05-29T12-06.html" data-search="sweetwater quadrangle — sectional map no. 14-j 1953 — peak american midcentury… a full-viewport silent generative wea… no tone — there is no narra…">
         <a class="card rarity-c" href="/archive/2026-05-29T12-06.html"
            style="--c1:#f1e4c4; --c2:#b53a2a; --c3:#2d5a2e; --rot:1.50deg;">
           <div class="card-inner">
@@ -1711,7 +1749,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-29T08-10.html">
+        <div class="card-wrap" data-file="2026-05-29T08-10.html" data-search="vega glassworks of tucumcari — sample portfolio no. 6, spring 1962 1962 — peak american roadside m… a working hand-illustrated salesman's… warm">
         <a class="card rarity-c" href="/archive/2026-05-29T08-10.html"
            style="--c1:#f3e7cf; --c2:#1a3a6e; --c3:#ff5a2c; --rot:1.50deg;">
           <div class="card-inner">
@@ -1735,7 +1773,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-29T04-08.html">
+        <div class="card-wrap" data-file="2026-05-29T04-08.html" data-search="label no. 2241 — bench 6, studio no. 4, tuesday afternoon 1968 — peak soviet matchbox-lab… a genuine playable in-browser cryptog… warm">
         <a class="card rarity-c" href="/archive/2026-05-29T04-08.html"
            style="--c1:#d6a86a; --c2:#b8312a; --c3:#f1e7cf; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1759,7 +1797,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-28T16-03.html">
+        <div class="card-wrap" data-file="2026-05-28T16-03.html" data-search="twist station — sherri's kiosk, galleria level 2 1987 — peak shopping mall food… a working hand-twist pretzel dough to… warm">
         <a class="card rarity-c" href="/archive/2026-05-28T16-03.html"
            style="--c1:#f0e4cf; --c2:#a8631f; --c3:#f4c95d; --rot:0.00deg;">
           <div class="card-inner">
@@ -1783,7 +1821,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-28T12-03.html">
+        <div class="card-wrap" data-file="2026-05-28T12-03.html" data-search="operator's manual — model 11/b — domestic series 1982 — peak instruction manual… a single overloaded technical instruc… flat deadpan technical prec…">
         <a class="card rarity-c" href="/archive/2026-05-28T12-03.html"
            style="--c1:#f5e6d3; --c2:#c87137; --c3:#7b9dc3; --rot:0.50deg;">
           <div class="card-inner">
@@ -1807,7 +1845,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-28T08-04.html">
+        <div class="card-wrap" data-file="2026-05-28T08-04.html" data-search="maple grove pool · progress report · emily r., age 7 · session ii, july 1976 summer 1976 handwritten swim-lesson progress repo… warm">
         <a class="card rarity-c" href="/archive/2026-05-28T08-04.html"
            style="--c1:#3a4a5a; --c2:#ff9500; --c3:#6a9b8b; --rot:1.50deg;">
           <div class="card-inner">
@@ -1831,7 +1869,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-28T04-10.html">
+        <div class="card-wrap" data-file="2026-05-28T04-10.html" data-search="the catskill mountain folk gathering · seventh annual program · july 1974 1974 — regional independent fol… interactive three-day festival progra… warm">
         <a class="card rarity-c" href="/archive/2026-05-28T04-10.html"
            style="--c1:#f5e6d3; --c2:#2d5016; --c3:#8b6f47; --rot:0.50deg;">
           <div class="card-inner">
@@ -1855,7 +1893,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-27T16-05.html">
+        <div class="card-wrap" data-file="2026-05-27T16-05.html" data-search="the sky is doing it again tonight 1970s amateur astronomer cultur… a full-viewport canvas animation of a… hushed reverence for percei…">
         <a class="card rarity-c" href="/archive/2026-05-27T16-05.html"
            style="--c1:#0a1428; --c2:#00dd99; --c3:#ff1493; --rot:1.00deg;">
           <div class="card-inner">
@@ -1879,7 +1917,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-27T12-06.html">
+        <div class="card-wrap" data-file="2026-05-27T12-06.html" data-search="the ashford key — a marcus kane mystery 1925 — peak american pulp detec… an interactive crime-novel puzzle-sol… hard-boiled detective voice…">
         <a class="card rarity-r" href="/archive/2026-05-27T12-06.html"
            style="--c1:#f5e6d3; --c2:#1a1a3a; --c3:#c83c3c; --rot:-1.50deg;">
           <div class="card-inner">
@@ -1903,7 +1941,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-27T08-03.html">
+        <div class="card-wrap" data-file="2026-05-27T08-03.html" data-search="the folding light — a kaleidoscope workbench 1970s spiritual craft culture a… interactive kaleidoscope pattern-comp… warm">
         <a class="card rarity-c" href="/archive/2026-05-27T08-03.html"
            style="--c1:#1a1a3a; --c2:#ff8a6b; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1927,7 +1965,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-27T04-09.html">
+        <div class="card-wrap" data-file="2026-05-27T04-09.html" data-search="buzzbox arcade · manager's clipboard · june 1982 1982 an interactive wall-mounted shift-log… warm">
         <a class="card rarity-c" href="/archive/2026-05-27T04-09.html"
            style="--c1:#4a8b8b; --c2:#ffb366; --c3:#1a1f3a; --rot:-0.50deg;">
           <div class="card-inner">
@@ -1951,7 +1989,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-26T16-04.html">
+        <div class="card-wrap" data-file="2026-05-26T16-04.html" data-search="margie's diner · standing orders book · evening shift reference 1985 — peak working neighborhoo… a working standing-orders reference l… warm">
         <a class="card rarity-h" href="/archive/2026-05-26T16-04.html"
            style="--c1:#8b4555; --c2:#ffb366; --c3:#f5e8d0; --rot:0.50deg;">
           <div class="card-inner">
@@ -1975,7 +2013,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-26T08-03.html">
+        <div class="card-wrap" data-file="2026-05-26T08-03.html" data-search="brain teaser monthly · the weekend puzzle page · april 1956 1950s puzzle magazine and brain… a working interactive puzzle challeng… upbeat">
         <a class="card rarity-u" href="/archive/2026-05-26T08-03.html"
            style="--c1:#ff7d6f; --c2:#a3d8b4; --c3:#f5e6d3; --rot:-1.50deg;">
           <div class="card-inner">
@@ -1999,7 +2037,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-26T04-05.html">
+        <div class="card-wrap" data-file="2026-05-26T04-05.html" data-search="echo bench — a working reverb room 1984 — peak affordable digital-… interactive audio echo-chamber play s… playful experimental enthus…">
         <a class="card rarity-c" href="/archive/2026-05-26T04-05.html"
            style="--c1:#00dd44; --c2:#ff9500; --c3:#005d22; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2023,7 +2061,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-25T16-03.html">
+        <div class="card-wrap" data-file="2026-05-25T16-03.html" data-search="frostform — a quiet watching 1970s computer-art speculation… full-viewport pure-css hushed reverence for percei…">
         <a class="card rarity-c" href="/archive/2026-05-25T16-03.html"
            style="--c1:#1a1a4a; --c2:#a8e6f0; --c3:#ff9500; --rot:0.50deg;">
           <div class="card-inner">
@@ -2047,7 +2085,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-25T12-06.html">
+        <div class="card-wrap" data-file="2026-05-25T12-06.html" data-search="vellum recursion — folio vii of the concentric marginalia medieval manuscript illuminatio… a page structured as infinitely neste… hushed reverence for orname…">
         <a class="card rarity-r" href="/archive/2026-05-25T12-06.html"
            style="--c1:#d4af37; --c2:#2a1a4a; --c3:#f5e6d3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2071,7 +2109,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-25T10-41.html">
+        <div class="card-wrap" data-file="2026-05-25T10-41.html" data-search="trade-in appraisal · sheet 4471 · crossroads ford-mercury 1975 suburban automotive trade-… a filled-out carbon-copy automobile t… matter-of-fact automotive a…">
         <a class="card rarity-c" href="/archive/2026-05-25T10-41.html"
            style="--c1:#6b8fa3; --c2:#c8bca8; --c3:#a85a4a; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2095,7 +2133,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-21T16-06.html">
+        <div class="card-wrap" data-file="2026-05-21T16-06.html" data-search="step inside — a visiting room timeless a generative room-description toy. cl… observant and quietly breat…">
         <a class="card rarity-u" href="/archive/2026-05-21T16-06.html"
            style="--c1:#f5e6d3; --c2:#e8a855; --c3:#ecd9bd; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2119,7 +2157,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-21T12-02.html">
+        <div class="card-wrap" data-file="2026-05-21T12-02.html" data-search="pollen hours — a quiet drift of seed and chlorophyll contemporary generative art era… full-viewport canvas-rendered particl… meditative hushed reverence…">
         <a class="card rarity-u" href="/archive/2026-05-21T12-02.html"
            style="--c1:#9fb8a0; --c2:#d4c4a8; --c3:#6b8fa3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2143,7 +2181,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-21T08-09.html">
+        <div class="card-wrap" data-file="2026-05-21T08-09.html" data-search="the empress theatre · daily box office ledger · 1933 1933 — depression-era small-tow… a bound daily box office ledger — wea… earnest">
         <a class="card rarity-c" href="/archive/2026-05-21T08-09.html"
            style="--c1:#f5e6d3; --c2:#7b9dc3; --c3:#5c1a1a; --rot:1.50deg;">
           <div class="card-inner">
@@ -2167,7 +2205,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-21T04-07.html">
+        <div class="card-wrap" data-file="2026-05-21T04-07.html" data-search="plot map · west bed, north bed, beans &amp;amp; co. · june 1998 1998 — suburban back-yard heirl… a hand-drawn garden plot map document… warm">
         <a class="card rarity-c" href="/archive/2026-05-21T04-07.html"
            style="--c1:#6b9b7d; --c2:#c87137; --c3:#7b9dc3; --rot:0.00deg;">
           <div class="card-inner">
@@ -2191,7 +2229,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-20T16-04.html">
+        <div class="card-wrap" data-file="2026-05-20T16-04.html" data-search="hattie's hand-pinned barrel — a tabletop music-box workshop mechanical victorian an interactive music-box composer toy… warm">
         <a class="card rarity-r" href="/archive/2026-05-20T16-04.html"
            style="--c1:#d4af37; --c2:#f5e6d3; --c3:#3e2723; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2215,7 +2253,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-20T12-02.html">
+        <div class="card-wrap" data-file="2026-05-20T12-02.html" data-search="the warm dark — a thermal field meditation timeless animated css thermal-vision landscape… meditative">
         <a class="card rarity-u" href="/archive/2026-05-20T12-02.html"
            style="--c1:#ff4500; --c2:#ff3333; --c3:#00d9ff; --rot:-1.50deg;">
           <div class="card-inner">
@@ -2239,7 +2277,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-20T08-06.html">
+        <div class="card-wrap" data-file="2026-05-20T08-06.html" data-search="closing credits · print notes 47-b · accessioned 2008 1973 film production a page that is the closing credits se… earnest film-archive resear…">
         <a class="card rarity-f" href="/archive/2026-05-20T08-06.html"
            style="--c1:#ff9500; --c2:#f5e6d3; --c3:#efe2c6; --rot:0.50deg;">
           <div class="card-inner">
@@ -2263,7 +2301,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-20T04-06.html">
+        <div class="card-wrap" data-file="2026-05-20T04-06.html" data-search="the silverhand club · members' directory · mcmxxxi 1931 — prohibition era peak a faux-leather-bound membership direc… warm">
         <a class="card rarity-c" href="/archive/2026-05-20T04-06.html"
            style="--c1:#8b1a1a; --c2:#f5e6d3; --c3:#d4af37; --rot:0.00deg;">
           <div class="card-inner">
@@ -2287,7 +2325,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T16-03.html">
+        <div class="card-wrap" data-file="2026-05-19T16-03.html" data-search="the calibration bench · wmrx-tv channel 9 · test-pattern alignment console 1952 — broadcast television sta… interactive test-pattern generator. v… earnest">
         <a class="card rarity-r" href="/archive/2026-05-19T16-03.html"
            style="--c1:#00dd44; --c2:#1a2a3c; --c3:#ff9500; --rot:1.00deg;">
           <div class="card-inner">
@@ -2311,7 +2349,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T13-57.html">
+        <div class="card-wrap" data-file="2026-05-19T13-57.html" data-search="starling on the loop · mission control transmission reconstruction console · 1969 1969 — apollo lunar mission cul… interactive transmission-decoder puzz… earnest">
         <a class="card rarity-c" href="/archive/2026-05-19T13-57.html"
            style="--c1:#0a1428; --c2:#ffa500; --c3:#dc143c; --rot:1.00deg;">
           <div class="card-inner">
@@ -2335,7 +2373,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T13-48.html">
+        <div class="card-wrap" data-file="2026-05-19T13-48.html" data-search="mrs. whitmore's postcard album · marshfield · 1905 1905 — peak american postcard c… interactive postcard collection brows… earnest postcard-collector…">
         <a class="card rarity-u" href="/archive/2026-05-19T13-48.html"
            style="--c1:#a0826d; --c2:#e8c4c4; --c3:#c5d9e8; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2359,7 +2397,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T13-29.html">
+        <div class="card-wrap" data-file="2026-05-19T13-29.html" data-search="sunday morning at 0300 z — w0 contest logs, june 12–13, 1965 1965 — peak american ham radio… interactive qso logbook browser — vis… earnest ham radio operator…">
         <a class="card rarity-c" href="/archive/2026-05-19T13-29.html"
            style="--c1:#1a2f4a; --c2:#ff9500; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2383,7 +2421,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T12-50.html">
+        <div class="card-wrap" data-file="2026-05-19T12-50.html" data-search="node 17 · continental bbs directory · 1989 1989 — peak bbs (bulletin board… interactive bbs terminal emulator — v… earnest sysop (system opera…">
         <a class="card rarity-u" href="/archive/2026-05-19T12-50.html"
            style="--c1:#33ff66; --c2:#ff9500; --c3:#f5e6d3; --rot:0.50deg;">
           <div class="card-inner">
@@ -2407,7 +2445,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T12-09.html">
+        <div class="card-wrap" data-file="2026-05-19T12-09.html" data-search="the aeolian music roll catalogue · spring quarterly · mcmxiii 1913 — peak player piano roll m… interactive player piano roll catalog… earnest music-publishing pr…">
         <a class="card rarity-c" href="/archive/2026-05-19T12-09.html"
            style="--c1:#f5e6d3; --c2:#8b1a1a; --c3:#d4af37; --rot:0.00deg;">
           <div class="card-inner">
@@ -2431,7 +2469,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T11-52.html">
+        <div class="card-wrap" data-file="2026-05-19T11-52.html" data-search="marlene's diner — check #4471 — tuesday afternoon, 1960 1960 diner culture a page formatted as an authentic dine… warm">
         <a class="card rarity-r" href="/archive/2026-05-19T11-52.html"
            style="--c1:#d94040; --c2:#ffb366; --c3:#f3d6a3; --rot:-1.50deg;">
           <div class="card-inner">
@@ -2455,7 +2493,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T11-48.html">
+        <div class="card-wrap" data-file="2026-05-19T11-48.html" data-search="the mail-order marvels trading society · members' bulletin · vol. iv no. 9 1960s mail-order novelty and jo… interactive vintage mail-order novelt… earnest vintage novelty col…">
         <a class="card rarity-u" href="/archive/2026-05-19T11-48.html"
            style="--c1:#ff1493; --c2:#d4a373; --c3:#ebe2c2; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2479,7 +2517,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T11-29.html">
+        <div class="card-wrap" data-file="2026-05-19T11-29.html" data-search="riverbend memorial library · microfiche preservation project · spring 1976 1976 — peak public library micr… interactive microfiche cartridge coll… earnest preservation librar…">
         <a class="card rarity-u" href="/archive/2026-05-19T11-29.html"
            style="--c1:#1a2a4a; --c2:#f5e6d3; --c3:#ff9500; --rot:0.50deg;">
           <div class="card-inner">
@@ -2503,7 +2541,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T09-51.html">
+        <div class="card-wrap" data-file="2026-05-19T09-51.html" data-search="the nightroad sideband · channel 19 roll call &amp; conversation logbook · 1970 1970 — peak citizen-band radio… interactive trucker handle directory… warm">
         <a class="card rarity-h" href="/archive/2026-05-19T09-51.html"
            style="--c1:#ff9500; --c2:#1a3a5a; --c3:#f5e6d3; --rot:0.00deg;">
           <div class="card-inner">
@@ -2527,7 +2565,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T09-25.html">
+        <div class="card-wrap" data-file="2026-05-19T09-25.html" data-search="your cosmic type — inner compass, autumn 1972 1972—peak new age personality g… interactive questionnaire styled as a… warm">
         <a class="card rarity-u" href="/archive/2026-05-19T09-25.html"
            style="--c1:#b7410e; --c2:#6b8e23; --c3:#f5e6d3; --rot:1.50deg;">
           <div class="card-inner">
@@ -2551,7 +2589,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T09-08.html">
+        <div class="card-wrap" data-file="2026-05-19T09-08.html" data-search="wqed-tv · channel 6 · the engineer's closing logbook · summer of 1952 1952 — early local television b… interactive engineer's shift-closure… earnest">
         <a class="card rarity-c" href="/archive/2026-05-19T09-08.html"
            style="--c1:#00dd44; --c2:#1a2a3c; --c3:#ff9500; --rot:0.00deg;">
           <div class="card-inner">
@@ -2575,7 +2613,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T08-58.html">
+        <div class="card-wrap" data-file="2026-05-19T08-58.html" data-search="the beacon street phonograph parlor — session logbook, 1880–1892 1880-1892—peak edison phonograp… interactive phonograph-session logboo… earnest phonograph technici…">
         <a class="card rarity-r" href="/archive/2026-05-19T08-58.html"
            style="--c1:#ff9500; --c2:#3e2723; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2599,7 +2637,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T08-46.html">
+        <div class="card-wrap" data-file="2026-05-19T08-46.html" data-search="wxyz · evening shift broadcast log · tuesday, october 16, 1923 1923 — peak live radio broadcas… interactive evening shift supervisor'… earnest">
         <a class="card rarity-u" href="/archive/2026-05-19T08-46.html"
            style="--c1:#ff8c42; --c2:#f5e6d3; --c3:#d4af37; --rot:0.00deg;">
           <div class="card-inner">
@@ -2623,7 +2661,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T08-37.html">
+        <div class="card-wrap" data-file="2026-05-19T08-37.html" data-search="the 87% moon · an abstract in tribute · eleven-twelfths society 2001 post-dotcom crash academic abstract library cardigan">
         <a class="card rarity-c" href="/archive/2026-05-19T08-37.html"
            style="--c1:#0066a3; --c2:#00568a; --c3:#003e64; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2647,7 +2685,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T08-18.html">
+        <div class="card-wrap" data-file="2026-05-19T08-18.html" data-search="the millbrook radio club — builders' roster &amp;amp; reception ledger · 1926 1922-1928 — peak amateur crysta… interactive crystal radio builder and… earnest amateur radio build…">
         <a class="card rarity-h" href="/archive/2026-05-19T08-18.html"
            style="--c1:#1a2f4a; --c2:#ff9500; --c3:#c9a961; --rot:-1.50deg;">
           <div class="card-inner">
@@ -2671,7 +2709,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T08-09.html">
+        <div class="card-wrap" data-file="2026-05-19T08-09.html" data-search="whitmore's metropolitan stereoscope viewing salon · boston · mdccclxxxv 1885 — peak stereoscope viewing… interactive stereoscope viewing salon… earnest curator and stereos…">
         <a class="card rarity-c" href="/archive/2026-05-19T08-09.html"
            style="--c1:#8b7355; --c2:#3e2723; --c3:#f5e6d3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2695,7 +2733,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T07-56.html">
+        <div class="card-wrap" data-file="2026-05-19T07-56.html" data-search="whitmore's cabinet of natural &amp;amp; artificial curiosities — exhibition guidebook · season of 1895 1890–1905: peak american dime m… interactive victorian dime museum exh… carnival barker meets earne…">
         <a class="card rarity-c" href="/archive/2026-05-19T07-56.html"
            style="--c1:#3e2723; --c2:#d4af37; --c3:#f5e6d3; --rot:0.50deg;">
           <div class="card-inner">
@@ -2719,7 +2757,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T07-39.html">
+        <div class="card-wrap" data-file="2026-05-19T07-39.html" data-search="the luminous studios · beacon hill, boston · coloring floor browser · spring 1912 1911-1914: peak hand-coloring s… interactive film-coloring workshop br… earnest studio artist voice…">
         <a class="card rarity-u" href="/archive/2026-05-19T07-39.html"
            style="--c1:#8b7355; --c2:#dc143c; --c3:#f5e6d3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2743,7 +2781,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T07-27.html">
+        <div class="card-wrap" data-file="2026-05-19T07-27.html" data-search="halsted municipal electric light co. — superintendent's evening logbook, 1887 1887 — peak era of electric str… interactive municipal electricity dep… earnest municipal electrici…">
         <a class="card rarity-u" href="/archive/2026-05-19T07-27.html"
            style="--c1:#ffb84d; --c2:#1a3a5a; --c3:#f5e6d3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2767,7 +2805,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T07-16.html">
+        <div class="card-wrap" data-file="2026-05-19T07-16.html" data-search="the riverside entomological society · specimen catalogue &amp; members' register 1880s peak amateur entomology c… interactive specimen catalog and coll… earnest victorian naturalis…">
         <a class="card rarity-r" href="/archive/2026-05-19T07-16.html"
            style="--c1:#2d5016; --c2:#f5e6d3; --c3:#b87333; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2791,7 +2829,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T07-00.html">
+        <div class="card-wrap" data-file="2026-05-19T07-00.html" data-search="the millbrook astronomical observation society · nightly logbook · 1885–1892 1885-1892: peak amateur astrono… interactive nightly observation logbo… earnest">
         <a class="card rarity-h" href="/archive/2026-05-19T07-00.html"
            style="--c1:#1a3a5a; --c2:#d4af37; --c3:#f5e6d3; --rot:1.00deg;">
           <div class="card-inner">
@@ -2815,7 +2853,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T06-47.html">
+        <div class="card-wrap" data-file="2026-05-19T06-47.html" data-search="thrilling tales · editor's desk · april 1942 1938-1945: golden age pulp maga… interactive editor's desk documentati… warm">
         <a class="card rarity-c" href="/archive/2026-05-19T06-47.html"
            style="--c1:#f5e6d3; --c2:#8b0000; --c3:#8b6f47; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2839,7 +2877,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T06-38.html">
+        <div class="card-wrap" data-file="2026-05-19T06-38.html" data-search="otis bramwell's programme cabinet · touring companies of 1925 1925 — peak era of touring thea… interactive theatrical souvenir progr… warm">
         <a class="card rarity-u" href="/archive/2026-05-19T06-38.html"
            style="--c1:#8b1a1a; --c2:#f5e6d3; --c3:#d4af37; --rot:1.50deg;">
           <div class="card-inner">
@@ -2863,7 +2901,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T05-48.html">
+        <div class="card-wrap" data-file="2026-05-19T05-48.html" data-search="the american network of pressure &amp; cloud observers · summer 1908 1908 — peak distributed amateur… interactive weather station network b… meticulous amateur meteorol…">
         <a class="card rarity-r" href="/archive/2026-05-19T05-48.html"
            style="--c1:#f5e6d3; --c2:#ff9500; --c3:#e8d5b8; --rot:1.50deg;">
           <div class="card-inner">
@@ -2887,7 +2925,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T05-38.html">
+        <div class="card-wrap" data-file="2026-05-19T05-38.html" data-search="the millbrook microscopy society · cabinet of mounted slides · 1885–1892 1880–1895 amateur microscopy cu… interactive microscopy society member… earnest victorian amateur n…">
         <a class="card rarity-c" href="/archive/2026-05-19T05-38.html"
            style="--c1:#c9a961; --c2:#3e2723; --c3:#2c3e50; --rot:0.50deg;">
           <div class="card-inner">
@@ -2911,7 +2949,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T05-27.html">
+        <div class="card-wrap" data-file="2026-05-19T05-27.html" data-search="the apoa circuit · 1974 regional championship bracket browser 1974 — peak regional pinball to… interactive tournament bracket browse… warm">
         <a class="card rarity-c" href="/archive/2026-05-19T05-27.html"
            style="--c1:#c81e1e; --c2:#ff6600; --c3:#1a2a3c; --rot:-1.00deg;">
           <div class="card-inner">
@@ -2935,7 +2973,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T04-38.html">
+        <div class="card-wrap" data-file="2026-05-19T04-38.html" data-search="commonwealth taxi co. · central dispatch · night logbook · february 1920 1920—peak american taxicab infr… interactive night-shift taxicab dispa… warm">
         <a class="card rarity-u" href="/archive/2026-05-19T04-38.html"
            style="--c1:#ff9500; --c2:#2a4a5a; --c3:#1e3642; --rot:-0.50deg;">
           <div class="card-inner">
@@ -2959,7 +2997,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T04-27.html">
+        <div class="card-wrap" data-file="2026-05-19T04-27.html" data-search="the millbrook lens · bulletin of the millbrook photography society · vol. i, no. 7 · july 1888 1888 — george eastman kodak rol… a page that is a photography club mon… earnest amateur photographe…">
         <a class="card rarity-c" href="/archive/2026-05-19T04-27.html"
            style="--c1:#704214; --c2:#f5e6d3; --c3:#ff8c42; --rot:0.00deg;">
           <div class="card-inner">
@@ -2983,7 +3021,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T03-57.html">
+        <div class="card-wrap" data-file="2026-05-19T03-57.html" data-search="pemberton central exchange · afternoon shift logbook · 14 september 1915 1915 interactive telephone operator's afte… earnest">
         <a class="card rarity-c" href="/archive/2026-05-19T03-57.html"
            style="--c1:#f5e6d3; --c2:#d4af37; --c3:#ead4b5; --rot:1.00deg;">
           <div class="card-inner">
@@ -3007,7 +3045,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T03-39.html">
+        <div class="card-wrap" data-file="2026-05-19T03-39.html" data-search="the electric brain bbs · node 1 · connect 2400/mnp5 1989 functioning text-based bbs terminal i… earnest enthusiast bbs oper…">
         <a class="card rarity-c" href="/archive/2026-05-19T03-39.html"
            style="--c1:#33ff66; --c2:#ff9500; --c3:#1a8033; --rot:0.00deg;">
           <div class="card-inner">
@@ -3031,7 +3069,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T03-27.html">
+        <div class="card-wrap" data-file="2026-05-19T03-27.html" data-search="the starlight drive-in · manager's nightly logbook · summer 1957 1957 interactive drive-in manager's nightl… warm">
         <a class="card rarity-c" href="/archive/2026-05-19T03-27.html"
            style="--c1:#5a7a9c; --c2:#ffa500; --c3:#2e3f5e; --rot:0.50deg;">
           <div class="card-inner">
@@ -3055,7 +3093,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T03-18.html">
+        <div class="card-wrap" data-file="2026-05-19T03-18.html" data-search="route seven · a lamplighter's december · 1925 1925 — the twilight of gas-lamp… interactive night-shift lamplighter's… earnest">
         <a class="card rarity-r" href="/archive/2026-05-19T03-18.html"
            style="--c1:#1a2a4a; --c2:#ff9500; --c3:#0d1730; --rot:1.00deg;">
           <div class="card-inner">
@@ -3079,7 +3117,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T03-05.html">
+        <div class="card-wrap" data-file="2026-05-19T03-05.html" data-search="mathew's daguerreotype studio · washington street, boston · sitting ledger 1850 1850 — peak daguerreotype portr… interactive daguerreotype studio appo… earnest">
         <a class="card rarity-r" href="/archive/2026-05-19T03-05.html"
            style="--c1:#3e2723; --c2:#f5e6d3; --c3:#ff8c42; --rot:0.50deg;">
           <div class="card-inner">
@@ -3103,7 +3141,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T02-56.html">
+        <div class="card-wrap" data-file="2026-05-19T02-56.html" data-search="horn &amp;amp; hardart automat · 818 chestnut street · hot meals at the drop of a coin 1924 interactive automat facade browser: v… warm">
         <a class="card rarity-c" href="/archive/2026-05-19T02-56.html"
            style="--c1:#d4af37; --c2:#f5e6d3; --c3:#3e2723; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3127,7 +3165,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T02-48.html">
+        <div class="card-wrap" data-file="2026-05-19T02-48.html" data-search="the marvels theater · manager's daily logbook · millbrook, michigan · september 1906 1906 — peak nickelodeon motion… interactive nickelodeon theater daily… warm">
         <a class="card rarity-u" href="/archive/2026-05-19T02-48.html"
            style="--c1:#8b7355; --c2:#ff8c42; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3151,7 +3189,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T02-36.html">
+        <div class="card-wrap" data-file="2026-05-19T02-36.html" data-search="eleanor hutchins' sighting logbook · burlington audubon chapter · 1954–1962 1957 — peak amateur ornithology… interactive field observer's personal… earnest amateur naturalist…">
         <a class="card rarity-u" href="/archive/2026-05-19T02-36.html"
            style="--c1:#8b9f7e; --c2:#f5e6d3; --c3:#4a5a6c; --rot:0.00deg;">
           <div class="card-inner">
@@ -3175,7 +3213,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T02-27.html">
+        <div class="card-wrap" data-file="2026-05-19T02-27.html" data-search="millbrook post office · incoming tray · tuesday, march 6, 1923 1923 — peak american mail art a… interactive postal sorting station: v… warm">
         <a class="card rarity-c" href="/archive/2026-05-19T02-27.html"
            style="--c1:#2d5016; --c2:#b87333; --c3:#4a6b35; --rot:-1.50deg;">
           <div class="card-inner">
@@ -3199,7 +3237,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T02-09.html">
+        <div class="card-wrap" data-file="2026-05-19T02-09.html" data-search="radio free uprising · five frequencies · tonight on the air 1980s peak pirate fm radio cult… working radio tuner interface with ro… warm">
         <a class="card rarity-u" href="/archive/2026-05-19T02-09.html"
            style="--c1:#ff8c42; --c2:#b020f0; --c3:#f5e6d3; --rot:0.00deg;">
           <div class="card-inner">
@@ -3223,7 +3261,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T01-55.html">
+        <div class="card-wrap" data-file="2026-05-19T01-55.html" data-search="the westcote optical society · slide cabinet &amp;amp; projection hall · 1887 1880s peak magic lantern slide… interactive magic lantern projection… earnest amateur optical ent…">
         <a class="card rarity-f" href="/archive/2026-05-19T01-55.html"
            style="--c1:#3e2723; --c2:#d4af37; --c3:#f5e6d3; --rot:1.00deg;">
           <div class="card-inner">
@@ -3247,7 +3285,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T01-48.html">
+        <div class="card-wrap" data-file="2026-05-19T01-48.html" data-search="the hartwell tobacco card collection · album &amp;amp; trading ledger · 1895 1895 — peak tobacco card chromo… interactive tobacco card collector's… earnest">
         <a class="card rarity-c" href="/archive/2026-05-19T01-48.html"
            style="--c1:#8b3a3a; --c2:#d4af37; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3271,7 +3309,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T01-37.html">
+        <div class="card-wrap" data-file="2026-05-19T01-37.html" data-search="the whitmore spiritualist circle · sittings of the veil · boston 1924 1924 — peak american spirituali… interactive darkened parlor viewed fr… earnest">
         <a class="card rarity-c" href="/archive/2026-05-19T01-37.html"
            style="--c1:#483d8b; --c2:#f5e6d3; --c3:#d4af37; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3295,7 +3333,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T00-56.html">
+        <div class="card-wrap" data-file="2026-05-19T00-56.html" data-search="channel 19 cafe · open mic on the long haul · week of march 11, 1974 1974 — peak cb radio trucker cu… interactive cb radio frequency tuner:… warm">
         <a class="card rarity-c" href="/archive/2026-05-19T00-56.html"
            style="--c1:#ff9500; --c2:#3a6b9e; --c3:#f5e6d3; --rot:1.00deg;">
           <div class="card-inner">
@@ -3319,7 +3357,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T00-46.html">
+        <div class="card-wrap" data-file="2026-05-19T00-46.html" data-search="doc mallory's route book · nine diners, holbrook county · spring 1954 1952–1958: peak diner jukebox c… interactive diner jukebox operator's… earnest">
         <a class="card rarity-h" href="/archive/2026-05-19T00-46.html"
            style="--c1:#ff9500; --c2:#8b6f47; --c3:#8b0000; --rot:0.50deg;">
           <div class="card-inner">
@@ -3343,7 +3381,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T00-37.html">
+        <div class="card-wrap" data-file="2026-05-19T00-37.html" data-search="the millbrook fossil collectors' society · registry of active members · anno 1887 1887 — the golden age of amateu… interactive field notebook and specim… earnest amateur naturalist…">
         <a class="card rarity-c" href="/archive/2026-05-19T00-37.html"
            style="--c1:#8b6f47; --c2:#f5e6d3; --c3:#b87333; --rot:0.50deg;">
           <div class="card-inner">
@@ -3367,7 +3405,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T00-25.html">
+        <div class="card-wrap" data-file="2026-05-19T00-25.html" data-search="the velvet door · south side chicago · ring twice, ask for pearl 1920-1933 prohibition-era speak… interactive speakeasy member director… conspiratorial whisper">
         <a class="card rarity-c" href="/archive/2026-05-19T00-25.html"
            style="--c1:#5c1a1a; --c2:#d4af37; --c3:#f5e6d3; --rot:-1.50deg;">
           <div class="card-inner">
@@ -3391,7 +3429,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T00-16.html">
+        <div class="card-wrap" data-file="2026-05-19T00-16.html" data-search="w9mrc · millbrook amateur radio club · operator's desk · march 17, 1953 1950s peak amateur ham radio op… interactive amateur radio operator's… earnest">
         <a class="card rarity-u" href="/archive/2026-05-19T00-16.html"
            style="--c1:#ff8c42; --c2:#f5e6d3; --c3:#8b6f47; --rot:1.50deg;">
           <div class="card-inner">
@@ -3415,7 +3453,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-19T00-08.html">
+        <div class="card-wrap" data-file="2026-05-19T00-08.html" data-search="aerial phenomena field reports · civilian witness index · 1954 1954 — peak ufo sighting wave d… interactive u.s. air force ufo incide… earnest wide-eyed witness v…">
         <a class="card rarity-u" href="/archive/2026-05-19T00-08.html"
            style="--c1:#3a4a5c; --c2:#4a9d6f; --c3:#2a3848; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3439,7 +3477,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T23-55.html">
+        <div class="card-wrap" data-file="2026-05-18T23-55.html" data-search="the heartland seed preservation network · member registry · 1934 1934 — depression-era agricultu… interactive seed-swap cooperative mem… warm">
         <a class="card rarity-c" href="/archive/2026-05-18T23-55.html"
            style="--c1:#6b4423; --c2:#f5e6d3; --c3:#5a7a4a; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3463,7 +3501,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T23-46.html">
+        <div class="card-wrap" data-file="2026-05-18T23-46.html" data-search="the stereoview publishing society of london · members' hall · spring 1884 1880s — peak stereoscope card c… interactive stereoscope viewer interf… earnest victorian-era colle…">
         <a class="card rarity-f" href="/archive/2026-05-18T23-46.html"
            style="--c1:#704214; --c2:#f5e6d3; --c3:#d4af37; --rot:-1.50deg;">
           <div class="card-inner">
@@ -3487,7 +3525,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T23-35.html">
+        <div class="card-wrap" data-file="2026-05-18T23-35.html" data-search="henderson's tv service · daily work-order log · week of may 14, 1953 1953 — golden age of television… interactive tv repair technician's da… earnest">
         <a class="card rarity-u" href="/archive/2026-05-18T23-35.html"
            style="--c1:#ff9500; --c2:#5c4033; --c3:#f5e6d3; --rot:0.00deg;">
           <div class="card-inner">
@@ -3511,7 +3549,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T23-24.html">
+        <div class="card-wrap" data-file="2026-05-18T23-24.html" data-search="beacon point light station · keeper's daily log · oregon coast 1891–1895 interactive flip-card weather and inc… earnest">
         <a class="card rarity-u" href="/archive/2026-05-18T23-24.html"
            style="--c1:#5a7a8c; --c2:#f5e6d3; --c3:#d4af37; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3535,7 +3573,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T23-18.html">
+        <div class="card-wrap" data-file="2026-05-18T23-18.html" data-search="sparkling note studio · the 1955 jingle library · des moines, iowa 1955 — peak golden age of radio… interactive jingle library browser: v… earnest">
         <a class="card rarity-u" href="/archive/2026-05-18T23-18.html"
            style="--c1:#ff8c42; --c2:#f5e6d3; --c3:#8b6f47; --rot:-1.50deg;">
           <div class="card-inner">
@@ -3559,7 +3597,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T23-08.html">
+        <div class="card-wrap" data-file="2026-05-18T23-08.html" data-search="krause's apotheke · charlottenburg · tagesinventar · 14. mai 1912 1912 berlin — early pre-fda pha… interactive wooden apothecary cabinet… earnest">
         <a class="card rarity-h" href="/archive/2026-05-18T23-08.html"
            style="--c1:#8b6f47; --c2:#f5e6d3; --c3:#2d5016; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3583,7 +3621,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T22-55.html">
+        <div class="card-wrap" data-file="2026-05-18T22-55.html" data-search="werkstatt klang — synthesizer-reparatur · köpenicker straße 47 · auftragsbuch 1979-1983: peak synthesizer ado… an interactive synthesizer repair wor… meticulous">
         <a class="card rarity-c" href="/archive/2026-05-18T22-55.html"
            style="--c1:#ff8c42; --c2:#00ffff; --c3:#a85a26; --rot:1.00deg;">
           <div class="card-inner">
@@ -3607,7 +3645,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T22-40.html">
+        <div class="card-wrap" data-file="2026-05-18T22-40.html" data-search="stage select · issue 14 · fall 1989 · the prism paladin review 1989 — peak gaming magazine cul… interactive recreation of a specific… earnest gaming magazine aut…">
         <a class="card rarity-c" href="/archive/2026-05-18T22-40.html"
            style="--c1:#0066ff; --c2:#ff1493; --c3:#f5e8dc; --rot:1.00deg;">
           <div class="card-inner">
@@ -3631,7 +3669,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T22-27.html">
+        <div class="card-wrap" data-file="2026-05-18T22-27.html" data-search="atomage home furnishings · kansas city showroom · 1960 1960 — space age optimism interactive 1960 furniture and applia… earnest">
         <a class="card rarity-h" href="/archive/2026-05-18T22-27.html"
            style="--c1:#00d4d4; --c2:#ff6b35; --c3:#f5e6d3; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3655,7 +3693,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T22-16.html">
+        <div class="card-wrap" data-file="2026-05-18T22-16.html" data-search="the mayfield suffragette alliance · campaign materials · spring 1913 1913 — peak suffragette movement interactive suffragette campaign mate… determined">
         <a class="card rarity-c" href="/archive/2026-05-18T22-16.html"
            style="--c1:#483d8b; --c2:#ffd700; --c3:#f5e6d3; --rot:0.00deg;">
           <div class="card-inner">
@@ -3679,7 +3717,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T22-05.html">
+        <div class="card-wrap" data-file="2026-05-18T22-05.html" data-search="danny's cartridge shelf · spring 1982 1981 — early atari 2600 home vi… interactive cartridge shelf library:… earnest young video game en…">
         <a class="card rarity-r" href="/archive/2026-05-18T22-05.html"
            style="--c1:#8b6f47; --c2:#d4af77; --c3:#5e4a30; --rot:0.00deg;">
           <div class="card-inner">
@@ -3703,7 +3741,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T21-54.html">
+        <div class="card-wrap" data-file="2026-05-18T21-54.html" data-search="starline diner · 48 hours with the moon · july 1969 1969 — apollo 11 moon landing s… an interactive family-curated scrapbo… warm">
         <a class="card rarity-c" href="/archive/2026-05-18T21-54.html"
            style="--c1:#c4a57b; --c2:#c41e3a; --c3:#d8bd97; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3727,7 +3765,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T21-43.html">
+        <div class="card-wrap" data-file="2026-05-18T21-43.html" data-search="vacancy! — the roadside postcard exchange · summer 1965 1965 — peak american motel post… interactive postcard collection brows… warm">
         <a class="card rarity-u" href="/archive/2026-05-18T21-43.html"
            style="--c1:#e8724f; --c2:#00a9b5; --c3:#d4af37; --rot:-1.50deg;">
           <div class="card-inner">
@@ -3751,7 +3789,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T21-36.html">
+        <div class="card-wrap" data-file="2026-05-18T21-36.html" data-search="the pattern cabinet · spring–summer 1952 · home seamstress quarterly 1952 — the golden age of home s… an interactive vintage sewing pattern… warm">
         <a class="card rarity-u" href="/archive/2026-05-18T21-36.html"
            style="--c1:#f5c6cb; --c2:#b3d4a8; --c3:#cc5500; --rot:0.50deg;">
           <div class="card-inner">
@@ -3775,7 +3813,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T21-26.html">
+        <div class="card-wrap" data-file="2026-05-18T21-26.html" data-search="the millbrook &amp;amp; eastern · layout showcase · bulletin no. 47 1982–1988: the golden age of an… an interactive model railroad layout… earnest hobbyist passion mi…">
         <a class="card rarity-c" href="/archive/2026-05-18T21-26.html"
            style="--c1:#2d5016; --c2:#f5e6d3; --c3:#d4af37; --rot:1.50deg;">
           <div class="card-inner">
@@ -3799,7 +3837,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T21-14.html">
+        <div class="card-wrap" data-file="2026-05-18T21-14.html" data-search="horn &amp;amp; hardart automat · 38th &amp;amp; broadway · open now 1930s — the golden age of the a… interactive automat facade simulator:… earnest automat enthusiast…">
         <a class="card rarity-u" href="/archive/2026-05-18T21-14.html"
            style="--c1:#f5e6d3; --c2:#d4af37; --c3:#e8d4ba; --rot:-0.50deg;">
           <div class="card-inner">
@@ -3823,7 +3861,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T21-07.html">
+        <div class="card-wrap" data-file="2026-05-18T21-07.html" data-search="the starlight theatre · week of october 17, 1927 · hadley falls, kansas 1927 — silent film exhibition interactive weekly exhibition schedul… warm">
         <a class="card rarity-u" href="/archive/2026-05-18T21-07.html"
            style="--c1:#3d2645; --c2:#f5e6d3; --c3:#d4af37; --rot:1.00deg;">
           <div class="card-inner">
@@ -3847,7 +3885,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T20-55.html">
+        <div class="card-wrap" data-file="2026-05-18T20-55.html" data-search="midwest chautauqua at clearwater · july 14–18, 1924 · official program 1924 — chautauqua circuit at pe… an interactive 5-day chautauqua assem… earnest chautauqua promoter…">
         <a class="card rarity-c" href="/archive/2026-05-18T20-55.html"
            style="--c1:#e8ddc0; --c2:#2d5016; --c3:#d4af37; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3871,7 +3909,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T20-44.html">
+        <div class="card-wrap" data-file="2026-05-18T20-44.html" data-search="the international correspondence institute · 1926 course catalog 1926 — post-wwi mail-order pros… an interactive correspondence school… warmly encouraging">
         <a class="card rarity-c" href="/archive/2026-05-18T20-44.html"
            style="--c1:#8b7355; --c2:#f5e6d3; --c3:#2d5016; --rot:1.00deg;">
           <div class="card-inner">
@@ -3895,7 +3933,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T20-24.html">
+        <div class="card-wrap" data-file="2026-05-18T20-24.html" data-search="millbrook — kansas: a guide to the sunflower state (1933) 1933 — federal writers' project a single earnest entry from a fiction… earnest federal writers' pr…">
         <a class="card rarity-u" href="/archive/2026-05-18T20-24.html"
            style="--c1:#6b5344; --c2:#f5e6d3; --c3:#2d5016; --rot:0.00deg;">
           <div class="card-inner">
@@ -3919,7 +3957,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T20-15.html">
+        <div class="card-wrap" data-file="2026-05-18T20-15.html" data-search="big wheel's logbook · cb radio · week of june 9, 1975 1975 — citizens band radio peak… an interactive cb radio control panel… earnest trucker cb culture…">
         <a class="card rarity-c" href="/archive/2026-05-18T20-15.html"
            style="--c1:#ffaa00; --c2:#e8d4a8; --c3:#c9a96e; --rot:-1.00deg;">
           <div class="card-inner">
@@ -3943,7 +3981,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T20-04.html">
+        <div class="card-wrap" data-file="2026-05-18T20-04.html" data-search="the dayton aviation club · inaugural logbook · 1910–1912 1911 — early aviation interactive flight logbook displayed… meticulous club secretary v…">
         <a class="card rarity-h" href="/archive/2026-05-18T20-04.html"
            style="--c1:#f5e6d3; --c2:#1a3a5c; --c3:#5c4033; --rot:1.00deg;">
           <div class="card-inner">
@@ -3967,7 +4005,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T19-56.html">
+        <div class="card-wrap" data-file="2026-05-18T19-56.html" data-search="becca's buddy list · tuesday, september 17, 1996 · 7:42 pm 1996 an interactive aol instant messenger… earnest">
         <a class="card rarity-c" href="/archive/2026-05-18T19-56.html"
            style="--c1:#0066cc; --c2:#ffff00; --c3:#003d7a; --rot:1.00deg;">
           <div class="card-inner">
@@ -3991,7 +4029,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T19-43.html">
+        <div class="card-wrap" data-file="2026-05-18T19-43.html" data-search="rainbow video · rental catalog · open 'til midnight 1990 — peak vhs rental culture interactive video rental card catalog… earnest video-nerd staff en…">
         <a class="card rarity-u" href="/archive/2026-05-18T19-43.html"
            style="--c1:#2d1b4e; --c2:#00d9ff; --c3:#ff006e; --rot:1.50deg;">
           <div class="card-inner">
@@ -4015,7 +4053,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T19-33.html">
+        <div class="card-wrap" data-file="2026-05-18T19-33.html" data-search="steinberg's delicatessen · 2nd &amp; mulberry · sandwich counter 1947 postwar american jewish de… interactive deli counter sandwich bui… warm">
         <a class="card rarity-c" href="/archive/2026-05-18T19-33.html"
            style="--c1:#d64045; --c2:#f5e8dc; --c3:#d4af37; --rot:-0.50deg;">
           <div class="card-inner">
@@ -4039,7 +4077,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T19-27.html">
+        <div class="card-wrap" data-file="2026-05-18T19-27.html" data-search="the tuesday morning kitchenware exchange · member card file 1955 — post-war suburban domest… an interactive rolodex-style member c… warm">
         <a class="card rarity-h" href="/archive/2026-05-18T19-27.html"
            style="--c1:#f5c6cb; --c2:#ffd966; --c3:#b3d4a8; --rot:0.00deg;">
           <div class="card-inner">
@@ -4063,7 +4101,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T19-19.html">
+        <div class="card-wrap" data-file="2026-05-18T19-19.html" data-search="the halliday bundle — letters east and west, 1890–1910 1890s american small-town posta… a clickable nested-letter experience.… earnest victorian formality…">
         <a class="card rarity-u" href="/archive/2026-05-18T19-19.html"
            style="--c1:#f5e6d3; --c2:#3e2723; --c3:#b87333; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4087,7 +4125,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T19-03.html">
+        <div class="card-wrap" data-file="2026-05-18T19-03.html" data-search="maple street community center · bulletin board 1974 — peak community center cu… an interactive cork bulletin board vi… warm">
         <a class="card rarity-u" href="/archive/2026-05-18T19-03.html"
            style="--c1:#8b7355; --c2:#f5e6d3; --c3:#dc143c; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4111,7 +4149,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T18-58.html">
+        <div class="card-wrap" data-file="2026-05-18T18-58.html" data-search="dr. friendly's complete guide to smiling bright 1958 — postwar american pediatr… an interactive children's dental-heal… warm">
         <a class="card rarity-c" href="/archive/2026-05-18T18-58.html"
            style="--c1:#4db8a8; --c2:#e8d4b8; --c3:#f5d4d8; --rot:-0.50deg;">
           <div class="card-inner">
@@ -4135,7 +4173,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T18-45.html">
+        <div class="card-wrap" data-file="2026-05-18T18-45.html" data-search="the byte house bbs · node 1 · 2400 baud · free 24/7 1989 — peak dial-up modem and b… a working text-based bbs login interf… earnest teenage bbs sysop —…">
         <a class="card rarity-c" href="/archive/2026-05-18T18-45.html"
            style="--c1:#33ff66; --c2:#1a8033; --c3:#1a8033; --rot:-0.50deg;">
           <div class="card-inner">
@@ -4159,7 +4197,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T18-23.html">
+        <div class="card-wrap" data-file="2026-05-18T18-23.html" data-search="pipochi ピポっち — official owner's manual &amp; care companion 1997 — peak tamagotchi craze an… an interactive tamagotchi instruction… earnest japanese product-in…">
         <a class="card rarity-c" href="/archive/2026-05-18T18-23.html"
            style="--c1:#ff1493; --c2:#ffb4dd; --c3:#ffe5f3; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4183,7 +4221,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T18-13.html">
+        <div class="card-wrap" data-file="2026-05-18T18-13.html" data-search="wacc-12 · tuesday evening program guide · willowbrook community cable 1976 — community access televis… a complete evening broadcast schedule… earnest community televisio…">
         <a class="card rarity-r" href="/archive/2026-05-18T18-13.html"
            style="--c1:#e8dcc0; --c2:#093540; --c3:#ff8c69; --rot:0.50deg;">
           <div class="card-inner">
@@ -4207,7 +4245,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T18-05.html">
+        <div class="card-wrap" data-file="2026-05-18T18-05.html" data-search="nebula strike — high score table — the galaxy room 1979 — space invaders phenomenon a full-screen arcade cabinet high-sco… earnest arcade regular and…">
         <a class="card rarity-r" href="/archive/2026-05-18T18-05.html"
            style="--c1:#00ff00; --c2:#00ffff; --c3:#ff6600; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4231,7 +4269,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T17-54.html">
+        <div class="card-wrap" data-file="2026-05-18T17-54.html" data-search="opa form r-403 · your weekly marketing worksheet · spring 1944 1944 — united states wartime fo… an interactive wartime ration booklet… earnest">
         <a class="card rarity-c" href="/archive/2026-05-18T17-54.html"
            style="--c1:#001f3f; --c2:#fffacd; --c3:#dc143c; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4255,7 +4293,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T17-45.html">
+        <div class="card-wrap" data-file="2026-05-18T17-45.html" data-search="the dungeon master's scrolls · issue #14 · uncommon creatures 1983 — golden age of dungeons &amp;… a single page from a spiral-bound fan… earnest amateur game-design…">
         <a class="card rarity-c" href="/archive/2026-05-18T17-45.html"
            style="--c1:#c41e3a; --c2:#c41e3a; --c3:#c41e3a; --rot:0.00deg;">
           <div class="card-inner">
@@ -4279,7 +4317,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T17-16.html">
+        <div class="card-wrap" data-file="2026-05-18T17-16.html" data-search="millbrook gazette — notices &amp;amp; personals · june 15, 1970 1970 — small-town community new… a single page of personals earnest">
         <a class="card rarity-r" href="/archive/2026-05-18T17-16.html"
            style="--c1:#c41e3a; --c2:#9e1830; --c3:#9e1830; --rot:1.00deg;">
           <div class="card-inner">
@@ -4303,7 +4341,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T14-47.html">
+        <div class="card-wrap" data-file="2026-05-18T14-47.html" data-search="w9rhp · station log · roy h. patterson · terre haute, indiana · 1962 1962 — ham radio and early spac… an interactive collection of authenti… earnest">
         <a class="card rarity-c" href="/archive/2026-05-18T14-47.html"
            style="--c1:#8b7355; --c2:#f5e6d3; --c3:#d4af37; --rot:1.00deg;">
           <div class="card-inner">
@@ -4327,7 +4365,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T12-48.html">
+        <div class="card-wrap" data-file="2026-05-18T12-48.html" data-search="copper canyon music festival · july 18–20, 1968 · northern california 1968 concert poster psychedelia… a full-page vintage concert poster re… breathless">
         <a class="card rarity-c" href="/archive/2026-05-18T12-48.html"
            style="--c1:#ff6b35; --c2:#9d4edd; --c3:#c94e1f; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4351,7 +4389,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T12-37.html">
+        <div class="card-wrap" data-file="2026-05-18T12-37.html" data-search="veggetamer 3000 — harrington's home kitchen catalog, vol. 12 1974 a product spread from a fake mail-ord… earnest mail-order copywrit…">
         <a class="card rarity-c" href="/archive/2026-05-18T12-37.html"
            style="--c1:#6b4423; --c2:#9a7050; --c3:#c4a882; --rot:1.50deg;">
           <div class="card-inner">
@@ -4375,7 +4413,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T11-29.html">
+        <div class="card-wrap" data-file="2026-05-18T11-29.html" data-search="the waxing gibbous: a fan tour for people who pay attention 2014 peak tumblr soft-grunge a click-to-summon-a-firework or click… tour guide with strong opin…">
         <a class="card rarity-r" href="/archive/2026-05-18T11-29.html"
            style="--c1:#ff44cc; --c2:#1e0a2e; --c3:#ffc8f0; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4399,7 +4437,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T11-27.html">
+        <div class="card-wrap" data-file="2026-05-18T11-27.html" data-search="dorothy's kitchen file · tested recipes for the modern homemaker 1954 atomic-age optimism and ei… a homemaker's 3x5 recipe-card file bo… warm">
         <a class="card rarity-h" href="/archive/2026-05-18T11-27.html"
            style="--c1:#00b4d8; --c2:#ff6b9d; --c3:#cc9f5c; --rot:1.00deg;">
           <div class="card-inner">
@@ -4423,7 +4461,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T06-28.html">
+        <div class="card-wrap" data-file="2026-05-18T06-28.html" data-search="unit operation companion · revision 4.1 · apparatus orientation series 1996 web 1.0 banner-ad a single drop of light pulsing in the… instructional">
         <a class="card rarity-c" href="/archive/2026-05-18T06-28.html"
            style="--c1:#ff8c69; --c2:#a3d8e6; --c3:#1c4a57; --rot:1.50deg;">
           <div class="card-inner">
@@ -4447,7 +4485,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T05-27.html">
+        <div class="card-wrap" data-file="2026-05-18T05-27.html" data-search="in memoriam: cloud-seaming · the_oracle_speaks · livejournal 2003 livejournal obituary for something that did not d… prophetic">
         <a class="card rarity-c" href="/archive/2026-05-18T05-27.html"
            style="--c1:#ffff66; --c2:#c8b6ff; --c3:#c8b6ff; --rot:0.50deg;">
           <div class="card-inner">
@@ -4471,7 +4509,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T05-17.html">
+        <div class="card-wrap" data-file="2026-05-18T05-17.html" data-search="mrs. pitchford's substitute diary · room 6 · crabapple hollow elementary · spring '78 1978 zine xerox aesthetic a real riddle whose answer is hidden… folksy">
         <a class="card rarity-r" href="/archive/2026-05-18T05-17.html"
            style="--c1:#cb6446; --c2:#f4d4cb; --c3:#8b3f25; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4495,7 +4533,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T02-38.html">
+        <div class="card-wrap" data-file="2026-05-18T02-38.html" data-search="volcano snakz™ — taste it again (in your heart) 2020 discord-server-as-community a one-button game (click increases so… enthusiastic-fan">
         <a class="card rarity-u" href="/archive/2026-05-18T02-38.html"
            style="--c1:#c66b3d; --c2:#828f4a; --c3:#f5e4c0; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4519,7 +4557,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T01-03.html">
+        <div class="card-wrap" data-file="2026-05-18T01-03.html" data-search="the hearthward transmissions · issue 33 · the sovereign broth of total becoming 2001 post-dotcom crash newsletter cult-y">
         <a class="card rarity-r" href="/archive/2026-05-18T01-03.html"
            style="--c1:#dfb35d; --c2:#677c3c; --c3:#f0cc82; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4543,7 +4581,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-18T00-49.html">
+        <div class="card-wrap" data-file="2026-05-18T00-49.html" data-search="the one-chair barbershop as community anchor — finch &amp; duvall, 1995 1995 early ncsa mosaic academic abstract earnest">
         <a class="card rarity-c" href="/archive/2026-05-18T00-49.html"
            style="--c1:#00f0ff; --c2:#ff006e; --c3:#ccffff; --rot:1.00deg;">
           <div class="card-inner">
@@ -4567,7 +4605,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T23-16.html">
+        <div class="card-wrap" data-file="2026-05-17T23-16.html" data-search="~*~ abilene &amp; dusty's official wedding registry ~*~ she is a horse 2005 myspace wedding registry for fictional people chipper">
         <a class="card rarity-c" href="/archive/2026-05-17T23-16.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:1.50deg;">
           <div class="card-inner">
@@ -4591,7 +4629,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T22-18.html">
+        <div class="card-wrap" data-file="2026-05-17T22-18.html" data-search="local 1204 dial-a-bulletin · amalgamated transit workers undated a rotary-phone dial toy (each digit p… ranger at a state park">
         <a class="card rarity-c" href="/archive/2026-05-17T22-18.html"
            style="--c1:#1c2b50; --c2:#f5ecd7; --c3:#b8912a; --rot:-0.50deg;">
           <div class="card-inner">
@@ -4615,7 +4653,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T21-07.html">
+        <div class="card-wrap" data-file="2026-05-17T21-07.html" data-search="parking lot oracle!! a logic grid for the sunrise hours 2011 early instagram filter a logic grid puzzle: 3 items breathless">
         <a class="card rarity-h" href="/archive/2026-05-17T21-07.html"
            style="--c1:#33ff66; --c2:#33ff66; --c3:#33ff66; --rot:0.00deg;">
           <div class="card-inner">
@@ -4639,7 +4677,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T16-49.html">
+        <div class="card-wrap" data-file="2026-05-17T16-49.html" data-search="let e = the thing joseph priestley held in 1770 2014 peak tumblr soft-grunge a page that's an unsolved equation wr… childlike">
         <a class="card rarity-u" href="/archive/2026-05-17T16-49.html"
            style="--c1:#f5b7b1; --c2:#9caf88; --c3:#5a3e3e; --rot:1.00deg;">
           <div class="card-inner">
@@ -4663,7 +4701,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T16-31.html">
+        <div class="card-wrap" data-file="2026-05-17T16-31.html" data-search="notice of absence — the sky (residential, blue) — case no. atm-2024-0117 2023 ai generative art flood missing pet flyer bureaucratic">
         <a class="card rarity-u" href="/archive/2026-05-17T16-31.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#093540; --rot:1.50deg;">
           <div class="card-inner">
@@ -4687,7 +4725,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T16-18.html">
+        <div class="card-wrap" data-file="2026-05-17T16-18.html" data-search="golden ear quarterly · no. xlvii · the room doctor replies to 414 linnet lane 1958 mid-century hi-fi enthusia… a two-page magazine spread of the roo… the room doctor himself — a…">
         <a class="card rarity-c" href="/archive/2026-05-17T16-18.html"
            style="--c1:#e8dcc0; --c2:#6b1f2a; --c3:#b89048; --rot:-0.50deg;">
           <div class="card-inner">
@@ -4711,7 +4749,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T15-47.html">
+        <div class="card-wrap" data-file="2026-05-17T15-47.html" data-search="overtime w/ ricky graves · caller #4 wants to talk about keys (not sports) 2026 present day a real cryptogram you can solve in-br… sports-talk-radio caller">
         <a class="card rarity-r" href="/archive/2026-05-17T15-47.html"
            style="--c1:#f0e6cf; --c2:#e6dcc1; --c3:#d8cdb0; --rot:0.00deg;">
           <div class="card-inner">
@@ -4735,7 +4773,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T15-31.html">
+        <div class="card-wrap" data-file="2026-05-17T15-31.html" data-search="i, the moon: a conversation — bright feed 2009 pre-iphone blog ecosystem a breathing pacer: inhale-hold-exhale… proud">
         <a class="card rarity-c" href="/archive/2026-05-17T15-31.html"
            style="--c1:#ffd1a8; --c2:#ff9f5e; --c3:#ffe4cb; --rot:1.50deg;">
           <div class="card-inner">
@@ -4759,7 +4797,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T15-17.html">
+        <div class="card-wrap" data-file="2026-05-17T15-17.html" data-search="possum creek stoop-skipping society ★ card no. 47 — maudine &quot;quickstep&quot; boggs 1996 web 1.0 banner-ad a magic-the-gathering-style fake coll… regional travel-show host">
         <a class="card rarity-r" href="/archive/2026-05-17T15-17.html"
            style="--c1:#f5e6c8; --c2:#704214; --c3:#fee900; --rot:1.00deg;">
           <div class="card-inner">
@@ -4783,7 +4821,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T15-08.html">
+        <div class="card-wrap" data-file="2026-05-17T15-08.html" data-search="a fan page for an ordinary wednesday · call transcript (unabridged) · the standing wednesday apostolate 2008 tumblr boot-up a transcript of a phone call where on… philosophical">
         <a class="card rarity-c" href="/archive/2026-05-17T15-08.html"
            style="--c1:#fdf5b1; --c2:#465775; --c3:#c5be84; --rot:-1.00deg;">
           <div class="card-inner">
@@ -4807,7 +4845,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T14-56.html">
+        <div class="card-wrap" data-file="2026-05-17T14-56.html" data-search="auction 8·47·g · the whistle-lessons of miss esther boone · northwire videotex 1985 pre-web bbs auction listing weather person who is hidin…">
         <a class="card rarity-r" href="/archive/2026-05-17T14-56.html"
            style="--c1:#c8232c; --c2:#1c2a4e; --c3:#ffd6a5; --rot:0.00deg;">
           <div class="card-inner">
@@ -4831,7 +4869,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T14-45.html">
+        <div class="card-wrap" data-file="2026-05-17T14-45.html" data-search="lesson seven · the bossa nova button — wendell-brockmeier sovereign ii companion 1981 home-organ instruction man… a full two-page spread of a home-orga… warm">
         <a class="card rarity-u" href="/archive/2026-05-17T14-45.html"
            style="--c1:#f5ead0; --c2:#4a2c1a; --c3:#3d7a82; --rot:1.50deg;">
           <div class="card-inner">
@@ -4855,7 +4893,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T14-40.html">
+        <div class="card-wrap" data-file="2026-05-17T14-40.html" data-search="★ don't hang up ★ cinderbrook founders' day bulletin — we still have floats 2001 post-dotcom crash corkboard infomercial late night">
         <a class="card rarity-f" href="/archive/2026-05-17T14-40.html"
            style="--c1:#cb6446; --c2:#f4d4cb; --c3:#8a3d29; --rot:-0.50deg;">
           <div class="card-inner">
@@ -4879,7 +4917,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T14-28.html">
+        <div class="card-wrap" data-file="2026-05-17T14-28.html" data-search="kotc-tv · ch·38 · the spring pledge break, '87 · live from the old feed &amp;amp; grain 1987 cable-access public-televi… a live on-screen pledge tote board th… warm">
         <a class="card rarity-c" href="/archive/2026-05-17T14-28.html"
            style="--c1:#f4c430; --c2:#c8392d; --c3:#f3ead0; --rot:0.00deg;">
           <div class="card-inner">
@@ -4903,7 +4941,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T14-04.html">
+        <div class="card-wrap" data-file="2026-05-17T14-04.html" data-search="fridge.gopher :: the 3 a.m. oracle (a/n inside!!) 1991 gopher menus and ftp index… a magic 8-ball or fortune machine tha… fan-fic note from the author">
         <a class="card rarity-u" href="/archive/2026-05-17T14-04.html"
            style="--c1:#ffaa33; --c2:#7a4f10; --c3:#7a4f10; --rot:0.00deg;">
           <div class="card-inner">
@@ -4927,7 +4965,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T13-56.html">
+        <div class="card-wrap" data-file="2026-05-17T13-56.html" data-search="fwd: fwd: annual rpt — piper's lemonade stand, fy '97 *pls read* 1997 peak geocities spam email (artisanal) amateur historian">
         <a class="card rarity-c" href="/archive/2026-05-17T13-56.html"
            style="--c1:#c8924a; --c2:#a04030; --c3:#2d5a3a; --rot:1.00deg;">
           <div class="card-inner">
@@ -4951,7 +4989,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T13-45.html">
+        <div class="card-wrap" data-file="2026-05-17T13-45.html" data-search="brotherhood pocket card · local 47 · walter engle [#214] 1969 hand-painted sign trade —… a tradesman's pocket membership card… a soft-spoken fifty-year un…">
         <a class="card rarity-r" href="/archive/2026-05-17T13-45.html"
            style="--c1:#7d1f2f; --c2:#f0e6cf; --c3:#c9a23e; --rot:-1.50deg;">
           <div class="card-inner">
@@ -4975,7 +5013,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T13-35.html">
+        <div class="card-wrap" data-file="2026-05-17T13-35.html" data-search="marlinsburg hellbenders · q2 stakeholder communiqué · issue #23 1995 early ncsa mosaic a hidden-object scene (find the cat corporate">
         <a class="card rarity-r" href="/archive/2026-05-17T13-35.html"
            style="--c1:#a8c9e0; --c2:#0000ee; --c3:#551a8b; --rot:0.50deg;">
           <div class="card-inner">
@@ -4999,7 +5037,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T13-27.html">
+        <div class="card-wrap" data-file="2026-05-17T13-27.html" data-search="★彡 the sky over bunkum, wyo. — what they don't want you to look up at 2017 weird twitter peak a constellation map of fictional star… conspiratorial">
         <a class="card rarity-c" href="/archive/2026-05-17T13-27.html"
            style="--c1:#ffc6df; --c2:#a8d8ea; --c3:#d56a96; --rot:-1.00deg;">
           <div class="card-inner">
@@ -5023,7 +5061,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T13-13.html">
+        <div class="card-wrap" data-file="2026-05-17T13-13.html" data-search="hush.fm · ep. 41 — i think i pressed play already 2020 discord-server-as-community a page that's the same sentence repea… sleepy">
         <a class="card rarity-c" href="/archive/2026-05-17T13-13.html"
            style="--c1:#0a0a2a; --c2:#7a7a96; --c3:#14143d; --rot:0.50deg;">
           <div class="card-inner">
@@ -5047,7 +5085,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T13-08.html">
+        <div class="card-wrap" data-file="2026-05-17T13-08.html" data-search="✿ tipsy on lavender ✿ — cassie's lj — entry #214 2003 livejournal a find-the-hidden-word puzzle: spot t… mall information desk">
         <a class="card rarity-u" href="/archive/2026-05-17T13-08.html"
            style="--c1:#ffff66; --c2:#c8b6ff; --c3:#2b1e5a; --rot:-1.00deg;">
           <div class="card-inner">
@@ -5071,7 +5109,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T12-56.html">
+        <div class="card-wrap" data-file="2026-05-17T12-56.html" data-search="the snack bar players — skyview drive-in · summer revue '59 1959 summer drive-in intermissi… a 'meet the troupe' stage roster for… small-time concessions-mana…">
         <a class="card rarity-f" href="/archive/2026-05-17T12-56.html"
            style="--c1:#e6352b; --c2:#37c6d4; --c3:#fff1c1; --rot:0.50deg;">
           <div class="card-inner">
@@ -5095,7 +5133,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T12-46.html">
+        <div class="card-wrap" data-file="2026-05-17T12-46.html" data-search="a field guide to the devotees of the great weeping hornbeam · vol. i 1999 pre-y2k millennium anxiety field guide entry (one species) cult-y">
         <a class="card rarity-u" href="/archive/2026-05-17T12-46.html"
            style="--c1:#f5ecd9; --c2:#e7b4ae; --c3:#b5c7a4; --rot:1.00deg;">
           <div class="card-inner">
@@ -5119,7 +5157,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T12-39.html">
+        <div class="card-wrap" data-file="2026-05-17T12-39.html" data-search="aguidedtourthroughthepetuniafallsmailbagno47✿amadelainewinsloweproduction 2014 peak tumblr soft-grunge a page that's a single very long word… tour guide with strong opin…">
         <a class="card rarity-u" href="/archive/2026-05-17T12-39.html"
            style="--c1:#00f0ff; --c2:#ff006e; --c3:#c8004f; --rot:0.50deg;">
           <div class="card-inner">
@@ -5143,7 +5181,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T12-31.html">
+        <div class="card-wrap" data-file="2026-05-17T12-31.html" data-search="the cornerstone crossword · maple &amp; verdugo · no. 17 2023 ai generative art flood crossword puzzle (no solution) library cardigan">
         <a class="card rarity-c" href="/archive/2026-05-17T12-31.html"
            style="--c1:#2d5016; --c2:#f0e2c0; --c3:#d9c89e; --rot:0.50deg;">
           <div class="card-inner">
@@ -5167,7 +5205,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T12-17.html">
+        <div class="card-wrap" data-file="2026-05-17T12-17.html" data-search="the tides of punta calamar — a pamphlet for the visiting sailor, bather, and general loiterer 1953 caribbean cruise-line trav… a working tide chart for a fictional… regional travel-show host —…">
         <a class="card rarity-c" href="/archive/2026-05-17T12-17.html"
            style="--c1:#ff7e6b; --c2:#7fd4c1; --c3:#fff3d6; --rot:1.00deg;">
           <div class="card-inner">
@@ -5191,7 +5229,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T12-04.html">
+        <div class="card-wrap" data-file="2026-05-17T12-04.html" data-search="gravel — a talon books original · #47 1962 mid-century pulp paperback… a full pulp paperback front cover ren… breathless pulp-cover-copy…">
         <a class="card rarity-c" href="/archive/2026-05-17T12-04.html"
            style="--c1:#ff6a1f; --c2:#f6e7a3; --c3:#c43a00; --rot:-1.00deg;">
           <div class="card-inner">
@@ -5215,7 +5253,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T11-54.html">
+        <div class="card-wrap" data-file="2026-05-17T11-54.html" data-search="★ who's on 19 tonight ★ doris's i-80 handle book · north platte to cheyenne · spring '72 1972 trucker cb radio handbook a cb radio handle directory — alphabe… chatty">
         <a class="card rarity-r" href="/archive/2026-05-17T11-54.html"
            style="--c1:#f2b134; --c2:#9c2a2a; --c3:#6e1717; --rot:1.50deg;">
           <div class="card-inner">
@@ -5239,7 +5277,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T11-44.html">
+        <div class="card-wrap" data-file="2026-05-17T11-44.html" data-search="so, you found little hummingbird island — a ranger's pick-a-path 2011 early instagram filter choose-your-own-adventure page ranger at a state park">
         <a class="card rarity-c" href="/archive/2026-05-17T11-44.html"
            style="--c1:#ff44cc; --c2:#fff2da; --c3:#fff2da; --rot:-1.00deg;">
           <div class="card-inner">
@@ -5263,7 +5301,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T11-26.html">
+        <div class="card-wrap" data-file="2026-05-17T11-26.html" data-search="hear ye! · 67th annual otterling county covered-bridge festival · crier's map &amp;amp; gazette 1934 wpa travel-poster aestheti… a clickable hand-drawn festival map —… county-fair auctioneer — to…">
         <a class="card rarity-c" href="/archive/2026-05-17T11-26.html"
            style="--c1:#cc5500; --c2:#1d5b65; --c3:#f0e6c8; --rot:0.00deg;">
           <div class="card-inner">
@@ -5287,7 +5325,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T11-24.html">
+        <div class="card-wrap" data-file="2026-05-17T11-24.html" data-search="★ from rock to pack ★ a word puzzle by wendell p. (age 9¾) 2009 pre-iphone blog ecosystem a word ladder from one word to another childlike">
         <a class="card rarity-c" href="/archive/2026-05-17T11-24.html"
            style="--c1:#0066a3; --c2:#fff7a8; --c3:#d9efff; --rot:1.50deg;">
           <div class="card-inner">
@@ -5311,7 +5349,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T11-15.html">
+        <div class="card-wrap" data-file="2026-05-17T11-15.html" data-search="the inner wheel · a tarot-of-the-hour for the machine · vol. iii, no. 11 1978 zine xerox aesthetic a tarot-card-of-the-moment draw with… bureaucratic">
         <a class="card rarity-c" href="/archive/2026-05-17T11-15.html"
            style="--c1:#f1e7cf; --c2:#e8dcbe; --c3:#172847; --rot:0.00deg;">
           <div class="card-inner">
@@ -5335,7 +5373,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T11-06.html">
+        <div class="card-wrap" data-file="2026-05-17T11-06.html" data-search="the solitary band — a field manual for the beginning student of elastometry · vol. i, 4th printing 1996 web 1.0 banner-ad a css-only generative wallpaper that… instructional">
         <a class="card rarity-c" href="/archive/2026-05-17T11-06.html"
            style="--c1:#a8e6cf; --c2:#ff8b94; --c3:#8fd9b8; --rot:0.00deg;">
           <div class="card-inner">
@@ -5359,7 +5397,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T10-54.html">
+        <div class="card-wrap" data-file="2026-05-17T10-54.html" data-search="a few words about the one-way bus — from marguerite, on the porch 2026 present day manifesto folksy">
         <a class="card rarity-u" href="/archive/2026-05-17T10-54.html"
            style="--c1:#dfb35d; --c2:#677c3c; --c3:#c89a44; --rot:0.00deg;">
           <div class="card-inner">
@@ -5383,7 +5421,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T10-44.html">
+        <div class="card-wrap" data-file="2026-05-17T10-44.html" data-search="★ the back page ★ classifieds &amp;amp; notices for sweetbriar-believers undated classified ads page earnest">
         <a class="card rarity-u" href="/archive/2026-05-17T10-44.html"
            style="--c1:#fdf5b1; --c2:#465775; --c3:#465775; --rot:1.50deg;">
           <div class="card-inner">
@@ -5407,7 +5445,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T10-42.html">
+        <div class="card-wrap" data-file="2026-05-17T10-42.html" data-search="small damp list · no. 14 · the october issue 2008 tumblr boot-up a slow ink-drop expanding across the… melancholy">
         <a class="card rarity-c" href="/archive/2026-05-17T10-42.html"
            style="--c1:#ff8c69; --c2:#a3d8e6; --c3:#7fc1d2; --rot:-0.50deg;">
           <div class="card-inner">
@@ -5431,7 +5469,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T10-34.html">
+        <div class="card-wrap" data-file="2026-05-17T10-34.html" data-search="tile for tile — newsletter of the wholegrain glen hoa · vol. iii no. 5 2005 myspace hoa newsletter school crossing guard">
         <a class="card rarity-c" href="/archive/2026-05-17T10-34.html"
            style="--c1:#c66b3d; --c2:#828f4a; --c3:#9a4c25; --rot:-1.00deg;">
           <div class="card-inner">
@@ -5455,7 +5493,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T10-27.html">
+        <div class="card-wrap" data-file="2026-05-17T10-27.html" data-search="frank from 11-b :: wx from the lobby :: gopher.everwynn.hotel 1991 gopher menus and ftp index… weather report sports-talk-radio caller">
         <a class="card rarity-c" href="/archive/2026-05-17T10-27.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:1.50deg;">
           <div class="card-inner">
@@ -5479,7 +5517,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T10-22.html">
+        <div class="card-wrap" data-file="2026-05-17T10-22.html" data-search="♡ fauntleroy mem. bee · rcpt #00471 · ty 4 beeing ♡ 2014 peak tumblr soft-grunge shop receipt with itemized list chipper">
         <a class="card rarity-c" href="/archive/2026-05-17T10-22.html"
            style="--c1:#cb6446; --c2:#f4d4cb; --c3:#f4d4cb; --rot:1.00deg;">
           <div class="card-inner">
@@ -5503,7 +5541,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T10-12.html">
+        <div class="card-wrap" data-file="2026-05-17T10-12.html" data-search="qsl!! · station one-chair · card #001 · larry is on the air (and also on the chair) 2008 tumblr boot-up amateur radio qsl card breathless">
         <a class="card rarity-h" href="/archive/2026-05-17T10-12.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:0.00deg;">
           <div class="card-inner">
@@ -5527,7 +5565,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T10-03.html">
+        <div class="card-wrap" data-file="2026-05-17T10-03.html" data-search="roxanne l. pemberton-rock :: a pet rock biography :: the tuesday volume (04/21/98) 1991 gopher menus and ftp index… biography of a pet rock pta president">
         <a class="card rarity-r" href="/archive/2026-05-17T10-03.html"
            style="--c1:#ffe300; --c2:#3a0ca3; --c3:#c9b400; --rot:0.50deg;">
           <div class="card-inner">
@@ -5551,7 +5589,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T09-53.html">
+        <div class="card-wrap" data-file="2026-05-17T09-53.html" data-search="★ the all-wednesday fan store ★ midweek_marcie's lj :: 4th season of operation 2003 livejournal product catalog page gossipy">
         <a class="card rarity-r" href="/archive/2026-05-17T09-53.html"
            style="--c1:#ff2a2a; --c2:#5a0d0d; --c3:#8f0f0f; --rot:1.50deg;">
           <div class="card-inner">
@@ -5575,7 +5613,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T09-43.html">
+        <div class="card-wrap" data-file="2026-05-17T09-43.html" data-search="the wintermere society · member's manual · page 47 / 200 2017 weird twitter peak instruction manual (page 47 of 200) earnest cryptid believer">
         <a class="card rarity-c" href="/archive/2026-05-17T09-43.html"
            style="--c1:#ff8c69; --c2:#a3d8e6; --c3:#d65f3e; --rot:0.50deg;">
           <div class="card-inner">
@@ -5599,7 +5637,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T09-34.html">
+        <div class="card-wrap" data-file="2026-05-17T09-34.html" data-search="★ the little museum of doorknobs — bannerman hollow, pa — visitor digest vol.ii no.7 ★ 1985 pre-web bbs mailing list digest regional travel-show host">
         <a class="card rarity-r" href="/archive/2026-05-17T09-34.html"
            style="--c1:#33ff66; --c2:#1f7a3a; --c3:#9fffb8; --rot:-1.50deg;">
           <div class="card-inner">
@@ -5623,7 +5661,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T09-23.html">
+        <div class="card-wrap" data-file="2026-05-17T09-23.html" data-search="★ the estate of aunt florine gladwell — sale of the century ★ 1978 zine xerox aesthetic tribute page to a fictional thing proud">
         <a class="card rarity-c" href="/archive/2026-05-17T09-23.html"
            style="--c1:#f5e6c8; --c2:#704214; --c3:#e8d4a8; --rot:0.50deg;">
           <div class="card-inner">
@@ -5647,7 +5685,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T09-14.html">
+        <div class="card-wrap" data-file="2026-05-17T09-14.html" data-search="fan mail :: to whoever's still there at wayside wishes greeting co. (1957–1991) 1991 gopher menus and ftp index… fan letter (one side only) regional travel-show host">
         <a class="card rarity-r" href="/archive/2026-05-17T09-14.html"
            style="--c1:#ffff66; --c2:#c8b6ff; --c3:#c8b6ff; --rot:0.50deg;">
           <div class="card-inner">
@@ -5671,7 +5709,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T09-02.html">
+        <div class="card-wrap" data-file="2026-05-17T09-02.html" data-search="★★ double-booked!! · wedding registry &amp;amp; reunion tour of the marzipan accident · call tonight ★★ 1985 pre-web bbs wedding registry for fictional people infomercial late night">
         <a class="card rarity-u" href="/archive/2026-05-17T09-02.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#0b4757; --rot:1.00deg;">
           <div class="card-inner">
@@ -5695,7 +5733,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T08-54.html">
+        <div class="card-wrap" data-file="2026-05-17T08-54.html" data-search="★ museum of lost keys · bbs ★ sign-in (please be gentle with the form) 1995 early ncsa mosaic bbs login screen and main menu anxious">
         <a class="card rarity-c" href="/archive/2026-05-17T08-54.html"
            style="--c1:#f5b7b1; --c2:#9caf88; --c3:#0000ee; --rot:0.50deg;">
           <div class="card-inner">
@@ -5719,7 +5757,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T08-42.html">
+        <div class="card-wrap" data-file="2026-05-17T08-42.html" data-search="★彡 lindenscopes ★彡 week of 5/17 · the society of the 41 quartermill linden 2014 peak tumblr soft-grunge horoscope page (12 signs deadpan">
         <a class="card rarity-c" href="/archive/2026-05-17T08-42.html"
            style="--c1:#a8e6cf; --c2:#ff8b94; --c3:#ffdfe2; --rot:-1.00deg;">
           <div class="card-inner">
@@ -5743,7 +5781,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T08-34.html">
+        <div class="card-wrap" data-file="2026-05-17T08-34.html" data-search="denise tells all!! — pet-rock biography of the weather in margaret's sewing room (1988–present) 1996 web 1.0 banner-ad biography of a pet rock gossipy">
         <a class="card rarity-r" href="/archive/2026-05-17T08-34.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:1.50deg;">
           <div class="card-inner">
@@ -5767,7 +5805,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T08-22.html">
+        <div class="card-wrap" data-file="2026-05-17T08-22.html" data-search="operate with joy!! · the living manual · node 7-g 2026 present day single-screen text adventure node breathless">
         <a class="card rarity-u" href="/archive/2026-05-17T08-22.html"
            style="--c1:#ffaa33; --c2:#b87520; --c3:#ffd07a; --rot:-1.50deg;">
           <div class="card-inner">
@@ -5791,7 +5829,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T08-14.html">
+        <div class="card-wrap" data-file="2026-05-17T08-14.html" data-search="✧ blueherons_pregame ✧ the pre-game aura circle (tues 5/13) 2003 livejournal aol chatroom log cult-y">
         <a class="card rarity-r" href="/archive/2026-05-17T08-14.html"
            style="--c1:#0a0a2a; --c2:#69db7c; --c3:#ffe066; --rot:0.50deg;">
           <div class="card-inner">
@@ -5815,7 +5853,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T08-01.html">
+        <div class="card-wrap" data-file="2026-05-17T08-01.html" data-search="browners-l digest · vol. 4 no. 87 · the umber question 1985 pre-web bbs mailing list digest bureaucratic">
         <a class="card rarity-r" href="/archive/2026-05-17T08-01.html"
            style="--c1:#ffe300; --c2:#3a0ca3; --c3:#3a0ca3; --rot:0.00deg;">
           <div class="card-inner">
@@ -5839,7 +5877,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T07-52.html">
+        <div class="card-wrap" data-file="2026-05-17T07-52.html" data-search="ninety-six regular — a specimen sheet for a typeface that remembers being nine 2020 discord-server-as-community font specimen sheet melancholy">
         <a class="card rarity-c" href="/archive/2026-05-17T07-52.html"
            style="--c1:#c66b3d; --c2:#828f4a; --c3:#9b4a26; --rot:-1.50deg;">
           <div class="card-inner">
@@ -5863,7 +5901,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T07-47.html">
+        <div class="card-wrap" data-file="2026-05-17T07-47.html" data-search="★ the pilgrim faq ★ the crossing at halberd pike &amp;amp; old veil road ★ 1997 peak geocities faq page prophetic">
         <a class="card rarity-u" href="/archive/2026-05-17T07-47.html"
            style="--c1:#b8862b; --c2:#9c3a1f; --c3:#3a5a2a; --rot:-1.50deg;">
           <div class="card-inner">
@@ -5887,7 +5925,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T07-35.html">
+        <div class="card-wrap" data-file="2026-05-17T07-35.html" data-search="★ the official biography of the wind!!! ★ a gallery in seven breaths ★ 2023 ai generative art flood ascii art gallery breathless">
         <a class="card rarity-u" href="/archive/2026-05-17T07-35.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:0.00deg;">
           <div class="card-inner">
@@ -5911,7 +5949,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T07-27.html">
+        <div class="card-wrap" data-file="2026-05-17T07-27.html" data-search="headlight municipal videotex — screensaver review subcommittee, winter session 1985 pre-web bbs screensaver showcase bureaucratic">
         <a class="card rarity-r" href="/archive/2026-05-17T07-27.html"
            style="--c1:#ffaa33; --c2:#ffd180; --c3:#b87a22; --rot:-0.50deg;">
           <div class="card-inner">
@@ -5935,7 +5973,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T07-15.html">
+        <div class="card-wrap" data-file="2026-05-17T07-15.html" data-search="★ auction: baybrook township recycling guide (2007 ed.) — a piece of my actual soul — bidshack.org ★ 2009 pre-iphone blog ecosystem auction listing enthusiastic-fan">
         <a class="card rarity-u" href="/archive/2026-05-17T07-15.html"
            style="--c1:#f5b7b1; --c2:#9caf88; --c3:#e89890; --rot:-1.50deg;">
           <div class="card-inner">
@@ -5959,7 +5997,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T07-04.html">
+        <div class="card-wrap" data-file="2026-05-17T07-04.html" data-search="★彡 wednesdaycore!!!! ・゚✧ the official fan catalog ・゚✧ new stock every week forever!!!!!!! 2014 peak tumblr soft-grunge product catalog page breathless">
         <a class="card rarity-c" href="/archive/2026-05-17T07-04.html"
            style="--c1:#cb6446; --c2:#f4d4cb; --c3:#7a3520; --rot:-1.00deg;">
           <div class="card-inner">
@@ -5983,7 +6021,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T06-54.html">
+        <div class="card-wrap" data-file="2026-05-17T06-54.html" data-search="yonder 1991 gopher menus and ftp index… single-screen text adventure node earnest">
         <a class="card rarity-c" href="/archive/2026-05-17T06-54.html"
            style="--c1:#00f0ff; --c2:#ff006e; --c3:#ff006e; --rot:-0.50deg;">
           <div class="card-inner">
@@ -6007,7 +6045,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T06-41.html">
+        <div class="card-wrap" data-file="2026-05-17T06-41.html" data-search="★ the 1999 gizmoscope!!! ★ millennium edition ★ 1999 pre-y2k millennium anxiety horoscope page (12 signs breathless">
         <a class="card rarity-c" href="/archive/2026-05-17T06-41.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#0c4250; --rot:-1.50deg;">
           <div class="card-inner">
@@ -6031,7 +6069,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T06-23.html">
+        <div class="card-wrap" data-file="2026-05-17T06-23.html" data-search="obituary: the &quot;homecoming&quot; tour — a reunion that did not happen (and will not, and cannot) undated obituary for something that did not d… conspiratorial">
         <a class="card rarity-u" href="/archive/2026-05-17T06-23.html"
            style="--c1:#f5b7b1; --c2:#9caf88; --c3:#d68b85; --rot:-1.50deg;">
           <div class="card-inner">
@@ -6055,7 +6093,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T06-18.html">
+        <div class="card-wrap" data-file="2026-05-17T06-18.html" data-search="field guide entry #1: a specific tuesday (please read before commenting) 2003 livejournal field guide entry (one species) defensive">
         <a class="card rarity-h" href="/archive/2026-05-17T06-18.html"
            style="--c1:#ffaa33; --c2:#ffd17a; --c3:#b97820; --rot:-1.50deg;">
           <div class="card-inner">
@@ -6079,7 +6117,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T06-04.html">
+        <div class="card-wrap" data-file="2026-05-17T06-04.html" data-search="the pebble falls volunteer cumulus appreciation society · cloud #44-b undated corkboard chipper">
         <a class="card rarity-u" href="/archive/2026-05-17T06-04.html"
            style="--c1:#0a0a2a; --c2:#15153a; --c3:#1a1a3a; --rot:0.00deg;">
           <div class="card-inner">
@@ -6103,7 +6141,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T05-56.html">
+        <div class="card-wrap" data-file="2026-05-17T05-56.html" data-search="the hornbeam society — friends of old knockle, est. april 2020 2020 discord-server-as-community tribute page to a fictional thing earnest cryptid believer">
         <a class="card rarity-u" href="/archive/2026-05-17T05-56.html"
            style="--c1:#f4ecd8; --c2:#093540; --c3:#d4cab5; --rot:0.00deg;">
           <div class="card-inner">
@@ -6127,7 +6165,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T05-42.html">
+        <div class="card-wrap" data-file="2026-05-17T05-42.html" data-search="the official unofficial visitor's companion to the estate sale of aunt vesper quibley — page 47 of 200 2014 peak tumblr soft-grunge instruction manual (page 47 of 200) enthusiastic-fan">
         <a class="card rarity-r" href="/archive/2026-05-17T05-42.html"
            style="--c1:#55ffff; --c2:#ff55ff; --c3:#ff55ff; --rot:1.50deg;">
           <div class="card-inner">
@@ -6151,7 +6189,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T05-35.html">
+        <div class="card-wrap" data-file="2026-05-17T05-35.html" data-search="granny pernilla's rubber band weather station — channel 7 ½ — whiffle hollow's most trusted twang forecast since 1962 1997 peak geocities weather report folksy">
         <a class="card rarity-r" href="/archive/2026-05-17T05-35.html"
            style="--c1:#ffc6df; --c2:#a8d8ea; --c3:#4a2740; --rot:1.00deg;">
           <div class="card-inner">
@@ -6175,7 +6213,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T05-25.html">
+        <div class="card-wrap" data-file="2026-05-17T05-25.html" data-search="placard #47 — fizzstone phosphate-lime (1957–1963) · marvin's amateur history cabinet 2009 pre-iphone blog ecosystem museum exhibit placard amateur historian">
         <a class="card rarity-h" href="/archive/2026-05-17T05-25.html"
            style="--c1:#cb6446; --c2:#a8d8ea; --c3:#dfb35d; --rot:0.00deg;">
           <div class="card-inner">
@@ -6199,7 +6237,7 @@
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>
 
-        <div class="card-wrap" data-file="2026-05-17T05-16.html">
+        <div class="card-wrap" data-file="2026-05-17T05-16.html" data-search="lottie truesdale's bulletin · apricot bend state park, kiosk no. 4 undated classified ads page ranger at a state park">
         <a class="card rarity-c" href="/archive/2026-05-17T05-16.html"
            style="--c1:#ffc6df; --c2:#a8d8ea; --c3:#ff96c2; --rot:1.50deg;">
           <div class="card-inner">
@@ -6225,6 +6263,7 @@
 </main>
 
 <p id="binder-empty">your binder is empty. tap the ☆ on a card to keep it.</p>
+<p id="finder-empty">nothing in the cabinet matches that. try a looser word.</p>
 
 <footer>
   outbox.cafe · trading cards mint themselves four times a day<br>
@@ -6284,6 +6323,33 @@
       });
     }
     refresh();
+  })();
+
+  // Finder: rummage the cabinet by title / era / format / tone. All terms
+  // must match (AND). Pure client-side — combines with binder-only via CSS
+  // (both add display:none, so they intersect).
+  (function () {
+    var input = document.getElementById('finder-input');
+    if (!input) return;
+    var countEl = document.getElementById('finder-count');
+    var emptyEl = document.getElementById('finder-empty');
+    var wraps = Array.prototype.slice.call(document.querySelectorAll('.card-wrap'));
+    var total = wraps.length;
+    function apply() {
+      var q = input.value.toLowerCase().trim();
+      var terms = q ? q.split(/\s+/) : [];
+      var shown = 0;
+      wraps.forEach(function (w) {
+        var hay = w.getAttribute('data-search') || '';
+        var hit = terms.every(function (t) { return hay.indexOf(t) !== -1; });
+        w.classList.toggle('hide-search', !hit);
+        if (hit) shown++;
+      });
+      if (countEl) countEl.textContent = terms.length ? (shown + ' / ' + total) : '';
+      if (emptyEl) emptyEl.classList.toggle('show', terms.length > 0 && shown === 0);
+    }
+    input.addEventListener('input', apply);
+    apply();
   })();
 </script>
 
