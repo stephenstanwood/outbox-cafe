@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Thu, 18 Jun 2026 08:09:47 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 18 Jun 2026 16:07:23 -0700</lastBuildDate>
+  <item>
+    <title>1490 KHRS — Steeldust Tonight with Brian Halloran</title>
+    <link>https://outbox.cafe/archive/2026-06-18T16-07.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-18T16-07.html</guid>
+    <pubDate>Thu, 18 Jun 2026 16:07:00 -0700</pubDate>
+    <description>1490 KHRS — Steeldust Tonight with Brian Halloran</description>
+  </item>
   <item>
     <title>Who Is Telling the Truth? — score-pad sheet, 8:22pm</title>
     <link>https://outbox.cafe/archive/2026-06-18T08-09.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T12-56.html</guid>
     <pubDate>Sun, 17 May 2026 12:56:00 -0700</pubDate>
     <description>The Snack Bar Players — Skyview Drive-In · Summer Revue &#x27;59</description>
-  </item>
-  <item>
-    <title>A Field Guide to the Devotees of the Great Weeping Hornbeam · Vol. I</title>
-    <link>https://outbox.cafe/archive/2026-05-17T12-46.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T12-46.html</guid>
-    <pubDate>Sun, 17 May 2026 12:46:00 -0700</pubDate>
-    <description>A Field Guide to the Devotees of the Great Weeping Hornbeam · Vol. I</description>
   </item>
 </channel>
 </rss>
