@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 17 Jun 2026 16:05:59 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 18 Jun 2026 04:05:32 -0700</lastBuildDate>
+  <item>
+    <title>The Pocket Planetarium — A Tiny Sky You Can Hold</title>
+    <link>https://outbox.cafe/archive/2026-06-18T04-05.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-18T04-05.html</guid>
+    <pubDate>Thu, 18 Jun 2026 04:05:00 -0700</pubDate>
+    <description>The Pocket Planetarium — A Tiny Sky You Can Hold</description>
+  </item>
   <item>
     <title>Row 14, Space 8 — Starlite, Bristol TN</title>
     <link>https://outbox.cafe/archive/2026-06-17T16-05.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T12-39.html</guid>
     <pubDate>Sun, 17 May 2026 12:39:00 -0700</pubDate>
     <description>AGUIDEDTOURTHROUGHTHEPETUNIAFALLSMAILBAGNO47✿AMADELAINEWINSLOWEPRODUCTION</description>
-  </item>
-  <item>
-    <title>The Cornerstone Crossword · Maple &amp; Verdugo · No. 17</title>
-    <link>https://outbox.cafe/archive/2026-05-17T12-31.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T12-31.html</guid>
-    <pubDate>Sun, 17 May 2026 12:31:00 -0700</pubDate>
-    <description>The Cornerstone Crossword · Maple &amp; Verdugo · No. 17</description>
   </item>
 </channel>
 </rss>
