@@ -6,6 +6,7 @@
   <url><loc>https://outbox.cafe/slips/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://outbox.cafe/columns/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://outbox.cafe/guestbook/</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://outbox.cafe/archive/2026-06-18T08-09.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://outbox.cafe/archive/2026-06-18T04-05.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://outbox.cafe/archive/2026-06-17T16-05.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://outbox.cafe/archive/2026-06-17T12-13.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
