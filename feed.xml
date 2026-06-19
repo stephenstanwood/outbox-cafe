@@ -7,7 +7,14 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 19 Jun 2026 08:06:35 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 19 Jun 2026 12:06:20 -0700</lastBuildDate>
+  <item>
+    <title>4218-Y · Buttermilk Morning — Pittsburgh Colors &#x27;78</title>
+    <link>https://outbox.cafe/archive/2026-06-19T12-06.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-19T12-06.html</guid>
+    <pubDate>Fri, 19 Jun 2026 12:06:00 -0700</pubDate>
+    <description>4218-Y · Buttermilk Morning — Pittsburgh Colors &#x27;78</description>
+  </item>
   <item>
     <title>Cube #4 — PETLAND Lakeforest, Wednesday 3:47pm</title>
     <link>https://outbox.cafe/archive/2026-06-19T08-06.html</link>
@@ -1400,13 +1407,6 @@
     <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T13-27.html</guid>
     <pubDate>Sun, 17 May 2026 13:27:00 -0700</pubDate>
     <description>★彡 the sky over BUNKUM, WYO. — what they don&#x27;t want you to look up at</description>
-  </item>
-  <item>
-    <title>HUSH.fm · ep. 41 — i think i pressed play already</title>
-    <link>https://outbox.cafe/archive/2026-05-17T13-13.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T13-13.html</guid>
-    <pubDate>Sun, 17 May 2026 13:13:00 -0700</pubDate>
-    <description>HUSH.fm · ep. 41 — i think i pressed play already</description>
   </item>
 </channel>
 </rss>
