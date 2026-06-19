@@ -1353,22 +1353,42 @@ def rebuild_feed() -> None:
         else:
             pub_dt = datetime.fromtimestamp(f.stat().st_mtime, tz=pt)
         link = f"https://outbox.cafe/archive/{f.name}"
-        # Description: title only; readers should click through to see the actual piece
-        desc = _html.escape(title)
+        # The post is the point: give the item a real excerpt + the cover thumb
+        # so it stands alone in a reader, not a bare title duplicated into <description>.
+        # Decode entities the page body carries as literal text (e.g. &nbsp;),
+        # so re-escaping below produces clean text, not &amp;nbsp;.
+        snippet = _html.unescape(_extract_snippet(html_text, max_chars=280))
+        # Strip a leading restatement of the title (most pages open with it) so the
+        # excerpt teases the body, not the headline the reader already sees.
+        if snippet.lower().startswith(title.lower()):
+            trimmed = snippet[len(title):].lstrip(" ·—-–:").strip()
+            if len(trimmed) >= 40:
+                snippet = trimmed
+        desc_text = snippet or title
+        image_url = blob.thumb_url(f.stem)
+        img_attr = _html.escape(image_url, quote=True)
+        content_html = (
+            f'<p><img src="{img_attr}" alt="{_html.escape(title, quote=True)}" /></p>'
+            f"<p>{_html.escape(desc_text)}</p>"
+        ).replace("]]>", "]]&gt;")  # never break out of the CDATA below
         items_xml.append(
             "  <item>\n"
             f"    <title>{_html.escape(title)}</title>\n"
             f"    <link>{link}</link>\n"
             f"    <guid isPermaLink=\"true\">{link}</guid>\n"
             f"    <pubDate>{format_datetime(pub_dt)}</pubDate>\n"
-            f"    <description>{desc}</description>\n"
+            f"    <description>{_html.escape(desc_text)}</description>\n"
+            f"    <content:encoded><![CDATA[{content_html}]]></content:encoded>\n"
+            f"    <media:content url=\"{img_attr}\" medium=\"image\"/>\n"
             "  </item>"
         )
 
     now_pt = datetime.now(tz=pt)
     feed_xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"'
+        ' xmlns:content="http://purl.org/rss/1.0/modules/content/"'
+        ' xmlns:media="http://search.yahoo.com/mrss/">\n'
         '<channel>\n'
         '  <title>outbox.cafe</title>\n'
         '  <link>https://outbox.cafe</link>\n'
