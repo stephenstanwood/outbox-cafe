@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 20 Jun 2026 08:09:47 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 20 Jun 2026 12:10:18 -0700</lastBuildDate>
+  <item>
+    <title>The Lindquist Cabin Guestbook — Lake Wapogasset, 1947–1962</title>
+    <link>https://outbox.cafe/archive/2026-06-20T12-10.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-20T12-10.html</guid>
+    <pubDate>Sat, 20 Jun 2026 12:10:00 -0700</pubDate>
+    <description>The Lindquist Cabin Guestbook — Lake Wapogasset, 1947–1962 other things left on the table</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-20T12-10.webp" alt="The Lindquist Cabin Guestbook — Lake Wapogasset, 1947–1962" /></p><p>The Lindquist Cabin Guestbook — Lake Wapogasset, 1947–1962 other things left on the table</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-20T12-10.webp" medium="image"/>
+  </item>
   <item>
     <title>Through the Loupe — 8:22 PM, Tuesday</title>
     <link>https://outbox.cafe/archive/2026-06-20T08-09.html</link>
@@ -1798,15 +1807,6 @@
     <description>gopher://outbox.cafe:70/1/fridge/oracle/ index of /fridge/oracle  ·  last touched 06.12.1991 · 03:14 a.m. type name note 0 README.A_N a note from me!! ♥ —pia 0 fortunes.dat 247 entries · cranks the dial 1 /pub/mold/…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T14-04.webp" alt="fridge.gopher :: the 3 a.m. oracle (a/n inside!!)" /></p><p>gopher://outbox.cafe:70/1/fridge/oracle/ index of /fridge/oracle  ·  last touched 06.12.1991 · 03:14 a.m. type name note 0 README.A_N a note from me!! ♥ —pia 0 fortunes.dat 247 entries · cranks the dial 1 /pub/mold/…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T14-04.webp" medium="image"/>
-  </item>
-  <item>
-    <title>FWD: FWD: ANNUAL RPT — PIPER&#x27;S LEMONADE STAND, FY &#x27;97 *PLS READ*</title>
-    <link>https://outbox.cafe/archive/2026-05-17T13-56.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T13-56.html</guid>
-    <pubDate>Sun, 17 May 2026 13:56:00 -0700</pubDate>
-    <description>★ ★ ★ FORWARD THIS TO A FRIEND WHO LIKES NUMBERS ★ ★ ★ welcome neighbor!!!  •  a project of the hadley grandparents  •  please do not let this end up in the bulk folder, it took me all of…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T13-56.webp" alt="FWD: FWD: ANNUAL RPT — PIPER&#x27;S LEMONADE STAND, FY &#x27;97 *PLS READ*" /></p><p>★ ★ ★ FORWARD THIS TO A FRIEND WHO LIKES NUMBERS ★ ★ ★ welcome neighbor!!!  •  a project of the hadley grandparents  •  please do not let this end up in the bulk folder, it took me all of…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T13-56.webp" medium="image"/>
   </item>
 </channel>
 </rss>
