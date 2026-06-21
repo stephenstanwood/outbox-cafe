@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sun, 21 Jun 2026 08:07:45 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 21 Jun 2026 12:06:42 -0700</lastBuildDate>
+  <item>
+    <title>The Chamber</title>
+    <link>https://outbox.cafe/archive/2026-06-21T12-06.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-21T12-06.html</guid>
+    <pubDate>Sun, 21 Jun 2026 12:06:00 -0700</pubDate>
+    <description>The Chamber if the door is open other chambers</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-21T12-06.webp" alt="The Chamber" /></p><p>The Chamber if the door is open other chambers</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-21T12-06.webp" medium="image"/>
+  </item>
   <item>
     <title>Granny Vinette&#x27;s One-Chair Shop — A Quilt That&#x27;s Also a Floor Plan</title>
     <link>https://outbox.cafe/archive/2026-06-21T08-07.html</link>
@@ -1798,15 +1807,6 @@
     <description>★ NORTHWIRE VIDEOTEX ★ AUCTION SERVICE ★ PG·8·47·G   0341h LOT 8·47·G The Whistle-Lessons Tapes of Miss Esther Boone &quot;Eighteen Cassettes, One Brave Woman, One Note She Never Quite Caught&quot; —…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T14-56.webp" alt="AUCTION 8·47·G · The Whistle-Lessons of Miss Esther Boone · NORTHWIRE VIDEOTEX" /></p><p>★ NORTHWIRE VIDEOTEX ★ AUCTION SERVICE ★ PG·8·47·G   0341h LOT 8·47·G The Whistle-Lessons Tapes of Miss Esther Boone &quot;Eighteen Cassettes, One Brave Woman, One Note She Never Quite Caught&quot; —…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T14-56.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Lesson Seven · The Bossa Nova Button — Wendell-Brockmeier Sovereign II Companion</title>
-    <link>https://outbox.cafe/archive/2026-05-17T14-45.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T14-45.html</guid>
-    <pubDate>Sun, 17 May 2026 14:45:00 -0700</pubDate>
-    <description>Owner&#x27;s Companion · Sovereign II Progressive Course · Vol. I Lesson Seven The Bossa Nova Button — and the iv–V 7 –I Cadence That Loves You Back by Mrs. Yvonne (Skillet)…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T14-45.webp" alt="Lesson Seven · The Bossa Nova Button — Wendell-Brockmeier Sovereign II Companion" /></p><p>Owner&#x27;s Companion · Sovereign II Progressive Course · Vol. I Lesson Seven The Bossa Nova Button — and the iv–V 7 –I Cadence That Loves You Back by Mrs. Yvonne (Skillet)…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T14-45.webp" medium="image"/>
   </item>
 </channel>
 </rss>
