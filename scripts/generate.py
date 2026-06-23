@@ -11,6 +11,7 @@ import json
 import re
 import subprocess
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -1602,7 +1603,20 @@ def main() -> int:
         html = ""
         for fb_attempts in range(1, 4):
             attempt_prompt = prompt if fb_attempts == 1 else prompt + NUDGE
-            raw = call_claude(attempt_prompt, model=gen_model, timeout=600)
+            # Two distinct failure types share this loop:
+            #   (a) the claude call itself fails (exit 1 / timeout) — transient
+            #       infra (token refresh, rate-limit blip). call_claude RAISES.
+            #       Catch it, back off, and retry — an unhandled raise here once
+            #       crashed a whole gen with no drop and no cat-signal when all
+            #       candidates AND the first fallback hit the same bad window.
+            #   (b) the call succeeds but emits non-HTML — snapshot + nudge + retry.
+            try:
+                raw = call_claude(attempt_prompt, model=gen_model, timeout=600)
+            except Exception as e:  # noqa: BLE001 — transient claude failure, not a crash
+                print(f"  fallback attempt {fb_attempts}/3: claude call failed ({e}) — backing off", file=sys.stderr)
+                if fb_attempts < 3:
+                    time.sleep(20 * fb_attempts)  # 20s, 40s — let a transient window clear
+                continue
             html = extract_html(raw)
             if looks_like_html(html):
                 if fb_attempts > 1:
@@ -1613,10 +1627,10 @@ def main() -> int:
             (ROOT / "data" / "last_bad_prompt.txt").write_text(attempt_prompt)
             print(f"  fallback attempt {fb_attempts}/3: output not HTML — retrying with nudge", file=sys.stderr)
         else:
-            print("output did not look like HTML after candidates + 3 fallback attempts; raw saved to data/last_bad_output.txt", file=sys.stderr)
+            print("no usable HTML after candidates + 3 fallback attempts (bad output or transient claude failure); raw saved to data/last_bad_output.txt", file=sys.stderr)
             try:
                 from cat_signal import signal
-                signal("gen-bad-output", "claude returned non-HTML output (candidates + 3 retries). raw saved to data/last_bad_output.txt", priority="high")
+                signal("gen-bad-output", "gen produced no usable HTML (candidates + 3 retries — bad output or transient claude exit-1/timeout). raw saved to data/last_bad_output.txt", priority="high")
             except Exception:
                 pass
             return 2
