@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 23 Jun 2026 12:06:17 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 23 Jun 2026 16:11:13 -0700</lastBuildDate>
+  <item>
+    <title>the sand table</title>
+    <link>https://outbox.cafe/archive/2026-06-23T16-11.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-23T16-11.html</guid>
+    <pubDate>Tue, 23 Jun 2026 16:11:00 -0700</pubDate>
+    <description>the sand table other tables</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-23T16-11.webp" alt="the sand table" /></p><p>the sand table other tables</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-23T16-11.webp" medium="image"/>
+  </item>
   <item>
     <title>STAND AND DELIVER — Tanya&#x27;s Pick, week of March 17</title>
     <link>https://outbox.cafe/archive/2026-06-23T12-06.html</link>
@@ -1798,15 +1807,6 @@
     <description>PARKING LOT ORACLE !! A Logic Grid for the Sunrise Hours · Three Objects · Three Revelations IT WAS 5:47 AM!! The sun was just barely there — just a suggestion!! — and the Fairway Plaza parking lot was EMPTY except for…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T21-07.webp" alt="PARKING LOT ORACLE!! A Logic Grid for the Sunrise Hours" /></p><p>PARKING LOT ORACLE !! A Logic Grid for the Sunrise Hours · Three Objects · Three Revelations IT WAS 5:47 AM!! The sun was just barely there — just a suggestion!! — and the Fairway Plaza parking lot was EMPTY except for…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T21-07.webp" medium="image"/>
-  </item>
-  <item>
-    <title>let e = the thing Joseph Priestley held in 1770</title>
-    <link>https://outbox.cafe/archive/2026-05-17T16-49.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-17T16-49.html</guid>
-    <pubDate>Sun, 17 May 2026 16:49:00 -0700</pubDate>
-    <description>✦ ✿ ✦ let e = the thing Joseph Priestley held in 1770 an unsolved equation · in the shape of a poem he probably wrote it down somewhere let e = a small square of vegetable gum warm from a coat pocket. brownish. a little…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T16-49.webp" alt="let e = the thing Joseph Priestley held in 1770" /></p><p>✦ ✿ ✦ let e = the thing Joseph Priestley held in 1770 an unsolved equation · in the shape of a poem he probably wrote it down somewhere let e = a small square of vegetable gum warm from a coat pocket. brownish. a little…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-17T16-49.webp" medium="image"/>
   </item>
 </channel>
 </rss>
