@@ -52,8 +52,10 @@ cd "$REPO_DIR"
 echo
 echo "===== $(date -Iseconds) ====="
 
-# Pull external changes before generating, to avoid push conflicts
-git pull --rebase --quiet || {
+# Pull external changes before generating, to avoid push conflicts. Autostash is
+# required because local generated state (for example canon scout additions) can
+# already be dirty before the next scheduled drop commits it.
+git pull --rebase --autostash --quiet || {
   echo "git pull failed — aborting this run"
   exit 1
 }
