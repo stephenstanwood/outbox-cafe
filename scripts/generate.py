@@ -7,6 +7,7 @@ listing, appends the spec to history, optionally commits and pushes.
 from __future__ import annotations
 
 import argparse
+import html as html_lib
 import json
 import re
 import subprocess
@@ -1452,6 +1453,250 @@ CANDIDATES (HTML source, may be truncated):
 Respond with ONLY the number (1-{n}) of the best candidate. No other text."""
 
 
+def _spec_text(spec: dict, key: str, default: str) -> str:
+    value = spec.get(key)
+    if isinstance(value, dict):
+        value = value.get("value") or value.get("label") or default
+    if value is None:
+        value = default
+    return re.sub(r"\s+", " ", str(value)).strip() or default
+
+
+def _shorten(text: str, max_chars: int) -> str:
+    text = re.sub(r"\s+", " ", text).strip()
+    if len(text) <= max_chars:
+        return text
+    head = text[:max_chars - 3].rsplit(" ", 1)[0].rstrip(" ,;:")
+    return (head or text[:max_chars - 3]).rstrip() + "..."
+
+
+def _claude_weekly_limit_seen(errors: list[str]) -> bool:
+    joined = "\n".join(errors).lower()
+    return "weekly limit" in joined and "resets" in joined
+
+
+def _script_json(value: object) -> str:
+    return json.dumps(value, ensure_ascii=False).replace("</", "<\\/")
+
+
+def build_limit_fallback_html(spec: dict) -> str:
+    """A small deterministic page for hard Claude weekly-limit windows.
+
+    Publicly this is just a counter card. It keeps the archive moving without
+    mentioning usage caps, Claude, or the machinery behind the cafe.
+    """
+    now = datetime.now(tz=PT)
+    subject = _spec_text(spec, "subject", "today's small object")
+    fmt = _spec_text(spec, "format", "a counter card")
+    era = _spec_text(spec, "era", "right now")
+    tone = _spec_text(spec, "tone", "plain and warm")
+    palette = _spec_text(spec, "palette", "paper and ink")
+    mandatory = _spec_text(spec, "mandatory", "leave one small change behind")
+    wildcard = _spec_text(spec, "wildcard", "")
+
+    title = f"Counter Card: {_shorten(subject, 54)}"
+    safe_title = html_lib.escape(title)
+    safe_subject = html_lib.escape(_shorten(subject, 95))
+    safe_format = html_lib.escape(_shorten(fmt, 180))
+    safe_era = html_lib.escape(_shorten(era, 150))
+    safe_tone = html_lib.escape(_shorten(tone, 150))
+    safe_palette = html_lib.escape(_shorten(palette, 150))
+    safe_date = now.strftime("%b %d, %Y at %I:%M %p PT").replace(" 0", " ")
+
+    notes = [mandatory]
+    if wildcard and not wildcard.lower().startswith("no wildcard"):
+        notes.append(wildcard)
+    notes.append(f"Keep the tone: {_shorten(tone, 90)}")
+    notes.append(f"Use the colors: {_shorten(palette, 90)}")
+    safe_notes = "\n".join(f"<li>{html_lib.escape(_shorten(note, 180))}</li>" for note in notes)
+
+    replies = [
+        "bell answered once",
+        "receipt tucked under the saucer",
+        "pencil returned to the cup",
+        "window two says yes",
+        "the counter saved your place",
+        "small stamp, clean edges",
+    ]
+    css_palette_note = html_lib.escape(_shorten(palette, 80))
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{safe_title}</title>
+  <style>
+    :root {{
+      --paper: #f7f0de;
+      --ink: #2b241c;
+      --red: #a84832;
+      --blue: #356f86;
+      --gold: #c49a3f;
+      --shadow: rgba(35, 29, 20, 0.18);
+      --grow: 0;
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: clamp(18px, 5vw, 52px);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        linear-gradient(90deg, rgba(53,111,134,.08) 1px, transparent 1px),
+        linear-gradient(rgba(168,72,50,.07) 1px, transparent 1px),
+        #eadfc9;
+      background-size: 34px 34px;
+    }}
+    main {{
+      width: min(760px, 100%);
+      border: 1px solid rgba(43,36,28,.45);
+      background: var(--paper);
+      box-shadow: 0 22px 54px var(--shadow);
+      padding: clamp(22px, 5vw, 46px);
+      position: relative;
+      overflow: hidden;
+    }}
+    main::before {{
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1px dashed rgba(43,36,28,.26);
+      pointer-events: none;
+    }}
+    .stamp {{
+      display: inline-block;
+      border: 2px solid var(--red);
+      color: var(--red);
+      padding: 5px 9px;
+      font: 700 12px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transform: rotate(-2deg);
+    }}
+    h1 {{
+      margin: 22px 0 12px;
+      font-size: clamp(34px, 7vw, 68px);
+      line-height: .95;
+      letter-spacing: 0;
+      max-width: 10ch;
+    }}
+    .lede {{
+      max-width: 56ch;
+      font-size: clamp(18px, 2.8vw, 23px);
+      line-height: 1.35;
+      margin: 0 0 28px;
+    }}
+    dl {{
+      display: grid;
+      grid-template-columns: minmax(90px, 130px) 1fr;
+      gap: 10px 16px;
+      border-block: 2px solid rgba(43,36,28,.22);
+      padding: 18px 0;
+      margin: 0 0 24px;
+    }}
+    dt {{
+      font: 700 12px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      color: var(--blue);
+      letter-spacing: .08em;
+    }}
+    dd {{ margin: 0; line-height: 1.35; }}
+    ul {{
+      margin: 0 0 26px;
+      padding-left: 22px;
+      line-height: 1.45;
+    }}
+    li + li {{ margin-top: 7px; }}
+    .machine {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      border-top: 1px solid rgba(43,36,28,.2);
+      padding-top: 18px;
+    }}
+    button {{
+      appearance: none;
+      border: 2px solid var(--ink);
+      background: #fff8e7;
+      color: var(--ink);
+      font: 700 14px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 12px 14px;
+      cursor: pointer;
+    }}
+    button:hover, button:focus-visible {{
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }}
+    .reply {{
+      min-height: 1.3em;
+      font-style: italic;
+    }}
+    .slow {{
+      width: 100%;
+      height: 14px;
+      border: 1px solid rgba(43,36,28,.45);
+      background: linear-gradient(90deg, var(--gold) calc(var(--grow) * 100%), transparent 0);
+    }}
+    .palette-note {{
+      margin-top: 12px;
+      font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: rgba(43,36,28,.62);
+    }}
+    @media (max-width: 560px) {{
+      dl {{ grid-template-columns: 1fr; gap: 4px; }}
+      h1 {{ max-width: none; }}
+    }}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="stamp">counter card &middot; {html_lib.escape(safe_date)}</div>
+    <h1>{safe_subject}</h1>
+    <p class="lede">The cafe wrote this one on a card and left it where the light reaches the counter.</p>
+    <dl>
+      <dt>shape</dt><dd>{safe_format}</dd>
+      <dt>when</dt><dd>{safe_era}</dd>
+      <dt>voice</dt><dd>{safe_tone}</dd>
+      <dt>colors</dt><dd>{safe_palette}</dd>
+    </dl>
+    <ul>
+      {safe_notes}
+    </ul>
+    <div class="machine">
+      <button type="button">ring bell</button>
+      <span class="reply">the bell is waiting politely.</span>
+      <div class="slow" aria-label="a slowly filling counter mark"></div>
+    </div>
+    <div class="palette-note">counter ink mixed toward: {css_palette_note}</div>
+  </main>
+  <script>
+    const replies = {_script_json(replies)};
+    let rings = 0;
+    let grow = 0;
+    const button = document.querySelector("button");
+    const reply = document.querySelector(".reply");
+    button.addEventListener("click", () => {{
+      rings += 1;
+      reply.textContent = replies[(rings - 1) % replies.length] + " #" + rings;
+      grow = Math.min(1, grow + 0.12);
+      document.documentElement.style.setProperty("--grow", grow.toFixed(2));
+    }});
+    setInterval(() => {{
+      grow = Math.min(1, grow + 0.018);
+      document.documentElement.style.setProperty("--grow", grow.toFixed(2));
+    }}, 1800);
+  </script>
+</body>
+</html>"""
+
+
 def generate_candidates(prompt: str, model: str, n: int, timeout: int = 600) -> list[str]:
     """Generate n candidate pages IN PARALLEL; return those that look like HTML.
 
@@ -1590,6 +1835,8 @@ def main() -> int:
     valid = generate_candidates(prompt, gen_model, n_want) if n_want > 1 else []
     n_candidates = len(valid)
     fb_attempts = 0
+    call_failures: list[str] = []
+    limit_fallback = False
     raw = ""
     if len(valid) >= 2:
         html = pick_best_candidate(valid, spec, model=gen_model)
@@ -1613,7 +1860,9 @@ def main() -> int:
             try:
                 raw = call_claude(attempt_prompt, model=gen_model, timeout=600)
             except Exception as e:  # noqa: BLE001 — transient claude failure, not a crash
-                print(f"  fallback attempt {fb_attempts}/3: claude call failed ({e}) — backing off", file=sys.stderr)
+                msg = str(e)
+                call_failures.append(msg)
+                print(f"  fallback attempt {fb_attempts}/3: claude call failed ({msg}) — backing off", file=sys.stderr)
                 if fb_attempts < 3:
                     time.sleep(20 * fb_attempts)  # 20s, 40s — let a transient window clear
                 continue
@@ -1627,13 +1876,23 @@ def main() -> int:
             (ROOT / "data" / "last_bad_prompt.txt").write_text(attempt_prompt)
             print(f"  fallback attempt {fb_attempts}/3: output not HTML — retrying with nudge", file=sys.stderr)
         else:
-            print("no usable HTML after candidates + 3 fallback attempts (bad output or transient claude failure); raw saved to data/last_bad_output.txt", file=sys.stderr)
-            try:
-                from cat_signal import signal
-                signal("gen-bad-output", "gen produced no usable HTML (candidates + 3 retries — bad output or transient claude exit-1/timeout). raw saved to data/last_bad_output.txt", priority="high")
-            except Exception:
-                pass
-            return 2
+            if _claude_weekly_limit_seen(call_failures):
+                print("claude weekly limit detected — publishing counter-card fallback", file=sys.stderr)
+                html = build_limit_fallback_html(spec)
+                limit_fallback = True
+                try:
+                    from cat_signal import signal
+                    signal("gen-limit-fallback", "Claude weekly limit hit; published a deterministic counter-card fallback drop.", priority="high")
+                except Exception:
+                    pass
+            else:
+                print("no usable HTML after candidates + 3 fallback attempts (bad output or transient claude failure); raw saved to data/last_bad_output.txt", file=sys.stderr)
+                try:
+                    from cat_signal import signal
+                    signal("gen-bad-output", "gen produced no usable HTML (candidates + 3 retries — bad output or transient claude exit-1/timeout). raw saved to data/last_bad_output.txt", priority="high")
+                except Exception:
+                    pass
+                return 2
 
     # Inject the canonical spec as meta tags so the cabinet can read it reliably
     html = inject_spec_meta(html, spec)
@@ -1671,6 +1930,8 @@ def main() -> int:
         except Exception as e:
             print(f"  social poster errored (non-fatal): {e}", file=sys.stderr)
 
+    if limit_fallback:
+        spec["limit_fallback"] = True
     append_history(spec)
     rebuild_cabinet()
     rebuild_feed()
@@ -1750,6 +2011,7 @@ def main() -> int:
             "thumb": shot_path.exists(),
             "bsky": posted_bsky,
             "tumblr": posted_tumblr,
+            "limit_fallback": limit_fallback,
         })
     except Exception as e:
         print(f"run-log write failed (non-fatal): {e}", file=sys.stderr)

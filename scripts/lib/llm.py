@@ -58,8 +58,13 @@ def call_claude(prompt: str, model: str = "opus", timeout: int = 120) -> str:
         timeout=timeout,
     )
     if result.returncode != 0:
+        detail = "\n".join(
+            part.strip()
+            for part in (result.stderr, result.stdout)
+            if part and part.strip()
+        )
         raise RuntimeError(
-            f"claude failed (exit {result.returncode}): {result.stderr[:500]}"
+            f"claude failed (exit {result.returncode}): {detail[:500]}"
         )
     return result.stdout
 
