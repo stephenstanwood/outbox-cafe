@@ -1472,7 +1472,23 @@ def _shorten(text: str, max_chars: int) -> str:
 
 def _claude_weekly_limit_seen(errors: list[str]) -> bool:
     joined = "\n".join(errors).lower()
-    return "weekly limit" in joined and "resets" in joined
+    limit_markers = (
+        "weekly limit",
+        "usage limit",
+        "rate limit",
+        "quota",
+        "too many requests",
+    )
+    reset_markers = (
+        "resets",
+        "reset at",
+        "try again",
+        "retry after",
+    )
+    return any(marker in joined for marker in limit_markers) and (
+        any(marker in joined for marker in reset_markers)
+        or "claude ai usage limit" in joined
+    )
 
 
 def _script_json(value: object) -> str:
@@ -1697,8 +1713,8 @@ def build_limit_fallback_html(spec: dict) -> str:
 </html>"""
 
 
-def generate_candidates(prompt: str, model: str, n: int, timeout: int = 600) -> list[str]:
-    """Generate n candidate pages IN PARALLEL; return those that look like HTML.
+def generate_candidates(prompt: str, model: str, n: int, timeout: int = 600) -> tuple[list[str], list[str]]:
+    """Generate n candidate pages IN PARALLEL; return valid HTML and call errors.
 
     Max OAuth = $0/token, so breadth is free; running them concurrently keeps
     wall-clock ~one gen instead of n. Each candidate (after the first) is nudged
@@ -1706,7 +1722,7 @@ def generate_candidates(prompt: str, model: str, n: int, timeout: int = 600) -> 
     """
     import concurrent.futures
 
-    def _one(i: int) -> "str | None":
+    def _one(i: int) -> "tuple[str | None, str | None]":
         p = prompt if i == 0 else prompt + (
             f"\n\n(Variant {i + 1}: commit to a distinct, non-obvious interpretation "
             "of the brief.)"
@@ -1714,17 +1730,23 @@ def generate_candidates(prompt: str, model: str, n: int, timeout: int = 600) -> 
         try:
             raw = call_claude(p, model=model, timeout=timeout)
         except Exception as e:
-            print(f"  candidate {i + 1}/{n} failed: {e}", file=sys.stderr)
-            return None
+            msg = str(e)
+            print(f"  candidate {i + 1}/{n} failed: {msg}", file=sys.stderr)
+            return None, msg
         html = extract_html(raw)
-        return html if looks_like_html(html) else None
+        if looks_like_html(html):
+            return html, None
+        return None, raw if _claude_weekly_limit_seen([raw]) else None
 
     out: list[str] = []
+    errors: list[str] = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=n) as ex:
-        for r in ex.map(_one, range(n)):
-            if r:
-                out.append(r)
-    return out
+        for html, error in ex.map(_one, range(n)):
+            if html:
+                out.append(html)
+            if error:
+                errors.append(error)
+    return out, errors
 
 
 def pick_best_candidate(candidates: list[str], spec: dict, model: str = "opus") -> str:
@@ -1832,10 +1854,12 @@ def main() -> int:
     # is free; parallel keeps wall-clock ~one gen. --candidates 1 = single-shot.
     n_want = max(1, args.candidates)
     print(f"generating {n_want} candidate(s) in parallel (opus) — this may take a few min ...")
-    valid = generate_candidates(prompt, gen_model, n_want) if n_want > 1 else []
+    valid: list[str] = []
+    call_failures: list[str] = []
+    if n_want > 1:
+        valid, call_failures = generate_candidates(prompt, gen_model, n_want)
     n_candidates = len(valid)
     fb_attempts = 0
-    call_failures: list[str] = []
     limit_fallback = False
     raw = ""
     if len(valid) >= 2:
@@ -1848,51 +1872,57 @@ def main() -> int:
         if n_want > 1:
             print("  no valid candidates — falling back to single-shot with nudge", file=sys.stderr)
         html = ""
-        for fb_attempts in range(1, 4):
-            attempt_prompt = prompt if fb_attempts == 1 else prompt + NUDGE
-            # Two distinct failure types share this loop:
-            #   (a) the claude call itself fails (exit 1 / timeout) — transient
-            #       infra (token refresh, rate-limit blip). call_claude RAISES.
-            #       Catch it, back off, and retry — an unhandled raise here once
-            #       crashed a whole gen with no drop and no cat-signal when all
-            #       candidates AND the first fallback hit the same bad window.
-            #   (b) the call succeeds but emits non-HTML — snapshot + nudge + retry.
-            try:
-                raw = call_claude(attempt_prompt, model=gen_model, timeout=600)
-            except Exception as e:  # noqa: BLE001 — transient claude failure, not a crash
-                msg = str(e)
-                call_failures.append(msg)
-                print(f"  fallback attempt {fb_attempts}/3: claude call failed ({msg}) — backing off", file=sys.stderr)
-                if fb_attempts < 3:
-                    time.sleep(20 * fb_attempts)  # 20s, 40s — let a transient window clear
-                continue
-            html = extract_html(raw)
-            if looks_like_html(html):
-                if fb_attempts > 1:
-                    print(f"  (looks-like-html passed on fallback attempt {fb_attempts}/3)")
-                break
-            # Always snapshot the most recent miss so the failure stays debuggable.
-            (ROOT / "data" / "last_bad_output.txt").write_text(raw)
-            (ROOT / "data" / "last_bad_prompt.txt").write_text(attempt_prompt)
-            print(f"  fallback attempt {fb_attempts}/3: output not HTML — retrying with nudge", file=sys.stderr)
+        if _claude_weekly_limit_seen(call_failures):
+            print("claude weekly/usage limit detected from candidate failures — publishing counter-card fallback without DM", file=sys.stderr)
+            html = build_limit_fallback_html(spec)
+            limit_fallback = True
         else:
-            if _claude_weekly_limit_seen(call_failures):
-                print("claude weekly limit detected — publishing counter-card fallback", file=sys.stderr)
-                html = build_limit_fallback_html(spec)
-                limit_fallback = True
+            for fb_attempts in range(1, 4):
+                attempt_prompt = prompt if fb_attempts == 1 else prompt + NUDGE
+                # Two distinct failure types share this loop:
+                #   (a) the claude call itself fails (exit 1 / timeout) — transient
+                #       infra (token refresh, rate-limit blip). call_claude RAISES.
+                #       Catch it, back off, and retry — an unhandled raise here once
+                #       crashed a whole gen with no drop and no cat-signal when all
+                #       candidates AND the first fallback hit the same bad window.
+                #   (b) the call succeeds but emits non-HTML — snapshot + nudge + retry.
                 try:
-                    from cat_signal import signal
-                    signal("gen-limit-fallback", "Claude weekly limit hit; published a deterministic counter-card fallback drop.", priority="high")
-                except Exception:
-                    pass
-            else:
-                print("no usable HTML after candidates + 3 fallback attempts (bad output or transient claude failure); raw saved to data/last_bad_output.txt", file=sys.stderr)
-                try:
-                    from cat_signal import signal
-                    signal("gen-bad-output", "gen produced no usable HTML (candidates + 3 retries — bad output or transient claude exit-1/timeout). raw saved to data/last_bad_output.txt", priority="high")
-                except Exception:
-                    pass
-                return 2
+                    raw = call_claude(attempt_prompt, model=gen_model, timeout=600)
+                except Exception as e:  # noqa: BLE001 — transient claude failure, not a crash
+                    msg = str(e)
+                    call_failures.append(msg)
+                    print(f"  fallback attempt {fb_attempts}/3: claude call failed ({msg}) — backing off", file=sys.stderr)
+                    if _claude_weekly_limit_seen(call_failures):
+                        break
+                    if fb_attempts < 3:
+                        time.sleep(20 * fb_attempts)  # 20s, 40s — let a transient window clear
+                    continue
+                html = extract_html(raw)
+                if looks_like_html(html):
+                    if fb_attempts > 1:
+                        print(f"  (looks-like-html passed on fallback attempt {fb_attempts}/3)")
+                    break
+                # Always snapshot the most recent miss so the failure stays debuggable.
+                (ROOT / "data" / "last_bad_output.txt").write_text(raw)
+                (ROOT / "data" / "last_bad_prompt.txt").write_text(attempt_prompt)
+                if _claude_weekly_limit_seen([raw]):
+                    call_failures.append(raw)
+                    break
+                print(f"  fallback attempt {fb_attempts}/3: output not HTML — retrying with nudge", file=sys.stderr)
+
+            if not looks_like_html(html):
+                if _claude_weekly_limit_seen(call_failures):
+                    print("claude weekly/usage limit detected — publishing counter-card fallback without DM", file=sys.stderr)
+                    html = build_limit_fallback_html(spec)
+                    limit_fallback = True
+                else:
+                    print("no usable HTML after candidates + 3 fallback attempts (bad output or transient claude failure); raw saved to data/last_bad_output.txt", file=sys.stderr)
+                    try:
+                        from cat_signal import signal
+                        signal("gen-bad-output", "gen produced no usable HTML (candidates + 3 retries — bad output or transient claude exit-1/timeout). raw saved to data/last_bad_output.txt", priority="high")
+                    except Exception:
+                        pass
+                    return 2
 
     # Inject the canonical spec as meta tags so the cabinet can read it reliably
     html = inject_spec_meta(html, spec)
