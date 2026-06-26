@@ -48,6 +48,12 @@
     {
       "name": "555-PEPR",
       "hint": "a phone number on tear-away tabs; calling it is never described; the tabs are always mostly taken"
+    },
+    {
+      "name": "Hempstead Brothers Shows",
+      "hint": "A small traveling carnival out of Frankfort, Indiana, est. 1903 — three wagons grown old; the kind of outfit that rolls into any town's fairgrounds for a week and is gone.",
+      "added": "2026-06-26",
+      "by": "scout"
     }
   ]
 }
