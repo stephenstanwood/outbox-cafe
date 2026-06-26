@@ -13,6 +13,7 @@ Weird/retro generative site, 4 gens/day. Mac Mini cron rolls a spec, hands to Cl
 - **OAuth token:** sourced from `~/Projects/mini-claude-proxy/.env` (`CLAUDE_CODE_OAUTH_TOKEN`).
   The wrapper does `set -a; . $PROXY_ENV; . $REPO/.env; set +a` — must use `set -a` to actually export.
 - **Builder task (laptop):** Claude scheduled task `outbox-cafe-builder` runs Tue+Fri 1pm — health-checks the cafe, then ships one self-chosen improvement. Prompt: `~/.claude/scheduled-tasks/outbox-cafe-builder/SKILL.md`.
+- **Cat-signal DMs are OFF by default.** Stephen does not want outbox.cafe breakage/quota/ritual/guestbook DMs. `scripts/cat_signal.py` logs and returns false unless `OUTBOX_CAT_SIGNAL_DMS=1` is explicitly set for a temporary test.
 
 ## Critical gotchas (each one cost real hours)
 
@@ -25,7 +26,7 @@ cmd = ["claude", "--print", "--tools", "", "--model", "sonnet"]   # ✓
 # NOT: ["claude", "--print", "--tools", "", "--permission-mode", "plan", ...]
 ```
 
-### Discord bot HTTP requires a `DiscordBot` User-Agent
+### Discord bot HTTP gotcha if DMs are ever re-enabled
 
 Bare `urllib` UA (`Python-urllib/3.x`) trips Cloudflare's browser-fingerprint block → **HTTP 403 / error 1010**. Required format per Discord API:
 
@@ -50,24 +51,26 @@ gens until the runner was fixed.
 
 When the Claude CLI is hard-capped (`You've hit your weekly limit ... resets ...`),
 `generate.py` now publishes a deterministic counter-card fallback drop instead of
-leaving the archive silent. It cat-signals `gen-limit-fallback`, records
-`limit_fallback: true` in `data/history.jsonl`/`data/runs.jsonl`, and still rebuilds
-the cabinet/feed/sitemap. Social captioners still call Claude directly, so they
-skip posting while capped; the site heartbeat is the priority.
+leaving the archive silent. It records `limit_fallback: true` in
+`data/history.jsonl`/`data/runs.jsonl` and still rebuilds the cabinet/feed/sitemap.
+It does not DM by default because the central cat-signal sender is disabled.
+Social captioners still call Claude directly, so they skip posting while capped;
+the site heartbeat is the priority.
 
 ### Weekly ritual crons run at :06 (2026-06-09)
 
 Slip is `6 9 * * 0`, Doris is `6 15 * * 0` — staggered off the :00 grid the
 every-15-min engage loop fires on, after both rituals failed silently on two
 Sundays (5/24, 6/7) with `claude exit 1`. Ritual scripts now retry with
-backoff across ~6 min, log both output streams on failure, and cat-signal on
-final failure. An off-Mini GitHub Actions heartbeat
+backoff across ~6 min and log both output streams on failure. The old cat-signal
+calls are now quiet unless `OUTBOX_CAT_SIGNAL_DMS=1` is explicitly set.
+An off-Mini GitHub Actions heartbeat
 (`.github/workflows/heartbeat.yml`) alerts if no `drop:` commit lands for 14h
 (threshold accommodates the 12h overnight gap).
 
 ### Guestbook (2026-06-09)
 
-The cafe's only UGC surface, pre-moderated. `/guestbook/` form → `api/sign.js` (honeypot, link-reject, length caps, 20s throttle, no IP stored) → unguessable JSON blob under `guestbook/queue/` on Vercel Blob. Mini cron `41 * * * * scripts/run-guestbook.sh` moderates the queue via LLM (injection-armored prompt, REJECT-when-unsure), appends approved notes to `data/guestbook.jsonl`, rebuilds the page, commits. Queue blobs are deleted only after a durable outcome; ≥50 queued = spam wave → cat-signal and hold. Never weaken the moderation gate or add UGC surfaces beyond this one.
+The cafe's only UGC surface, pre-moderated. `/guestbook/` form → `api/sign.js` (honeypot, link-reject, length caps, 20s throttle, no IP stored) → unguessable JSON blob under `guestbook/queue/` on Vercel Blob. Mini cron `41 * * * * scripts/run-guestbook.sh` moderates the queue via LLM (injection-armored prompt, REJECT-when-unsure), appends approved notes to `data/guestbook.jsonl`, rebuilds the page, commits. Queue blobs are deleted only after a durable outcome; ≥50 queued = spam wave → log and hold, but no DM unless cat-signal DMs are explicitly re-enabled. Never weaken the moderation gate or add UGC surfaces beyond this one.
 
 ### Carte blanche + canon (2026-06-09)
 
@@ -84,7 +87,7 @@ The cafe's only UGC surface, pre-moderated. `/guestbook/` form → `api/sign.js`
 - **Clear stale lock**: `rm -rf /tmp/outbox-cafe-run.lock`
 - **Force midnight cleanup now**: on Mini, `~/Projects/outbox-cafe/scripts/run-cleanup.sh`
 - **Check what broke**: `grep -nE '✓ wrote|did not look like HTML|TimeoutExpired' ~/logs/outbox-cafe.log | tail -40`
-- **Send a test cat-signal**: `python3 scripts/cat_signal.py --key test 'msg'`
+- **Temporarily test cat-signal DMs**: `OUTBOX_CAT_SIGNAL_DMS=1 python3 scripts/cat_signal.py --key test 'msg'`
 
 ## Voice / content guardrails
 

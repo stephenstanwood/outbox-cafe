@@ -416,8 +416,8 @@ def main():
     line = _generate_aphorism(model="opus")
     if not line:
         print("[slip] failed to generate aphorism — aborting", file=sys.stderr)
-        # Loud failure: the Sunday slip silently missed twice (5/24, 6/7)
-        # before anyone noticed. A skipped ritual deserves a DM.
+        # Log through cat_signal for one-line failure visibility. The central
+        # sender is quiet by default, so this no longer creates an outbox DM.
         try:
             from cat_signal import signal
             signal("ritual-slip", "Mr. Quiet's Sunday slip failed all generation retries — no slip posted today. Check ~/logs/outbox-slip.log on the Mini.", priority="high")

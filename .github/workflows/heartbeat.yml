@@ -1,7 +1,6 @@
-# Dead-man's switch for the cafe. Everything that can alert (cat-signal DMs,
-# nightly digest) runs ON the Mac Mini — if the Mini dies, wedges, or loses
-# power, the result is total silence. This action runs OFF the Mini and
-# checks that drops keep landing.
+# Dead-man's switch for the cafe. Most routine monitoring runs ON the Mac Mini;
+# if the Mini dies, wedges, or loses power, the result is otherwise total
+# silence. This action runs OFF the Mini and checks that drops keep landing.
 #
 # Gens commit "drop: <title>" 4x/day (4am/8am/12pm/4pm PT). The longest
 # normal gap is overnight: 4pm → 4am = 12 hours. Threshold is 14h so a

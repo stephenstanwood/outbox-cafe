@@ -7,6 +7,10 @@ ship. Lives in the repo (not Claude project memory) so the Mini's updates
 survive — the laptop pushes its memory snapshot over the Mini's hourly, which
 would clobber Mini-side memory edits. Moved here 2026-06-10.
 
+Current alert rule, added 2026-06-26: outbox.cafe cat-signal DMs are off by
+default. Historical entries below may mention DMs, but `scripts/cat_signal.py`
+now logs and returns false unless `OUTBOX_CAT_SIGNAL_DMS=1` is explicitly set.
+
 2026-05-28 Stephen asked for an aggressive top-to-bottom review and approved the whole list. Standing decisions: engagement stays **fully auto** (no human review queue, no second-opinion model gate) — the whole thing is low-stakes, light-hearted, fun. Everything haiku→opus. Social posters are ephemeral (don't keep); on-site images (thumbnails) → Vercel Blob. The "Tailscale fire-a-gen button" was never built — cut, don't build.
 
 **Batch 1 — SHIPPED (PR #19, commit df73e7a, verified on Mini):** MCP/settings isolation via new `scripts/lib/llm.py` (root-caused the gen-failure mode, see [[project-headless-claude-isolation]]); haiku→opus everywhere [[feedback-opus-by-default]]; broadened HTML validation + adaptive retry [[project-bad-output-failure-mode]]; word-boundary controversy regex + robust `is_nopost`; untracked ephemeral `archive/social/`; deleted dead `post.py`/`_s.js`/empty `personas/`; rewrote stale README.

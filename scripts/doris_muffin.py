@@ -200,6 +200,8 @@ def main():
     column = _generate_column(model="opus")
     if not column:
         print("[muffin] failed to generate column — abort", file=sys.stderr)
+        # cat_signal is quiet by default; this records intent without creating
+        # an outbox DM unless explicitly re-enabled for a temporary test.
         try:
             from cat_signal import signal
             signal("ritual-doris", "Doris's Sunday muffin column failed all generation retries — no column posted today. Check ~/logs/outbox-doris.log on the Mini.", priority="high")

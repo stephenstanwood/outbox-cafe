@@ -35,7 +35,7 @@ QUEUE_PREFIX = "guestbook/queue/"
 MAX_PER_RUN = 20
 NAME_MAX = 40
 MESSAGE_MAX = 280
-SPAM_WAVE_THRESHOLD = 50  # queue bigger than this → cat-signal once
+SPAM_WAVE_THRESHOLD = 50  # queue bigger than this → log via quiet cat-signal
 
 MOD_PROMPT = """You are the cat on duty at outbox.cafe reading the guestbook counter. A visitor left a note. Decide whether it goes in the public guestbook, and optionally write a tiny reply.
 

@@ -1,13 +1,17 @@
-"""Cat-signal: DM Stephen a Discord alert when the unattended cafe needs his
-attention. Posts directly to the bot's DM channel — NEVER to #tasks. Stephen
-explicitly does not want routine activity in #tasks; the only thing that
-reaches him from this project is a breakage DM via this module.
+"""Cat-signal: formerly DM'd Stephen when the unattended cafe needed attention.
+
+Outbox.cafe DMs are disabled by default. Stephen does not want this project
+creating cat-signal DMs for breakage, quota windows, guestbook waves, or ritual
+misses. The callers can still call `signal(...)` for logging, but this module is
+a no-op unless `OUTBOX_CAT_SIGNAL_DMS=1` is explicitly set.
 
 Trigger conditions are decided by the caller (generate.py, engage_bsky.py);
-this module just formats and sends. Best-effort — failures here never bubble.
+this module just formats and sends when explicitly enabled. Best-effort —
+failures here never bubble.
 
 Dedup: writes the last-signal timestamp per `key` to data/cat_signal_state.json
-(gitignored). Repeat signals for the same key within 6 hours are suppressed.
+(gitignored) only when DMs are enabled and actually sent. Repeat signals for the
+same key within 6 hours are suppressed.
 """
 from __future__ import annotations
 
@@ -24,6 +28,11 @@ STATE_PATH = ROOT / "data" / "cat_signal_state.json"
 BOT_TOKEN_FILE = Path(os.path.expanduser("~/.claude/channels/discord/.env"))
 DM_CHANNEL = "1486102002474811524"   # bot ↔ Stephen DM channel
 DEDUP_WINDOW_SECONDS = 6 * 3600
+ENABLE_ENV = "OUTBOX_CAT_SIGNAL_DMS"
+
+
+def _dm_enabled() -> bool:
+    return os.environ.get(ENABLE_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
 def _load() -> dict:
@@ -75,14 +84,19 @@ def _dm(token: str, body: str) -> bool:
 
 
 def signal(key: str, message: str, priority: str = "normal") -> bool:
-    """DM Stephen with a cat-signal alert. Dedupes per-`key` within 6 hours.
+    """Maybe DM Stephen with a cat-signal alert.
 
     `key` is a short identifier for what's wrong ('bsky-auth', 'fal-quota',
     'git-push', etc.). `priority` is one of low/normal/high — only changes
     the prefix label on the message.
 
-    Returns True if the alert was sent; False if deduped or token missing.
+    Returns True if the alert was sent; False if disabled, deduped, or token
+    missing.
     """
+    if not _dm_enabled():
+        print(f"[cat-signal] outbox DMs disabled; skipping '{key}'", file=sys.stderr)
+        return False
+
     state = _load()
     now = time.time()
     last = state.get(key)
