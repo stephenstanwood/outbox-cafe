@@ -39,6 +39,22 @@ Affects `scripts/cat_signal.py` and any other direct Discord API call we add.
 
 Currently `0 4,8,12,16 * * *` on the Mini — 4 gens/day at 4am, 8am, 12pm, 4pm PT. Single-flight lock prevents pileup. Past schedules used: `*/10 * * * *` (stash mode during Max usage cycles), `0 * * * *` (hourly); the flip-to-hourly helper script from that era has been deleted.
 
+### Gen runner pulls must autostash
+
+`scripts/run-on-mini.sh` must use `git pull --rebase --autostash`. The nightly
+canon scout can leave `data/canon.json` dirty before the next scheduled drop;
+plain `git pull --rebase` aborts before generation and wedged all four 2026-06-26
+gens until the runner was fixed.
+
+### Claude weekly-limit fallback
+
+When the Claude CLI is hard-capped (`You've hit your weekly limit ... resets ...`),
+`generate.py` now publishes a deterministic counter-card fallback drop instead of
+leaving the archive silent. It cat-signals `gen-limit-fallback`, records
+`limit_fallback: true` in `data/history.jsonl`/`data/runs.jsonl`, and still rebuilds
+the cabinet/feed/sitemap. Social captioners still call Claude directly, so they
+skip posting while capped; the site heartbeat is the priority.
+
 ### Weekly ritual crons run at :06 (2026-06-09)
 
 Slip is `6 9 * * 0`, Doris is `6 15 * * 0` — staggered off the :00 grid the
