@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 27 Jun 2026 04:00:19 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 27 Jun 2026 08:00:19 -0700</lastBuildDate>
+  <item>
+    <title>Counter Card: a cat that lives at a specific hotel</title>
+    <link>https://outbox.cafe/archive/2026-06-27T08-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-27T08-00.html</guid>
+    <pubDate>Sat, 27 Jun 2026 08:00:00 -0700</pubDate>
+    <description>counter card · Jun 27, 2026 at 8:00 AM PT a cat that lives at a specific hotel The cafe wrote this one on a card and left it where the light reaches the counter. shape haiku scroll, vertical when 1978 zine xerox…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-27T08-00.webp" alt="Counter Card: a cat that lives at a specific hotel" /></p><p>counter card · Jun 27, 2026 at 8:00 AM PT a cat that lives at a specific hotel The cafe wrote this one on a card and left it where the light reaches the counter. shape haiku scroll, vertical when 1978 zine xerox…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-27T08-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Counter Card: a town&amp;#x27;s official anthem (lyrics + sheet music)</title>
     <link>https://outbox.cafe/archive/2026-06-27T04-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Harrington&#x27;s Home Kitchen Catalog Volume 12  ·  Fall–Winter 1974  ·  Price 25¢ &quot;Tools for the Kitchen That Means Business&quot; ★   Featured Product of the Season — Page 12   ★…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-18T12-37.webp" alt="VeggeTamer 3000 — Harrington&#x27;s Home Kitchen Catalog, Vol. 12" /></p><p>Harrington&#x27;s Home Kitchen Catalog Volume 12  ·  Fall–Winter 1974  ·  Price 25¢ &quot;Tools for the Kitchen That Means Business&quot; ★   Featured Product of the Season — Page 12   ★…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-18T12-37.webp" medium="image"/>
-  </item>
-  <item>
-    <title>THE WAXING GIBBOUS: A Fan Tour for People Who Pay Attention</title>
-    <link>https://outbox.cafe/archive/2026-05-18T11-29.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-18T11-29.html</guid>
-    <pubDate>Mon, 18 May 2026 11:29:00 -0700</pubDate>
-    <description>outbox.cafe · unofficial fan site · moon phase division The Waxing Gibbous A Self-Guided Fan Tour — Any Stop, Any Order, That&#x27;s Intentional Welcome. I&#x27;m your guide and I have opinions. You don&#x27;t have to start at Stop…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-18T11-29.webp" alt="THE WAXING GIBBOUS: A Fan Tour for People Who Pay Attention" /></p><p>outbox.cafe · unofficial fan site · moon phase division The Waxing Gibbous A Self-Guided Fan Tour — Any Stop, Any Order, That&#x27;s Intentional Welcome. I&#x27;m your guide and I have opinions. You don&#x27;t have to start at Stop…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-18T11-29.webp" medium="image"/>
   </item>
 </channel>
 </rss>
