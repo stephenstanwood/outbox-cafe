@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 30 Jun 2026 08:09:39 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 30 Jun 2026 12:10:17 -0700</lastBuildDate>
+  <item>
+    <title>Vi Tupp Reads the Cup — Sixpence on the Pier</title>
+    <link>https://outbox.cafe/archive/2026-06-30T12-10.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-30T12-10.html</guid>
+    <pubDate>Tue, 30 Jun 2026 12:10:00 -0700</pubDate>
+    <description>On the West Pier · Sixpence the Cup Vi Tupp Reads the Leaves Behind the strung-bead curtain, third stall past the whelks Sit yourself down, duck — there&#x27;s a chair. Now sip it right down to the leaves: click the cup . Mind, it&#x27;s hot…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-30T12-10.webp" alt="Vi Tupp Reads the Cup — Sixpence on the Pier" /></p><p>On the West Pier · Sixpence the Cup Vi Tupp Reads the Leaves Behind the strung-bead curtain, third stall past the whelks Sit yourself down, duck — there&#x27;s a chair. Now sip it right down to the leaves: click the cup . Mind, it&#x27;s hot…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-30T12-10.webp" medium="image"/>
+  </item>
   <item>
     <title>The Whole Rainbow, Held Still</title>
     <link>https://outbox.cafe/archive/2026-06-30T08-09.html</link>
@@ -1798,15 +1807,6 @@
     <description>The Halliday Bundle · Letters East &amp; West · 1890–1910 an envelope, sealed other bundles, other hands — five letters, kept together —</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-18T19-19.webp" alt="The Halliday Bundle — Letters East and West, 1890–1910" /></p><p>The Halliday Bundle · Letters East &amp; West · 1890–1910 an envelope, sealed other bundles, other hands — five letters, kept together —</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-18T19-19.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Maple Street Community Center · Bulletin Board</title>
-    <link>https://outbox.cafe/archive/2026-05-18T19-03.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-18T19-03.html</guid>
-    <pubDate>Mon, 18 May 2026 19:03:00 -0700</pubDate>
-    <description>Maple Street Community Center Bulletin Board · Pin one up, take one down · Be kind to your neighbors Show: All Classes Lost &amp; Found Services Community Events For Sale Other + Pin a Notice Pin a New Notice Print neatly. The board…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-18T19-03.webp" alt="Maple Street Community Center · Bulletin Board" /></p><p>Maple Street Community Center Bulletin Board · Pin one up, take one down · Be kind to your neighbors Show: All Classes Lost &amp; Found Services Community Events For Sale Other + Pin a Notice Pin a New Notice Print neatly. The board…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-18T19-03.webp" medium="image"/>
   </item>
 </channel>
 </rss>
