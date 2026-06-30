@@ -1861,6 +1861,7 @@ def main() -> int:
     n_candidates = len(valid)
     fb_attempts = 0
     limit_fallback = False
+    fallback_reason = None
     raw = ""
     if len(valid) >= 2:
         html = pick_best_candidate(valid, spec, model=gen_model)
@@ -1876,6 +1877,7 @@ def main() -> int:
             print("claude weekly/usage limit detected from candidate failures — publishing counter-card fallback without DM", file=sys.stderr)
             html = build_limit_fallback_html(spec)
             limit_fallback = True
+            fallback_reason = "weekly_limit"
         else:
             for fb_attempts in range(1, 4):
                 attempt_prompt = prompt if fb_attempts == 1 else prompt + NUDGE
@@ -1915,14 +1917,24 @@ def main() -> int:
                     print("claude weekly/usage limit detected — publishing counter-card fallback without DM", file=sys.stderr)
                     html = build_limit_fallback_html(spec)
                     limit_fallback = True
+                    fallback_reason = "weekly_limit"
                 else:
-                    print("no usable HTML after candidates + 3 fallback attempts (bad output or transient claude failure); raw saved to data/last_bad_output.txt", file=sys.stderr)
+                    # All candidates AND all fallbacks exhausted for a non-limit reason
+                    # (600s timeouts on an over-heavy spec, repeated non-HTML, transient
+                    # exit-1). We used to `return 2` here, which left the archive silent
+                    # and tripped the 14h heartbeat (e.g. the missed 4pm 2026-06-29 drop:
+                    # an orrery-puzzle spec timed out on all 6 attempts). The counter-card
+                    # is the same "never leave the archive silent" net used for weekly
+                    # limits — publish it deterministically rather than going dark.
+                    print("no usable HTML after candidates + 3 fallback attempts (timeout / bad output / transient claude failure); publishing counter-card fallback to keep the archive live", file=sys.stderr)
                     try:
                         from cat_signal import signal
-                        signal("gen-bad-output", "gen produced no usable HTML (candidates + 3 retries — bad output or transient claude exit-1/timeout). raw saved to data/last_bad_output.txt", priority="high")
+                        signal("gen-bad-output", "gen produced no usable HTML (candidates + 3 retries — timeout/bad output/exit-1); published counter-card fallback instead of going silent. raw (if any) saved to data/last_bad_output.txt", priority="high")
                     except Exception:
                         pass
-                    return 2
+                    html = build_limit_fallback_html(spec)
+                    limit_fallback = True
+                    fallback_reason = "exhausted"
 
     # Inject the canonical spec as meta tags so the cabinet can read it reliably
     html = inject_spec_meta(html, spec)
@@ -1962,6 +1974,7 @@ def main() -> int:
 
     if limit_fallback:
         spec["limit_fallback"] = True
+        spec["fallback_reason"] = fallback_reason
     append_history(spec)
     rebuild_cabinet()
     rebuild_feed()
@@ -2042,6 +2055,7 @@ def main() -> int:
             "bsky": posted_bsky,
             "tumblr": posted_tumblr,
             "limit_fallback": limit_fallback,
+            "fallback_reason": fallback_reason,
         })
     except Exception as e:
         print(f"run-log write failed (non-fatal): {e}", file=sys.stderr)

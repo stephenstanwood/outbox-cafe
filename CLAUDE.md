@@ -47,15 +47,22 @@ canon scout can leave `data/canon.json` dirty before the next scheduled drop;
 plain `git pull --rebase` aborts before generation and wedged all four 2026-06-26
 gens until the runner was fixed.
 
-### Claude weekly-limit fallback
+### Counter-card fallback (any total gen failure)
 
-When the Claude CLI is hard-capped (`You've hit your weekly limit ... resets ...`),
-`generate.py` now publishes a deterministic counter-card fallback drop instead of
-leaving the archive silent. It records `limit_fallback: true` in
-`data/history.jsonl`/`data/runs.jsonl` and still rebuilds the cabinet/feed/sitemap.
-It does not DM by default because the central cat-signal sender is disabled.
-Social captioners still call Claude directly, so they skip posting while capped;
-the site heartbeat is the priority.
+When a gen can't produce real HTML — Claude weekly-capped
+(`You've hit your weekly limit ... resets ...`), OR all candidates + all 3
+single-shot fallbacks exhaust for any other reason (repeated 600s timeouts on an
+over-heavy spec, repeated non-HTML, a transient exit-1 storm) — `generate.py`
+publishes a deterministic counter-card fallback drop instead of leaving the
+archive silent. It records `limit_fallback: true` plus `fallback_reason`
+(`"weekly_limit"` or `"exhausted"`) in `data/history.jsonl`/`data/runs.jsonl` and
+still rebuilds the cabinet/feed/sitemap. The card is generic — built from the
+rolled spec's own fields, never mentions Claude/limits/timeouts/plumbing. It does
+not DM by default because the central cat-signal sender is disabled. Social
+captioners still call Claude directly, so they skip posting while capped; the site
+heartbeat is the priority. (Before 2026-06-30 the net covered only the weekly-limit
+case; a timeout-exhausted gen used to `return 2` and go dark — that silent slot
+tripped the heartbeat on the missed 4pm 6/29 orrery-puzzle gen.)
 
 ### Weekly ritual crons run at :06 (2026-06-09)
 
