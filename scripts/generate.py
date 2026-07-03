@@ -1860,6 +1860,23 @@ def main() -> int:
         "<!DOCTYPE html>. No preamble, no explanation, no planning, no code "
         "fences — just the HTML, starting at the very first character."
     )
+    # Last-ditch rescue nudge. When a spec is simply too heavy to finish writing
+    # inside the 600s wall (multi-part simulations + wildcards + tallies), every
+    # retry of the same brief times out identically. This tells the model to keep
+    # the soul of the brief but build the LEANEST complete version — one core
+    # interaction, no secondary mechanics — so it lands a real page instead of a
+    # generic counter-card. Kept separate from NUDGE because it changes scope, not
+    # just output format.
+    SIMPLIFY_NUDGE = (
+        "\n\n---\nSCOPE OVERRIDE: earlier attempts at this brief ran too long to "
+        "finish. Build the LEANEST version that still honours the era, palette, "
+        "tone, and subject above. Keep exactly ONE core interaction or visual; "
+        "drop every secondary mechanic, wildcard, saved-tally, reveal-card, and "
+        "sub-simulation. Favour a single self-contained page you can write in full "
+        "quickly and completely — a small finished thing, not an ambitious "
+        "unfinished one. Output ONLY the raw HTML document, beginning with "
+        "<!DOCTYPE html>, no preamble or code fences."
+    )
 
     # Multi-candidate generation: spin up N candidates IN PARALLEL and let an opus
     # judge pick the one that best inhabits the spec. Max OAuth = $0, so breadth
@@ -1874,6 +1891,7 @@ def main() -> int:
     fb_attempts = 0
     limit_fallback = False
     fallback_reason = None
+    reduced_scope = False
     raw = ""
     if len(valid) >= 2:
         html = pick_best_candidate(valid, spec, model=gen_model)
@@ -1931,22 +1949,40 @@ def main() -> int:
                     limit_fallback = True
                     fallback_reason = "weekly_limit"
                 else:
-                    # All candidates AND all fallbacks exhausted for a non-limit reason
-                    # (600s timeouts on an over-heavy spec, repeated non-HTML, transient
-                    # exit-1). We used to `return 2` here, which left the archive silent
-                    # and tripped the 14h heartbeat (e.g. the missed 4pm 2026-06-29 drop:
-                    # an orrery-puzzle spec timed out on all 6 attempts). The counter-card
-                    # is the same "never leave the archive silent" net used for weekly
-                    # limits — publish it deterministically rather than going dark.
-                    print("no usable HTML after candidates + 3 fallback attempts (timeout / bad output / transient claude failure); publishing counter-card fallback to keep the archive live", file=sys.stderr)
+                    # All candidates AND all fallbacks exhausted for a non-limit reason.
+                    # The dominant cause is an over-heavy spec (multi-part simulation +
+                    # wildcards + tallies) opus can't finish writing inside the 600s wall,
+                    # so every retry of the SAME brief times out identically — hammering it
+                    # again is futile. Before degrading to a generic counter-card, make ONE
+                    # reduced-scope attempt: same era/palette/tone/subject, stripped to a
+                    # single core interaction it can complete fast. A real (if leaner) page
+                    # beats the generic card for visitors and for the social poster/thumb.
+                    print("candidates + 3 fallbacks exhausted — one reduced-scope rescue before counter-card", file=sys.stderr)
                     try:
-                        from cat_signal import signal
-                        signal("gen-bad-output", "gen produced no usable HTML (candidates + 3 retries — timeout/bad output/exit-1); published counter-card fallback instead of going silent. raw (if any) saved to data/last_bad_output.txt", priority="high")
-                    except Exception:
-                        pass
-                    html = build_limit_fallback_html(spec)
-                    limit_fallback = True
-                    fallback_reason = "exhausted"
+                        raw = call_claude(prompt + SIMPLIFY_NUDGE, model=gen_model, timeout=600)
+                        cand = extract_html(raw)
+                        if looks_like_html(cand):
+                            html = cand
+                            reduced_scope = True
+                            print("  reduced-scope rescue produced a real page — publishing it instead of a counter-card")
+                    except Exception as e:  # noqa: BLE001 — transient; fall through to counter-card
+                        print(f"  reduced-scope rescue failed ({e}) — falling to counter-card", file=sys.stderr)
+
+                    if not looks_like_html(html):
+                        # Even the lean rescue couldn't land. We used to `return 2` here,
+                        # which left the archive silent and tripped the 14h heartbeat (e.g.
+                        # the missed 4pm 2026-06-29 orrery-puzzle drop). The counter-card is
+                        # the same "never leave the archive silent" net used for weekly
+                        # limits — publish it deterministically rather than going dark.
+                        print("no usable HTML after candidates + 3 fallbacks + reduced-scope rescue; publishing counter-card fallback to keep the archive live", file=sys.stderr)
+                        try:
+                            from cat_signal import signal
+                            signal("gen-bad-output", "gen produced no usable HTML (candidates + 3 retries + reduced-scope rescue — timeout/bad output/exit-1); published counter-card fallback instead of going silent. raw (if any) saved to data/last_bad_output.txt", priority="high")
+                        except Exception:
+                            pass
+                        html = build_limit_fallback_html(spec)
+                        limit_fallback = True
+                        fallback_reason = "exhausted"
 
     # Inject the canonical spec as meta tags so the cabinet can read it reliably
     html = inject_spec_meta(html, spec)
@@ -2068,6 +2104,7 @@ def main() -> int:
             "tumblr": posted_tumblr,
             "limit_fallback": limit_fallback,
             "fallback_reason": fallback_reason,
+            "reduced_scope": reduced_scope,
         })
     except Exception as e:
         print(f"run-log write failed (non-fatal): {e}", file=sys.stderr)
