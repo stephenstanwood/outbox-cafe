@@ -14,6 +14,17 @@ whole class of failures in one place:
   * No settings bleed. --setting-sources '' keeps the user + project CLAUDE.md
     and hooks out of the creative context (we don't want Stephen's global prefs
     leaking into a 1933 box-office ledger).
+  * Prompt-cache reuse. Without --exclude-dynamic-system-prompt-sections, the
+    CLI's default system prompt embeds per-machine sections (cwd, env info,
+    memory paths, git status) directly in the system prompt — ahead of any
+    cache breakpoint. Since every headless call here is a fresh --print
+    invocation (no --resume/session reuse), that per-machine text is a silent
+    cache invalidator on top of whatever else varies: it makes the "stable"
+    system-prompt prefix subtly different across the Mini vs. laptop, and
+    across cwd/env drift on the same box, so the cache write from one call is
+    rarely readable by the next. The flag moves that content into the first
+    user message instead, leaving the system prompt byte-identical across
+    calls (2026-07-03 token-spend audit: 3.2M cache writes vs 291K reads).
   * Never --permission-mode plan. It biases toward planning text. We never pass it.
   * Model default is opus. Max OAuth = $0 marginal cost, so the best model is
     free. Helpers used to run haiku; everything is opus now.
@@ -32,6 +43,7 @@ _ISOLATION = [
     "--strict-mcp-config",
     "--mcp-config", '{"mcpServers":{}}',
     "--setting-sources", "",
+    "--exclude-dynamic-system-prompt-sections",
 ]
 
 
