@@ -33,6 +33,21 @@
       var permaHref = '/archive/' + list[currentIdx];
       var permaUrl = location.origin + permaHref;
 
+      // Stamp this entry as "seen" — a quiet visit log the cabinet reads to
+      // mark cards, count progress, and power its UNSEEN filter. This browser
+      // only (localStorage), same shoebox model as the binder. Best-effort:
+      // wrapped so a storage error (private mode, quota) never blocks nav.
+      try {
+        var SEEN_KEY = 'outbox-seen';
+        var seenArr = JSON.parse(localStorage.getItem(SEEN_KEY) || '[]');
+        if (!Array.isArray(seenArr)) seenArr = [];
+        var cur = list[currentIdx];
+        if (cur && seenArr.indexOf(cur) === -1) {
+          seenArr.push(cur);
+          localStorage.setItem(SEEN_KEY, JSON.stringify(seenArr));
+        }
+      } catch (e) {}
+
       var style = document.createElement('style');
       style.id = 'outbox-nav-style';
       style.textContent = [

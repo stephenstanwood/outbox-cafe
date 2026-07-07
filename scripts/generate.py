@@ -637,6 +637,7 @@ def rebuild_cabinet() -> None:
           </div>
           <div class="card-shine" aria-hidden="true"></div>
         </a>
+        <span class="seen-mark" aria-hidden="true">✓ seen</span>
         <button class="keep-btn" type="button" aria-label="keep this card in your binder" title="keep in your binder">☆</button>
         </div>'''
 
@@ -703,6 +704,29 @@ def rebuild_cabinet() -> None:
     font-style: italic; font-size: 14px; padding: 40px 0;
   }
   #finder-empty.show { display: block; }
+
+  /* SEEN — a quiet visit log. nav.js stamps each gen page you open into
+     localStorage; the cabinet reads it to mark cards + power the UNSEEN
+     filter. Same shoebox-under-the-bed model as the binder. */
+  .seen-mark {
+    position: absolute; top: -8px; left: -8px; z-index: 11;
+    display: none;
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 9px; letter-spacing: 1px; text-transform: lowercase;
+    color: var(--dim); background: var(--paper);
+    border: 1.5px solid var(--dim); border-radius: 3px;
+    padding: 2px 5px; transform: rotate(-7deg);
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.18);
+    pointer-events: none;
+  }
+  .card-wrap.seen .seen-mark { display: block; }
+  #unseen-toggle.on { background: var(--gold); color: var(--ink); padding: 0 6px; }
+  body.unseen-only .card-wrap.seen { display: none; }
+  #unseen-empty {
+    display: none; text-align: center; color: var(--dim);
+    font-style: italic; font-size: 14px; padding: 40px 0;
+  }
+  body.unseen-only #unseen-empty.show { display: block; }
 """
 
     binder_js = """
@@ -783,6 +807,38 @@ def rebuild_cabinet() -> None:
     }
     input.addEventListener('input', apply);
     apply();
+  })();
+
+  // Seen: which cards you've opened. nav.js stamps every gen page you visit
+  // into localStorage; the cabinet reads that set to mark cards, count what's
+  // left, and power the UNSEEN filter. This browser only — same shoebox model
+  // as the binder. Read-only here (nav.js does the writing on the gen pages).
+  (function () {
+    var seen;
+    try { seen = JSON.parse(localStorage.getItem('outbox-seen') || '[]'); }
+    catch (e) { seen = []; }
+    if (!Array.isArray(seen)) seen = [];
+    var set = {};
+    seen.forEach(function (f) { set[f] = 1; });
+    var wraps = Array.prototype.slice.call(document.querySelectorAll('.card-wrap'));
+    var total = wraps.length;
+    var seenCount = 0;
+    wraps.forEach(function (w) {
+      if (set[w.getAttribute('data-file')]) { w.classList.add('seen'); seenCount++; }
+    });
+    var unseen = total - seenCount;
+    var countEl = document.getElementById('unseen-count');
+    if (countEl) countEl.textContent = unseen;
+    var emptyEl = document.getElementById('unseen-empty');
+    var toggle = document.getElementById('unseen-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        var on = document.body.classList.toggle('unseen-only');
+        toggle.classList.toggle('on', on);
+        if (emptyEl) emptyEl.classList.toggle('show', on && unseen === 0);
+      });
+    }
   })();
 </script>
 """
@@ -1234,6 +1290,12 @@ def rebuild_cabinet() -> None:
     .card-name {{ font-size: 13px; }}
     .card:hover {{ transform: rotate(0) translateY(-2px) scale(1.01); }}
     .keep-btn {{ width: 34px; height: 34px; font-size: 17px; top: -8px; right: -6px; }}
+    /* The control strip has enough chips (NEWEST/STUMBLE/BINDER/UNSEEN) to run
+       off a phone's edge — let it wrap and stay fully on-screen. */
+    header.hero .meta {{
+      display: flex; flex-wrap: wrap; justify-content: center;
+      max-width: 100%; gap: 8px 12px; row-gap: 6px;
+    }}
   }}
 {binder_css}
 </style>
@@ -1249,6 +1311,7 @@ def rebuild_cabinet() -> None:
     <a href="/">→ NEWEST</a>
     <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
     <a href="#" id="binder-toggle" title="show only the cards you've kept">★ BINDER · <span id="binder-count">0</span></a>
+    <a href="#" id="unseen-toggle" title="show only cards you haven't opened yet">◇ UNSEEN · <span id="unseen-count">0</span></a>
   </div>
   <div class="finder">
     <input id="finder-input" type="search" autocomplete="off" spellcheck="false"
@@ -1279,11 +1342,13 @@ def rebuild_cabinet() -> None:
 
 <p id="binder-empty">your binder is empty. tap the ☆ on a card to keep it.</p>
 <p id="finder-empty">nothing in the cabinet matches that. try a looser word.</p>
+<p id="unseen-empty">you've opened every card in the cabinet. that's all of 'em — for now. ✓</p>
 
 <footer>
   outbox.cafe · trading cards mint themselves four times a day<br>
   <small>rarity is randomly assigned at mint. 1st-edition cards have a gold border. holographics shimmer in the dark.</small><br>
   <small>tap the ☆ on a card to keep it in your binder. the binder lives in this browser — like a shoebox under your bed.</small><br>
+  <small>every card you open picks up a small ✓. the cabinet keeps count so you can hunt down the ones you've missed.</small><br>
   <small><a href="/about/">about</a> · <a href="/guestbook/">sign the guestbook</a> · <a href="/slips/">the slip drawer</a> · <a href="/columns/">the muffin column</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
 </footer>
 
