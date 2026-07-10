@@ -2018,16 +2018,29 @@ def main() -> int:
                     # reduced-scope attempt: same era/palette/tone/subject, stripped to a
                     # single core interaction it can complete fast. A real (if leaner) page
                     # beats the generic card for visitors and for the social poster/thumb.
-                    print("candidates + 3 fallbacks exhausted — one reduced-scope rescue before counter-card", file=sys.stderr)
+                    #
+                    # Run this last-ditch attempt on SONNET, not opus. The whole reason we
+                    # are here is opus repeatedly failed to finish ANY page inside 600s —
+                    # a leaner brief on the same slow opus still hits the same wall (7/10
+                    # 04:53's rescue timed out at 600s on opus, exactly like its candidates).
+                    # This is NOT the opus-everywhere primary path (that's a cost decision
+                    # for gens that succeed); it's the choice between a real sonnet page and
+                    # a blank counter-card, where a real page always wins. Sonnet is markedly
+                    # faster wall-clock, so a stripped-down brief is far likelier to land in
+                    # time. (Early outbox gens ran sonnet — capability is not the concern for
+                    # a lean rescue.) If gen_model was already sonnet, this is a harmless
+                    # same-model retry, no worse than the old opus-again behaviour.
+                    rescue_model = "sonnet"
+                    print(f"candidates + 3 fallbacks exhausted — one reduced-scope rescue ({rescue_model}) before counter-card", file=sys.stderr)
                     try:
-                        raw = call_claude(prompt + SIMPLIFY_NUDGE, model=gen_model, timeout=600)
+                        raw = call_claude(prompt + SIMPLIFY_NUDGE, model=rescue_model, timeout=600)
                         cand = extract_html(raw)
                         if looks_like_html(cand):
                             html = cand
                             reduced_scope = True
-                            print("  reduced-scope rescue produced a real page — publishing it instead of a counter-card")
+                            print(f"  reduced-scope rescue ({rescue_model}) produced a real page — publishing it instead of a counter-card")
                     except Exception as e:  # noqa: BLE001 — transient; fall through to counter-card
-                        print(f"  reduced-scope rescue failed ({e}) — falling to counter-card", file=sys.stderr)
+                        print(f"  reduced-scope rescue ({rescue_model}) failed ({e}) — falling to counter-card", file=sys.stderr)
 
                     if not looks_like_html(html):
                         # Even the lean rescue couldn't land. We used to `return 2` here,
