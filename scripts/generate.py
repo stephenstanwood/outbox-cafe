@@ -1786,16 +1786,12 @@ def generate_candidates(prompt: str, model: str, n: int, timeout: int = 600) -> 
     toward a distinct interpretation so they actually differ.
 
     NOTE on prompt caching: each candidate is a fresh, disposable `claude --print`
-    invocation with no --resume/--session-id continuation, so there is no prior
-    turn for the CLI to extend a cache breakpoint from — the shared `prompt` text
-    below is never eligible for a cache read regardless of call timing (verified
-    empirically: even fully sequential, byte-identical --print calls show
-    cache_creation_input_tokens > 0 / cache_read_input_tokens == 0 for the
-    user-turn content, every time). So don't "fix" this by staggering the
-    launches — there is nothing to stagger into. The one thing that IS cached
-    and reusable across these disposable sessions is the CLI's own fixed
-    system-prompt/tools prefix, which is what --exclude-dynamic-system-prompt-sections
-    in lib/llm.py's claude_cmd() addresses.
+    invocation with no --resume/--session-id continuation. Candidate 2+ also add
+    a unique variant suffix, so their full user prefixes are deliberately
+    different. Caching those one-shot requests produced expensive writes that
+    almost nothing could reuse; lib/llm.py disables prompt caching for this
+    command family. Staggering the launches cannot turn distinct prompts into a
+    shared conversation, so parallelism is still the right latency tradeoff.
     """
     import concurrent.futures
 
