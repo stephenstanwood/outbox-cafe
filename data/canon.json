@@ -102,6 +102,12 @@
       "hint": "A small out-of-the-way parish village, the kind with one old church and a rose window; good for a return address, a bus stop, or where someone's aunt retired.",
       "added": "2026-07-09",
       "by": "scout"
+    },
+    {
+      "name": "small-weather-passing",
+      "hint": "A gentle old tune called 'Small Weather, Passing' — the kind of half-remembered melody that turns up in a music box, on a jukebox, or hummed absently by someone at a sink.",
+      "added": "2026-07-10",
+      "by": "scout"
     }
   ]
 }
