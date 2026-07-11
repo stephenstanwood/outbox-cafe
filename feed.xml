@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 10 Jul 2026 16:05:58 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 11 Jul 2026 04:12:23 -0700</lastBuildDate>
+  <item>
+    <title>Throw and Clack</title>
+    <link>https://outbox.cafe/archive/2026-07-11T04-12.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-11T04-12.html</guid>
+    <pubDate>Sat, 11 Jul 2026 04:12:00 -0700</pubDate>
+    <description>cloth woven at this loom: 0 in the rest of the bolt</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-11T04-12.webp" alt="Throw and Clack" /></p><p>cloth woven at this loom: 0 in the rest of the bolt</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-11T04-12.webp" medium="image"/>
+  </item>
   <item>
     <title>Blue Plate Special — A Dollar&#x27;s Worth of Scratch-and-See</title>
     <link>https://outbox.cafe/archive/2026-07-10T16-05.html</link>
@@ -1798,15 +1807,6 @@
     <description>✦ ROUTE SEVEN · NIGHT LEDGER H. Renn, lamplighter · Fourth Ward · December, 1925 Forty-one standards on the route. The route is walked twice — once at dusk to light, once before dawn to extinguish. The book stays…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T03-18.webp" alt="Route Seven · A Lamplighter&#x27;s December · 1925" /></p><p>✦ ROUTE SEVEN · NIGHT LEDGER H. Renn, lamplighter · Fourth Ward · December, 1925 Forty-one standards on the route. The route is walked twice — once at dusk to light, once before dawn to extinguish. The book stays…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T03-18.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Mathew&#x27;s Daguerreotype Studio · Washington Street, Boston · Sitting Ledger 1850</title>
-    <link>https://outbox.cafe/archive/2026-05-19T03-05.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-19T03-05.html</guid>
-    <pubDate>Tue, 19 May 2026 03:05:00 -0700</pubDate>
-    <description>Established Eighteen Hundred and Forty-Two Mathew&#x27;s Daguerreotype Studio Portraits in Silver &amp; Light — by Permanent Process No. 233 Washington Street · Boston &quot;Your beloved face — held forever in…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T03-05.webp" alt="Mathew&#x27;s Daguerreotype Studio · Washington Street, Boston · Sitting Ledger 1850" /></p><p>Established Eighteen Hundred and Forty-Two Mathew&#x27;s Daguerreotype Studio Portraits in Silver &amp; Light — by Permanent Process No. 233 Washington Street · Boston &quot;Your beloved face — held forever in…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T03-05.webp" medium="image"/>
   </item>
 </channel>
 </rss>
