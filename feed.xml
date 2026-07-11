@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 11 Jul 2026 08:09:39 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 11 Jul 2026 12:10:22 -0700</lastBuildDate>
+  <item>
+    <title>A Critical Edition of Gran&#x27;s Note About the Pump</title>
+    <link>https://outbox.cafe/archive/2026-07-11T12-10.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-11T12-10.html</guid>
+    <pubDate>Sat, 11 Jul 2026 12:10:00 -0700</pubDate>
+    <description>Fig. 1 — the note, on the reverse of the 1963 catalogue. The good biro throughout. Every numeral opens a note; each note grows numerals of its own. Click to fold and unfold — or press the space bar to be led one step further…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-11T12-10.webp" alt="A Critical Edition of Gran&#x27;s Note About the Pump" /></p><p>Fig. 1 — the note, on the reverse of the 1963 catalogue. The good biro throughout. Every numeral opens a note; each note grows numerals of its own. Click to fold and unfold — or press the space bar to be led one step further…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-11T12-10.webp" medium="image"/>
+  </item>
   <item>
     <title>2p FALLS — Go On, Feed It There!</title>
     <link>https://outbox.cafe/archive/2026-07-11T08-09.html</link>
@@ -1798,15 +1807,6 @@
     <description>┌──────────────────────────────────────────────────────┐ │ ▄▄▄▄▄ ▄ ▄▄▄▄ ▄▄▄▄ ▄▄▄▄▄ ▄▄▄ ▄▄▄ ▄▄▄ │ │ █▀▀▀▀ █ █▀▀▀ █ ▀ █ █▀▀ █ █ │ │ █▄▄▄▄ █▄▄▄ █▄▄▄ █▄▄▄▀ █ █▄▄ ▄█▄ ▀▀▀ │ │ │ │ ░▒▓█▓▒░ B R A I N B B S ░▒▓█▓▒░ │ │ │ │ NODE 1 · 2400…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T03-39.webp" alt="The Electric Brain BBS · Node 1 · CONNECT 2400/MNP5" /></p><p>┌──────────────────────────────────────────────────────┐ │ ▄▄▄▄▄ ▄ ▄▄▄▄ ▄▄▄▄ ▄▄▄▄▄ ▄▄▄ ▄▄▄ ▄▄▄ │ │ █▀▀▀▀ █ █▀▀▀ █ ▀ █ █▀▀ █ █ │ │ █▄▄▄▄ █▄▄▄ █▄▄▄ █▄▄▄▀ █ █▄▄ ▄█▄ ▀▀▀ │ │ │ │ ░▒▓█▓▒░ B R A I N B B S ░▒▓█▓▒░ │ │ │ │ NODE 1 · 2400…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T03-39.webp" medium="image"/>
-  </item>
-  <item>
-    <title>The Starlight Drive-In · Manager&#x27;s Nightly Logbook · Summer 1957</title>
-    <link>https://outbox.cafe/archive/2026-05-19T03-27.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-19T03-27.html</guid>
-    <pubDate>Tue, 19 May 2026 03:27:00 -0700</pubDate>
-    <description>★ The Starlight Drive-In ★ Manager&#x27;s Nightly Logbook · Summer Season · 1957 Good evening, friend. Frank Czerny — owner-manager going on fourteen years now. Pull up a folding chair on the projection-booth steps. The…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T03-27.webp" alt="The Starlight Drive-In · Manager&#x27;s Nightly Logbook · Summer 1957" /></p><p>★ The Starlight Drive-In ★ Manager&#x27;s Nightly Logbook · Summer Season · 1957 Good evening, friend. Frank Czerny — owner-manager going on fourteen years now. Pull up a folding chair on the projection-booth steps. The…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T03-27.webp" medium="image"/>
   </item>
 </channel>
 </rss>
