@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Mon, 13 Jul 2026 08:04:11 -0700</lastBuildDate>
+  <lastBuildDate>Mon, 13 Jul 2026 12:01:37 -0700</lastBuildDate>
+  <item>
+    <title>The Meadow Answers Every Tap</title>
+    <link>https://outbox.cafe/archive/2026-07-13T12-01.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-13T12-01.html</guid>
+    <pubDate>Mon, 13 Jul 2026 12:01:00 -0700</pubDate>
+    <description>Tap the grass. Something is waiting to become a flower. 0 blooms and counting · wander back through the other gardens</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-13T12-01.webp" alt="The Meadow Answers Every Tap" /></p><p>Tap the grass. Something is waiting to become a flower. 0 blooms and counting · wander back through the other gardens</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-13T12-01.webp" medium="image"/>
+  </item>
   <item>
     <title>Old Haymaker&#x27;s Switchel — The Pop With the Bite</title>
     <link>https://outbox.cafe/archive/2026-07-13T08-03.html</link>
@@ -1798,15 +1807,6 @@
     <description>Thrilling Tales &quot;Stories That Carry You Out the Window&quot; Editorial Office · 219 W. 39th Street · New York · April 1942 Submissions Tray Illustrator Commissions Circulation Ledger Submit a Story Click any card to open the editor&#x27;s…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T06-47.webp" alt="Thrilling Tales · Editor&#x27;s Desk · April 1942" /></p><p>Thrilling Tales &quot;Stories That Carry You Out the Window&quot; Editorial Office · 219 W. 39th Street · New York · April 1942 Submissions Tray Illustrator Commissions Circulation Ledger Submit a Story Click any card to open the editor&#x27;s…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T06-47.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Otis Bramwell&#x27;s Programme Cabinet · Touring Companies of 1925</title>
-    <link>https://outbox.cafe/archive/2026-05-19T06-38.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-19T06-38.html</guid>
-    <pubDate>Tue, 19 May 2026 06:38:00 -0700</pubDate>
-    <description>elements, just styled placeholder with theatrical typography, ornate borders, production titles, performance dates, and company information) paired with a passionate handwritten letter from the collector reflecting on how theatrical programs preserve the ephemeral memory of live…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T06-38.webp" alt="Otis Bramwell&#x27;s Programme Cabinet · Touring Companies of 1925" /></p><p>elements, just styled placeholder with theatrical typography, ornate borders, production titles, performance dates, and company information) paired with a passionate handwritten letter from the collector reflecting on how theatrical programs preserve the ephemeral memory of live…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T06-38.webp" medium="image"/>
   </item>
 </channel>
 </rss>
