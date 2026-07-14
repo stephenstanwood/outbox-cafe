@@ -615,8 +615,10 @@ def rebuild_cabinet() -> None:
         ).lower()
         search_attr = (search_blob.replace("&", "&amp;").replace('"', "&quot;")
                        .replace("<", "&lt;").replace(">", "&gt;"))
+        # Tier letter (c/u/r/h/f) — powers the RARE filter (hunt ★★★ and up).
+        rar = e["rarity_cls"].rsplit("-", 1)[-1]
         return f'''
-        <div class="card-wrap" data-file="{e["file"]}" data-search="{search_attr}">
+        <div class="card-wrap" data-file="{e["file"]}" data-search="{search_attr}" data-rarity="{rar}">
         <a class="card {e["rarity_cls"]}" href="{e["page_path"]}"
            style="--c1:{c1}; --c2:{c2}; --c3:{c3}; --rot:{e['rot']:.2f}deg;">
           <div class="card-inner">
@@ -643,6 +645,12 @@ def rebuild_cabinet() -> None:
 
     cards_html = "\n".join(render_card(i, e) for i, e in enumerate(entries))
     count = total
+    # Scarce cards (★★★ and up) — the site already visually groups these three
+    # tiers with the gold-star treatment; the RARE filter rounds them all up.
+    rare_count = sum(
+        1 for e in entries
+        if e["rarity_cls"] in ("rarity-r", "rarity-h", "rarity-f")
+    )
 
     # Binder: visitors can "keep" cards (localStorage). Plain strings — not
     # f-strings — so the CSS/JS braces don't need doubling.
@@ -727,6 +735,12 @@ def rebuild_cabinet() -> None:
     font-style: italic; font-size: 14px; padding: 40px 0;
   }
   body.unseen-only #unseen-empty.show { display: block; }
+
+  /* RARE — hunt the scarce cards (★★★ and up: RARE / HOLO / FIRST EDITION).
+     Additive hide only (hides everything that ISN'T rare+), so it intersects
+     cleanly with UNSEEN / BINDER — every filter just adds display:none. */
+  #rare-toggle.on { background: var(--gold); color: var(--ink); padding: 0 6px; }
+  body.rare-only .card-wrap:not([data-rarity="r"]):not([data-rarity="h"]):not([data-rarity="f"]) { display: none; }
 """
 
     binder_js = """
@@ -839,6 +853,19 @@ def rebuild_cabinet() -> None:
         if (emptyEl) emptyEl.classList.toggle('show', on && unseen === 0);
       });
     }
+  })();
+
+  // Rare: hunt the scarce cards (★★★ and up). Pure CSS filter — no localStorage.
+  // Combines with UNSEEN / BINDER via intersection (all filters only add
+  // display:none), so RARE + UNSEEN = scarce cards you haven't opened yet.
+  (function () {
+    var toggle = document.getElementById('rare-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      var on = document.body.classList.toggle('rare-only');
+      toggle.classList.toggle('on', on);
+    });
   })();
 </script>
 """
@@ -1290,8 +1317,8 @@ def rebuild_cabinet() -> None:
     .card-name {{ font-size: 13px; }}
     .card:hover {{ transform: rotate(0) translateY(-2px) scale(1.01); }}
     .keep-btn {{ width: 34px; height: 34px; font-size: 17px; top: -8px; right: -6px; }}
-    /* The control strip has enough chips (NEWEST/STUMBLE/BINDER/UNSEEN) to run
-       off a phone's edge — let it wrap and stay fully on-screen. */
+    /* The control strip has enough chips (NEWEST/STUMBLE/BINDER/UNSEEN/RARE) to
+       run off a phone's edge — let it wrap and stay fully on-screen. */
     header.hero .meta {{
       display: flex; flex-wrap: wrap; justify-content: center;
       max-width: 100%; gap: 8px 12px; row-gap: 6px;
@@ -1312,6 +1339,7 @@ def rebuild_cabinet() -> None:
     <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
     <a href="#" id="binder-toggle" title="show only the cards you've kept">★ BINDER · <span id="binder-count">0</span></a>
     <a href="#" id="unseen-toggle" title="show only cards you haven't opened yet">◇ UNSEEN · <span id="unseen-count">0</span></a>
+    <a href="#" id="rare-toggle" title="show only the scarce cards — ★★★ and up">✦ RARE · {rare_count}</a>
   </div>
   <div class="finder">
     <input id="finder-input" type="search" autocomplete="off" spellcheck="false"
@@ -1349,6 +1377,7 @@ def rebuild_cabinet() -> None:
   <small>rarity is randomly assigned at mint. 1st-edition cards have a gold border. holographics shimmer in the dark.</small><br>
   <small>tap the ☆ on a card to keep it in your binder. the binder lives in this browser — like a shoebox under your bed.</small><br>
   <small>every card you open picks up a small ✓. the cabinet keeps count so you can hunt down the ones you've missed.</small><br>
+  <small>about one card in five mints scarce — ★★★ and up. the ✦ RARE filter rounds up every one in the cabinet.</small><br>
   <small><a href="/about/">about</a> · <a href="/guestbook/">sign the guestbook</a> · <a href="/slips/">the slip drawer</a> · <a href="/columns/">the muffin column</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
 </footer>
 
