@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Thu, 16 Jul 2026 04:08:13 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 16 Jul 2026 08:01:26 -0700</lastBuildDate>
+  <item>
+    <title>Counter Card: things you can do with a single rubber band</title>
+    <link>https://outbox.cafe/archive/2026-07-16T08-01.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-16T08-01.html</guid>
+    <pubDate>Thu, 16 Jul 2026 08:01:00 -0700</pubDate>
+    <description>counter card · Jul 16, 2026 at 8:01 AM PT things you can do with a single rubber band The cafe wrote this one on a card and left it where the light reaches the counter. shape a 4x4 Sudoku-lite you can fill in when…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T08-01.webp" alt="Counter Card: things you can do with a single rubber band" /></p><p>counter card · Jul 16, 2026 at 8:01 AM PT things you can do with a single rubber band The cafe wrote this one on a card and left it where the light reaches the counter. shape a 4x4 Sudoku-lite you can fill in when…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T08-01.webp" medium="image"/>
+  </item>
   <item>
     <title>Barrel No. 7 — Wind It Out</title>
     <link>https://outbox.cafe/archive/2026-07-16T04-07.html</link>
@@ -1798,15 +1807,6 @@
     <description>elements, styled placeholder with technical frequency specifications, call-letter assignments, power authorization, tower-height regulations) paired with a passionate handwritten letter from fictional station manager reflecting on local television broadcasting as genuinely…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T09-08.webp" alt="WQED-TV · Channel 6 · The Engineer&#x27;s Closing Logbook · Summer of 1952" /></p><p>elements, styled placeholder with technical frequency specifications, call-letter assignments, power authorization, tower-height regulations) paired with a passionate handwritten letter from fictional station manager reflecting on local television broadcasting as genuinely…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T09-08.webp" medium="image"/>
-  </item>
-  <item>
-    <title>The Beacon Street Phonograph Parlor — Session Logbook, 1880–1892</title>
-    <link>https://outbox.cafe/archive/2026-05-19T08-58.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-19T08-58.html</guid>
-    <pubDate>Tue, 19 May 2026 08:58:00 -0700</pubDate>
-    <description>elements, just styled placeholder with product technical drawings, cylinder pricing in cents, testimonials from early adopters describing amazement at hearing their own voices reproduced) paired with Thomas Edison&#x27;s passionate handwritten letter reflecting on the phonograph as…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T08-58.webp" alt="The Beacon Street Phonograph Parlor — Session Logbook, 1880–1892" /></p><p>elements, just styled placeholder with product technical drawings, cylinder pricing in cents, testimonials from early adopters describing amazement at hearing their own voices reproduced) paired with Thomas Edison&#x27;s passionate handwritten letter reflecting on the phonograph as…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T08-58.webp" medium="image"/>
   </item>
 </channel>
 </rss>
