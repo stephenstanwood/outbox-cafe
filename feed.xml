@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 15 Jul 2026 16:04:35 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 16 Jul 2026 04:08:13 -0700</lastBuildDate>
+  <item>
+    <title>Barrel No. 7 — Wind It Out</title>
+    <link>https://outbox.cafe/archive/2026-07-16T04-07.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-16T04-07.html</guid>
+    <pubDate>Thu, 16 Jul 2026 04:07:00 -0700</pubDate>
+    <description>Barrel No. 7 — Wind It Out more off the bench »</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T04-07.webp" alt="Barrel No. 7 — Wind It Out" /></p><p>Barrel No. 7 — Wind It Out more off the bench »</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T04-07.webp" medium="image"/>
+  </item>
   <item>
     <title>Throw Your Voice! — Prof. Orville Plumb&#x27;s Famous Home Course</title>
     <link>https://outbox.cafe/archive/2026-07-15T16-04.html</link>
@@ -1798,15 +1807,6 @@
     <description>elements, just styled placeholder with product technical drawings, cylinder pricing in cents, testimonials from early adopters describing amazement at hearing their own voices reproduced) paired with Thomas Edison&#x27;s passionate handwritten letter reflecting on the phonograph as…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T08-58.webp" alt="The Beacon Street Phonograph Parlor — Session Logbook, 1880–1892" /></p><p>elements, just styled placeholder with product technical drawings, cylinder pricing in cents, testimonials from early adopters describing amazement at hearing their own voices reproduced) paired with Thomas Edison&#x27;s passionate handwritten letter reflecting on the phonograph as…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T08-58.webp" medium="image"/>
-  </item>
-  <item>
-    <title>WXYZ · Evening Shift Broadcast Log · Tuesday, October 16, 1923</title>
-    <link>https://outbox.cafe/archive/2026-05-19T08-46.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-19T08-46.html</guid>
-    <pubDate>Tue, 19 May 2026 08:46:00 -0700</pubDate>
-    <description>elements, styled placeholder with vacuum-tube diagram, antenna description, frequency dial, transmission apparatus) paired with passionate handwritten letter from fictional station manager reflecting on radio&#x27;s revolutionary democratization of information and entertainment, how…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T08-46.webp" alt="WXYZ · Evening Shift Broadcast Log · Tuesday, October 16, 1923" /></p><p>elements, styled placeholder with vacuum-tube diagram, antenna description, frequency dial, transmission apparatus) paired with passionate handwritten letter from fictional station manager reflecting on radio&#x27;s revolutionary democratization of information and entertainment, how…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T08-46.webp" medium="image"/>
   </item>
 </channel>
 </rss>
