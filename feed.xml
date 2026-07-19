@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 18 Jul 2026 16:06:11 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 19 Jul 2026 04:07:15 -0700</lastBuildDate>
+  <item>
+    <title>See the Sound! — Bow the Brass Plate and Watch the Sand Draw</title>
+    <link>https://outbox.cafe/archive/2026-07-19T04-07.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-19T04-07.html</guid>
+    <pubDate>Sun, 19 Jul 2026 04:07:00 -0700</pubDate>
+    <description>Ready? Give the plate a bow — drag up or down the edge and listen! Plate No. 4 · brass · a bow · sand FIGURES DRAWN ON THIS PLATE: 0 more from the bench →</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-19T04-07.webp" alt="See the Sound! — Bow the Brass Plate and Watch the Sand Draw" /></p><p>Ready? Give the plate a bow — drag up or down the edge and listen! Plate No. 4 · brass · a bow · sand FIGURES DRAWN ON THIS PLATE: 0 more from the bench →</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-19T04-07.webp" medium="image"/>
+  </item>
   <item>
     <title>Delphine Memorial Pool — Rules &amp;amp; This Week&#x27;s Notes</title>
     <link>https://outbox.cafe/archive/2026-07-18T16-05.html</link>
@@ -1798,15 +1807,6 @@
     <description>WMRX-TV · Channel 9 · Engineering The Calibration Bench Test-pattern alignment console — Tuesday evening, before sign-on. Adjust each dial; the pattern responds in real time. Your bench remembers where…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T16-03.webp" alt="The Calibration Bench · WMRX-TV Channel 9 · Test-Pattern Alignment Console" /></p><p>WMRX-TV · Channel 9 · Engineering The Calibration Bench Test-pattern alignment console — Tuesday evening, before sign-on. Adjust each dial; the pattern responds in real time. Your bench remembers where…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T16-03.webp" medium="image"/>
-  </item>
-  <item>
-    <title>STARLING on the Loop · Mission Control Transmission Reconstruction Console · 1969</title>
-    <link>https://outbox.cafe/archive/2026-05-19T13-57.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-19T13-57.html</guid>
-    <pubDate>Tue, 19 May 2026 13:57:00 -0700</pubDate>
-    <description>▌ MISSION CONTROL · TRANSMISSION RECONSTRUCTION CONSOLE GET 102:38:21 · S-BAND ● FLIGHT to all console positions — Six down-link transmissions from STARLING and MERIDIAN have come down with partial…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T13-57.webp" alt="STARLING on the Loop · Mission Control Transmission Reconstruction Console · 1969" /></p><p>▌ MISSION CONTROL · TRANSMISSION RECONSTRUCTION CONSOLE GET 102:38:21 · S-BAND ● FLIGHT to all console positions — Six down-link transmissions from STARLING and MERIDIAN have come down with partial…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-19T13-57.webp" medium="image"/>
   </item>
 </channel>
 </rss>
