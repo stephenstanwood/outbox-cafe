@@ -31,6 +31,9 @@ SLIPS_PAGE = ROOT / "slips" / "index.html"
 COLUMNS_PAGE = ROOT / "columns" / "index.html"
 GUESTBOOK_DATA = ROOT / "data" / "guestbook.jsonl"
 GUESTBOOK_PAGE = ROOT / "guestbook" / "index.html"
+CANON_DATA = ROOT / "data" / "canon.json"
+ARCHIVE_DIR = ROOT / "archive"
+REGULARS_PAGE = ROOT / "regulars" / "index.html"
 
 # Shared look — same paper/ink palette as /about/ so the cafe's non-gen pages
 # read as one room.
@@ -433,10 +436,252 @@ def rebuild_guestbook_page() -> None:
     GUESTBOOK_PAGE.write_text(page)
 
 
+_REGULARS_CSS = """
+  .intro {
+    background: var(--paper-2);
+    padding: 20px 24px;
+    border-left: 4px solid var(--teal);
+    margin: 0 0 34px;
+    font-size: 16px;
+  }
+  .intro p { margin: 0 0 10px; }
+  .intro p:last-child { margin-bottom: 0; }
+  article.reg {
+    margin: 0 0 26px;
+    padding: 16px 20px 14px;
+    background: var(--paper-2);
+    border-left: 4px solid var(--accent);
+    transform: rotate(var(--rot, 0deg));
+  }
+  article.reg .name {
+    font-size: 21px; font-weight: bold; line-height: 1.2;
+    margin-bottom: 3px;
+  }
+  article.reg .hint {
+    color: var(--ink); font-style: italic; font-size: 15.5px;
+    line-height: 1.5; margin-bottom: 10px;
+  }
+  article.reg .count {
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--dim); margin-bottom: 6px;
+  }
+  ul.sightings { list-style: none; margin: 0; padding: 0; }
+  ul.sightings li { margin: 0 0 4px; font-size: 15px; line-height: 1.45; }
+  ul.sightings .when {
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 11px; color: var(--dim); letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  ul.sightings .more { color: var(--dim); font-style: italic; font-size: 14px; }
+  h2.section {
+    font-family: "Georgia", serif;
+    font-size: 22px;
+    margin: 44px 0 14px;
+    border-bottom: 1px dashed var(--dim);
+    padding-bottom: 8px;
+  }
+  .waiting {
+    background: var(--paper-2);
+    padding: 16px 20px;
+    border-left: 4px solid var(--dim);
+    font-size: 15.5px; line-height: 1.6;
+  }
+  .waiting .who { font-style: italic; }
+  .empty { text-align: center; color: var(--dim); font-style: italic; padding: 40px 0; }
+  @media (max-width: 540px) {
+    article.reg { padding: 14px 16px 12px; transform: none; }
+    article.reg .name { font-size: 19px; }
+  }
+"""
+
+
+def _page_text(raw: str) -> str:
+    """Visible text of a gen page — tags, scripts and styles removed."""
+    s = re.sub(r"<script[^>]*>.*?</script>", " ", raw, flags=re.DOTALL | re.IGNORECASE)
+    s = re.sub(r"<style[^>]*>.*?</style>", " ", s, flags=re.DOTALL | re.IGNORECASE)
+    s = re.sub(r"<[^>]+>", " ", s)
+    return re.sub(r"\s+", " ", _html.unescape(s))
+
+
+def _page_title(raw: str) -> str:
+    m = re.search(r"<title[^>]*>(.*?)</title>", raw, flags=re.DOTALL | re.IGNORECASE)
+    if not m:
+        m = re.search(r'<meta\s+property="og:title"\s+content="([^"]*)"', raw, re.IGNORECASE)
+    if not m:
+        return ""
+    return re.sub(r"\s+", " ", _html.unescape(m.group(1))).strip()
+
+
+def _gen_date(stem: str) -> str:
+    """'2026-07-21T12-04' → 'july 21, 2026' (site voice: lowercase)."""
+    try:
+        d = datetime.strptime(stem[:10], "%Y-%m-%d")
+    except ValueError:
+        return stem
+    return f"{d.strftime('%B').lower()} {d.day}, {d.year}"
+
+
+def _sort_name(name: str) -> str:
+    """Alphabetise 'the Good Wok' under G, like any decent index."""
+    return re.sub(r"^the\s+", "", name, flags=re.IGNORECASE).lower()
+
+
+def _trim_restatement(hint: str, name: str) -> str:
+    """Drop a leading restatement of the name ('Wren & Halloway, Instrument
+    Makers — a maker's mark…' → 'a maker's mark…'), which reads as a stutter
+    once the name is already the heading. Only fires when a dash/colon gives a
+    clean cut point, so a hint that merely opens with the name stays whole."""
+    if not hint.lower().startswith(name.lower()):
+        return hint
+    m = re.search(r"\s*[—–:-]\s+", hint[: len(name) + 60])
+    if not m or m.start() < len(name):
+        return hint
+    rest = hint[m.end():].strip()
+    return rest or hint
+
+
+def _lead_lower(s: str) -> str:
+    """Site voice runs lowercase. Only ever touches a leading article, so a
+    name that opens the sentence ('Wren & Halloway — a maker's mark') is safe."""
+    first = s.split(" ", 1)[0]
+    return s[0].lower() + s[1:] if first in ("A", "An", "The") else s
+
+
+def rebuild_regulars_page() -> None:
+    """Rebuild /regulars/ — the names that turn up in more than one posting.
+
+    The cafe has been quietly accumulating a shared cast (a shy cat, a takeout
+    place, an address where everything is for sale) that recurs across pages,
+    with no way for anyone to notice the pattern or find the other appearances.
+    This page is the list kept behind the counter: each regular, and every
+    posting it turns up in, linked. Sightings are found by scanning the visible
+    text of every archived page, so the index keeps itself honest — a name only
+    appears here because it actually showed up somewhere.
+    """
+    try:
+        elements = json.loads(CANON_DATA.read_text()).get("elements") or []
+    except Exception:
+        elements = []
+
+    pages: list[tuple[str, str, str]] = []  # (filename, title, text)
+    for f in sorted(ARCHIVE_DIR.glob("*.html"), reverse=True):
+        if f.name == "index.html":
+            continue
+        try:
+            raw = f.read_text(errors="ignore")
+        except Exception:
+            continue
+        pages.append((f.name, _page_title(raw) or f.stem, _page_text(raw)))
+
+    regulars: list[dict] = []
+    for el in elements:
+        name = (el.get("name") or "").strip()
+        hint = (el.get("hint") or "").strip()
+        if not name or not hint:
+            continue
+        # `aka`, when set, lists the exact phrasings that count as a sighting and
+        # REPLACES the bare name — that's how an entry whose name is an ordinary
+        # first name ("Frederick" → "cousin Frederick") stays honest.
+        terms = [str(a) for a in (el.get("aka") or [])] or [name]
+        # A short one-word term is claimed by too much ordinary prose to count
+        # as a sighting on its own: "Pepper" would collect salt-and-pepper and
+        # Dr. Pepper, "Eugene" would collect Eugene, Oregon. Those simply go
+        # unseen until the entry earns an unambiguous phrasing.
+        terms = [t for t in terms if t and (" " in t or not t.isalpha() or len(t) >= 7)]
+        pats = [
+            re.compile(r"(?<![A-Za-z0-9])" + re.escape(t) + r"(?![A-Za-z0-9])", re.IGNORECASE)
+            for t in terms
+        ]
+        seen = [
+            (fn, title) for fn, title, text in pages
+            if any(p.search(text) for p in pats)
+        ]
+        regulars.append({
+            "name": name,
+            "hint": _lead_lower(_trim_restatement(hint, name)),
+            "seen": seen,
+        })
+
+    # Most-present first — the page reads as a list of who's around, and the
+    # ones still waiting for a first sighting get their own quiet section.
+    around = sorted(
+        (r for r in regulars if r["seen"]),
+        key=lambda r: (-len(r["seen"]), _sort_name(r["name"])),
+    )
+    waiting = sorted((r for r in regulars if not r["seen"]), key=lambda r: _sort_name(r["name"]))
+
+    MAX_SHOWN = 12
+    cards = []
+    for r in around:
+        n = len(r["seen"])
+        shown = r["seen"][:MAX_SHOWN]
+        rest = n - len(shown)
+        items = "\n".join(
+            f'      <li><a href="/archive/{fn}">{_html.escape(title)}</a> '
+            f'<span class="when">{_gen_date(fn[:-5])}</span></li>'
+            for fn, title in shown
+        )
+        if rest:
+            items += (
+                f'\n      <li class="more">…and {rest} more</li>'
+            )
+        count = "one sighting" if n == 1 else f"{n} sightings"
+        cards.append(
+            f'  <article class="reg" style="--rot:{_rot(r["name"], 0.35):.2f}deg">\n'
+            f'    <div class="name">{_html.escape(r["name"])}</div>\n'
+            f'    <div class="hint">{_html.escape(r["hint"])}</div>\n'
+            f'    <div class="count">{count}</div>\n'
+            f'    <ul class="sightings">\n{items}\n    </ul>\n'
+            f"  </article>"
+        )
+
+    if cards:
+        body = "\n".join(cards)
+    else:
+        body = '  <p class="empty">nobody has turned up twice yet. give it a week.</p>'
+
+    if waiting:
+        names = " · ".join(f'<span class="who">{_html.escape(r["name"])}</span>' for r in waiting)
+        body += (
+            '\n\n<h2 class="section">not seen lately</h2>\n'
+            '<div class="waiting">\n'
+            "  <p>still on the list, still expected back:</p>\n"
+            f"  <p>{names}</p>\n"
+            "</div>"
+        )
+
+    page = (
+        _head(
+            "the regulars",
+            "who's around at outbox.cafe, and where they've turned up.",
+            "/regulars/",
+            _REGULARS_CSS,
+        )
+        + """<header class="hero">
+  <h1>the regulars</h1>
+  <div class="sub">who's around, and where they've turned up</div>
+</header>
+
+<div class="intro">
+  <p>none of this was planned. somebody uses a name, and then somebody else uses it again, and after a while it's just part of the place — a cat nobody has seen since 1998, a takeout counter with an item on the menu that costs nothing, a house where the chairs are always for sale.</p>
+  <p>this is the list we keep behind the counter, with every posting they've turned up in.</p>
+</div>
+
+"""
+        + body
+        + "\n"
+        + _FOOTER
+    )
+    REGULARS_PAGE.parent.mkdir(parents=True, exist_ok=True)
+    REGULARS_PAGE.write_text(page)
+
+
 def rebuild_ritual_pages() -> None:
     """Rebuild the ritual + guestbook pages. Best-effort per page."""
     import sys
-    for fn in (rebuild_slips_page, rebuild_columns_page, rebuild_guestbook_page):
+    for fn in (rebuild_slips_page, rebuild_columns_page, rebuild_guestbook_page,
+               rebuild_regulars_page):
         try:
             fn()
         except Exception as e:

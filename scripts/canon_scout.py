@@ -127,6 +127,13 @@ def run() -> str | None:
     if not name or not hint or len(name) > 60 or len(hint) > 220:
         print(f"[canon] rejected malformed nomination {name!r}", file=sys.stderr)
         return None
+    # The scout occasionally returns a slug ("ferncliff-gravel-pit") instead of
+    # the name as it would actually appear on a page. A slug reads wrong when
+    # the prompt offers it to a gen, and it never matches page text, so /regulars/
+    # can't find its sightings. Reject the shape; a real name gets re-nominated.
+    if re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)+", name):
+        print(f"[canon] rejected slug-shaped name {name!r}", file=sys.stderr)
+        return None
     lower_existing = {n.lower() for n in existing_names}
     if name.lower() in lower_existing or any(name.lower() in n or n in name.lower() for n in lower_existing):
         print(f"[canon] {name!r} duplicates existing canon — skipped")

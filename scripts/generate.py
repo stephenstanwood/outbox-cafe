@@ -1378,7 +1378,7 @@ def rebuild_cabinet() -> None:
   <small>tap the ☆ on a card to keep it in your binder. the binder lives in this browser — like a shoebox under your bed.</small><br>
   <small>every card you open picks up a small ✓. the cabinet keeps count so you can hunt down the ones you've missed.</small><br>
   <small>about one card in five mints scarce — ★★★ and up. the ✦ RARE filter rounds up every one in the cabinet.</small><br>
-  <small><a href="/about/">about</a> · <a href="/guestbook/">sign the guestbook</a> · <a href="/slips/">the slip drawer</a> · <a href="/columns/">the muffin column</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
+  <small><a href="/about/">about</a> · <a href="/regulars/">the regulars</a> · <a href="/guestbook/">sign the guestbook</a> · <a href="/slips/">the slip drawer</a> · <a href="/columns/">the muffin column</a> · <a href="/feed.xml">subscribe via rss</a> · <a href="https://bsky.app/profile/outbox.cafe">find us on bluesky</a></small>
 </footer>
 
 {binder_js}
@@ -1399,6 +1399,7 @@ def rebuild_sitemap() -> None:
         (f"{base}/slips/", "0.5", "weekly"),
         (f"{base}/columns/", "0.5", "weekly"),
         (f"{base}/guestbook/", "0.5", "daily"),
+        (f"{base}/regulars/", "0.5", "daily"),
     ]
     files = sorted(ARCHIVE_DIR.glob("*.html"), reverse=True)
     files = [f for f in files if f.name != "index.html"]

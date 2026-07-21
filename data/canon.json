@@ -15,11 +15,17 @@
     },
     {
       "name": "Margot, age 4 ½",
-      "hint": "a child artist of local renown; signs everything with her age; her work has a sun in the corner; ask about Margot"
+      "hint": "a child artist of local renown; signs everything with her age; her work has a sun in the corner; ask about Margot",
+      "aka": [
+        "Margot, age 4"
+      ]
     },
     {
       "name": "Frederick",
-      "hint": "somebody's cousin; claims to have been an extra in something; claims to detect flavors that are not there; claims a lot of things; sticks by every claim"
+      "hint": "somebody's cousin; claims to have been an extra in something; claims to detect flavors that are not there; claims a lot of things; sticks by every claim",
+      "aka": [
+        "cousin Frederick"
+      ]
     },
     {
       "name": "Mortimer",
@@ -39,11 +45,17 @@
     },
     {
       "name": "the sign above the door",
-      "hint": "reads 'if the door is open, you are welcome inside.' — est. ~1962; quoted occasionally, attributed inconsistently"
+      "hint": "reads 'if the door is open, you are welcome inside.' — est. ~1962; quoted occasionally, attributed inconsistently",
+      "aka": [
+        "if the door is open"
+      ]
     },
     {
       "name": "the 3:47 light",
-      "hint": "every day at 3:47 the light hits the second shelf exactly right; some schedules, timetables, and instructions quietly account for this"
+      "hint": "every day at 3:47 the light hits the second shelf exactly right; some schedules, timetables, and instructions quietly account for this",
+      "aka": [
+        "3:47"
+      ]
     },
     {
       "name": "555-PEPR",
@@ -56,7 +68,7 @@
       "by": "scout"
     },
     {
-      "name": "ferncliff-gravel-pit",
+      "name": "the Ferncliff gravel pit",
       "hint": "An abandoned gravel pit behind the old cement works — a half-flooded local hangout where kids skip stones and nothing official ever happens.",
       "added": "2026-06-30",
       "by": "scout"
@@ -80,7 +92,7 @@
       "by": "scout"
     },
     {
-      "name": "wren-and-halloway",
+      "name": "Wren & Halloway",
       "hint": "Wren & Halloway, Instrument Makers — a maker's mark (est. 1879) that can be stamped or engraved on any well-built object, from a harmonograph to a barometer.",
       "added": "2026-07-05",
       "by": "scout"
@@ -104,7 +116,7 @@
       "by": "scout"
     },
     {
-      "name": "small-weather-passing",
+      "name": "Small Weather, Passing",
       "hint": "A gentle old tune called 'Small Weather, Passing' — the kind of half-remembered melody that turns up in a music box, on a jukebox, or hummed absently by someone at a sink.",
       "added": "2026-07-10",
       "by": "scout"
@@ -137,7 +149,10 @@
       "name": "the Deaver boys",
       "hint": "the local pack of rowdy brothers everyone knows by name — the ones who break the rule you just posted; usable in any era as background mischief.",
       "added": "2026-07-19",
-      "by": "scout"
+      "by": "scout",
+      "aka": [
+        "Deaver boys"
+      ]
     },
     {
       "name": "Ledbetter's Practical Kite-Craft",
