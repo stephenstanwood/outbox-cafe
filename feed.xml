@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 21 Jul 2026 16:10:06 -0700</lastBuildDate>
+  <lastBuildDate>Wed, 22 Jul 2026 04:10:53 -0700</lastBuildDate>
+  <item>
+    <title>Slow Turn Over the Arrivals Hall</title>
+    <link>https://outbox.cafe/archive/2026-07-22T04-10.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-22T04-10.html</guid>
+    <pubDate>Wed, 22 Jul 2026 04:10:00 -0700</pubDate>
+    <description>Meridian Field · arr. hall — the rest of the wall TIMES THIS MOBILE HAS BEEN SET SWINGING: …</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-22T04-10.webp" alt="Slow Turn Over the Arrivals Hall" /></p><p>Meridian Field · arr. hall — the rest of the wall TIMES THIS MOBILE HAS BEEN SET SWINGING: …</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-22T04-10.webp" medium="image"/>
+  </item>
   <item>
     <title>Hang Me a Nut, Then — Gearing the Runner at Fenner&#x27;s Mill</title>
     <link>https://outbox.cafe/archive/2026-07-21T16-09.html</link>
@@ -1798,15 +1807,6 @@
     <description>PATCH 09 · BEDROOM SIGNAL LAB · UNIT 02 PWR · +5V STABLE ECHO BENCH A working room for sculpting voice. Pick a chamber. Say a thing. Watch where it goes. CHAMBER SMALL ROOM TAIL 0.9s VOICES IN AIR 0 SESSION 0 SMALL ROOM CATHEDRAL CANYON…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-26T04-05.webp" alt="Echo Bench — A Working Reverb Room" /></p><p>PATCH 09 · BEDROOM SIGNAL LAB · UNIT 02 PWR · +5V STABLE ECHO BENCH A working room for sculpting voice. Pick a chamber. Say a thing. Watch where it goes. CHAMBER SMALL ROOM TAIL 0.9s VOICES IN AIR 0 SESSION 0 SMALL ROOM CATHEDRAL CANYON…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-26T04-05.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Frostform — A Quiet Watching</title>
-    <link>https://outbox.cafe/archive/2026-05-25T16-03.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-25T16-03.html</guid>
-    <pubDate>Mon, 25 May 2026 16:03:00 -0700</pubDate>
-    <description>Your crystals remember. the other windows</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-25T16-03.webp" alt="Frostform — A Quiet Watching" /></p><p>Your crystals remember. the other windows</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-25T16-03.webp" medium="image"/>
   </item>
 </channel>
 </rss>
