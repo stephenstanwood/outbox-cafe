@@ -43,6 +43,15 @@ WILD_STATE_PATH = ROOT / "data" / "wild_state.json"
 THROWBACK_STATE_PATH = ROOT / "data" / "throwback_state.json"
 BSKY_BASE = "https://bsky.social/xrpc"
 MAX_REPLIES_PER_RUN = 10  # safety cap so a backlog doesn't fire 50 replies at once
+# Notification-reply storm guards (added 2026-07-23 after a 151-reply/day loop with a
+# single bot, @marvin.invalid-handle.com, on 2026-07-19). The per-run cap wasn't enough:
+# a bot that replies to us every ~15 min creates a fresh notification (new URI, newer
+# indexedAt) each firing, so neither `handled` nor the watermark stops it and we replied
+# ~96x/day forever. Wild replies already had these guards; notification replies didn't.
+# These are time-windowed (24h), so they hold across runs, not just within one run.
+NOTIF_REPLY_DAILY_CAP = 20            # max notification replies (mentions+replies) in any 24h
+NOTIF_REPLY_PER_AUTHOR_DAILY_CAP = 3  # max replies to the SAME handle in any 24h — the loop-breaker
+NOTIF_REPLY_LOG_CAP = 300             # bound the rolling reply log kept in engage_state
 HANDLED_URI_CAP = 500
 AMBIENT_PROBABILITY = 0.04  # at every-15-min cron firings = ~3-4 ambient posts/day
 
@@ -94,6 +103,44 @@ def _load_state() -> dict[str, Any]:
 def _save_state(state: dict[str, Any]) -> None:
     STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_json(STATE_PATH, state)
+
+
+def _notif_reply_window(state: dict[str, Any]) -> tuple[int, dict[str, int]]:
+    """(total notification replies in last 24h, {handle: count in last 24h}).
+
+    Drives the storm guards. Reads the rolling `reply_log` in engage_state; each
+    successful notification reply appends one {handle, ts} entry via _record_notif_reply.
+    """
+    import time
+    cutoff = time.time() - 24 * 3600
+    total = 0
+    by_handle: dict[str, int] = {}
+    for e in state.get("reply_log", []):
+        if not isinstance(e, dict):
+            continue
+        try:
+            when = datetime.fromisoformat((e.get("ts") or "").replace("Z", "+00:00")).timestamp()
+        except Exception:
+            continue
+        if when < cutoff:
+            continue
+        total += 1
+        h = e.get("handle") or ""
+        by_handle[h] = by_handle.get(h, 0) + 1
+    return total, by_handle
+
+
+def _record_notif_reply(state: dict[str, Any], handle: str) -> None:
+    log = state.setdefault("reply_log", [])
+    log.append({"handle": handle, "ts": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")})
+    state["reply_log"] = log[-NOTIF_REPLY_LOG_CAP:]
+
+
+def _is_unresolved_handle(handle: str) -> bool:
+    """Bluesky renders an unresolvable handle as '<name>.invalid'. Those accounts can't
+    even see a reply render normally — never worth replying to."""
+    h = (handle or "").lower()
+    return h == "handle.invalid" or h.endswith(".invalid")
 
 
 def _bsky(path: str, *, data=None, headers=None, method=None) -> dict:
@@ -895,48 +942,62 @@ def run(skip_ambient: bool = False, max_replies: int | None = None) -> int:
         author = (n.get("author") or {}).get("handle", "(unknown)")
 
         if reason in ("mention", "reply"):
-            src_post = _fetch_post(n_uri, jwt) or {}
-            src_text = ((src_post.get("record") or {}).get("text") or "").strip()
-            our_context = ""
-            if reason == "reply":
-                reply_block = (src_post.get("record") or {}).get("reply") or {}
-                root_ref = reply_block.get("root") or {}
-                root_uri_ref = root_ref.get("uri", "")
-                if root_uri_ref:
-                    root_post = _fetch_post(root_uri_ref, jwt) or {}
-                    our_context = ((root_post.get("record") or {}).get("text") or "").strip()
-
-            staff = rng.choices(staff_pool, weights=weights, k=1)[0]
-            action_desc = (
-                "mentioned the cafe (your handle was tagged in their post)"
-                if reason == "mention"
-                else "replied to one of our posts"
-            )
-            text = _generate_reply(staff, action_desc, author, src_text, our_context)
-            if not text:
-                print(f"[engage] skip (NOPOST or empty): {author} — {src_text[:60]!r}")
+            # Storm guards — never machine-gun one account, never blow a sane daily budget.
+            skip = None
+            if _is_unresolved_handle(author):
+                skip = f"unresolved handle @{author}"
             else:
-                try:
-                    parent_uri = src_post.get("uri")
-                    parent_cid = src_post.get("cid")
+                total_24h, by_handle_24h = _notif_reply_window(state)
+                if total_24h >= NOTIF_REPLY_DAILY_CAP:
+                    skip = f"notif-reply daily cap {NOTIF_REPLY_DAILY_CAP} reached"
+                elif by_handle_24h.get(author, 0) >= NOTIF_REPLY_PER_AUTHOR_DAILY_CAP:
+                    skip = f"@{author} already replied {by_handle_24h[author]}x in 24h (loop guard)"
+            if skip:
+                print(f"[engage] skip reply — {skip}")
+            else:
+                src_post = _fetch_post(n_uri, jwt) or {}
+                src_text = ((src_post.get("record") or {}).get("text") or "").strip()
+                our_context = ""
+                if reason == "reply":
                     reply_block = (src_post.get("record") or {}).get("reply") or {}
-                    root = reply_block.get("root") or {}
-                    root_uri_ref = root.get("uri") or parent_uri
-                    root_cid_ref = root.get("cid") or parent_cid
-                    resp = _create_reply(
-                        did, jwt, text, parent_uri, parent_cid, root_uri_ref, root_cid_ref
-                    )
-                    print(f"[engage] replied as {staff['name']} to @{author}: {resp.get('uri','?')}")
+                    root_ref = reply_block.get("root") or {}
+                    root_uri_ref = root_ref.get("uri", "")
+                    if root_uri_ref:
+                        root_post = _fetch_post(root_uri_ref, jwt) or {}
+                        our_context = ((root_post.get("record") or {}).get("text") or "").strip()
+
+                staff = rng.choices(staff_pool, weights=weights, k=1)[0]
+                action_desc = (
+                    "mentioned the cafe (your handle was tagged in their post)"
+                    if reason == "mention"
+                    else "replied to one of our posts"
+                )
+                text = _generate_reply(staff, action_desc, author, src_text, our_context)
+                if not text:
+                    print(f"[engage] skip (NOPOST or empty): {author} — {src_text[:60]!r}")
+                else:
                     try:
-                        from post_log import log as post_log
-                        post_log("reply", persona=staff["name"], uri=resp.get("uri"), subject=f"@{author}", text=text)
-                    except Exception:
-                        pass
-                    actions += 1
-                except urllib.error.HTTPError as e:
-                    print(f"[engage] reply post HTTP {e.code}: {e.read().decode()[:200]}", file=sys.stderr)
-                except Exception as e:
-                    print(f"[engage] reply post failed: {e}", file=sys.stderr)
+                        parent_uri = src_post.get("uri")
+                        parent_cid = src_post.get("cid")
+                        reply_block = (src_post.get("record") or {}).get("reply") or {}
+                        root = reply_block.get("root") or {}
+                        root_uri_ref = root.get("uri") or parent_uri
+                        root_cid_ref = root.get("cid") or parent_cid
+                        resp = _create_reply(
+                            did, jwt, text, parent_uri, parent_cid, root_uri_ref, root_cid_ref
+                        )
+                        print(f"[engage] replied as {staff['name']} to @{author}: {resp.get('uri','?')}")
+                        _record_notif_reply(state, author)
+                        try:
+                            from post_log import log as post_log
+                            post_log("reply", persona=staff["name"], uri=resp.get("uri"), subject=f"@{author}", text=text)
+                        except Exception:
+                            pass
+                        actions += 1
+                    except urllib.error.HTTPError as e:
+                        print(f"[engage] reply post HTTP {e.code}: {e.read().decode()[:200]}", file=sys.stderr)
+                    except Exception as e:
+                        print(f"[engage] reply post failed: {e}", file=sys.stderr)
 
         elif reason == "quote":
             try:

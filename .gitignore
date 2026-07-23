@@ -33,6 +33,9 @@ data/throwback_state.json
 # Tumblr like-loop state — per-Mini, daily cap + dedup
 data/like_state.json
 
+# Bsky follow-loop state — per-Mini, daily cap + one-follow-per-account dedup
+data/follow_state.json
+
 # Tumblr reblog state — per-Mini, dedup + cooldown
 data/reblog_state.json
 

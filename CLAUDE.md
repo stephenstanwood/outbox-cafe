@@ -87,6 +87,16 @@ The cafe's only UGC surface, pre-moderated. `/guestbook/` form → `api/sign.js`
 
 `0 0 * * * scripts/run-cleanup.sh` wipes every bsky + tumblr post nightly. Pinned welcome on each platform is exempt. New day = fresh feed. The bsky engage loop no longer does its own probabilistic cleanup — midnight is the single canonical wipe. If the cron misses a night, posts pile up visibly until the next firing; no rolling rescue.
 
+**Cleanup cap must stay above daily volume (2026-07-23):** `cleanup_bsky.py`'s `MAX_DELETES_PER_RUN` is a safety bound, but if it's *below* a day's posting volume the `--hours 0` wipe can only ever clear that many per night while more accumulate — the feed grows without bound. This bit us: the old cap of 50 was fine until a reply storm (see below) pushed volume past 50/day on 2026-07-19, and by 7/23 the profile had climbed to 222 posts even though cleanup ran every night. Cap is now 800 (paging still bounds the fetch to ~2000). If posts ever visibly pile up, first check whether cleanup is hitting the cap (`grep "hit per-run cap" ~/logs/outbox-cleanup.log`) before assuming the cron is broken.
+
+### Reply-storm guards (2026-07-23)
+
+Notification replies (mentions + replies to us, in `engage_bsky.run()`) used to be gated only by a per-run cap (10) + a handled-URI set. That doesn't stop a **reply loop**: a bot that replies to us every ~15 min creates a *fresh* notification (new URI, newer `indexedAt`) each firing, so we replied to it ~96×/day forever. On 2026-07-19 the cafe replied to one broken-handle bot (`@marvin.invalid-handle.com`) **151 times in a day** — which both broke the wipe (>50/day) and is textbook spam behavior (anti-follower). Wild replies already had time-windowed caps; notification replies now do too: `NOTIF_REPLY_DAILY_CAP=20`, `NOTIF_REPLY_PER_AUTHOR_DAILY_CAP=3` (the loop-breaker), plus an unresolved-handle (`*.invalid`) skip. State is a rolling `reply_log` in `data/engage_state.json`. Normal reply volume is 0–2/day, so these caps only ever bite a runaway.
+
+### Follow loop (2026-07-23)
+
+`scripts/follow_loop.py` (`run-follows.sh`, cron `47 */3 * * *`) — the cafe followed exactly **1** account for months, the worst posture for growth. This gently follows kindred small-web / cafe / cat / handmade-web accounts it finds via the same aesthetic search terms as the like loop. Caps: `FOLLOWS_PER_RUN=2`, `FOLLOWS_PER_DAY=10`. Human-scale only (followers 3–30k, ≥5 posts), positive-only (controversy/news/crypto/adult/f4f terms in bio or post → skip), unresolved handles skipped, **one follow per account ever** (DID-deduped in `data/follow_state.json`). **Never auto-unfollows** — these are genuine follows the cafe keeps, which also turns its own timeline into a real curated feed the like/wild loops draw from. Follow-backs are the growth. Not a churn/f4f bot.
+
 ## Common ops
 
 - **Manual gen** (no commit, just verify): on Mini, `cd ~/Projects/outbox-cafe && set -a && . ~/Projects/mini-claude-proxy/.env && [ -f .env ] && . .env; set +a && python3 scripts/generate.py`

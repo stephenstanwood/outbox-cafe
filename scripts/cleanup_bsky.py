@@ -21,7 +21,14 @@ from pathlib import Path
 from lib import bsky
 
 DEFAULT_DELETE_AFTER_HOURS = 24
-MAX_DELETES_PER_RUN = 50    # safety cap so a runaway loop can't nuke everything
+# Safety bound against a pathological paging loop. Must stay comfortably ABOVE the
+# cafe's busiest realistic day, or the nightly `--hours 0` wipe can't clear a full
+# day and the feed grows without bound. That's exactly what happened 2026-07-19→23:
+# a reply storm pushed volume past the old cap of 50, so each midnight run deleted
+# only 50 while >50 accumulated daily → the feed climbed to 222 posts. Deletes cost
+# 1 rate-limit point each (5000/hr budget), so a high cap is cheap. Paging is bounded
+# to 20 pages × 100 below, so this can never fetch more than ~2000 anyway.
+MAX_DELETES_PER_RUN = 800
 ENGAGEMENT_SNAPSHOT = Path(__file__).resolve().parent.parent / "data" / "post_engagement.jsonl"
 
 
