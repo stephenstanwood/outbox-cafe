@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Thu, 23 Jul 2026 04:04:50 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 23 Jul 2026 08:05:56 -0700</lastBuildDate>
+  <item>
+    <title>Wet Colour on the Hot Deck</title>
+    <link>https://outbox.cafe/archive/2026-07-23T08-05.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-23T08-05.html</guid>
+    <pubDate>Thu, 23 Jul 2026 08:05:00 -0700</pubDate>
+    <description>◉ more colour on the wall reels run on this wheel: …</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-23T08-05.webp" alt="Wet Colour on the Hot Deck" /></p><p>◉ more colour on the wall reels run on this wheel: …</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-23T08-05.webp" medium="image"/>
+  </item>
   <item>
     <title>Strike It, Match the Seed — Merv&#x27;s Rock Bench</title>
     <link>https://outbox.cafe/archive/2026-07-23T04-04.html</link>
@@ -1798,15 +1807,6 @@
     <description>Black Tin Detective Stories  ·  Vol. III  ·  No. 11  ·  September 1925 The Ashford Key A Marcus Kane Mystery The dame walked into my office on a Thursday and she didn&#x27;t waste my time, which was rare enough…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-27T12-06.webp" alt="The Ashford Key — A Marcus Kane Mystery" /></p><p>Black Tin Detective Stories  ·  Vol. III  ·  No. 11  ·  September 1925 The Ashford Key A Marcus Kane Mystery The dame walked into my office on a Thursday and she didn&#x27;t waste my time, which was rare enough…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-27T12-06.webp" medium="image"/>
-  </item>
-  <item>
-    <title>The Folding Light — A Kaleidoscope Workbench</title>
-    <link>https://outbox.cafe/archive/2026-05-27T08-03.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-27T08-03.html</guid>
-    <pubDate>Wed, 27 May 2026 08:03:00 -0700</pubDate>
-    <description>The Folding Light Drag inside the wedge — the geometry returns your gesture six times, then twelve. One small motion becomes a whole circle of color. Take your time. The pattern is listening for you. brush slow spin save clear your…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-27T08-03.webp" alt="The Folding Light — A Kaleidoscope Workbench" /></p><p>The Folding Light Drag inside the wedge — the geometry returns your gesture six times, then twelve. One small motion becomes a whole circle of color. Take your time. The pattern is listening for you. brush slow spin save clear your…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-27T08-03.webp" medium="image"/>
   </item>
 </channel>
 </rss>
