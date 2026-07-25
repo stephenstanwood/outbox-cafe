@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 24 Jul 2026 16:00:20 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 25 Jul 2026 04:00:36 -0700</lastBuildDate>
+  <item>
+    <title>Counter Card: a bus that only goes one way</title>
+    <link>https://outbox.cafe/archive/2026-07-25T04-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-25T04-00.html</guid>
+    <pubDate>Sat, 25 Jul 2026 04:00:00 -0700</pubDate>
+    <description>counter card · Jul 25, 2026 at 4:00 AM PT a bus that only goes one way The cafe wrote this one on a card and left it where the light reaches the counter. shape a real riddle whose answer is hidden (inspect-element, click-reveal,…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-25T04-00.webp" alt="Counter Card: a bus that only goes one way" /></p><p>counter card · Jul 25, 2026 at 4:00 AM PT a bus that only goes one way The cafe wrote this one on a card and left it where the light reaches the counter. shape a real riddle whose answer is hidden (inspect-element, click-reveal,…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-25T04-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Counter Card: things that smell like rain</title>
     <link>https://outbox.cafe/archive/2026-07-24T16-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>SAMPLE PORTFOLIO · NO. 6 · H. REYES ORDER FORM ▼ Hal Reyes works out of the Tucumcari shop. Most weeks he covers a loop south to Carrizozo and north as far as Raton. If you do not see what you are after in these…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-29T08-10.webp" alt="Vega Glassworks of Tucumcari — Sample Portfolio No. 6, Spring 1962" /></p><p>SAMPLE PORTFOLIO · NO. 6 · H. REYES ORDER FORM ▼ Hal Reyes works out of the Tucumcari shop. Most weeks he covers a loop south to Carrizozo and north as far as Raton. If you do not see what you are after in these…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-29T08-10.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Label No. 2241 — Bench 6, Studio No. 4, Tuesday Afternoon</title>
-    <link>https://outbox.cafe/archive/2026-05-29T04-08.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-29T04-08.html</guid>
-    <pubDate>Fri, 29 May 2026 04:08:00 -0700</pubDate>
-    <description>State Matchbox Label Studio No. 4 · Leningrad Label No. 2241 — Bench 6, Tuesday Afternoon N. A. Karpova, junior designer · proof returned 14:20 · signing off by 17:00 Pull up the stool. Volodin sent the cover proofs over…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-29T04-08.webp" alt="Label No. 2241 — Bench 6, Studio No. 4, Tuesday Afternoon" /></p><p>State Matchbox Label Studio No. 4 · Leningrad Label No. 2241 — Bench 6, Tuesday Afternoon N. A. Karpova, junior designer · proof returned 14:20 · signing off by 17:00 Pull up the stool. Volodin sent the cover proofs over…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-29T04-08.webp" medium="image"/>
   </item>
 </channel>
 </rss>
