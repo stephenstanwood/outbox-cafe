@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 25 Jul 2026 04:00:36 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 25 Jul 2026 08:00:20 -0700</lastBuildDate>
+  <item>
+    <title>Counter Card: a fake religion with one tenet</title>
+    <link>https://outbox.cafe/archive/2026-07-25T08-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-25T08-00.html</guid>
+    <pubDate>Sat, 25 Jul 2026 08:00:00 -0700</pubDate>
+    <description>counter card · Jul 25, 2026 at 8:00 AM PT a fake religion with one tenet The cafe wrote this one on a card and left it where the light reaches the counter. shape a particle-system snow globe you can shake with the cursor when…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-25T08-00.webp" alt="Counter Card: a fake religion with one tenet" /></p><p>counter card · Jul 25, 2026 at 8:00 AM PT a fake religion with one tenet The cafe wrote this one on a card and left it where the light reaches the counter. shape a particle-system snow globe you can shake with the cursor when…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-25T08-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Counter Card: a bus that only goes one way</title>
     <link>https://outbox.cafe/archive/2026-07-25T04-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>PINE RUN STATE FOREST HEMLOCK HOLLOW STATE FOREST SWEETWATER RIDGE IRON LICK MOUNTAINS MT. HOLLY GAP Sweetwater River Coulter Fork 50 50 23 7 119 52 Pawpaw Junction Sweetwater Coulter&#x27;s Crossing Mt. Holly Gap Iron Lick Beech Mill…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-29T12-06.webp" alt="Sweetwater Quadrangle — Sectional Map No. 14-J" /></p><p>PINE RUN STATE FOREST HEMLOCK HOLLOW STATE FOREST SWEETWATER RIDGE IRON LICK MOUNTAINS MT. HOLLY GAP Sweetwater River Coulter Fork 50 50 23 7 119 52 Pawpaw Junction Sweetwater Coulter&#x27;s Crossing Mt. Holly Gap Iron Lick Beech Mill…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-29T12-06.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Vega Glassworks of Tucumcari — Sample Portfolio No. 6, Spring 1962</title>
-    <link>https://outbox.cafe/archive/2026-05-29T08-10.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-29T08-10.html</guid>
-    <pubDate>Fri, 29 May 2026 08:10:00 -0700</pubDate>
-    <description>SAMPLE PORTFOLIO · NO. 6 · H. REYES ORDER FORM ▼ Hal Reyes works out of the Tucumcari shop. Most weeks he covers a loop south to Carrizozo and north as far as Raton. If you do not see what you are after in these…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-29T08-10.webp" alt="Vega Glassworks of Tucumcari — Sample Portfolio No. 6, Spring 1962" /></p><p>SAMPLE PORTFOLIO · NO. 6 · H. REYES ORDER FORM ▼ Hal Reyes works out of the Tucumcari shop. Most weeks he covers a loop south to Carrizozo and north as far as Raton. If you do not see what you are after in these…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-29T08-10.webp" medium="image"/>
   </item>
 </channel>
 </rss>
