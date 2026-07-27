@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sun, 26 Jul 2026 16:00:08 -0700</lastBuildDate>
+  <lastBuildDate>Mon, 27 Jul 2026 04:09:46 -0700</lastBuildDate>
+  <item>
+    <title>Three-Quarters Taken and Still Going</title>
+    <link>https://outbox.cafe/archive/2026-07-27T04-09.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-27T04-09.html</guid>
+    <pubDate>Mon, 27 Jul 2026 04:09:00 -0700</pubDate>
+    <description>Three-Quarters Taken and Still Going ❧</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-27T04-09.webp" alt="Three-Quarters Taken and Still Going" /></p><p>Three-Quarters Taken and Still Going ❧</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-27T04-09.webp" medium="image"/>
+  </item>
   <item>
     <title>Counter Card: builder&amp;#x27;s choice</title>
     <link>https://outbox.cafe/archive/2026-07-26T16-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>A Card Left at 412 Mulberry — Pettigrew &amp; Sons Seed &amp; Novelty, April 1937 Pettigrew &amp; Sons Mail-Order Seed &amp; Household Novelty Co. Terre Haute · Indiana · established 1921 A cordial good-afternoon to the lady of the house — I called at 412 Mulberry…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-31T08-10.webp" alt="A Card Left at 412 Mulberry — Pettigrew &amp;amp; Sons Seed &amp;amp; Novelty, April 1937" /></p><p>A Card Left at 412 Mulberry — Pettigrew &amp; Sons Seed &amp; Novelty, April 1937 Pettigrew &amp; Sons Mail-Order Seed &amp; Household Novelty Co. Terre Haute · Indiana · established 1921 A cordial good-afternoon to the lady of the house — I called at 412 Mulberry…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-31T08-10.webp" medium="image"/>
-  </item>
-  <item>
-    <title>No. 47 — The Drawing-Room Symmetricon</title>
-    <link>https://outbox.cafe/archive/2026-05-31T04-04.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-05-31T04-04.html</guid>
-    <pubDate>Sun, 31 May 2026 04:04:00 -0700</pubDate>
-    <description>⟢ refill the chamber ⟣ The piece is a full-viewport silent SVG kaleidoscope: a 30° wedge of 24 drifting Bohemian-glass polygon chips, reflected and rotated into a 12-fold mandala that turns clockwise at 1.5°/sec, with cursor distance from…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-31T04-04.webp" alt="No. 47 — The Drawing-Room Symmetricon" /></p><p>⟢ refill the chamber ⟣ The piece is a full-viewport silent SVG kaleidoscope: a 30° wedge of 24 drifting Bohemian-glass polygon chips, reflected and rotated into a 12-fold mandala that turns clockwise at 1.5°/sec, with cursor distance from…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-05-31T04-04.webp" medium="image"/>
   </item>
 </channel>
 </rss>
