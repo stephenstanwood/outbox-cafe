@@ -56,6 +56,13 @@ archive/thumbs/
 # Per-Mini observability for the nightly digest; not worth committing.
 data/runs.jsonl
 
+# Reserve drawer — per-Mini buffer of valid runner-up gen candidates, stashed for
+# free during healthy gens and drained during cap/exhaustion windows in place of a
+# generic counter-card. A local buffer, never site content (drained pages become
+# committed archive HTML at publish time); gitignored to keep the gen runner's
+# `git pull --rebase --autostash` clean, like every other per-Mini state file.
+data/reserve/
+
 
 # Per-worktree harness state (scheduled_tasks.lock etc.)
 .claude/

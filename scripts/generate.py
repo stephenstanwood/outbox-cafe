@@ -28,6 +28,7 @@ from images import fetch_images, derive_query
 from images_ai import fetch_ai_images, fetch_poster_image
 from lib.llm import call_claude
 from lib import blob
+from lib import reserve
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
@@ -1983,9 +1984,20 @@ def main() -> int:
     limit_fallback = False
     fallback_reason = None
     reduced_scope = False
+    from_reserve = False
+    reserve_reason = None
     raw = ""
     if len(valid) >= 2:
         html = pick_best_candidate(valid, spec, model=gen_model)
+        # Reserve drawer: stash ONE valid runner-up for free. We generate 3
+        # candidates and publish 1 — the rest are real, judged-second pages we'd
+        # otherwise discard. Buffering one (per-Mini, gitignored) lets a future cap
+        # or exhaustion slot publish a real page instead of a generic counter-card.
+        # One per gen (not all non-winners) keeps the buffer's subjects diverse.
+        others = [c for c in valid if c is not html]
+        if others:
+            if reserve.stash(others[0], spec):
+                print(f"  reserved a runner-up (buffer: {reserve.count()})")
     elif len(valid) == 1:
         print(f"  only 1/{n_want} candidates was valid HTML — using it")
         html = valid[0]
@@ -2087,6 +2099,29 @@ def main() -> int:
                         html = build_limit_fallback_html(spec)
                         limit_fallback = True
                         fallback_reason = "exhausted"
+
+    # Reserve drawer drain. If we're about to publish a generic counter-card
+    # (weekly/session cap OR total exhaustion — `limit_fallback` is set), first see
+    # whether a real page is waiting in the reserve buffer: a valid runner-up
+    # candidate stashed for free during a healthy gen. Draining one turns a
+    # multi-day cap window of identical generic cards into real, varied drops. This
+    # costs no Claude call, so it works even while fully capped. Single interception
+    # downstream of all three counter-card sites — keyed off limit_fallback so the
+    # tested candidate/fallback/rescue control flow above is untouched.
+    #
+    # On a hit we ADOPT the stashed spec: the buffered HTML was built for it, so
+    # meta, cabinet dims, history, and the poster must all reflect it, not this
+    # slot's failed roll. Best-effort — an empty/failed drain keeps the counter-card.
+    if limit_fallback:
+        drained = reserve.drain()
+        if drained:
+            html, spec = drained
+            from_reserve = True
+            reserve_reason = fallback_reason       # why we needed it (cap / exhausted)
+            limit_fallback = False                 # a real page ships, not a counter-card
+            fallback_reason = None
+            print(f"reserve drawer: published a stashed runner-up instead of a "
+                  f"counter-card ({reserve_reason}; buffer now {reserve.count()})")
 
     # Inject the canonical spec as meta tags so the cabinet can read it reliably
     html = inject_spec_meta(html, spec)
@@ -2209,6 +2244,8 @@ def main() -> int:
             "limit_fallback": limit_fallback,
             "fallback_reason": fallback_reason,
             "reduced_scope": reduced_scope,
+            "from_reserve": from_reserve,
+            "reserve_reason": reserve_reason,
         })
     except Exception as e:
         print(f"run-log write failed (non-fatal): {e}", file=sys.stderr)

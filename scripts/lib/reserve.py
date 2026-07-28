@@ -1,0 +1,129 @@
+"""Reserve drawer — a per-Mini buffer of valid runner-up gen candidates.
+
+Every healthy multi-candidate gen produces N valid HTML pages and publishes ONE
+(the judge's pick); the other valid candidates are thrown away. This stashes one
+of them, for free, so that during a Claude cap or a total-exhaustion window — when
+the gen would otherwise publish a generic counter-card — we can publish a real
+(if not-the-first-choice) page instead.
+
+Why this shape:
+  * Fill is free. The candidate already exists; stashing it costs no extra Claude
+    call, so it never adds load during the very weeks we keep hitting weekly caps.
+  * Drain is free. The page is pre-built, so draining works even while fully
+    capped — exactly when it's needed.
+  * Per-Mini, gitignored, ephemeral. Drained pages become committed archive HTML
+    at publish time; the buffer itself never leaves the Mini (like runs.jsonl and
+    the engage/like/follow state files).
+
+Stored HTML is RAW candidate output (pre-injection): a drained entry flows through
+the same inject_spec_meta/og/nav/reload pipeline as a fresh gen, under its own new
+archive filename, using the stashed spec — so the published page is internally
+consistent. Entries carry their spec so the cabinet dims, history, and poster all
+match the page that actually ships.
+
+Age bound: a candidate may embed external image URLs (fal.ai / unsplash) the model
+chose to reference. Those are the same persistence assumption every cafe page
+already makes, but a long-buffered entry's images are older at publish time, so
+drain only ever serves entries within MAX_AGE_DAYS and deletes the stale ones.
+Carte-blanche and image-less candidates carry no such risk.
+"""
+from __future__ import annotations
+
+import json
+import os
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+from lib.io import atomic_write_json
+
+RESERVE_DIR = Path(__file__).resolve().parents[2] / "data" / "reserve"
+
+# Buffer size. The worst observed cap window was 9 consecutive counter-cards
+# (2026-07-24→26); 16 covers that with margin and still fills in ~4 days at one
+# stash per healthy gen while staying fresh.
+DEFAULT_CAP = 16
+
+# Only ever serve entries this fresh (see module docstring on embedded images).
+MAX_AGE_DAYS = 21
+
+
+def _entry_files() -> list[Path]:
+    """Reserve entry files, oldest first (sort by filename, which is ts-prefixed)."""
+    if not RESERVE_DIR.exists():
+        return []
+    return sorted(RESERVE_DIR.glob("*.json"))
+
+
+def count() -> int:
+    """How many entries are currently buffered (for logging/observability)."""
+    return len(_entry_files())
+
+
+def stash(html: str, spec: dict, *, cap: int = DEFAULT_CAP) -> bool:
+    """Buffer one valid runner-up candidate. Best-effort — any failure returns
+    False and is non-fatal (the happy path must never break to save a spare)."""
+    try:
+        now = datetime.now(timezone.utc)
+        # ts-prefixed name → lexical sort == chronological order; suffix keeps
+        # concurrent stashes in one gen from colliding.
+        stem = now.strftime("%Y%m%dT%H%M%S%f")
+        path = RESERVE_DIR / f"{stem}.json"
+        # Strip any fallback bookkeeping so a drained spec reads as a clean roll.
+        clean_spec = {k: v for k, v in spec.items()
+                      if k not in ("limit_fallback", "fallback_reason", "file")}
+        atomic_write_json(path, {"html": html, "spec": clean_spec,
+                                 "ts": now.isoformat()}, indent=None)
+        _prune(cap)
+        return True
+    except Exception as e:  # noqa: BLE001 — buffering a spare must never break a gen
+        print(f"  reserve stash failed (non-fatal): {e}", file=sys.stderr)
+        return False
+
+
+def _prune(cap: int) -> None:
+    """Keep the buffer at or under `cap` by deleting the oldest entries."""
+    files = _entry_files()
+    for f in files[:max(0, len(files) - cap)]:
+        try:
+            f.unlink()
+        except OSError:
+            pass
+
+
+def drain(*, max_age_days: int = MAX_AGE_DAYS) -> "tuple[str, dict] | None":
+    """Pop and return the oldest fresh entry as (html, spec), deleting its file.
+
+    Stale (over-age) or corrupt entries are deleted and skipped. Returns None if
+    the buffer holds nothing usable. Never raises — a drain failure just leaves
+    the caller with its counter-card."""
+    try:
+        cutoff = datetime.now(timezone.utc).timestamp() - max_age_days * 86400
+        for f in _entry_files():
+            try:
+                data = json.loads(f.read_text())
+            except (OSError, ValueError):
+                _unlink(f)
+                continue
+            ts_raw = data.get("ts", "")
+            try:
+                age_ok = datetime.fromisoformat(ts_raw).timestamp() >= cutoff
+            except (TypeError, ValueError):
+                age_ok = False
+            html, spec = data.get("html"), data.get("spec")
+            if not age_ok or not isinstance(html, str) or not isinstance(spec, dict):
+                _unlink(f)  # stale / malformed — retire it and try the next
+                continue
+            _unlink(f)  # claim it before returning so it's never served twice
+            return html, spec
+        return None
+    except Exception as e:  # noqa: BLE001 — a drain miss must never crash a gen
+        print(f"  reserve drain failed (non-fatal): {e}", file=sys.stderr)
+        return None
+
+
+def _unlink(f: Path) -> None:
+    try:
+        os.remove(f)
+    except OSError:
+        pass
