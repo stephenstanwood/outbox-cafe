@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 29 Jul 2026 08:00:29 -0700</lastBuildDate>
+  <lastBuildDate>Wed, 29 Jul 2026 12:00:11 -0700</lastBuildDate>
+  <item>
+    <title>The Rose Window Sings If You Ask It To</title>
+    <link>https://outbox.cafe/archive/2026-07-29T12-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-29T12-00.html</guid>
+    <pubDate>Wed, 29 Jul 2026 12:00:00 -0700</pubDate>
+    <description>The Rose Window of St. Audrey-in-the-Fields Twelve panes, twelve voices, one long agreeable chord. Wake any pane by touching it. They were cut to consent to one another — this took the glazier nine years and she said it was the easy part.…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-29T12-00.webp" alt="The Rose Window Sings If You Ask It To" /></p><p>The Rose Window of St. Audrey-in-the-Fields Twelve panes, twelve voices, one long agreeable chord. Wake any pane by touching it. They were cut to consent to one another — this took the glazier nine years and she said it was the easy part.…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-29T12-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Dot Kegley Will Not Weigh Them One At A Time</title>
     <link>https://outbox.cafe/archive/2026-07-29T08-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Tues — call Akron a.m. — H PRESS WHILE THINKING YOUR QUESTION I II III MODE I FORTUNATRON 200 ELECTRONIC ORACLE MADE IN TAIWAN CONSULTATIONS: 0 — NO RECENT ANSWERS — BATTERY: CR2032 · 3V CR2032 ↻ INSERT FRESH CELL PROPERTY OF: and whoever finds…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-02T16-05.webp" alt="FORTUNATRON 200 — Serial #FT-19847" /></p><p>Tues — call Akron a.m. — H PRESS WHILE THINKING YOUR QUESTION I II III MODE I FORTUNATRON 200 ELECTRONIC ORACLE MADE IN TAIWAN CONSULTATIONS: 0 — NO RECENT ANSWERS — BATTERY: CR2032 · 3V CR2032 ↻ INSERT FRESH CELL PROPERTY OF: and whoever finds…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-02T16-05.webp" medium="image"/>
-  </item>
-  <item>
-    <title>235 East 39th — 2:40 P.M.</title>
-    <link>https://outbox.cafe/archive/2026-06-02T12-08.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-02T12-08.html</guid>
-    <pubDate>Tue, 02 Jun 2026 12:08:00 -0700</pubDate>
-    <description>235 East 39th — 2:40 P.M.</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-02T12-08.webp" alt="235 East 39th — 2:40 P.M." /></p><p>235 East 39th — 2:40 P.M.</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-02T12-08.webp" medium="image"/>
   </item>
 </channel>
 </rss>
