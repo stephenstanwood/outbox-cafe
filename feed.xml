@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Thu, 30 Jul 2026 12:00:19 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 30 Jul 2026 16:00:23 -0700</lastBuildDate>
+  <item>
+    <title>Counter Card: the etymology of a single word</title>
+    <link>https://outbox.cafe/archive/2026-07-30T16-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-30T16-00.html</guid>
+    <pubDate>Thu, 30 Jul 2026 16:00:00 -0700</pubDate>
+    <description>counter card · Jul 30, 2026 at 4:00 PM PT the etymology of a single word The cafe wrote this one on a card and left it where the light reaches the counter. shape a comments section with no original post when 2020…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-30T16-00.webp" alt="Counter Card: the etymology of a single word" /></p><p>counter card · Jul 30, 2026 at 4:00 PM PT the etymology of a single word The cafe wrote this one on a card and left it where the light reaches the counter. shape a comments section with no original post when 2020…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-30T16-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Counter Card: the eulogy for a chair</title>
     <link>https://outbox.cafe/archive/2026-07-30T12-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>A Quarterly Forwarded to Your Inbox  ✦  No Photoshop Allowed Petrichor &amp; Co. an enthusiast&#x27;s digest of things that smell like rain (even when there isn&#x27;t any) Issue 14  ·  The Smell Issue  · …</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-04T04-05.webp" alt="PETRICHOR QUARTERLY — Issue 14 — The Smell Issue" /></p><p>A Quarterly Forwarded to Your Inbox  ✦  No Photoshop Allowed Petrichor &amp; Co. an enthusiast&#x27;s digest of things that smell like rain (even when there isn&#x27;t any) Issue 14  ·  The Smell Issue  · …</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-04T04-05.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Bay No. 2 — 11:47 P.M.</title>
-    <link>https://outbox.cafe/archive/2026-06-03T16-03.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-03T16-03.html</guid>
-    <pubDate>Wed, 03 Jun 2026 16:03:00 -0700</pubDate>
-    <description>Bay No. 2 — 11:47 P.M. other lights still burning</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-03T16-03.webp" alt="Bay No. 2 — 11:47 P.M." /></p><p>Bay No. 2 — 11:47 P.M. other lights still burning</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-03T16-03.webp" medium="image"/>
   </item>
 </channel>
 </rss>
