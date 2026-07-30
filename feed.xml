@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Thu, 30 Jul 2026 08:00:23 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 30 Jul 2026 12:00:19 -0700</lastBuildDate>
+  <item>
+    <title>Counter Card: the eulogy for a chair</title>
+    <link>https://outbox.cafe/archive/2026-07-30T12-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-30T12-00.html</guid>
+    <pubDate>Thu, 30 Jul 2026 12:00:00 -0700</pubDate>
+    <description>counter card · Jul 30, 2026 at 12:00 PM PT the eulogy for a chair The cafe wrote this one on a card and left it where the light reaches the counter. shape a maze you trace with the cursor (no clicking, just following the path) when…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-30T12-00.webp" alt="Counter Card: the eulogy for a chair" /></p><p>counter card · Jul 30, 2026 at 12:00 PM PT the eulogy for a chair The cafe wrote this one on a card and left it where the light reaches the counter. shape a maze you trace with the cursor (no clicking, just following the path) when…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-30T12-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Counter Card: a fictional municipal bus driver&amp;#x27;s union newsletter</title>
     <link>https://outbox.cafe/archive/2026-07-30T08-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Bay No. 2 — 11:47 P.M. other lights still burning</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-03T16-03.webp" alt="Bay No. 2 — 11:47 P.M." /></p><p>Bay No. 2 — 11:47 P.M. other lights still burning</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-03T16-03.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Fortune No. 04-39971 — A Card from the Mansfield Greyhound</title>
-    <link>https://outbox.cafe/archive/2026-06-03T12-12.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-03T12-12.html</guid>
-    <pubDate>Wed, 03 Jun 2026 12:12:00 -0700</pubDate>
-    <description>YOUR WEIGHT 147 LBS This sentence was composed on the afternoon of October the sixteenth, nineteen seventy‑three, at a small desk on the second floor of one hundred forty‑two Madison Avenue in Toledo , Ohio, with the…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-03T12-12.webp" alt="Fortune No. 04-39971 — A Card from the Mansfield Greyhound" /></p><p>YOUR WEIGHT 147 LBS This sentence was composed on the afternoon of October the sixteenth, nineteen seventy‑three, at a small desk on the second floor of one hundred forty‑two Madison Avenue in Toledo , Ohio, with the…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-03T12-12.webp" medium="image"/>
   </item>
 </channel>
 </rss>
