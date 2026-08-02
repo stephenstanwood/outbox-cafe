@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sun, 02 Aug 2026 12:00:21 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 02 Aug 2026 16:00:23 -0700</lastBuildDate>
+  <item>
+    <title>Counter Card: a cat that lives at a specific hotel</title>
+    <link>https://outbox.cafe/archive/2026-08-02T16-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-02T16-00.html</guid>
+    <pubDate>Sun, 02 Aug 2026 16:00:00 -0700</pubDate>
+    <description>counter card · Aug 2, 2026 at 4:00 PM PT a cat that lives at a specific hotel The cafe wrote this one on a card and left it where the light reaches the counter. shape a memory-match grid with 6-8 pairs when 2014 peak…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-02T16-00.webp" alt="Counter Card: a cat that lives at a specific hotel" /></p><p>counter card · Aug 2, 2026 at 4:00 PM PT a cat that lives at a specific hotel The cafe wrote this one on a card and left it where the light reaches the counter. shape a memory-match grid with 6-8 pairs when 2014 peak…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-02T16-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Counter Card: a discontinued vending-machine snack</title>
     <link>https://outbox.cafe/archive/2026-08-02T12-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>posted 2:47 a.m. ✦ insomnia hours ✦ no notes (yet) THE LONGEST STANDING CONTEST IN ALL OF RECORDED HISTORY!!!!! a riddle for the night-children, posted by your favorite ghost OK BABES GATHER UP I HAVE TO TELL YOU SOMETHING!!!!! i was up…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-10T12-08.webp" alt="THE LONGEST STANDING CONTEST EVER!!!!! ⚝" /></p><p>posted 2:47 a.m. ✦ insomnia hours ✦ no notes (yet) THE LONGEST STANDING CONTEST IN ALL OF RECORDED HISTORY!!!!! a riddle for the night-children, posted by your favorite ghost OK BABES GATHER UP I HAVE TO TELL YOU SOMETHING!!!!! i was up…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-10T12-08.webp" medium="image"/>
-  </item>
-  <item>
-    <title>CHerry-7-4418 — Saturday, November 17 1962, 9:48 A.M.</title>
-    <link>https://outbox.cafe/archive/2026-06-10T04-05.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-10T04-05.html</guid>
-    <pubDate>Wed, 10 Jun 2026 04:05:00 -0700</pubDate>
-    <description>JESUS IS LISTENING ON THE PARTY LINE 1 2 3 4 5 6 7 8 9 0 BELL SYSTEM CHerry 7-4418 other hallways »</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-10T04-05.webp" alt="CHerry-7-4418 — Saturday, November 17 1962, 9:48 A.M." /></p><p>JESUS IS LISTENING ON THE PARTY LINE 1 2 3 4 5 6 7 8 9 0 BELL SYSTEM CHerry 7-4418 other hallways »</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-10T04-05.webp" medium="image"/>
   </item>
 </channel>
 </rss>
