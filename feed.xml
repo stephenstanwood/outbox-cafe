@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 01 Aug 2026 16:00:21 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 02 Aug 2026 04:00:22 -0700</lastBuildDate>
+  <item>
+    <title>Counter Card: the weather inside a specific room</title>
+    <link>https://outbox.cafe/archive/2026-08-02T04-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-02T04-00.html</guid>
+    <pubDate>Sun, 02 Aug 2026 04:00:00 -0700</pubDate>
+    <description>counter card · Aug 2, 2026 at 4:00 AM PT the weather inside a specific room The cafe wrote this one on a card and left it where the light reaches the counter. shape a tap-the-bell game where each ring slightly changes the…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-02T04-00.webp" alt="Counter Card: the weather inside a specific room" /></p><p>counter card · Aug 2, 2026 at 4:00 AM PT the weather inside a specific room The cafe wrote this one on a card and left it where the light reaches the counter. shape a tap-the-bell game where each ring slightly changes the…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-02T04-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Counter Card: a small island that disappears at high tide</title>
     <link>https://outbox.cafe/archive/2026-08-01T16-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>The Puzzle Garden Sunday, October 18, 1987 Page 14   Vol. VII, No. 42 Knight-Ridder Newspapers, Inc. The Cottontail&#x27;s Return Home  ·  designed by Garner Tilbury  ·  maze no. 314 YOU…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-09T08-12.webp" alt="The Cottontail&#x27;s Return Home — The Puzzle Garden, Sunday Oct 18 1987" /></p><p>The Puzzle Garden Sunday, October 18, 1987 Page 14   Vol. VII, No. 42 Knight-Ridder Newspapers, Inc. The Cottontail&#x27;s Return Home  ·  designed by Garner Tilbury  ·  maze no. 314 YOU…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-09T08-12.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Carnival Midway Pocket Pinball — Model 88 — Wing Hing Toy Mfy. Ltd.</title>
-    <link>https://outbox.cafe/archive/2026-06-09T04-12.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-09T04-12.html</guid>
-    <pubDate>Tue, 09 Jun 2026 04:12:00 -0700</pubDate>
-    <description>CALLIOPE RING TOSS · 3 FOR 25¢ HOT BUTTERED POPCORN 10¢ A BAG LINDA V. — CICERO ILL. — JUNE 30 1973 — WING HING TOY MFY · MODEL 88 SCORE 000 BEST SCORE THIS SUMMER 000 ROUND COMPLETE 000 NEW BALLS sign your high…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-09T04-12.webp" alt="Carnival Midway Pocket Pinball — Model 88 — Wing Hing Toy Mfy. Ltd." /></p><p>CALLIOPE RING TOSS · 3 FOR 25¢ HOT BUTTERED POPCORN 10¢ A BAG LINDA V. — CICERO ILL. — JUNE 30 1973 — WING HING TOY MFY · MODEL 88 SCORE 000 BEST SCORE THIS SUMMER 000 ROUND COMPLETE 000 NEW BALLS sign your high…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-09T04-12.webp" medium="image"/>
   </item>
 </channel>
 </rss>
