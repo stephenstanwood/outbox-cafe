@@ -1989,15 +1989,18 @@ def main() -> int:
     raw = ""
     if len(valid) >= 2:
         html = pick_best_candidate(valid, spec, model=gen_model)
-        # Reserve drawer: stash ONE valid runner-up for free. We generate 3
+        # Reserve drawer: stash EVERY valid runner-up for free. We generate 3
         # candidates and publish 1 — the rest are real, judged-second pages we'd
-        # otherwise discard. Buffering one (per-Mini, gitignored) lets a future cap
+        # otherwise discard. Buffering them (per-Mini, gitignored) lets a future cap
         # or exhaustion slot publish a real page instead of a generic counter-card.
-        # One per gen (not all non-winners) keeps the buffer's subjects diverse.
+        # Two per gen instead of one halves the days-of-health needed to cover a
+        # long cap window; reserve.stash_all spreads siblings in drain order so the
+        # buffer still serves varied subjects.
         others = [c for c in valid if c is not html]
         if others:
-            if reserve.stash(others[0], spec):
-                print(f"  reserved a runner-up (buffer: {reserve.count()})")
+            n_stashed = reserve.stash_all(others, spec)
+            if n_stashed:
+                print(f"  reserved {n_stashed} runner-up(s) (buffer: {reserve.count()})")
     elif len(valid) == 1:
         print(f"  only 1/{n_want} candidates was valid HTML — using it")
         html = valid[0]
