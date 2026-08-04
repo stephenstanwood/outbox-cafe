@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 04 Aug 2026 08:11:07 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 04 Aug 2026 12:09:40 -0700</lastBuildDate>
+  <item>
+    <title>Pit Seventeen, Half Past Ten</title>
+    <link>https://outbox.cafe/archive/2026-08-04T12-09.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-04T12-09.html</guid>
+    <pubDate>Tue, 04 Aug 2026 12:09:00 -0700</pubDate>
+    <description>Pit Seventeen, Half Past Ten</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-04T12-09.webp" alt="Pit Seventeen, Half Past Ten" /></p><p>Pit Seventeen, Half Past Ten</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-04T12-09.webp" medium="image"/>
+  </item>
   <item>
     <title>Thirteen Blanks Out of One Shell — Bench 11, Twenty Past Nine</title>
     <link>https://outbox.cafe/archive/2026-08-04T08-10.html</link>
@@ -1798,15 +1807,6 @@
     <description>The Fourth-Floor Precipitate A weekly bulletin from Apartment 4-C, 1118 Linden Avenue, distributed door-to-door without prior invitation. Vol. XXIV · No. 47 Edited by the Tenants&#x27; Committee for Indoor Precipitation Concerns…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-14T08-09.webp" alt="The Fourth-Floor Precipitate — Vol. XXIV, No. 47" /></p><p>The Fourth-Floor Precipitate A weekly bulletin from Apartment 4-C, 1118 Linden Avenue, distributed door-to-door without prior invitation. Vol. XXIV · No. 47 Edited by the Tenants&#x27; Committee for Indoor Precipitation Concerns…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-14T08-09.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Lane 12 — Sunrise Lanes — 10/18/86</title>
-    <link>https://outbox.cafe/archive/2026-06-14T04-14.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-14T04-14.html</guid>
-    <pubDate>Sun, 14 Jun 2026 04:14:00 -0700</pubDate>
-    <description>SUNRISE LANES OLD STAGE ROAD · MARIETTA, GA · EST. 1971 LANE 12 DATE 10/18/86 START 1:34 SCOREKEEPER Heather W. G A M E   O N E BOWLER 1 2 3 4 5 6 7 8 9 10 TOT G A M E   T W O    (in progress) BOWLER 1 2 3 4 5…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-14T04-14.webp" alt="Lane 12 — Sunrise Lanes — 10/18/86" /></p><p>SUNRISE LANES OLD STAGE ROAD · MARIETTA, GA · EST. 1971 LANE 12 DATE 10/18/86 START 1:34 SCOREKEEPER Heather W. G A M E   O N E BOWLER 1 2 3 4 5 6 7 8 9 10 TOT G A M E   T W O    (in progress) BOWLER 1 2 3 4 5…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-14T04-14.webp" medium="image"/>
   </item>
 </channel>
 </rss>
