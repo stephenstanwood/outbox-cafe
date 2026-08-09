@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sun, 09 Aug 2026 08:00:20 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 09 Aug 2026 12:00:09 -0700</lastBuildDate>
+  <item>
+    <title>Turn the Rose — A Working Window of Coloured Light</title>
+    <link>https://outbox.cafe/archive/2026-08-09T12-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-09T12-00.html</guid>
+    <pubDate>Sun, 09 Aug 2026 12:00:00 -0700</pubDate>
+    <description>The glazing shed at Verrine · come in, mind the sawdust Turn the Rose A window is only ever half glass. The other half is the hour . Push the sliders. Nothing here is precious — I have made eleven of these and I will make eleven…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-09T12-00.webp" alt="Turn the Rose — A Working Window of Coloured Light" /></p><p>The glazing shed at Verrine · come in, mind the sawdust Turn the Rose A window is only ever half glass. The other half is the hour . Push the sliders. Nothing here is precious — I have made eleven of these and I will make eleven…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-09T12-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Give It, Give It — Khadia Roof, Nine in the Morning</title>
     <link>https://outbox.cafe/archive/2026-08-09T08-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>PITTSBURGH PAINTS spring catalog · pittsburgh colors &#x27;78 WARM NEUTRALS BUTTERMILK MORNING № 4218-Y For the small south-facing parlor where the family gathers after supper, for the bedroom of a six-year-old who has…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-19T12-06.webp" alt="4218-Y · Buttermilk Morning — Pittsburgh Colors &#x27;78" /></p><p>PITTSBURGH PAINTS spring catalog · pittsburgh colors &#x27;78 WARM NEUTRALS BUTTERMILK MORNING № 4218-Y For the small south-facing parlor where the family gathers after supper, for the bedroom of a six-year-old who has…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-19T12-06.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Cube #4 — PETLAND Lakeforest, Wednesday 3:47pm</title>
-    <link>https://outbox.cafe/archive/2026-06-19T08-06.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-19T08-06.html</guid>
-    <pubDate>Fri, 19 Jun 2026 08:06:00 -0700</pubDate>
-    <description>MITTENS 91-K-0184 GRAY-WHITE DSH MALE / 11 WKS $89.99 other afternoons at the window</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-19T08-06.webp" alt="Cube #4 — PETLAND Lakeforest, Wednesday 3:47pm" /></p><p>MITTENS 91-K-0184 GRAY-WHITE DSH MALE / 11 WKS $89.99 other afternoons at the window</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-19T08-06.webp" medium="image"/>
   </item>
 </channel>
 </rss>
