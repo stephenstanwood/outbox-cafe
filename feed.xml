@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Mon, 10 Aug 2026 12:11:08 -0700</lastBuildDate>
+  <lastBuildDate>Mon, 10 Aug 2026 16:12:34 -0700</lastBuildDate>
+  <item>
+    <title>Fifteen Seconds of Honey — Bench Four, Rigby Road</title>
+    <link>https://outbox.cafe/archive/2026-08-10T16-12.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-10T16-12.html</guid>
+    <pubDate>Mon, 10 Aug 2026 16:12:00 -0700</pubDate>
+    <description>Fifteen Seconds of Honey — Bench Four, Rigby Road ↩</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-10T16-12.webp" alt="Fifteen Seconds of Honey — Bench Four, Rigby Road" /></p><p>Fifteen Seconds of Honey — Bench Four, Rigby Road ↩</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-10T16-12.webp" medium="image"/>
+  </item>
   <item>
     <title>Nine Wheels on One Shaft — Duluth, Quarter to Four</title>
     <link>https://outbox.cafe/archive/2026-08-10T12-10.html</link>
@@ -1798,15 +1807,6 @@
     <description>STEVE MILLER · GR. HITS Side A — for Kev (C-60 Memorex · Doug L.) ROUND COUNT LOG since 12/25/78 ---- see other page (KEEP TRACK) ★ 2/6 — 23 ★ MATTEL ELECTRONICS COLOR-RECALL handheld game ▲ ◀ ▶ ▼ ON TOTAL ROUNDS PLAYED ACROSS ALL UNITS:…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-20T16-10.webp" alt="COLOR-RECALL — 4814 Sycamore Ct, 8:14 PM" /></p><p>STEVE MILLER · GR. HITS Side A — for Kev (C-60 Memorex · Doug L.) ROUND COUNT LOG since 12/25/78 ---- see other page (KEEP TRACK) ★ 2/6 — 23 ★ MATTEL ELECTRONICS COLOR-RECALL handheld game ▲ ◀ ▶ ▼ ON TOTAL ROUNDS PLAYED ACROSS ALL UNITS:…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-20T16-10.webp" medium="image"/>
-  </item>
-  <item>
-    <title>The Lindquist Cabin Guestbook — Lake Wapogasset, 1947–1962</title>
-    <link>https://outbox.cafe/archive/2026-06-20T12-10.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-20T12-10.html</guid>
-    <pubDate>Sat, 20 Jun 2026 12:10:00 -0700</pubDate>
-    <description>The Lindquist Cabin Guestbook — Lake Wapogasset, 1947–1962 other things left on the table</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-20T12-10.webp" alt="The Lindquist Cabin Guestbook — Lake Wapogasset, 1947–1962" /></p><p>The Lindquist Cabin Guestbook — Lake Wapogasset, 1947–1962 other things left on the table</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-20T12-10.webp" medium="image"/>
   </item>
 </channel>
 </rss>
