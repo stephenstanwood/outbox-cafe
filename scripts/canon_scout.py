@@ -14,13 +14,12 @@ from __future__ import annotations
 
 import json
 import re
-import subprocess
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from lib.llm import claude_cmd, strip_fences
+from lib.llm import run_claude, strip_fences
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
@@ -100,19 +99,12 @@ def run() -> str | None:
         existing="\n".join(f"- {n}" for n in existing_names) or "(empty)",
         excerpts="\n\n".join(f"=== {name} ===\n{text}" for name, text in gens),
     )
-    try:
-        result = subprocess.run(
-            claude_cmd("opus"), input=prompt,
-            capture_output=True, text=True, timeout=180,
-        )
-    except Exception as e:
-        print(f"[canon] claude failed: {e}", file=sys.stderr)
-        return None
-    if result.returncode != 0:
-        print(f"[canon] claude exit {result.returncode}", file=sys.stderr)
+    res = run_claude(prompt, model="opus", timeout=180)
+    if not res.ok:
+        print(res.log_line("canon"), file=sys.stderr)
         return None
 
-    out = strip_fences(result.stdout)
+    out = strip_fences(res.text)
     if not out or out.upper().startswith("NONE"):
         print("[canon] scout says NONE")
         return None

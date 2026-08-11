@@ -17,14 +17,13 @@ import json
 import os
 import random
 import re
-import subprocess
 import sys
 import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any
 
-from lib.llm import claude_cmd
+from lib.llm import run_claude
 from lib import bsky
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -148,20 +147,10 @@ def _call_claude_for_post(
         snippet=snippet or "(no snippet)",
         signoff=staff.get("signoff", ""),
     )
-    try:
-        result = subprocess.run(
-            # Short persona-voiced post — opus now (Max OAuth = $0 marginal cost)
-            claude_cmd("opus"),
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-    except Exception as e:
-        print(f"[post_bsky] claude subprocess failed: {e}", file=sys.stderr)
-        return None
-    if result.returncode != 0:
-        print(f"[post_bsky] claude exit {result.returncode}: {result.stderr[:200]}", file=sys.stderr)
+    # Short persona-voiced post — opus now (Max OAuth = $0 marginal cost)
+    res = run_claude(prompt, model="opus", timeout=120)
+    if not res.ok:
+        print(res.log_line("post_bsky"), file=sys.stderr)
         return None
     text = result.stdout.strip()
     # Strip stray code fences / quotes that LLMs sometimes wrap with

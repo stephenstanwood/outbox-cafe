@@ -36,6 +36,7 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
+from typing import NamedTuple
 
 # This is deliberately task-neutral: individual callers already provide the
 # full HTML, JSON, moderation, ritual, or social-post contract in their prompt.
@@ -73,30 +74,171 @@ def claude_cmd(model: str = "opus") -> list[str]:
     ]
 
 
+# --- failure legibility -----------------------------------------------------
+# The CLI prints usage-cap notices on STDOUT and exits 1 with an EMPTY stderr.
+# Every helper used to log only `result.stderr`, so a capped run logged a bare
+# "claude exit 1: " with no reason — the reblog loop recorded 2019 of those.
+# Match the observed shapes:
+#   "You've hit your weekly limit · resets 12am (America/Los_Angeles)"
+#   "You've hit your weekly limit · resets Aug 10 at 12am (America/Los_Angeles)"
+#   "You've hit your limit · resets 3pm"            (5-hour session cap)
+_LIMIT_RE = re.compile(
+    r"(?:hit your (?:weekly |session |daily )?limit"
+    r"|usage limit(?: reached)?"
+    r"|rate limit(?:ed)?)",
+    re.IGNORECASE,
+)
+_RESET_RE = re.compile(r"resets?\s+([^\n·|]{1,60})", re.IGNORECASE)
+
+
+def detect_usage_limit(text: str | None) -> str | None:
+    """Return a reset hint if `text` is a Claude usage-cap notice, else None.
+
+    Returns "" (falsy-but-not-None is avoided deliberately — see below) is NOT
+    used; a matched cap with no parseable reset time returns "unknown". Callers
+    should test `is not None`.
+    """
+    if not text or not _LIMIT_RE.search(text):
+        return None
+    m = _RESET_RE.search(text)
+    return m.group(1).strip() if m else "unknown"
+
+
+# Per-model, process-wide latch. Once a cap is seen for a model, every later
+# call to THAT model in THIS process short-circuits instead of spawning a
+# doomed subprocess: the reblog loop used to fire up to 44 calls into a cap
+# window, and engage hammered one every 15 min.
+#
+# Keyed BY MODEL on purpose. generate.py's last-ditch reduced-scope rescue
+# (Batch 17) deliberately runs sonnet after opus has failed — a global latch
+# would short-circuit that rescue whenever opus capped and silently undo it.
+# Never persisted to disk: a fresh cron run always re-probes.
+_LIMIT_LATCH: dict[str, str] = {}
+
+
+def usage_limited(model: str | None = None) -> str | None:
+    """Reset hint if a usage cap was seen earlier in this process, else None.
+
+    Pass a model to ask about that model specifically; omit it to mean "any
+    model is capped". Loops should check this and break early rather than
+    burning the rest of their candidate list on calls that cannot succeed.
+    """
+    if model is None:
+        return next(iter(_LIMIT_LATCH.values()), None)
+    return _LIMIT_LATCH.get(model)
+
+
+def reset_usage_latch() -> None:
+    """Clear the latch (tests, and long-lived processes that span a reset)."""
+    _LIMIT_LATCH.clear()
+
+
+class ClaudeResult(NamedTuple):
+    """Outcome of one headless call. `run_claude` never raises, so every field
+    is always populated and callers can log a real reason."""
+
+    ok: bool
+    text: str            # stdout on success, "" otherwise
+    detail: str          # combined stderr+stdout, for logging (always non-None)
+    reason: str          # "ok" | "usage_limit" | "timeout" | "error"
+    reset_hint: str | None   # set when reason == "usage_limit"
+    returncode: int | None
+    exc: BaseException | None  # set when the subprocess itself blew up
+
+    def log_line(self, tag: str) -> str:
+        """One-line, already-explained failure message for a cron log."""
+        if self.ok:
+            return f"[{tag}] claude ok"
+        if self.reason == "usage_limit":
+            return f"[{tag}] claude usage limit — resets {self.reset_hint}"
+        if self.reason == "timeout":
+            return f"[{tag}] claude timed out"
+        return f"[{tag}] claude exit {self.returncode}: {self.detail[:300]}"
+
+
+def run_claude(
+    prompt: str,
+    model: str = "opus",
+    timeout: int = 120,
+    latch: bool = True,
+) -> ClaudeResult:
+    """Run claude and describe what happened. NEVER raises.
+
+    This is the call every helper should use: it captures BOTH streams (the cap
+    notice lives on stdout), classifies the failure, and trips the process-wide
+    cap latch so the rest of a loop can stop early.
+    """
+    latched = _LIMIT_LATCH.get(model)
+    if latch and latched is not None:
+        return ClaudeResult(
+            ok=False, text="",
+            detail=f"usage limit already seen for {model} (resets {latched})",
+            reason="usage_limit", reset_hint=latched, returncode=None, exc=None,
+        )
+
+    try:
+        result = subprocess.run(
+            claude_cmd(model),
+            input=prompt,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired as e:
+        return ClaudeResult(
+            ok=False, text="", detail=f"timed out after {timeout}s",
+            reason="timeout", reset_hint=None, returncode=None, exc=e,
+        )
+    except Exception as e:  # noqa: BLE001 — helpers must never crash the cron
+        return ClaudeResult(
+            ok=False, text="", detail=f"subprocess failed: {e}",
+            reason="error", reset_hint=None, returncode=None, exc=e,
+        )
+
+    detail = "\n".join(
+        part.strip()
+        for part in (result.stderr, result.stdout)
+        if part and part.strip()
+    )
+    if result.returncode != 0:
+        hint = detect_usage_limit(detail)
+        if hint is not None:
+            if latch:
+                _LIMIT_LATCH[model] = hint
+            return ClaudeResult(
+                ok=False, text="", detail=detail, reason="usage_limit",
+                reset_hint=hint, returncode=result.returncode, exc=None,
+            )
+        return ClaudeResult(
+            ok=False, text="", detail=detail, reason="error",
+            reset_hint=None, returncode=result.returncode, exc=None,
+        )
+    return ClaudeResult(
+        ok=True, text=result.stdout, detail=detail, reason="ok",
+        reset_hint=None, returncode=0, exc=None,
+    )
+
+
 def call_claude(prompt: str, model: str = "opus", timeout: int = 120) -> str:
     """Run claude in print mode and return stdout. Raises RuntimeError on failure.
 
     Use this when the caller wants to handle/propagate failures itself (e.g. the
     main generator's retry loop). Helpers that should never crash the cron want
     `call_claude_or_none` instead.
+
+    Behaviour is deliberately unchanged: the RuntimeError text still reads
+    "claude failed (exit N): <stderr+stdout>" because generate.py's proven
+    counter-card gate (`_claude_weekly_limit_seen`) greps that message, and a
+    TimeoutExpired still propagates rather than becoming a RuntimeError.
     """
-    result = subprocess.run(
-        claude_cmd(model),
-        input=prompt,
-        capture_output=True,
-        text=True,
-        timeout=timeout,
+    res = run_claude(prompt, model=model, timeout=timeout)
+    if res.ok:
+        return res.text
+    if res.exc is not None:
+        raise res.exc
+    raise RuntimeError(
+        f"claude failed (exit {res.returncode}): {res.detail[:500]}"
     )
-    if result.returncode != 0:
-        detail = "\n".join(
-            part.strip()
-            for part in (result.stderr, result.stdout)
-            if part and part.strip()
-        )
-        raise RuntimeError(
-            f"claude failed (exit {result.returncode}): {detail[:500]}"
-        )
-    return result.stdout
 
 
 def call_claude_or_none(prompt: str, model: str = "opus", timeout: int = 120) -> str | None:

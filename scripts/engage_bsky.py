@@ -20,7 +20,6 @@ import json
 import os
 import random
 import re
-import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -29,7 +28,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from lib.llm import claude_cmd, is_nopost
+from lib.llm import is_nopost, run_claude
 from lib.io import atomic_write_json
 from lib import bsky
 
@@ -211,21 +210,11 @@ def _generate_reply(
         our_context=our_context or "(N/A)",
         signoff=staff.get("signoff", ""),
     )
-    try:
-        result = subprocess.run(
-            claude_cmd("opus"),
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-    except Exception as e:
-        print(f"[engage] claude subprocess failed: {e}", file=sys.stderr)
+    res = run_claude(prompt, model="opus", timeout=120)
+    if not res.ok:
+        print(res.log_line("engage"), file=sys.stderr)
         return None
-    if result.returncode != 0:
-        print(f"[engage] claude exit {result.returncode}: {result.stderr[:200]}", file=sys.stderr)
-        return None
-    text = (result.stdout or "").strip()
+    text = (res.text or "").strip()
     if is_nopost(text):
         return None
     text = re.sub(r"^```[a-z]*\s*", "", text).strip()
@@ -326,21 +315,11 @@ def _generate_ambient(staff: dict[str, Any]) -> str | None:
         examples="\n\n".join(staff["examples"]),
         signoff=staff.get("signoff", ""),
     )
-    try:
-        result = subprocess.run(
-            claude_cmd("opus"),
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-    except Exception as e:
-        print(f"[engage/ambient] claude failed: {e}", file=sys.stderr)
+    res = run_claude(prompt, model="opus", timeout=120)
+    if not res.ok:
+        print(res.log_line("engage/ambient"), file=sys.stderr)
         return None
-    if result.returncode != 0:
-        print(f"[engage/ambient] claude exit {result.returncode}", file=sys.stderr)
-        return None
-    text = (result.stdout or "").strip()
+    text = (res.text or "").strip()
     text = re.sub(r"^```[a-z]*\s*", "", text).strip()
     text = re.sub(r"\s*```\s*$", "", text).strip()
     if text.startswith('"') and text.endswith('"') and text.count('"') == 2:
@@ -484,16 +463,12 @@ def _roll_wild_topic(rng: random.Random) -> str:
             + ". Consider sibling topics in the same register; don't copy them verbatim."
         )
     try:
-        result = subprocess.run(
-            claude_cmd("opus"),
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=60,
-        )
-        if result.returncode != 0:
-            raise RuntimeError(f"claude exit {result.returncode}")
-        out = (result.stdout or "").strip()
+        res = run_claude(prompt, model="opus", timeout=60)
+        if not res.ok:
+            # Carry the real reason (cap + reset time, timeout, or exit detail)
+            # into the fallback log line instead of a bare "claude exit 1".
+            raise RuntimeError(res.log_line("wild")[len("[wild] "):])
+        out = (res.text or "").strip()
         # First non-empty line, strip quotes/fences
         for line in out.splitlines():
             line = line.strip()
@@ -555,21 +530,11 @@ def _generate_wild_reply(
         source_text=source_text or "(no text)",
         signoff=staff.get("signoff", ""),
     )
-    try:
-        result = subprocess.run(
-            claude_cmd("opus"),
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-    except Exception as e:
-        print(f"[wild] claude failed: {e}", file=sys.stderr)
+    res = run_claude(prompt, model="opus", timeout=120)
+    if not res.ok:
+        print(res.log_line("wild"), file=sys.stderr)
         return None
-    if result.returncode != 0:
-        print(f"[wild] claude exit {result.returncode}", file=sys.stderr)
-        return None
-    text = (result.stdout or "").strip()
+    text = (res.text or "").strip()
     if is_nopost(text):
         return None
     text = re.sub(r"^```[a-z]*\s*", "", text).strip()

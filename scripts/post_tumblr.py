@@ -24,7 +24,6 @@ import json
 import os
 import random
 import re
-import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -32,7 +31,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from lib.llm import claude_cmd
+from lib.llm import run_claude
 from lib import tumblr
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -112,19 +111,9 @@ def _call_claude(staff: dict[str, Any], title: str, snippet: str) -> str | None:
         snippet=snippet or "(no snippet)",
         signoff=staff.get("signoff", ""),
     )
-    try:
-        result = subprocess.run(
-            claude_cmd("opus"),
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-    except Exception as e:
-        print(f"[post_tumblr] claude subprocess failed: {e}", file=sys.stderr)
-        return None
-    if result.returncode != 0:
-        print(f"[post_tumblr] claude exit {result.returncode}: {result.stderr[:200]}", file=sys.stderr)
+    res = run_claude(prompt, model="opus", timeout=120)
+    if not res.ok:
+        print(res.log_line("post_tumblr"), file=sys.stderr)
         return None
     text = (result.stdout or "").strip()
     text = re.sub(r"^```[a-z]*\s*", "", text).strip()

@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from lib.llm import claude_cmd
+from lib.llm import run_claude
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
@@ -473,15 +473,16 @@ def roll_spec_via_llm(
 
     # Spec rolling is just JSON output. Runs on opus like everything else now
     # (Max OAuth = $0); falls back to the static roller on any failure anyway.
-    cmd = claude_cmd(model or "opus")
+    spec_model = model or "opus"
 
     try:
-        result = subprocess.run(
-            cmd, input=prompt, capture_output=True, text=True, timeout=timeout
-        )
-        if result.returncode != 0:
-            raise RuntimeError(f"claude exit {result.returncode}: {result.stderr[:300]}")
-        out = result.stdout.strip()
+        res = run_claude(prompt, model=spec_model, timeout=timeout)
+        if not res.ok:
+            # Real reason (cap + reset, timeout, or exit detail) instead of a
+            # bare exit code — this line is the only trace when the roller
+            # silently degrades to the static fallback below.
+            raise RuntimeError(res.log_line("spec_llm")[len("[spec_llm] "):])
+        out = res.text.strip()
         # Strip ```json fences if present
         out = re.sub(r"^```(?:json)?\s*", "", out)
         out = re.sub(r"\s*```\s*$", "", out)

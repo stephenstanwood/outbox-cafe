@@ -17,6 +17,40 @@ Weird/retro generative site, 4 gens/day. Mac Mini cron rolls a spec, hands to Cl
 
 ## Critical gotchas (each one cost real hours)
 
+### Headless claude failures: always log STDOUT, and use `run_claude()` (2026-08-11)
+
+The CLI prints usage-cap notices on **stdout** and exits 1 with an **empty stderr**.
+Every helper used to log only `result.stderr`, so a capped run recorded a bare
+`claude exit 1: ` with no reason — the reblog loop alone logged **2019** of those,
+and the real cause (`You've hit your weekly limit · resets ...`) was never written
+down anywhere. Diagnosing a dead loop meant re-deriving it from scratch each time.
+
+**Never call `subprocess.run(claude_cmd(...))` directly.** Use
+`scripts/lib/llm.py`'s `run_claude()`, which returns a `ClaudeResult`
+(`ok / text / detail / reason / reset_hint`) and never raises. `reason` is one of
+`ok | usage_limit | timeout | error`, and `res.log_line("tag")` renders an
+already-explained one-liner for the cron log:
+
+```python
+res = run_claude(prompt, model="opus", timeout=120)
+if not res.ok:
+    print(res.log_line("reblog"), file=sys.stderr)   # "claude usage limit — resets 3pm"
+    return None
+```
+
+`run_claude` also trips a **per-model** cap latch: once a cap is seen, later calls
+to that model in the same process short-circuit without spawning a doomed
+subprocess. Loops should check `usage_limited("opus")` and break — the reblog loop
+used to fire one pointless call per candidate (44 in the worst run) into a window
+that could not clear. The latch is **keyed by model on purpose**: generate.py's
+last-ditch reduced-scope rescue runs sonnet after opus fails, and a global latch
+would silently disable that rescue. It is in-process only, never persisted, so
+every fresh cron run re-probes.
+
+`call_claude` / `call_claude_or_none` still behave exactly as before (same
+`"claude failed (exit N): ..."` message that generate.py's counter-card gate
+greps, and `TimeoutExpired` still propagates) — they're now thin wrappers.
+
 ### Never pass `--permission-mode plan` to headless `claude --print`
 
 Plan mode biases the model to emit planning text ("Let me create the plan file...") instead of the requested HTML/JSON/reply. With `--tools ""` there are no tools to permission-check anyway — plan mode is pure downside. ~50% of gens silently failed for over a day until this was found. Pattern across all call sites:

@@ -25,7 +25,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from lib.llm import claude_cmd, is_nopost, strip_fences
+from lib.llm import is_nopost, run_claude, strip_fences
 
 ROOT = Path(__file__).resolve().parent.parent
 GUESTBOOK_DATA = ROOT / "data" / "guestbook.jsonl"
@@ -132,16 +132,10 @@ def _moderate(note: dict[str, Any], persona: dict[str, Any]) -> tuple[str, str]:
         persona_tone=persona.get("tone", ""),
         signoff=persona.get("signoff", ""),
     )
-    try:
-        result = subprocess.run(
-            claude_cmd("opus"), input=prompt,
-            capture_output=True, text=True, timeout=120,
-        )
-    except Exception as e:
-        return "ERROR", f"claude call failed: {e}"
-    if result.returncode != 0:
-        return "ERROR", f"claude exit {result.returncode}: {result.stderr[:200]}"
-    out = strip_fences(result.stdout)
+    res = run_claude(prompt, model="opus", timeout=120)
+    if not res.ok:
+        return "ERROR", res.log_line("guestbook")[len("[guestbook] "):]
+    out = strip_fences(res.text)
     line = next((l.strip() for l in out.splitlines() if l.strip()), "")
     if is_nopost(line) or line.upper().startswith("REJECT"):
         reason = line.partition(":")[2].strip() or "(no reason)"

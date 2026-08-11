@@ -33,7 +33,6 @@ import json
 import os
 import random
 import re
-import subprocess
 import sys
 import time
 import urllib.error
@@ -43,7 +42,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from lib.llm import claude_cmd
+from lib.llm import run_claude, usage_limited
 from lib.io import atomic_write_json
 from lib import tumblr
 
@@ -278,19 +277,12 @@ def _moderate_and_draft(post: dict, staff: dict[str, Any]) -> tuple[str, str | N
         examples="\n".join(f"- {e}" for e in (staff.get("examples") or [])[:4]),
         signoff=staff.get("signoff", "(none)"),
     )
-    try:
-        result = subprocess.run(
-            claude_cmd("opus"),
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-    except Exception as e:
-        return "SKIP", f"claude call failed: {e}"
-    if result.returncode != 0:
-        return "SKIP", f"claude exit {result.returncode}: {result.stderr[:200]}"
-    out = (result.stdout or "").strip()
+    res = run_claude(prompt, model="opus", timeout=120)
+    if not res.ok:
+        # res.log_line explains the real reason (the cap notice arrives on
+        # stdout, which this used to drop on the floor).
+        return "SKIP", res.log_line("reblog")[len("[reblog] "):]
+    out = (res.text or "").strip()
     # Parse first non-empty line
     line = next((l for l in out.splitlines() if l.strip()), "").strip()
     if line.startswith("SKIP"):
@@ -419,6 +411,14 @@ def main():
 
     for cand in deduped:
         if reblogged_this_run >= run_cap:
+            break
+        # A usage cap can't clear mid-run, so moderating the rest of the list
+        # is pure waste: this loop used to fire one doomed call per candidate
+        # (44 in the worst observed run) and log 44 blank "claude exit 1" lines.
+        capped = usage_limited("opus")
+        if capped:
+            print(f"[reblog] usage limit (resets {capped}) — stopping after "
+                  f"{len(skips)} moderated, {len(deduped)} candidates seen")
             break
         staff = _staff_for(rng)
         action, payload = _moderate_and_draft(cand, staff)
