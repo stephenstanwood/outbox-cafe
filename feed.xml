@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 11 Aug 2026 08:09:13 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 11 Aug 2026 12:12:33 -0700</lastBuildDate>
+  <item>
+    <title>Four Sheets Deep — Market Street, Twenty To Four</title>
+    <link>https://outbox.cafe/archive/2026-08-11T12-12.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-11T12-12.html</guid>
+    <pubDate>Tue, 11 Aug 2026 12:12:00 -0700</pubDate>
+    <description>Cruickshank &amp; Boots — Market Street first floor, above the chandler&#x27;s · two chairs · Thursday, 3:40 SMALL WORK FROM £1 · NO HANDS, NO FINGERS, NO FEET Sheet put it back on the wall Where it&#x27;s going…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-11T12-12.webp" alt="Four Sheets Deep — Market Street, Twenty To Four" /></p><p>Cruickshank &amp; Boots — Market Street first floor, above the chandler&#x27;s · two chairs · Thursday, 3:40 SMALL WORK FROM £1 · NO HANDS, NO FINGERS, NO FEET Sheet put it back on the wall Where it&#x27;s going…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-11T12-12.webp" medium="image"/>
+  </item>
   <item>
     <title>Day Eleven — The Chart Taped Inside the Screen Door</title>
     <link>https://outbox.cafe/archive/2026-08-11T08-08.html</link>
@@ -1798,15 +1807,6 @@
     <description>The Chamber if the door is open other chambers</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-21T12-06.webp" alt="The Chamber" /></p><p>The Chamber if the door is open other chambers</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-21T12-06.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Granny Vinette&#x27;s One-Chair Shop — A Quilt That&#x27;s Also a Floor Plan</title>
-    <link>https://outbox.cafe/archive/2026-06-21T08-07.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-21T08-07.html</guid>
-    <pubDate>Sun, 21 Jun 2026 08:07:00 -0700</pubDate>
-    <description>Granny Vinette&#x27;s One-Chair Shop — pieced in cotton, stitched by hand, the whole place to scale — touch a square granny&#x27;ll tell you what it is, sugar. more squares pinned out back on the clothesline</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-21T08-07.webp" alt="Granny Vinette&#x27;s One-Chair Shop — A Quilt That&#x27;s Also a Floor Plan" /></p><p>Granny Vinette&#x27;s One-Chair Shop — pieced in cotton, stitched by hand, the whole place to scale — touch a square granny&#x27;ll tell you what it is, sugar. more squares pinned out back on the clothesline</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-21T08-07.webp" medium="image"/>
   </item>
 </channel>
 </rss>
