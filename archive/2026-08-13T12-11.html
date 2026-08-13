@@ -1147,25 +1147,5 @@ console.log('Top roll padding: worn band at u=0.63, width 7 in. of 54. Not fixab
 </script>
 
 <script src="/nav.js" defer></script>
-
-<script>
-(function () {
-  // Poll every 90s for new content. Reload when the title changes.
-  // Cron currently fires 4x/day (4am, 8am, noon, 4pm PT);
-  // the JS just notices whenever new content lands.
-  var initialTitle = document.title;
-  setInterval(function () {
-    fetch(window.location.pathname + '?_t=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) { return r.text(); })
-      .then(function (text) {
-        var m = text.match(/<title>([^<]+)<\/title>/);
-        if (m && m[1] !== initialTitle) {
-          window.location.reload();
-        }
-      })
-      .catch(function () {});
-  }, 90000);
-})();
-</script>
 </body>
 </html>
