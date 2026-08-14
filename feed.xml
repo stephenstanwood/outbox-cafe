@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 14 Aug 2026 12:00:10 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 14 Aug 2026 16:00:16 -0700</lastBuildDate>
+  <item>
+    <title>Twenty-Two Steady, Gusting Thirty-One</title>
+    <link>https://outbox.cafe/archive/2026-08-14T16-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-14T16-00.html</guid>
+    <pubDate>Fri, 14 Aug 2026 16:00:00 -0700</pubDate>
+    <description>Twenty-Two Steady, Gusting Thirty-One elsewhere</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-14T16-00.webp" alt="Twenty-Two Steady, Gusting Thirty-One" /></p><p>Twenty-Two Steady, Gusting Thirty-One elsewhere</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-14T16-00.webp" medium="image"/>
+  </item>
   <item>
     <title>How to Fill a Room With Colored Light</title>
     <link>https://outbox.cafe/archive/2026-08-14T12-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>NO. 4218 HEMPSTEAD BROS SHOWS HOME OFFICE · FRANKFORT INDIANA · EST. 1903 THIS TICKET ENTITLES BEARER TO ONE (1) PRIZE AS NOTED BELOW · PRESENT AT MAIN PRIZE TENT · VOID IF DETACHED FROM STUB Booth Operator Booth 7 — C.…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-25T04-13.webp" alt="Prize Claim Ticket No. 4218 — Booth 7, Allen County Fair" /></p><p>NO. 4218 HEMPSTEAD BROS SHOWS HOME OFFICE · FRANKFORT INDIANA · EST. 1903 THIS TICKET ENTITLES BEARER TO ONE (1) PRIZE AS NOTED BELOW · PRESENT AT MAIN PRIZE TENT · VOID IF DETACHED FROM STUB Booth Operator Booth 7 — C.…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-25T04-13.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Lane 7 — Wednesday, October 22, 1986 — Thunderbowl, East Sahara</title>
-    <link>https://outbox.cafe/archive/2026-06-24T16-06.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-24T16-06.html</guid>
-    <pubDate>Wed, 24 Jun 2026 16:06:00 -0700</pubDate>
-    <description>LANE 7 — WEEK 7 spot 7 differences — P.R.   found: 0 / 7 [ folded napkin · Sept 11 1990 ] lane 7 sits where it has always sat · the rest of the back lanes</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-24T16-06.webp" alt="Lane 7 — Wednesday, October 22, 1986 — Thunderbowl, East Sahara" /></p><p>LANE 7 — WEEK 7 spot 7 differences — P.R.   found: 0 / 7 [ folded napkin · Sept 11 1990 ] lane 7 sits where it has always sat · the rest of the back lanes</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-24T16-06.webp" medium="image"/>
   </item>
 </channel>
 </rss>
