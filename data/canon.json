@@ -207,6 +207,12 @@
       "hint": "A long-lived rubber-stamp and brass-die shop; its tiny maker's mark turns up on the handle of any stamp, and its impressions are always slightly crooked.",
       "added": "2026-08-12",
       "by": "scout"
+    },
+    {
+      "name": "Ferd",
+      "hint": "The maintenance man nobody ever sees; whatever's broken, worn, or leaking, Ferd says he'll get to it Monday. He has said this for some time.",
+      "added": "2026-08-14",
+      "by": "scout"
     }
   ]
 }
