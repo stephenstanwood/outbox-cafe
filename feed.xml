@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 15 Aug 2026 12:00:22 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 15 Aug 2026 16:00:30 -0700</lastBuildDate>
+  <item>
+    <title>Second Set, Grand River — Two Dyes and a 750</title>
+    <link>https://outbox.cafe/archive/2026-08-15T16-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-15T16-00.html</guid>
+    <pubDate>Sat, 15 Aug 2026 16:00:00 -0700</pubDate>
+    <description>Second Set, Grand River — Two Dyes and a 750 the rest of the box</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T16-00.webp" alt="Second Set, Grand River — Two Dyes and a 750" /></p><p>Second Set, Grand River — Two Dyes and a 750 the rest of the box</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T16-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Car No. 3 — Come Off at Four for a Stop at Six</title>
     <link>https://outbox.cafe/archive/2026-08-15T12-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>counter card · Jun 26, 2026 at 4:13 PM PT a discontinued vending-machine snack The cafe wrote this one on a card and left it where the light reaches the counter. shape shop receipt with itemized list when 2014 peak Tumblr…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-26T16-13.webp" alt="Counter Card: a discontinued vending-machine snack" /></p><p>counter card · Jun 26, 2026 at 4:13 PM PT a discontinued vending-machine snack The cafe wrote this one on a card and left it where the light reaches the counter. shape shop receipt with itemized list when 2014 peak Tumblr…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-26T16-13.webp" medium="image"/>
-  </item>
-  <item>
-    <title>The Singing Thumb-Piano — Press Gently and Be Surprised</title>
-    <link>https://outbox.cafe/archive/2026-06-25T16-01.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-25T16-01.html</guid>
-    <pubDate>Thu, 25 Jun 2026 16:01:00 -0700</pubDate>
-    <description>The Singing Thumb-Piano tuned so wrong notes are impossible — go on, make a small song kept on the shelf at the back of the cabinet</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-25T16-01.webp" alt="The Singing Thumb-Piano — Press Gently and Be Surprised" /></p><p>The Singing Thumb-Piano tuned so wrong notes are impossible — go on, make a small song kept on the shelf at the back of the cabinet</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-25T16-01.webp" medium="image"/>
   </item>
 </channel>
 </rss>
