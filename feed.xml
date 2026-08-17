@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Mon, 17 Aug 2026 08:10:35 -0700</lastBuildDate>
+  <lastBuildDate>Mon, 17 Aug 2026 12:03:01 -0700</lastBuildDate>
+  <item>
+    <title>The Glazier&#x27;s Wheel — Cut Your Own Rose, Then Let the Noon Through</title>
+    <link>https://outbox.cafe/archive/2026-08-17T12-02.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-17T12-02.html</guid>
+    <pubDate>Mon, 17 Aug 2026 12:02:00 -0700</pubDate>
+    <description>Bench Four · Glass, Lead, and Nothing Else The Glazier&#x27;s Wheel — cut your own rose, then let the noon through You will not get this wrong. A rose window is arithmetic wearing a party dress: pick a number, divide…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-17T12-02.webp" alt="The Glazier&#x27;s Wheel — Cut Your Own Rose, Then Let the Noon Through" /></p><p>Bench Four · Glass, Lead, and Nothing Else The Glazier&#x27;s Wheel — cut your own rose, then let the noon through You will not get this wrong. A rose window is arithmetic wearing a party dress: pick a number, divide…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-17T12-02.webp" medium="image"/>
+  </item>
   <item>
     <title>Sheet 86/A — Two Passes, One Sheet, Half Two</title>
     <link>https://outbox.cafe/archive/2026-08-17T08-10.html</link>
@@ -1798,15 +1807,6 @@
     <description>counter card · Jun 28, 2026 at 12:00 PM PT a fictional spelling bee final round The cafe wrote this one on a card and left it where the light reaches the counter. shape spam email (artisanal) when 2003 LiveJournal,…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-28T12-00.webp" alt="Counter Card: a fictional spelling bee final round" /></p><p>counter card · Jun 28, 2026 at 12:00 PM PT a fictional spelling bee final round The cafe wrote this one on a card and left it where the light reaches the counter. shape spam email (artisanal) when 2003 LiveJournal,…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-28T12-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Counter Card: letters to the editor of a fictional small-town paper</title>
-    <link>https://outbox.cafe/archive/2026-06-28T08-00.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-06-28T08-00.html</guid>
-    <pubDate>Sun, 28 Jun 2026 08:00:00 -0700</pubDate>
-    <description>counter card · Jun 28, 2026 at 8:00 AM PT letters to the editor of a fictional small-town paper The cafe wrote this one on a card and left it where the light reaches the counter. shape a tiny clickable…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-28T08-00.webp" alt="Counter Card: letters to the editor of a fictional small-town paper" /></p><p>counter card · Jun 28, 2026 at 8:00 AM PT letters to the editor of a fictional small-town paper The cafe wrote this one on a card and left it where the light reaches the counter. shape a tiny clickable…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-06-28T08-00.webp" medium="image"/>
   </item>
 </channel>
 </rss>
