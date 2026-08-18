@@ -1,0 +1,45 @@
+# Static guard for the cafe's Python. Runs OFF the Mini, like the heartbeat.
+#
+# Why this exists: on 2026-08-13 a refactor (5f9d760) swapped subprocess.run
+# for run_claude() in both social posters but left `result.stdout` on the
+# SUCCESS path. Every call site failed with `name 'result' is not defined` —
+# but only once a call actually succeeded, so while the account was weekly-
+# capped the early `return None` masked it entirely. When the cap cleared,
+# every bsky + tumblr post crashed for days. Nothing caught it: the drops
+# kept landing so the heartbeat stayed green, the errors were logged
+# "non-fatal", and cat-signal DMs are off by default.
+#
+# pyflakes catches undefined names without importing or running anything,
+# which is exactly the class of bug that got through. Keep it fast and
+# zero-config so it never becomes the reason a fix doesn't ship.
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  pyflakes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: install pyflakes
+        run: pip install --quiet pyflakes
+
+      - name: pyflakes scripts
+        run: |
+          set -euo pipefail
+          # Compile-check first (syntax), then pyflakes (undefined names,
+          # unused imports). Both must be clean.
+          python -m compileall -q scripts
+          pyflakes scripts/*.py scripts/lib/*.py

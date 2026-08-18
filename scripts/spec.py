@@ -428,7 +428,6 @@ def roll_spec_via_llm(
 ) -> dict[str, Any]:
     """Ask Claude to invent a fresh spec across all dimensions. Fall back to static roller on any failure."""
     import re
-    import subprocess
 
     rng = random.Random(seed) if seed is not None else random.Random()
     dims = load_dimensions()

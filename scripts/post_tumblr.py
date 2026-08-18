@@ -115,7 +115,7 @@ def _call_claude(staff: dict[str, Any], title: str, snippet: str) -> str | None:
     if not res.ok:
         print(res.log_line("post_tumblr"), file=sys.stderr)
         return None
-    text = (result.stdout or "").strip()
+    text = (res.text or "").strip()
     text = re.sub(r"^```[a-z]*\s*", "", text).strip()
     text = re.sub(r"\s*```\s*$", "", text).strip()
     if text.startswith('"') and text.endswith('"') and text.count('"') == 2:

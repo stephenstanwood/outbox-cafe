@@ -152,7 +152,7 @@ def _call_claude_for_post(
     if not res.ok:
         print(res.log_line("post_bsky"), file=sys.stderr)
         return None
-    text = result.stdout.strip()
+    text = res.text.strip()
     # Strip stray code fences / quotes that LLMs sometimes wrap with
     text = re.sub(r"^```[a-z]*\s*", "", text)
     text = re.sub(r"\s*```\s*$", "", text)
