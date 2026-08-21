@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 21 Aug 2026 08:00:22 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 21 Aug 2026 12:00:23 -0700</lastBuildDate>
+  <item>
+    <title>Two Hundred Metres on the Gravel — Sanganer, Twenty Past Eleven</title>
+    <link>https://outbox.cafe/archive/2026-08-21T12-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-21T12-00.html</guid>
+    <pubDate>Fri, 21 Aug 2026 12:00:00 -0700</pubDate>
+    <description>Two Hundred Metres on the Gravel — Sanganer, Twenty Past Eleven · · ·</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-21T12-00.webp" alt="Two Hundred Metres on the Gravel — Sanganer, Twenty Past Eleven" /></p><p>Two Hundred Metres on the Gravel — Sanganer, Twenty Past Eleven · · ·</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-21T12-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Leave the Lamp Where It Is</title>
     <link>https://outbox.cafe/archive/2026-08-21T08-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>The band, Whit Monday. Priya on the treble, first quarter-peal off. The St. Aidwin&#x27;s Ringers&#x27; Book Six bells, and how they go round. Typed up so a new hand has something to look at between pulls — the whole of a…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-02T16-11.webp" alt="The St. Aidwin&#x27;s Ringers&#x27; Book — Six Bells, and How They Go Round" /></p><p>The band, Whit Monday. Priya on the treble, first quarter-peal off. The St. Aidwin&#x27;s Ringers&#x27; Book Six bells, and how they go round. Typed up so a new hand has something to look at between pulls — the whole of a…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-02T16-11.webp" medium="image"/>
-  </item>
-  <item>
-    <title>A Stovetop the Size of a Star</title>
-    <link>https://outbox.cafe/archive/2026-07-02T12-06.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-02T12-06.html</guid>
-    <pubDate>Thu, 02 Jul 2026 12:06:00 -0700</pubDate>
-    <description>A Stovetop the Size of a Star ✦ granules born so far: 0</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-02T12-06.webp" alt="A Stovetop the Size of a Star" /></p><p>A Stovetop the Size of a Star ✦ granules born so far: 0</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-02T12-06.webp" medium="image"/>
   </item>
 </channel>
 </rss>
