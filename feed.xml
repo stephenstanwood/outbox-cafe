@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 21 Aug 2026 12:00:23 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 21 Aug 2026 16:00:16 -0700</lastBuildDate>
+  <item>
+    <title>Compulsory Round — Thirty Seconds, Held</title>
+    <link>https://outbox.cafe/archive/2026-08-21T16-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-21T16-00.html</guid>
+    <pubDate>Fri, 21 Aug 2026 16:00:00 -0700</pubDate>
+    <description>HOLD ANY KEY · MOVE UP AND DOWN TO BEND the rest of the morning’s sheets</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-21T16-00.webp" alt="Compulsory Round — Thirty Seconds, Held" /></p><p>HOLD ANY KEY · MOVE UP AND DOWN TO BEND the rest of the morning’s sheets</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-21T16-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Two Hundred Metres on the Gravel — Sanganer, Twenty Past Eleven</title>
     <link>https://outbox.cafe/archive/2026-08-21T12-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>the bench kendama same one, an hour ago caught your breath?   more toys on the bench →</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T04-11.webp" alt="Big Cup, Small Cup, Base Cup, Spike — the Bench Kendama" /></p><p>the bench kendama same one, an hour ago caught your breath?   more toys on the bench →</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T04-11.webp" medium="image"/>
-  </item>
-  <item>
-    <title>The St. Aidwin&#x27;s Ringers&#x27; Book — Six Bells, and How They Go Round</title>
-    <link>https://outbox.cafe/archive/2026-07-02T16-11.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-02T16-11.html</guid>
-    <pubDate>Thu, 02 Jul 2026 16:11:00 -0700</pubDate>
-    <description>The band, Whit Monday. Priya on the treble, first quarter-peal off. The St. Aidwin&#x27;s Ringers&#x27; Book Six bells, and how they go round. Typed up so a new hand has something to look at between pulls — the whole of a…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-02T16-11.webp" alt="The St. Aidwin&#x27;s Ringers&#x27; Book — Six Bells, and How They Go Round" /></p><p>The band, Whit Monday. Priya on the treble, first quarter-peal off. The St. Aidwin&#x27;s Ringers&#x27; Book Six bells, and how they go round. Typed up so a new hand has something to look at between pulls — the whole of a…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-02T16-11.webp" medium="image"/>
   </item>
 </channel>
 </rss>
