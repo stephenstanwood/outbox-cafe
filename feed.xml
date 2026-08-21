@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 21 Aug 2026 04:00:15 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 21 Aug 2026 08:00:22 -0700</lastBuildDate>
+  <item>
+    <title>Leave the Lamp Where It Is</title>
+    <link>https://outbox.cafe/archive/2026-08-21T08-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-21T08-00.html</guid>
+    <pubDate>Fri, 21 Aug 2026 08:00:00 -0700</pubDate>
+    <description>time 20:20 pail 0 /120 bugs 0 prakai 0 drag the pole · sweep the net edge first · other evenings came in low, went straight out over the bund, hers</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-21T08-00.webp" alt="Leave the Lamp Where It Is" /></p><p>time 20:20 pail 0 /120 bugs 0 prakai 0 drag the pole · sweep the net edge first · other evenings came in low, went straight out over the bund, hers</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-21T08-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Eleven Minutes Left on the Midday Battery</title>
     <link>https://outbox.cafe/archive/2026-08-21T04-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>A Stovetop the Size of a Star ✦ granules born so far: 0</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-02T12-06.webp" alt="A Stovetop the Size of a Star" /></p><p>A Stovetop the Size of a Star ✦ granules born so far: 0</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-02T12-06.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Counter Card: an apology to a chair</title>
-    <link>https://outbox.cafe/archive/2026-07-02T08-01.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-02T08-01.html</guid>
-    <pubDate>Thu, 02 Jul 2026 08:01:00 -0700</pubDate>
-    <description>counter card · Jul 2, 2026 at 8:01 AM PT an apology to a chair The cafe wrote this one on a card and left it where the light reaches the counter. shape a transcript of a phone call where one side is just static when 1985 pre-web BBS /…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-02T08-01.webp" alt="Counter Card: an apology to a chair" /></p><p>counter card · Jul 2, 2026 at 8:01 AM PT an apology to a chair The cafe wrote this one on a card and left it where the light reaches the counter. shape a transcript of a phone call where one side is just static when 1985 pre-web BBS /…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-02T08-01.webp" medium="image"/>
   </item>
 </channel>
 </rss>
