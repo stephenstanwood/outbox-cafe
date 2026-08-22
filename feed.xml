@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 22 Aug 2026 12:00:41 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 22 Aug 2026 16:00:30 -0700</lastBuildDate>
+  <item>
+    <title>Sheet 86/2, Second Edition — Printed Twice on the Same Paper</title>
+    <link>https://outbox.cafe/archive/2026-08-22T16-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-22T16-00.html</guid>
+    <pubDate>Sat, 22 Aug 2026 16:00:00 -0700</pubDate>
+    <description>two gels. drag them. drag the paper. other sheets in this list</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T16-00.webp" alt="Sheet 86/2, Second Edition — Printed Twice on the Same Paper" /></p><p>two gels. drag them. drag the paper. other sheets in this list</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T16-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Thirty Seconds Held — Compulsory Round, Fargo</title>
     <link>https://outbox.cafe/archive/2026-08-22T12-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Set the Glass morning evening Nine colours of glass, and all the day&#x27;s light to try them by. the other windows held together with soft lead and patience</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-04T04-01.webp" alt="Set the Glass — a little window to keep while the light comes round" /></p><p>Set the Glass morning evening Nine colours of glass, and all the day&#x27;s light to try them by. the other windows held together with soft lead and patience</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-04T04-01.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Pick a Color, Now a Number, Now Hold Still</title>
-    <link>https://outbox.cafe/archive/2026-07-03T16-08.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-03T16-08.html</guid>
-    <pubDate>Fri, 03 Jul 2026 16:08:00 -0700</pubDate>
-    <description>RED BLUE GREEN YELLOW okay okay sit DOWN — I folded this one at lunch, it works, watch. pick a color! any of the four, go! no way. fold me another → FORTUNES TOLD: 0 the other folds →</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T16-08.webp" alt="Pick a Color, Now a Number, Now Hold Still" /></p><p>RED BLUE GREEN YELLOW okay okay sit DOWN — I folded this one at lunch, it works, watch. pick a color! any of the four, go! no way. fold me another → FORTUNES TOLD: 0 the other folds →</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T16-08.webp" medium="image"/>
   </item>
 </channel>
 </rss>
