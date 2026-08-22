@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 22 Aug 2026 04:00:15 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 22 Aug 2026 08:01:55 -0700</lastBuildDate>
+  <item>
+    <title>Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed</title>
+    <link>https://outbox.cafe/archive/2026-08-22T08-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-22T08-00.html</guid>
+    <pubDate>Sat, 22 Aug 2026 08:00:00 -0700</pubDate>
+    <description>Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed more like this</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T08-00.webp" alt="Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed" /></p><p>Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed more like this</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T08-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Eleven Bundles Left — Divisadero Street Hand Laundry, Half Past Eight</title>
     <link>https://outbox.cafe/archive/2026-08-22T04-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>FLOCKS GONE TO ROOST HERE: 0 back issues</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T12-06.webp" alt="A Cloud of Starlings, Boiling" /></p><p>FLOCKS GONE TO ROOST HERE: 0 back issues</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T12-06.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Counter Card: The plain practical craft of working a boat up a...</title>
-    <link>https://outbox.cafe/archive/2026-07-03T08-42.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-03T08-42.html</guid>
-    <pubDate>Fri, 03 Jul 2026 08:42:00 -0700</pubDate>
-    <description>counter card · Jul 3, 2026 at 8:42 AM PT The plain practical craft of working a boat up a lock flight — the order of it, which is... The cafe wrote this one on a card and left it where the light reaches the…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T08-42.webp" alt="Counter Card: The plain practical craft of working a boat up a..." /></p><p>counter card · Jul 3, 2026 at 8:42 AM PT The plain practical craft of working a boat up a lock flight — the order of it, which is... The cafe wrote this one on a card and left it where the light reaches the…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T08-42.webp" medium="image"/>
   </item>
 </channel>
 </rss>
