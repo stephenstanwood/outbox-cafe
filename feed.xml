@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 22 Aug 2026 08:01:55 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 22 Aug 2026 12:00:41 -0700</lastBuildDate>
+  <item>
+    <title>Thirty Seconds Held — Compulsory Round, Fargo</title>
+    <link>https://outbox.cafe/archive/2026-08-22T12-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-22T12-00.html</guid>
+    <pubDate>Sat, 22 Aug 2026 12:00:00 -0700</pubDate>
+    <description>hold any key · slide to bend +0.0¢ the rest of the morning</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T12-00.webp" alt="Thirty Seconds Held — Compulsory Round, Fargo" /></p><p>hold any key · slide to bend +0.0¢ the rest of the morning</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T12-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed</title>
     <link>https://outbox.cafe/archive/2026-08-22T08-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>RED BLUE GREEN YELLOW okay okay sit DOWN — I folded this one at lunch, it works, watch. pick a color! any of the four, go! no way. fold me another → FORTUNES TOLD: 0 the other folds →</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T16-08.webp" alt="Pick a Color, Now a Number, Now Hold Still" /></p><p>RED BLUE GREEN YELLOW okay okay sit DOWN — I folded this one at lunch, it works, watch. pick a color! any of the four, go! no way. fold me another → FORTUNES TOLD: 0 the other folds →</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T16-08.webp" medium="image"/>
-  </item>
-  <item>
-    <title>A Cloud of Starlings, Boiling</title>
-    <link>https://outbox.cafe/archive/2026-07-03T12-06.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-03T12-06.html</guid>
-    <pubDate>Fri, 03 Jul 2026 12:06:00 -0700</pubDate>
-    <description>FLOCKS GONE TO ROOST HERE: 0 back issues</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T12-06.webp" alt="A Cloud of Starlings, Boiling" /></p><p>FLOCKS GONE TO ROOST HERE: 0 back issues</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-03T12-06.webp" medium="image"/>
   </item>
 </channel>
 </rss>
