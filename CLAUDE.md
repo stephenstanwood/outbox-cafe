@@ -74,6 +74,29 @@ Affects `scripts/cat_signal.py` and any other direct Discord API call we add.
 
 Currently `0 4,8,12,16 * * *` on the Mini — 4 gens/day at 4am, 8am, 12pm, 4pm PT. Single-flight lock prevents pileup. Past schedules used: `*/10 * * * *` (stash mode during Max usage cycles), `0 * * * *` (hourly); the flip-to-hourly helper script from that era has been deleted.
 
+### crontab writes hang on this Mini — new schedules go via launchd (2026-08-25)
+
+`crontab -l` reads fine, but `crontab <file>` blocks forever on a macOS
+TCC/Full-Disk-Access prompt a non-interactive session can't answer (verified
+2026-08-25 inside and outside the sandbox; the crontab survived intact after
+each attempt; timestamped backup at `/tmp/crontab.backup.20260825-130837`).
+Existing cron entries keep firing — only WRITES are blocked.
+
+For a new or changed schedule, in order of preference:
+
+1. Hook into an already-installed runner when the timing fits — Batch 24's
+   ritual prep rides `run-nightly.sh` for exactly this reason.
+2. Install a launchd agent: copy
+   `scripts/launchd/dev.stanwood.outbox-TEMPLATE.plist` to
+   `~/Library/LaunchAgents/dev.stanwood.outbox-<job>.plist`, fill in
+   label/script/schedule/log, then
+   `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/dev.stanwood.outbox-<job>.plist`.
+   The Mini already runs ~40 `dev.stanwood.*` agents this way; launchd
+   installs don't hit the TCC prompt.
+3. A true crontab edit needs Stephen at the keyboard (or a Full Disk Access
+   grant to whatever runs the session) — flag it as his to-do; never retry
+   the hang.
+
 ### Gen runner pulls must autostash
 
 `scripts/run-on-mini.sh` must use `git pull --rebase --autostash`. The nightly
