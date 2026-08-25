@@ -28,7 +28,6 @@ import html as _html
 import json
 import os
 import re
-import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -36,8 +35,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-from lib.llm import claude_cmd
-from lib import bsky, tumblr
+from lib.llm import run_claude, usage_limited
+from lib import bsky, ritual_cache, tumblr
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -131,54 +130,73 @@ def _act_posted_today(act: int) -> bool:
 RETRY_SLEEPS = (45, 90, 180)
 
 
-def _generate_act(act: int, max_tries: int = 4) -> str | None:
+def extract_act(act: int, out: str) -> str | None:
+    """Pull one usable act line out of raw model output, or None.
+
+    Kept separate from the call loop so the weekday prep run
+    (`scripts/ritual_prep.py`) validates a cached act — including the act-1
+    "must still be gibberish" check — against exactly the same rules this
+    script would have applied on Saturday.
+    """
+    # First non-empty line; strip quotes
+    for raw in (out or "").strip().splitlines():
+        line = raw.strip()
+        line = re.sub(r"^[\"'`]+|[\"'`]+$", "", line)
+        if not line:
+            continue
+        # Must end with —Pancake (or close variant)
+        if "Pancake" not in line:
+            continue
+        if len(line) > 280:
+            continue
+        # Act 1 sanity: must not contain too many real-looking words
+        if act == 1:
+            # Reject if too "sentence-like" (e.g., has actual periods or common words besides "asdf"-like)
+            if re.search(r"\b(the|and|cat|cafe|sunbeam|warm)\b", line, re.IGNORECASE):
+                print(f"[pancake-1] rejected (too word-like): {line!r}", file=sys.stderr)
+                continue
+        return line
+    return None
+
+
+def generate_act_live(act: int, max_tries: int = 4) -> str | None:
     import time
     prompt = ACT_PROMPTS[act]
     # opus now (Max OAuth = $0) — short outputs, but the best model is free
     for attempt in range(max_tries):
         if attempt > 0:
+            # A spent weekly window won't clear mid-loop; don't sleep ~6 min to learn that.
+            hint = usage_limited("opus")
+            if hint:
+                print(f"[pancake-{act}] claude usage limit (resets {hint}) — not retrying", file=sys.stderr)
+                break
             delay = RETRY_SLEEPS[min(attempt - 1, len(RETRY_SLEEPS) - 1)]
             print(f"[pancake-{act}] retrying in {delay}s", file=sys.stderr)
             time.sleep(delay)
-        try:
-            result = subprocess.run(
-                claude_cmd("opus"),
-                input=prompt,
-                capture_output=True,
-                text=True,
-                timeout=60,
-            )
-        except Exception as e:
-            print(f"[pancake-{act}] claude failed try {attempt+1}: {e}", file=sys.stderr)
+        res = run_claude(prompt, model="opus", timeout=60)
+        if not res.ok:
+            print(res.log_line(f"pancake-{act}"), file=sys.stderr)
             continue
-        if result.returncode != 0:
-            print(
-                f"[pancake-{act}] claude exit {result.returncode}"
-                f" stderr={result.stderr[:300]!r} stdout={result.stdout[:300]!r}",
-                file=sys.stderr,
-            )
-            continue
-        out = (result.stdout or "").strip()
-        # First non-empty line; strip quotes
-        for raw in out.splitlines():
-            line = raw.strip()
-            line = re.sub(r"^[\"'`]+|[\"'`]+$", "", line)
-            if not line:
-                continue
-            # Must end with —Pancake (or close variant)
-            if "Pancake" not in line:
-                continue
-            if len(line) > 280:
-                continue
-            # Act 1 sanity: must not contain too many real-looking words
-            if act == 1:
-                # Reject if too "sentence-like" (e.g., has actual periods or common words besides "asdf"-like)
-                if re.search(r"\b(the|and|cat|cafe|sunbeam|warm)\b", line, re.IGNORECASE):
-                    print(f"[pancake-1] rejected (too word-like): {line!r}", file=sys.stderr)
-                    continue
+        line = extract_act(act, res.text)
+        if line:
             return line
-        print(f"[pancake-{act}] no usable output try {attempt+1}: {out[:160]!r}", file=sys.stderr)
+        print(f"[pancake-{act}] no usable output try {attempt+1}: {res.text[:160]!r}", file=sys.stderr)
     return None
+
+
+def _generate_act(act: int, max_tries: int = 4) -> str | None:
+    """This act's line — from the ritual drawer if prep filled it, else live.
+
+    All three acts are independent prompts (act 2 never reads act 1), so the
+    whole Saturday sequence can be written Monday and posted across the day.
+    See scripts/lib/ritual_cache.py.
+    """
+    cached = ritual_cache.take(f"pancake_{act}")
+    if cached:
+        print(f"[pancake-{act}] using this week's pre-generated act from the ritual drawer", file=sys.stderr)
+        return cached
+    print(f"[pancake-{act}] ritual drawer empty — generating live", file=sys.stderr)
+    return generate_act_live(act, max_tries=max_tries)
 
 
 # ---------- Bsky ----------

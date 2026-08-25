@@ -98,6 +98,37 @@ heartbeat is the priority. (Before 2026-06-30 the net covered only the weekly-li
 case; a timeout-exhausted gen used to `return 2` and go dark — that silent slot
 tripped the heartbeat on the missed 4pm 6/29 orrery-puzzle gen.)
 
+### Weekend rituals must NEVER call Claude on the day (2026-08-25)
+
+The Claude weekly usage window resets **Monday 12am PT**. Four gens/day, each
+rolling multiple candidates, routinely spend it by midweek. Every weekly ritual
+posts on the weekend — Pancake Sat 7am/1pm/7pm, slip Sun 9:06am, Doris Sun
+3:06pm — so generating at post time meant asking for tokens at the one moment of
+the week there were reliably none.
+
+All three died **five consecutive weekends** (2026-07-25 → 2026-08-23), every
+failure logging `You've hit your weekly limit`. Nothing alerted: cat-signal DMs
+are off by default and the heartbeat only watches `drop:` commits, which kept
+landing perfectly. Mr. Quiet and Doris are the *top two* voices by engagement
+(1.269× / 1.188× in the nightly reflection) and both were silent for over a month.
+
+Fix: separate *writing the words* from *posting them*. `scripts/ritual_prep.py`
+fills `data/ritual_cache.json` (gitignored, ISO-week keyed) nightly from
+`run-nightly.sh` at 2:30am — Monday 2:30am is ~2.5h past the reset, the freshest
+the window ever is. Each ritual calls `ritual_cache.take(...)` and posts with
+zero Claude calls; live generation stays as the fallback. Nightly runs are a
+no-op once the week is filled, so a failed night self-heals.
+
+**Rules for any future recurring ritual:** if it fires Fri–Sun, pre-generate it
+on a weeknight — never at post time. Add its item to `ritual_cache.ITEMS` and a
+spec in `ritual_prep._specs()`. Keep the prompt and validator in the ritual's own
+module and *import* them into the prep specs so the two can't drift. The nightly
+digest warns Thu-onward if the drawer is short, so this can't go quiet again.
+
+Related: the rituals used to sleep through a 45/90/180s backoff before
+discovering a cap that cannot clear. They now check `usage_limited(model)` and
+bail after the first capped try.
+
 ### Weekly ritual crons run at :06 (2026-06-09)
 
 Slip is `6 9 * * 0`, Doris is `6 15 * * 0` — staggered off the :00 grid the

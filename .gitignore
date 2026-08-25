@@ -71,3 +71,8 @@ data/reserve/
 # purpose: everything tracked in this repo deploys to outbox.cafe as a public
 # file, and the Mini's gen cron commits with `git add -A`.
 /AGENTS.md
+
+# Weekend ritual drawer — text pre-generated on a weekday so the Sat/Sun rituals
+# never need Claude on the day (the weekly window is routinely spent by then).
+# Per-Mini runtime state; tracking it would dirty the tree the gen runner rebases.
+data/ritual_cache.json

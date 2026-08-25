@@ -24,7 +24,6 @@ import html as _html
 import json
 import os
 import re
-import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -32,7 +31,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-from lib.llm import claude_cmd
+from lib.llm import run_claude, usage_limited
+from lib import ritual_cache
 from lib import tumblr
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -82,40 +82,58 @@ OUTPUT THE COLUMN ONLY. No preamble. No "Sure, here's the column:". No quotes ar
 RETRY_SLEEPS = (45, 90, 180)
 
 
-def _generate_column(model: str = "opus", max_tries: int = 4) -> str | None:
+def extract_column(out: str) -> str | None:
+    """Clean the column out of raw model output, or None if it doesn't qualify.
+
+    Kept separate from the call loop so the weekday prep run
+    (`scripts/ritual_prep.py`) validates a cached column against exactly the
+    same rules this script would have applied on Sunday afternoon.
+    """
+    out = (out or "").strip()
+    # Strip any wrapping fences
+    out = re.sub(r"^```[a-z]*\s*", "", out)
+    out = re.sub(r"\s*```\s*$", "", out)
+    # Quick sanity: must contain "—Doris" or "-Doris" and at least 200 chars
+    if "Doris" in out and len(out) >= 200:
+        return out
+    return None
+
+
+def generate_column_live(model: str = "opus", max_tries: int = 4) -> str | None:
     import time
     for attempt in range(max_tries):
         if attempt > 0:
+            # A spent weekly window won't clear mid-loop; don't sleep ~6 min to learn that.
+            hint = usage_limited(model)
+            if hint:
+                print(f"[muffin] claude usage limit (resets {hint}) — not retrying", file=sys.stderr)
+                break
             delay = RETRY_SLEEPS[min(attempt - 1, len(RETRY_SLEEPS) - 1)]
             print(f"[muffin] retrying in {delay}s", file=sys.stderr)
             time.sleep(delay)
-        try:
-            result = subprocess.run(
-                claude_cmd(model),
-                input=COLUMN_PROMPT,
-                capture_output=True,
-                text=True,
-                timeout=180,
-            )
-        except Exception as e:
-            print(f"[muffin] claude failed try {attempt+1}: {e}", file=sys.stderr)
+        res = run_claude(COLUMN_PROMPT, model=model, timeout=180)
+        if not res.ok:
+            print(res.log_line("muffin"), file=sys.stderr)
             continue
-        if result.returncode != 0:
-            print(
-                f"[muffin] claude exit {result.returncode}"
-                f" stderr={result.stderr[:300]!r} stdout={result.stdout[:300]!r}",
-                file=sys.stderr,
-            )
-            continue
-        out = (result.stdout or "").strip()
-        # Strip any wrapping fences
-        out = re.sub(r"^```[a-z]*\s*", "", out)
-        out = re.sub(r"\s*```\s*$", "", out)
-        # Quick sanity: must contain "—Doris" or "-Doris" and at least 200 chars
-        if "Doris" in out and len(out) >= 200:
-            return out
-        print(f"[muffin] output too short or missing signoff (try {attempt+1}): {out[:160]!r}", file=sys.stderr)
+        column = extract_column(res.text)
+        if column:
+            return column
+        print(f"[muffin] output too short or missing signoff (try {attempt+1}): {res.text[:160]!r}", file=sys.stderr)
     return None
+
+
+def _generate_column(model: str = "opus", max_tries: int = 4) -> str | None:
+    """This week's column — from the ritual drawer if prep filled it, else live.
+
+    The drawer is the normal path: it was filled Monday, when the weekly usage
+    window was fresh. See scripts/lib/ritual_cache.py.
+    """
+    cached = ritual_cache.take("doris")
+    if cached:
+        print("[muffin] using this week's pre-generated column from the ritual drawer", file=sys.stderr)
+        return cached
+    print("[muffin] ritual drawer empty — generating live", file=sys.stderr)
+    return generate_column_live(model=model, max_tries=max_tries)
 
 
 def _split_title_and_body(text: str) -> tuple[str, str]:

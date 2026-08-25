@@ -31,7 +31,6 @@ import json
 import os
 import random
 import re
-import subprocess
 import sys
 import urllib.error
 import urllib.request
@@ -45,8 +44,8 @@ sys.path.insert(0, str(SCRIPT_DIR))
 ROOT = SCRIPT_DIR.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
 
-from lib.llm import claude_cmd
-from lib import bsky, tumblr
+from lib.llm import run_claude, usage_limited
+from lib import bsky, ritual_cache, tumblr
 SLIPS_DIR = ROOT / "archive" / "slips"
 SLIPS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -94,52 +93,68 @@ Output: just the line. Nothing else."""
 RETRY_SLEEPS = (45, 90, 180)
 
 
-def _generate_aphorism(model: str = "opus", max_tries: int = 4) -> str | None:
+def extract_aphorism(out: str) -> str | None:
+    """Pull ONE clean slip line out of raw model output, or None.
+
+    Kept separate from the call loop so the weekday prep run
+    (`scripts/ritual_prep.py`) validates a cached line against exactly the same
+    rules this script would have applied on Sunday morning.
+    """
+    for raw_line in (out or "").strip().splitlines():
+        line = raw_line.strip()
+        line = re.sub(r"^[\"'`*_>]+|[\"'`*_]+$", "", line).strip()
+        line = re.sub(r"^```[a-z]*\s*", "", line)
+        line = re.sub(r"\s*```\s*$", "", line)
+        # Reject obvious prefixes
+        if re.match(r"^(here|slip|today|aphorism|line)[:.\s]", line, re.IGNORECASE):
+            continue
+        # Reject sign-offs
+        if re.search(r"—\s*Mr\.\s*Quiet|\bMr\.?\s*Quiet\s*$", line):
+            continue
+        # Reject if too short or too long
+        if 8 <= len(line) <= 110 and "!" not in line:
+            return line
+    return None
+
+
+def generate_aphorism_live(model: str = "opus", max_tries: int = 4) -> str | None:
     """Call Claude headless and return ONE clean aphorism line, or None."""
     import time
     for attempt in range(max_tries):
         if attempt > 0:
+            # A spent weekly window will not clear inside a retry loop, and the
+            # backoff is ~6 minutes of sleeping to find that out. Bail instead.
+            hint = usage_limited(model)
+            if hint:
+                print(f"[slip] claude usage limit (resets {hint}) — not retrying", file=sys.stderr)
+                break
             delay = RETRY_SLEEPS[min(attempt - 1, len(RETRY_SLEEPS) - 1)]
             print(f"[slip] retrying in {delay}s", file=sys.stderr)
             time.sleep(delay)
-        try:
-            result = subprocess.run(
-                claude_cmd(model),
-                input=APHORISM_PROMPT,
-                capture_output=True,
-                text=True,
-                timeout=120,
-            )
-        except Exception as e:
-            print(f"[slip] claude call failed (try {attempt+1}): {e}", file=sys.stderr)
+        res = run_claude(APHORISM_PROMPT, model=model, timeout=120)
+        if not res.ok:
+            print(res.log_line("slip"), file=sys.stderr)
             continue
-        if result.returncode != 0:
-            # Log BOTH streams — the CLI sometimes puts the real error on stdout,
-            # and `exit 1` with empty stderr is undebuggable (see 5/24, 6/7 logs).
-            print(
-                f"[slip] claude exit {result.returncode}"
-                f" stderr={result.stderr[:300]!r} stdout={result.stdout[:300]!r}",
-                file=sys.stderr,
-            )
-            continue
-        out = (result.stdout or "").strip()
-        # Pull the first non-empty line, strip quotes/fences/sign-offs
-        for raw_line in out.splitlines():
-            line = raw_line.strip()
-            line = re.sub(r"^[\"'`*_>]+|[\"'`*_]+$", "", line).strip()
-            line = re.sub(r"^```[a-z]*\s*", "", line)
-            line = re.sub(r"\s*```\s*$", "", line)
-            # Reject obvious prefixes
-            if re.match(r"^(here|slip|today|aphorism|line)[:.\s]", line, re.IGNORECASE):
-                continue
-            # Reject sign-offs
-            if re.search(r"—\s*Mr\.\s*Quiet|\bMr\.?\s*Quiet\s*$", line):
-                continue
-            # Reject if too short or too long
-            if 8 <= len(line) <= 110 and "!" not in line:
-                return line
-        print(f"[slip] no usable line in output (try {attempt+1}); raw: {out[:200]!r}", file=sys.stderr)
+        line = extract_aphorism(res.text)
+        if line:
+            return line
+        print(f"[slip] no usable line in output (try {attempt+1}); raw: {res.text[:200]!r}", file=sys.stderr)
     return None
+
+
+def _generate_aphorism(model: str = "opus", max_tries: int = 4) -> str | None:
+    """This week's line — from the ritual drawer if prep filled it, else live.
+
+    The drawer is the normal path: it was filled Monday, when the weekly usage
+    window was fresh. Live generation stays as the fallback for a week where
+    prep never ran. See scripts/lib/ritual_cache.py.
+    """
+    cached = ritual_cache.take("slip")
+    if cached:
+        print("[slip] using this week's pre-generated line from the ritual drawer", file=sys.stderr)
+        return cached
+    print("[slip] ritual drawer empty — generating live", file=sys.stderr)
+    return generate_aphorism_live(model=model, max_tries=max_tries)
 
 
 # ---------- Slip image rendering ----------

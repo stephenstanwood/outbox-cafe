@@ -21,7 +21,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from lib import bsky
+from lib import bsky, ritual_cache
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
@@ -268,6 +268,24 @@ def main() -> int:
         if bits:
             parts.append("")
             parts.append(f"⚠️ **gen health:** {', '.join(bits)} (of {health['logged']} logged)")
+
+    # Weekend rituals draw their text from the drawer that scripts/ritual_prep.py
+    # fills Mon–Fri. If it's still empty on the approach to the weekend, they'll
+    # have to generate live on the day — which is exactly how all three died five
+    # weekends running before anyone noticed. Quiet Mon–Wed (prep has runway),
+    # loud Thu onward, when a missing item is a real risk to Saturday.
+    try:
+        if datetime.now(tz=PT).weekday() >= 3:
+            gaps = ritual_cache.missing()
+            if gaps:
+                parts.append("")
+                parts.append(
+                    f"⚠️ **ritual drawer:** {len(gaps)} of {len(ritual_cache.ITEMS)} unfilled "
+                    f"({', '.join(gaps)}) — weekend rituals will fall back to live "
+                    f"generation. `scripts/ritual_prep.py` on the Mini."
+                )
+    except Exception as e:
+        print(f"[digest] ritual drawer check failed (non-fatal): {e}", file=sys.stderr)
 
     if reflection:
         parts.append("")
