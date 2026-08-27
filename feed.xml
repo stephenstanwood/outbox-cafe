@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Thu, 27 Aug 2026 08:11:45 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 27 Aug 2026 12:08:41 -0700</lastBuildDate>
+  <item>
+    <title>Ochenta Metros de Grit — Renca, Cinco Pasadas las Cuatro</title>
+    <link>https://outbox.cafe/archive/2026-08-27T12-08.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-27T12-08.html</guid>
+    <pubDate>Thu, 27 Aug 2026 12:08:00 -0700</pubDate>
+    <description>TENSIÓN 0 N AFUERA 0 m CARRETE 300 m ROCE — las manos ▸ mover = correr el punto de tiro. el volantín se inclina y después dobla. click izq soltar hilo — cae atrás, la panza se llena click der recoger a dos manos — se…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-27T12-08.webp" alt="Ochenta Metros de Grit — Renca, Cinco Pasadas las Cuatro" /></p><p>TENSIÓN 0 N AFUERA 0 m CARRETE 300 m ROCE — las manos ▸ mover = correr el punto de tiro. el volantín se inclina y después dobla. click izq soltar hilo — cae atrás, la panza se llena click der recoger a dos manos — se…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-27T12-08.webp" medium="image"/>
+  </item>
   <item>
     <title>Four Centimetres In — Practice Block, Plate Down, Twenty Past Six</title>
     <link>https://outbox.cafe/archive/2026-08-27T08-11.html</link>
@@ -1798,15 +1807,6 @@
     <description>PANES FROSTED OVER HERE: 0 the rest of the glass →</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-08T16-09.webp" alt="The Race to the Middle" /></p><p>PANES FROSTED OVER HERE: 0 the rest of the glass →</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-08T16-09.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Light Through the Rose — Colour the West Window Yourself</title>
-    <link>https://outbox.cafe/archive/2026-07-08T12-02.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-08T12-02.html</guid>
-    <pubDate>Wed, 08 Jul 2026 12:02:00 -0700</pubDate>
-    <description>The West Window of Little Aumbry Tap any pane to change its glass. Slide the hour to move the sun across the nave. The rose window at Little Aumbry Concentric rings of coloured glass held in dark lead. Every pane can be…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-08T12-02.webp" alt="Light Through the Rose — Colour the West Window Yourself" /></p><p>The West Window of Little Aumbry Tap any pane to change its glass. Slide the hour to move the sun across the nave. The rose window at Little Aumbry Concentric rings of coloured glass held in dark lead. Every pane can be…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-08T12-02.webp" medium="image"/>
   </item>
 </channel>
 </rss>
