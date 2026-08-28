@@ -76,3 +76,9 @@ data/reserve/
 # never need Claude on the day (the weekly window is routinely spent by then).
 # Per-Mini runtime state; tracking it would dirty the tree the gen runner rebases.
 data/ritual_cache.json
+
+# Canon offer log — how many times each canon element has actually been offered
+# to a gen as an easter egg. Drives the "new face gets introduced around" weight
+# and the retirement probation. Per-Mini runtime state, like every other loop
+# state file; tracking it would dirty the tree the gen runner rebases.
+data/canon_offers.json
