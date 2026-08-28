@@ -24,6 +24,8 @@ import re
 from datetime import datetime
 from pathlib import Path
 
+from lib import canon as canon_lib
+
 ROOT = Path(__file__).resolve().parent.parent
 SLIPS_DIR = ROOT / "archive" / "slips"
 COLUMNS_DIR = ROOT / "archive" / "columns"
@@ -31,7 +33,6 @@ SLIPS_PAGE = ROOT / "slips" / "index.html"
 COLUMNS_PAGE = ROOT / "columns" / "index.html"
 GUESTBOOK_DATA = ROOT / "data" / "guestbook.jsonl"
 GUESTBOOK_PAGE = ROOT / "guestbook" / "index.html"
-CANON_DATA = ROOT / "data" / "canon.json"
 ARCHIVE_DIR = ROOT / "archive"
 REGULARS_PAGE = ROOT / "regulars" / "index.html"
 
@@ -559,8 +560,12 @@ def rebuild_regulars_page() -> None:
     text of every archived page, so the index keeps itself honest — a name only
     appears here because it actually showed up somewhere.
     """
+    # Only the ACTIVE roster. A retired element never became a regular — that
+    # is the whole meaning of retirement — so it stops being listed here and
+    # stops being "expected back". Its one appearance stays on the page that
+    # made it; nothing is rewritten.
     try:
-        elements = json.loads(CANON_DATA.read_text()).get("elements") or []
+        elements = canon_lib.active()
     except Exception:
         elements = []
 
@@ -580,19 +585,10 @@ def rebuild_regulars_page() -> None:
         hint = (el.get("hint") or "").strip()
         if not name or not hint:
             continue
-        # `aka`, when set, lists the exact phrasings that count as a sighting and
-        # REPLACES the bare name — that's how an entry whose name is an ordinary
-        # first name ("Frederick" → "cousin Frederick") stays honest.
-        terms = [str(a) for a in (el.get("aka") or [])] or [name]
-        # A short one-word term is claimed by too much ordinary prose to count
-        # as a sighting on its own: "Pepper" would collect salt-and-pepper and
-        # Dr. Pepper, "Eugene" would collect Eugene, Oregon. Those simply go
-        # unseen until the entry earns an unambiguous phrasing.
-        terms = [t for t in terms if t and (" " in t or not t.isalpha() or len(t) >= 7)]
-        pats = [
-            re.compile(r"(?<![A-Za-z0-9])" + re.escape(t) + r"(?![A-Za-z0-9])", re.IGNORECASE)
-            for t in terms
-        ]
+        # What counts as a sighting lives in lib/canon.py, so this page, the
+        # scout's retirement verdict, and the offer weighting can never drift
+        # apart on the question of whether a name actually turned up.
+        pats = canon_lib.sighting_patterns(el)
         seen = [
             (fn, title) for fn, title, text in pages
             if any(p.search(text) for p in pats)

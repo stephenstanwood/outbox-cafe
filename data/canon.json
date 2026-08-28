@@ -3,147 +3,166 @@
   "elements": [
     {
       "name": "Pepper",
-      "hint": "a shy cat, missing since roughly 1998, last seen behind the bus stop on 4th; answers to nothing; sightings are occasionally reported and never confirmed"
+      "hint": "a shy cat, missing since roughly 1998, last seen behind the bus stop on 4th; answers to nothing; sightings are occasionally reported and never confirmed",
+      "seen": 0
     },
     {
       "name": "Eugene",
-      "hint": "a small spider who lives in a lobby corner; named by someone who had no authority to name him; unbothered; welcome"
+      "hint": "a small spider who lives in a lobby corner; named by someone who had no authority to name him; unbothered; welcome",
+      "seen": 0
     },
     {
       "name": "Roy",
-      "hint": "a late husband, fondly remembered; had exactly one hobby at a time (woodworking, jam, model trains, birdhouses); believed simpler is best; understood a load-bearing seam"
+      "hint": "a late husband, fondly remembered; had exactly one hobby at a time (woodworking, jam, model trains, birdhouses); believed simpler is best; understood a load-bearing seam",
+      "seen": 0
     },
     {
       "name": "Margot, age 4 ½",
       "hint": "a child artist of local renown; signs everything with her age; her work has a sun in the corner; ask about Margot",
       "aka": [
         "Margot, age 4"
-      ]
+      ],
+      "seen": 2
     },
     {
       "name": "Frederick",
       "hint": "somebody's cousin; claims to have been an extra in something; claims to detect flavors that are not there; claims a lot of things; sticks by every claim",
       "aka": [
         "cousin Frederick"
-      ]
+      ],
+      "seen": 1
     },
     {
       "name": "Mortimer",
-      "hint": "a kitten who dropped by once and is still talked about; whereabouts unknown; left an impression"
+      "hint": "a kitten who dropped by once and is still talked about; whereabouts unknown; left an impression",
+      "seen": 1
     },
     {
       "name": "Deli Mustard",
-      "hint": "a band of unverifiable genre; plays $3 shows; no cover for birthdays; sometimes billed with Half Karen and the Eugene Eugenes"
+      "hint": "a band of unverifiable genre; plays $3 shows; no cover for birthdays; sometimes billed with Half Karen and the Eugene Eugenes",
+      "seen": 0
     },
     {
       "name": "The Good Wok",
-      "hint": "a takeout place; delivery 11–9, cash or check; menu item C4 is ??? and costs $0.00; the almond cookies come six to a bag"
+      "hint": "a takeout place; delivery 11–9, cash or check; menu item C4 is ??? and costs $0.00; the almond cookies come six to a bag",
+      "seen": 1
     },
     {
       "name": "429 Persimmon Ln",
-      "hint": "an address where everything is perpetually for sale — the chairs, the photos, the lamps, a kettle; please don't haggle on the kettle"
+      "hint": "an address where everything is perpetually for sale — the chairs, the photos, the lamps, a kettle; please don't haggle on the kettle",
+      "seen": 1
     },
     {
       "name": "the sign above the door",
       "hint": "reads 'if the door is open, you are welcome inside.' — est. ~1962; quoted occasionally, attributed inconsistently",
       "aka": [
         "if the door is open"
-      ]
+      ],
+      "seen": 1
     },
     {
       "name": "the 3:47 light",
       "hint": "every day at 3:47 the light hits the second shelf exactly right; some schedules, timetables, and instructions quietly account for this",
       "aka": [
         "3:47"
-      ]
+      ],
+      "seen": 7
     },
     {
       "name": "555-PEPR",
-      "hint": "a phone number on tear-away tabs; calling it is never described; the tabs are always mostly taken"
-    },
-    {
-      "name": "Hempstead Brothers Shows",
-      "hint": "A small traveling carnival out of Frankfort, Indiana, est. 1903 — three wagons grown old; the kind of outfit that rolls into any town's fairgrounds for a week and is gone.",
-      "added": "2026-06-26",
-      "by": "scout"
+      "hint": "a phone number on tear-away tabs; calling it is never described; the tabs are always mostly taken",
+      "seen": 3
     },
     {
       "name": "the Ferncliff gravel pit",
       "hint": "An abandoned gravel pit behind the old cement works — a half-flooded local hangout where kids skip stones and nothing official ever happens.",
       "added": "2026-06-30",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Tindall's Confectionery",
       "hint": "A neighborhood sweets counter that's 'had a counter here a long while'; hand-writes honest notes on every chocolate. Drop in anywhere as the old candy shop everyone's grandmother swore by.",
       "added": "2026-07-01",
-      "by": "scout"
+      "by": "scout",
+      "seen": 1
     },
     {
       "name": "Slade Shallows",
       "hint": "A shallow river ford where the water's low enough to wade or pole across; the kind of crossing named on old maps, flyers, and directions given by memory.",
       "added": "2026-07-02",
-      "by": "scout"
+      "by": "scout",
+      "seen": 1
     },
     {
       "name": "St. Aidwin's",
       "hint": "The parish of a fictional English saint — turns up as a church, a school, a jumble sale or a bell tower; something's always going on down at St. Aidwin's.",
       "added": "2026-07-03",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Wren & Halloway",
       "hint": "Wren & Halloway, Instrument Makers — a maker's mark (est. 1879) that can be stamped or engraved on any well-built object, from a harmonograph to a barometer.",
       "added": "2026-07-05",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Ray Pruett",
       "hint": "The neighbor on Linden who'll come stand in your yard and tell you what bird you keep hearing, by ear, for free — you never have to see it, and neither does he.",
       "added": "2026-07-07",
-      "by": "scout"
+      "by": "scout",
+      "seen": 1
     },
     {
       "name": "Skipper the Seal",
       "hint": "A cheerful cartoon mascot seal from an old draw-this talent ad, the kind of drugstore-rack character that could grin from any flyer, matchbook, or napkin in any era.",
       "added": "2026-07-08",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Little Aumbry",
       "hint": "A small out-of-the-way parish village, the kind with one old church and a rose window; good for a return address, a bus stop, or where someone's aunt retired.",
       "added": "2026-07-09",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Small Weather, Passing",
       "hint": "A gentle old tune called 'Small Weather, Passing' — the kind of half-remembered melody that turns up in a music box, on a jukebox, or hummed absently by someone at a sink.",
       "added": "2026-07-10",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Old Haymaker's Switchel",
       "hint": "A fizzy ginger-molasses-and-cider tonic pop bottled by Hollis & Son, prized on hot dusty afternoons; 2¢ back on the empty.",
       "added": "2026-07-14",
-      "by": "scout"
+      "by": "scout",
+      "seen": 1
     },
     {
       "name": "Castellane's",
       "hint": "The grand old downtown department store, famous for the roof aviary worth the whole elevator ride — droppable in any era as a passing shopping-trip mention.",
       "added": "2026-07-15",
-      "by": "scout"
+      "by": "scout",
+      "seen": 2
     },
     {
       "name": "Prof. Orville Plumb",
       "hint": "A long-ago mail-order huckster whose ten-dime ventriloquism course still turns up in classifieds and attic trunks; nobody ever quite mastered lesson three.",
       "added": "2026-07-16",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Prewitt & Daughter",
       "hint": "A hand-run dahlia-tuber farm out past the county fairgrounds — Ada Prewitt sells, daughter Ruth does the digging; a mail-order name to drop in any era.",
       "added": "2026-07-18",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "the Deaver boys",
@@ -152,85 +171,117 @@
       "by": "scout",
       "aka": [
         "Deaver boys"
-      ]
+      ],
+      "seen": 0
     },
     {
       "name": "Ledbetter's Practical Kite-Craft",
       "hint": "A well-thumbed how-to book on kite-making, forever in a revised printing with the figures slightly wrong; drops onto any shelf, table, or reading list in any era.",
       "added": "2026-07-20",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Bett's Orchard",
       "hint": "A roadside cider-press stand (est. 1971) where you fill your own jug by the quart; the wasps, Bett notes, are non-paying customers.",
       "added": "2026-07-21",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Fenner's Mill",
       "hint": "A wind-driven grist mill where old Ossie Fenner grinds any hour — the sails never stop turning, so you can come by whenever.",
       "added": "2026-07-22",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Chef Pinder",
       "hint": "A homey fictional frozen TV-dinner brand ('Chef Pinder's Own'), forever promising a whole hot supper in 25 minutes; drop it into any pantry, ad, or memory.",
       "added": "2026-07-23",
-      "by": "scout"
+      "by": "scout",
+      "seen": 1
     },
     {
       "name": "Sunn's Prehistoric Gardens",
       "hint": "A family-built roadside dinosaur park off the highway — nine hand-painted fiberglass giants you're allowed to touch, and a cherry slush at the window.",
       "added": "2026-07-28",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Wilf",
       "hint": "The fellow who keeps his own rival tally column chalked up beside the official one; nobody disputes his numbers, only his handwriting, which is a disgrace.",
       "added": "2026-07-29",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "A. Vasconcelos",
       "hint": "The initialed name found stamped or inked on well-made small things — gauges, handles, tags — always with a date and never a first name, only ever the person who made it.",
       "added": "2026-08-07",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Bev Hallonquist",
       "hint": "The woman who can fix the thing everyone else has given up on, usually found with both arms inside it; keeps every shop order she's ever written, and knows exactly which drawer.",
       "added": "2026-08-11",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Bickel & Sons Marking Device Works",
       "hint": "A long-lived rubber-stamp and brass-die shop; its tiny maker's mark turns up on the handle of any stamp, and its impressions are always slightly crooked.",
       "added": "2026-08-12",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Ferd",
       "hint": "The maintenance man nobody ever sees; whatever's broken, worn, or leaking, Ferd says he'll get to it Monday. He has said this for some time.",
       "added": "2026-08-14",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Wickwire's",
       "hint": "A four-square downtown department store — six floors, tea room on the top — whose elevator indicator always reads a beat behind the car; turns up on bags, boxes, and charge accounts.",
       "added": "2026-08-17",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Col",
       "hint": "The person who taught you the trade, never present but constantly quoted — \"Col says I talk\" — always right, always mildly disapproving, and nobody ever explains who Col is.",
       "added": "2026-08-19",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     },
     {
       "name": "Kestrel & Fell",
       "hint": "A street corner known for a small tin of yellow chalk screwed to the brick — always full, never once stolen, and nobody keeps track of who marks it.",
       "added": "2026-08-20",
+      "by": "scout",
+      "seen": 0
+    },
+    {
+      "name": "Mrs Kellsall",
+      "hint": "The neighbour two doors up; owns a striking clock that has never once kept time, and asks favours at teatime so you say yes before you've thought about it.",
+      "added": "2026-08-28",
       "by": "scout"
+    }
+  ],
+  "retired": [
+    {
+      "name": "Hempstead Brothers Shows",
+      "hint": "A small traveling carnival out of Frankfort, Indiana, est. 1903 — three wagons grown old; the kind of outfit that rolls into any town's fairgrounds for a week and is gone.",
+      "added": "2026-06-26",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-08-28",
+      "offers": 0,
+      "waited": 250
     }
   ]
 }

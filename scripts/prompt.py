@@ -1,20 +1,42 @@
 """Build the generation prompt from a rolled spec."""
 from __future__ import annotations
 
-import json
 import random
 from pathlib import Path
 from typing import Any
 
+from lib import canon as canon_lib
+
 ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
-CANON_PATH = ROOT / "data" / "canon.json"
 
 # How often a gen is OFFERED one canon element as an optional easter egg.
 # Low on purpose: the cafe is "very very random" first — canon is seasoning,
 # not structure. At 4 gens/day this is ~5 offers/week, and the model is told
 # to skip the egg whenever it doesn't fit, so actual appearances are rarer.
 CANON_PROBABILITY = 0.18
+
+# Which element gets the offer. A uniform pick over a 40-name roster gave each
+# element roughly six chances a YEAR — far too few for anyone to become a
+# regular, which is exactly what the sightings showed: most scout-added names
+# appeared on the page that invented them and never again. So the roll is
+# weighted the way a room works. A new face gets introduced around until it has
+# had a real handful of chances; somebody who has already turned up again is
+# somebody people are glad to see; everyone else waits their turn.
+W_PROBATION = 6.0   # still earning its introductions
+W_RECURRED = 2.0    # has been picked up by a later page at least once
+W_BASE = 1.0
+
+
+def _canon_weight(el: dict, offers: dict) -> float:
+    if canon_lib.offers_for(el.get("name") or "", offers) < canon_lib.PROBATION_OFFERS:
+        return W_PROBATION
+    try:
+        if int(el.get("seen") or 0) >= 1:
+            return W_RECURRED
+    except (TypeError, ValueError):
+        pass
+    return W_BASE
 
 
 def _canon_block(rng: "random.Random | None" = None) -> str:
@@ -23,15 +45,24 @@ def _canon_block(rng: "random.Random | None" = None) -> str:
     if r.random() >= CANON_PROBABILITY:
         return ""
     try:
-        elements = json.loads(CANON_PATH.read_text()).get("elements") or []
+        elements = [e for e in canon_lib.active() if e.get("name") and e.get("hint")]
     except Exception:
         return ""
     if not elements:
         return ""
-    el = r.choice(elements)
+    try:
+        offers = canon_lib.load_offers()
+        weights = [_canon_weight(e, offers) for e in elements]
+        el = r.choices(elements, weights=weights, k=1)[0]
+    except Exception:
+        el = r.choice(elements)
     name, hint = el.get("name"), el.get("hint")
     if not name or not hint:
         return ""
+    # Record the chance this element just got. Retirement is a verdict on
+    # elements that were genuinely offered and never taken up, so it can only
+    # be fair if the offers are counted. Best-effort — never breaks a gen.
+    canon_lib.record_offer(str(name))
     return f"""
 CANON EASTER EGG (OPTIONAL)
 ===========================

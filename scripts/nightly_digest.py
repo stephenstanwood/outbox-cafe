@@ -209,10 +209,15 @@ def main() -> int:
     except Exception as e:
         print(f"[digest] reflect pass errored (non-fatal): {e}", file=sys.stderr)
 
-    # Canon scout — maybe yesterday invented somebody worth keeping.
-    new_canon = None
+    # Canon scout — refresh who's actually turning up, retire at most one name
+    # that never did, then maybe welcome somebody yesterday invented.
+    new_canon = retired_canon = None
     try:
-        from canon_scout import run as run_scout
+        from canon_scout import run as run_scout, refresh_and_retire
+        try:
+            retired_canon = refresh_and_retire()
+        except Exception as e:
+            print(f"[digest] canon retirement errored (non-fatal): {e}", file=sys.stderr)
         new_canon = run_scout()
     except Exception as e:
         print(f"[digest] canon scout errored (non-fatal): {e}", file=sys.stderr)
@@ -291,9 +296,14 @@ def main() -> int:
         parts.append("")
         parts.append(f"**reflection:** {reflection}")
 
-    if new_canon:
+    if new_canon or retired_canon:
         parts.append("")
-        parts.append(f"**canon:** the universe welcomed _{new_canon}_ (see data/canon.json)")
+        bits = []
+        if new_canon:
+            bits.append(f"the universe welcomed _{new_canon}_")
+        if retired_canon:
+            bits.append(f"_{retired_canon}_ never turned up again and left the roster")
+        parts.append(f"**canon:** {' · '.join(bits)} (see data/canon.json)")
 
     # Sunday extra: the week's top drops by social engagement, so flagging a
     # winner (→ spotlight / liked-gens log) doesn't require a log dive.
