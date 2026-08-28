@@ -171,6 +171,25 @@ The cafe's only UGC surface, pre-moderated. `/guestbook/` form → `api/sign.js`
 
 ~10% of gens roll a carte-blanche spec (`scripts/spec.py`): every dimension reads "builder's choice", the prompt drops to only the rules that always apply, and image prefetch is skipped (screenshot fallback covers social). `data/canon.json` is the cafe's recurring universe (Pepper, The Good Wok, 429 Persimmon Ln, ...); 18% of prompts offer one element as an optional easter egg. The nightly digest's canon scout (`scripts/canon_scout.py`) reads the day's gens and may promote at most ONE new element per night (cap 40).
 
+**Canon is a roster with turnover, not an append-only list (2026-08-28).** It
+filled to its cap of 40 on 2026-08-20 and the scout became a permanent no-op —
+`[canon] at cap (40) — not scouting`, every night, forever. Measuring it showed
+the real problem: a uniform pick over 40 names at an 18% offer rate gave each
+element ~0.018 offers/day, so **not one scout-added element had ever had even a
+single expected offer** and 26 of 40 had never been picked up by a later page.
+They were starving, not failing. `scripts/lib/canon.py` now owns the rules:
+`prompt.py` weights the roll (probation 6×, already-recurring 2×, else 1×) and
+records each offer to the gitignored `data/canon_offers.json`, and
+`canon_scout.refresh_and_retire()` runs nightly BEFORE `run()` to refresh each
+element's `seen` count and retire at most one that never turned up. Two
+invariants to preserve if you touch this: retirement fires **only at cap** and
+**only one per night**, so the roster can never fall more than one below cap and
+turnover is gated by the scout's promotion rate; and `run()` is scout-only, so
+calling both is the caller's job (calling `refresh_and_retire()` twice would
+cost an extra name a night). Recurrence deliberately excludes the birth page —
+a scout-promoted element is promoted *from* a page, so its first sighting proves
+nothing.
+
 ### Midnight cleanup (2026-05-19)
 
 `0 0 * * * scripts/run-cleanup.sh` wipes every bsky + tumblr post nightly. Pinned welcome on each platform is exempt. New day = fresh feed. The bsky engage loop no longer does its own probabilistic cleanup — midnight is the single canonical wipe. If the cron misses a night, posts pile up visibly until the next firing; no rolling rescue.
