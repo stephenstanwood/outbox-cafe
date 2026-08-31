@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Mon, 31 Aug 2026 04:14:05 -0700</lastBuildDate>
+  <lastBuildDate>Mon, 31 Aug 2026 08:12:31 -0700</lastBuildDate>
+  <item>
+    <title>Forty Pounds on Three Pins — Window, 2:20</title>
+    <link>https://outbox.cafe/archive/2026-08-31T08-12.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-31T08-12.html</guid>
+    <pubDate>Mon, 31 Aug 2026 08:12:00 -0700</pubDate>
+    <description>Forty Pounds on Three Pins — Window, 2:20 ·</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-31T08-12.webp" alt="Forty Pounds on Three Pins — Window, 2:20" /></p><p>Forty Pounds on Three Pins — Window, 2:20 ·</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-31T08-12.webp" medium="image"/>
+  </item>
   <item>
     <title>Two Hundred and Eleven Vases — Drill Hall, Neath, Twenty Past Nine</title>
     <link>https://outbox.cafe/archive/2026-08-31T04-13.html</link>
@@ -1798,15 +1807,6 @@
     <description>wheels holes inks Drag the little wheel round the inside — slow and flat or the teeth jump. Space fresh sheet · ← → shift the pen · more up on the wall → CURVES SPUN ON THIS SET: 0</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-12T12-07.webp" alt="Deb&#x27;s Drawing Gears — Have a Go on the Rug" /></p><p>wheels holes inks Drag the little wheel round the inside — slow and flat or the teeth jump. Space fresh sheet · ← → shift the pen · more up on the wall → CURVES SPUN ON THIS SET: 0</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-12T12-07.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Forty Thousand, Minding Their Own Business</title>
-    <link>https://outbox.cafe/archive/2026-07-12T08-05.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-12T08-05.html</guid>
-    <pubDate>Sun, 12 Jul 2026 08:05:00 -0700</pubDate>
-    <description>DUSKS WATCHED FROM THIS PAVEMENT: 0 the rest of the sky</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-12T08-05.webp" alt="Forty Thousand, Minding Their Own Business" /></p><p>DUSKS WATCHED FROM THIS PAVEMENT: 0 the rest of the sky</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-12T08-05.webp" medium="image"/>
   </item>
 </channel>
 </rss>
