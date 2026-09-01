@@ -104,6 +104,32 @@ canon scout can leave `data/canon.json` dirty before the next scheduled drop;
 plain `git pull --rebase` aborts before generation and wedged all four 2026-06-26
 gens until the runner was fixed.
 
+### The gen runner retries its pull, and aborts are logged (2026-09-01)
+
+`run-on-mini.sh` used to abort the whole run on a single failed `git pull`. On
+2026-09-01 the 4am gen died on one transient
+`ssh: connect to host github.com port 22: Undefined error: 0`, the cafe went
+**16h between drops**, and *nothing anywhere reported it*: the GitHub heartbeat's
+14h threshold has to tolerate the 12h overnight gap, so a missed 4am slot is
+exactly the failure it cannot see, and an abort that early leaves no
+`runs.jsonl` line for the nightly digest to notice. The digest's only gen alarm
+was `count == 0`, so three gens on a four-gen day read as an ordinary night.
+
+Two halves of the fix, and both matter:
+
+1. The pull now retries **3× with 15s/30s backoff** before giving up. A healthy
+   pull is still silent — output is captured and printed only on failure.
+2. Anything that kills a run before `generate.py` can write its own
+   `runs.jsonl` line appends to `data/aborted_runs.jsonl` (gitignored per-Mini
+   state) via `record_abort`. A hard non-zero `generate.py` exit records too.
+   The nightly digest reads it, and separately compares the gen count against
+   `GEN_SLOT_HOURS` — the cron's actual slots — so a **shortfall** now says
+   "3 gens in last 24h — ⚠️ 4 expected" instead of passing as a quiet day.
+
+**Rule for any future pre-generation step in the runner:** it must retry
+transient network failure and it must `record_abort` before exiting, or it
+reintroduces a silent missed drop. Bare `exit 1` in that script is a bug.
+
 ### Counter-card fallback (any total gen failure)
 
 When a gen can't produce real HTML — Claude weekly-capped

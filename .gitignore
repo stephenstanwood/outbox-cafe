@@ -82,3 +82,8 @@ data/ritual_cache.json
 # and the retirement probation. Per-Mini runtime state, like every other loop
 # state file; tracking it would dirty the tree the gen runner rebases.
 data/canon_offers.json
+
+# Aborted-run log — one JSON line whenever run-on-mini.sh dies before generate.py
+# can write its own runs.jsonl entry (network-dead pull, hard generate crash).
+# The nightly digest reads it so a missed drop can't pass as a quiet day.
+data/aborted_runs.jsonl

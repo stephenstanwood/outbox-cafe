@@ -17,7 +17,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, time as dtime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -27,6 +27,10 @@ ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_DIR = ROOT / "archive"
 HISTORY_PATH = ROOT / "data" / "history.jsonl"
 SIGNAL_STATE = ROOT / "data" / "cat_signal_state.json"
+ABORTED_RUNS = ROOT / "data" / "aborted_runs.jsonl"
+# The Mini's gen cron slots, PT. Used to notice a SHORTFALL — three gens on a
+# four-gen day used to read as a perfectly ordinary line in this digest.
+GEN_SLOT_HOURS = (4, 8, 12, 16)
 HELPER = Path(os.path.expanduser("~/.claude/scripts/post-to-tasks.sh"))
 PT = ZoneInfo("America/Los_Angeles")
 
@@ -170,6 +174,45 @@ def _top_drops_week(n: int = 3) -> list[tuple[str, str, float]]:
     return out
 
 
+def _expected_gens_last_24h() -> int:
+    """How many scheduled gen slots fall inside the last-24h window."""
+    now = datetime.now(tz=PT)
+    cutoff = now - timedelta(hours=24)
+    n = 0
+    day = cutoff.date()
+    while day <= now.date():
+        for h in GEN_SLOT_HOURS:
+            slot = datetime.combine(day, dtime(hour=h)).replace(tzinfo=PT)
+            if cutoff <= slot <= now:
+                n += 1
+        day += timedelta(days=1)
+    return n
+
+
+def _aborted_runs_last_24h() -> list[dict]:
+    """Runs that died before generate.py could log anything (see run-on-mini.sh)."""
+    if not ABORTED_RUNS.exists():
+        return []
+    cutoff = datetime.now(tz=PT) - timedelta(hours=24)
+    out: list[dict] = []
+    for line in ABORTED_RUNS.read_text(errors="ignore").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            e = json.loads(line)
+            dt = datetime.fromisoformat(e.get("ts", ""))
+        except Exception:
+            continue
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=PT)
+        if dt < cutoff:
+            continue
+        e["_dt"] = dt
+        out.append(e)
+    return out
+
+
 def _gen_health_last_24h() -> dict:
     """Summarize data/runs.jsonl over the last 24h: gens logged + failed posts + retries."""
     runs_path = ROOT / "data" / "runs.jsonl"
@@ -235,12 +278,29 @@ def main() -> int:
     parts.append(f"_{datetime.now(tz=PT).strftime('%a %b %d %Y · %H:%M PT')}_")
     parts.append("")
 
+    try:
+        expected = _expected_gens_last_24h()
+    except Exception:
+        expected = 0
+    try:
+        aborted = _aborted_runs_last_24h()
+    except Exception:
+        aborted = []
+
     if count == 0:
         parts.append("⚠️ **no gens in last 24h** — cron may be wedged")
     else:
-        parts.append(f"**{count} gens** in last 24h. recent titles:")
+        short = f" — ⚠️ **{expected} expected**" if expected and count < expected else ""
+        parts.append(f"**{count} gens** in last 24h{short}. recent titles:")
         for t in titles:
             parts.append(f"  · {t[:90]}")
+
+    if aborted:
+        parts.append("")
+        parts.append(f"⚠️ **{len(aborted)} run(s) aborted before generating:**")
+        for e in aborted[-4:]:
+            when = e["_dt"].strftime("%a %H:%M")
+            parts.append(f"  · {when} — {e.get('stage', '?')}: {str(e.get('detail', ''))[:120]}")
 
     parts.append("")
     if "error" in bsky:
