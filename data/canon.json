@@ -88,13 +88,6 @@
       "seen": 1
     },
     {
-      "name": "St. Aidwin's",
-      "hint": "The parish of a fictional English saint — turns up as a church, a school, a jumble sale or a bell tower; something's always going on down at St. Aidwin's.",
-      "added": "2026-07-03",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "Wren & Halloway",
       "hint": "Wren & Halloway, Instrument Makers — a maker's mark (est. 1879) that can be stamped or engraved on any well-built object, from a harmonograph to a barometer.",
       "added": "2026-07-05",
@@ -200,7 +193,7 @@
       "hint": "A family-built roadside dinosaur park off the highway — nine hand-painted fiberglass giants you're allowed to touch, and a cherry slush at the window.",
       "added": "2026-07-28",
       "by": "scout",
-      "seen": 0
+      "seen": 1
     },
     {
       "name": "Wilf",
@@ -269,6 +262,13 @@
       "name": "R. Ramanujam",
       "hint": "A clerk who keeps every ledger, list, and label in pencil because the roof has always leaked directly over his desk; two corrections circled, both to be believed.",
       "added": "2026-08-31",
+      "by": "scout",
+      "seen": 0
+    },
+    {
+      "name": "Frankenberry-Teague Stage Weather Co.",
+      "hint": "Kansas supplier of theatrical snow, rain, wind and fog, sold by the pound; their stenciled crates and stubborn price lists turn up in any basement, era, or back room.",
+      "added": "2026-09-01",
       "by": "scout"
     }
   ],
@@ -290,6 +290,16 @@
       "by": "scout",
       "seen": 0,
       "retired": "2026-08-29",
+      "offers": 0,
+      "waited": 236
+    },
+    {
+      "name": "St. Aidwin's",
+      "hint": "The parish of a fictional English saint — turns up as a church, a school, a jumble sale or a bell tower; something's always going on down at St. Aidwin's.",
+      "added": "2026-07-03",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-09-01",
       "offers": 0,
       "waited": 236
     }
