@@ -88,13 +88,6 @@
       "seen": 1
     },
     {
-      "name": "Wren & Halloway",
-      "hint": "Wren & Halloway, Instrument Makers — a maker's mark (est. 1879) that can be stamped or engraved on any well-built object, from a harmonograph to a barometer.",
-      "added": "2026-07-05",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "Ray Pruett",
       "hint": "The neighbor on Linden who'll come stand in your yard and tell you what bird you keep hearing, by ear, for free — you never have to see it, and neither does he.",
       "added": "2026-07-07",
@@ -269,7 +262,8 @@
       "name": "Frankenberry-Teague Stage Weather Co.",
       "hint": "Kansas supplier of theatrical snow, rain, wind and fog, sold by the pound; their stenciled crates and stubborn price lists turn up in any basement, era, or back room.",
       "added": "2026-09-01",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     }
   ],
   "retired": [
@@ -302,6 +296,16 @@
       "retired": "2026-09-01",
       "offers": 0,
       "waited": 236
+    },
+    {
+      "name": "Wren & Halloway",
+      "hint": "Wren & Halloway, Instrument Makers — a maker's mark (est. 1879) that can be stamped or engraved on any well-built object, from a harmonograph to a barometer.",
+      "added": "2026-07-05",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-09-02",
+      "offers": 0,
+      "waited": 231
     }
   ]
 }

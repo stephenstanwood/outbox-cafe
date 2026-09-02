@@ -966,25 +966,5 @@ console.log("half-point is the finest stroke that survives the press. anything u
 <!-- printer's note, Allentown, on the plate: line 7 keeps the star. nobody has told us why. we set it because it's on the film. -->
 
 <script src="/nav.js" defer></script>
-
-<script>
-(function () {
-  // Poll every 90s for new content. Reload when the title changes.
-  // Cron currently fires 4x/day (4am, 8am, noon, 4pm PT);
-  // the JS just notices whenever new content lands.
-  var initialTitle = document.title;
-  setInterval(function () {
-    fetch(window.location.pathname + '?_t=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) { return r.text(); })
-      .then(function (text) {
-        var m = text.match(/<title>([^<]+)<\/title>/);
-        if (m && m[1] !== initialTitle) {
-          window.location.reload();
-        }
-      })
-      .catch(function () {});
-  }, 90000);
-})();
-</script>
 </body>
 </html>
