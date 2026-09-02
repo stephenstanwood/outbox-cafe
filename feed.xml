@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 02 Sep 2026 08:12:45 -0700</lastBuildDate>
+  <lastBuildDate>Wed, 02 Sep 2026 12:07:21 -0700</lastBuildDate>
+  <item>
+    <title>Four a Second, Bulb Clamped to the Bench</title>
+    <link>https://outbox.cafe/archive/2026-09-02T12-07.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-02T12-07.html</guid>
+    <pubDate>Wed, 02 Sep 2026 12:07:00 -0700</pubDate>
+    <description>Four a Second, Bulb Clamped to the Bench .</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-02T12-07.webp" alt="Four a Second, Bulb Clamped to the Bench" /></p><p>Four a Second, Bulb Clamped to the Bench .</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-02T12-07.webp" medium="image"/>
+  </item>
   <item>
     <title>Sixty-Four Centimetre Repeat, Half-Drop — Book 84/1, Twenty Past Four</title>
     <link>https://outbox.cafe/archive/2026-09-02T08-12.html</link>
@@ -1798,15 +1807,6 @@
     <description>◀ PAGE 1 ▶ – – Punch a letter, then a number. Vic loaded these himself. QUEUE nothing dropped yet TUNES PUNCHED IN AT THIS BOOTH: 0 the rest of Vic&#x27;s strips › Rennick&#x27;s Grill · the box on the end…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-14T12-05.webp" alt="Rennick&#x27;s Wall-O-Matic — Fresh Strips, Nickels Dropping" /></p><p>◀ PAGE 1 ▶ – – Punch a letter, then a number. Vic loaded these himself. QUEUE nothing dropped yet TUNES PUNCHED IN AT THIS BOOTH: 0 the rest of Vic&#x27;s strips › Rennick&#x27;s Grill · the box on the end…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-14T12-05.webp" medium="image"/>
-  </item>
-  <item>
-    <title>The Wet Show — Oil Won&#x27;t Take the Water</title>
-    <link>https://outbox.cafe/archive/2026-07-14T08-04.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-14T08-04.html</guid>
-    <pubDate>Tue, 14 Jul 2026 08:04:00 -0700</pubDate>
-    <description>GLASSWING LIGHTS  ·  REEL 12 SETS RUN ON THIS WALL: 0 ← the other reels</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-14T08-04.webp" alt="The Wet Show — Oil Won&#x27;t Take the Water" /></p><p>GLASSWING LIGHTS  ·  REEL 12 SETS RUN ON THIS WALL: 0 ← the other reels</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-14T08-04.webp" medium="image"/>
   </item>
 </channel>
 </rss>
