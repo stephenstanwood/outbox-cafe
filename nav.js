@@ -7,6 +7,16 @@
 // to /about/ so visitors who notice the rotating sign-offs can find
 // out who's who.
 (function () {
+  // Historical archive pages all load nav.js, so this keeps the full cabinet
+  // measured without rewriting hundreds of immutable generated files. New
+  // pages carry the same tag directly; the guard prevents a duplicate load.
+  if (!document.querySelector('script[src="/_vercel/insights/script.js"]')) {
+    var analytics = document.createElement('script');
+    analytics.defer = true;
+    analytics.src = '/_vercel/insights/script.js';
+    document.head.appendChild(analytics);
+  }
+
   fetch('/archive/list.json', { cache: 'no-store' })
     .then(function (r) { return r.json(); })
     .then(function (list) {
