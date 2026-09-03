@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Thu, 03 Sep 2026 04:13:49 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 03 Sep 2026 08:09:36 -0700</lastBuildDate>
+  <item>
+    <title>Northgate Mall Information Desk — The Clock Above the Fountain</title>
+    <link>https://outbox.cafe/archive/2026-09-03T08-09.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-03T08-09.html</guid>
+    <pubDate>Thu, 03 Sep 2026 08:09:00 -0700</pubDate>
+    <description>gopher://northgate.mall.oh.us:70/1/desk/whistling NORTHGATE MALL INFORMATION DESK — LEVEL ONE, BY THE FOUNTAIN Desk staffed 10:00–21:00 weekdays · 10:00–18:00 Sunday Maintained by M. Ocampo,…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-03T08-09.webp" alt="Northgate Mall Information Desk — The Clock Above the Fountain" /></p><p>gopher://northgate.mall.oh.us:70/1/desk/whistling NORTHGATE MALL INFORMATION DESK — LEVEL ONE, BY THE FOUNTAIN Desk staffed 10:00–21:00 weekdays · 10:00–18:00 Sunday Maintained by M. Ocampo,…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-03T08-09.webp" medium="image"/>
+  </item>
   <item>
     <title>Réjeanne&#x27;s Third Frame Has a Four In It</title>
     <link>https://outbox.cafe/archive/2026-09-03T04-13.html</link>
@@ -1798,15 +1807,6 @@
     <description>Beat-Fringe — Kestrel &amp; Vane, Plate 14 Kestrel &amp; Vane · Optical Suite · Plate 14 Plates pulled in this edition: 0 the rest of the suite →</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-15T08-05.webp" alt="Beat-Fringe — Kestrel &amp;amp; Vane, Plate 14" /></p><p>Beat-Fringe — Kestrel &amp; Vane, Plate 14 Kestrel &amp; Vane · Optical Suite · Plate 14 Plates pulled in this edition: 0 the rest of the suite →</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-15T08-05.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Ferndike Wharf — Make Up The Pick-Up Goods</title>
-    <link>https://outbox.cafe/archive/2026-07-15T04-51.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-15T04-51.html</guid>
-    <pubDate>Wed, 15 Jul 2026 04:51:00 -0700</pubDate>
-    <description>Ferndike Wharf goods yard · pick-up goods, this afternoon A knot of punters lean over the rope. Baz has the controller warm in his hand and a fresh rake of wagons just set out on the boards. MAKE UP: TANK – OPEN – VAN – MINERAL – BRAKE,…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-15T04-51.webp" alt="Ferndike Wharf — Make Up The Pick-Up Goods" /></p><p>Ferndike Wharf goods yard · pick-up goods, this afternoon A knot of punters lean over the rope. Baz has the controller warm in his hand and a fresh rake of wagons just set out on the boards. MAKE UP: TANK – OPEN – VAN – MINERAL – BRAKE,…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-15T04-51.webp" medium="image"/>
   </item>
 </channel>
 </rss>
