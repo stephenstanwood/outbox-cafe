@@ -81,6 +81,22 @@ def inject_reload(html: str) -> str:
 
 
 NAV_SCRIPT_TAG = '\n<script src="/nav.js" defer></script>\n'
+ANALYTICS_SCRIPT_TAG = '\n<script defer src="/_vercel/insights/script.js"></script>\n'
+
+
+def inject_analytics(html: str) -> str:
+    """Insert Vercel Web Analytics in the document head. Idempotent."""
+    if 'src="/_vercel/insights/script.js"' in html:
+        return html
+    if re.search(r"</head\s*>", html, re.IGNORECASE):
+        return re.sub(
+            r"(</head\s*>)",
+            ANALYTICS_SCRIPT_TAG + r"\1",
+            html,
+            count=1,
+            flags=re.IGNORECASE,
+        )
+    return html
 
 
 def inject_nav(html: str) -> str:
@@ -903,6 +919,7 @@ def rebuild_cabinet() -> None:
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="outbox.cafe">
 <title>THE COLLECTION · outbox.cafe</title>
+<script defer src="/_vercel/insights/script.js"></script>
 <style>
   :root {{
     --ink: #1a1612;
@@ -2135,6 +2152,7 @@ def main() -> int:
     title_pre_og = extract_title(html) or archive_file.stem
     desc = _extract_snippet(html, max_chars=180)
     html = inject_og_tags(html, title_pre_og, archive_file.name, description=desc)
+    html = inject_analytics(html)
     # Archive entries get the nav.js chrome so visitors can flip ← → through history.
     archive_file.write_text(inject_nav(html))
     # Homepage adds the auto-reload script on top of nav (it watches for the next hour).

@@ -93,6 +93,7 @@ def _head(title: str, description: str, path: str, extra_css: str) -> str:
 <meta property="og:url" content="https://outbox.cafe{path}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="outbox.cafe">
+<script defer src="/_vercel/insights/script.js"></script>
 <style>{_BASE_CSS}{extra_css}</style>
 </head>
 <body>
