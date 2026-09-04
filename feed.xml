@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 04 Sep 2026 12:02:46 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 04 Sep 2026 16:11:55 -0700</lastBuildDate>
+  <item>
+    <title>Twenty Past Eight, Full Cycle, One R Out</title>
+    <link>https://outbox.cafe/archive/2026-09-04T16-11.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-04T16-11.html</guid>
+    <pubDate>Fri, 04 Sep 2026 16:11:00 -0700</pubDate>
+    <description>Twenty Past Eight, Full Cycle, One R Out archive</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-04T16-11.webp" alt="Twenty Past Eight, Full Cycle, One R Out" /></p><p>Twenty Past Eight, Full Cycle, One R Out archive</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-04T16-11.webp" medium="image"/>
+  </item>
   <item>
     <title>Gloria in Twelve Panes — A Rose Window You Can Turn</title>
     <link>https://outbox.cafe/archive/2026-09-04T12-02.html</link>
@@ -1798,15 +1807,6 @@
     <description>Ring the Change A little ring of eight, hung fresh this evening — pull one, or set the whole tower going. Tap a bell, or set the ring going below. Ring a Round Plain Hunt Queens Tittums Whittingtons Stand! Peal speed — slow…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T16-02.webp" alt="Ring the Change — A Little Ring of Eight for Idle Hands" /></p><p>Ring the Change A little ring of eight, hung fresh this evening — pull one, or set the whole tower going. Tap a bell, or set the ring going below. Ring a Round Plain Hunt Queens Tittums Whittingtons Stand! Peal speed — slow…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T16-02.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Fern, Split, Fern Again — a pane going over tonight</title>
-    <link>https://outbox.cafe/archive/2026-07-16T12-06.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-16T12-06.html</guid>
-    <pubDate>Thu, 16 Jul 2026 12:06:00 -0700</pubDate>
-    <description>PANES FROSTED OVER AT THIS WINDOW: 0 ✷   elsewhere on the sill</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T12-06.webp" alt="Fern, Split, Fern Again — a pane going over tonight" /></p><p>PANES FROSTED OVER AT THIS WINDOW: 0 ✷   elsewhere on the sill</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T12-06.webp" medium="image"/>
   </item>
 </channel>
 </rss>
