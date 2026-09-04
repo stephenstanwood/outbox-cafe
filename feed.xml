@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 04 Sep 2026 08:10:34 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 04 Sep 2026 12:02:46 -0700</lastBuildDate>
+  <item>
+    <title>Gloria in Twelve Panes — A Rose Window You Can Turn</title>
+    <link>https://outbox.cafe/archive/2026-09-04T12-02.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-04T12-02.html</guid>
+    <pubDate>Fri, 04 Sep 2026 12:02:00 -0700</pubDate>
+    <description>Gloria in Twelve Panes turn it with your thumb · every pane sings the sun at half past two The seventh pane is not ours. It came out of a smaller window that came down in a storm three valleys over, and the green is…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-04T12-02.webp" alt="Gloria in Twelve Panes — A Rose Window You Can Turn" /></p><p>Gloria in Twelve Panes turn it with your thumb · every pane sings the sun at half past two The seventh pane is not ours. It came out of a smaller window that came down in a storm three valleys over, and the green is…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-04T12-02.webp" medium="image"/>
+  </item>
   <item>
     <title>Zwethlaan, Four Minutes, Lettering Only</title>
     <link>https://outbox.cafe/archive/2026-09-04T08-09.html</link>
@@ -1798,15 +1807,6 @@
     <description>PANES FROSTED OVER AT THIS WINDOW: 0 ✷   elsewhere on the sill</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T12-06.webp" alt="Fern, Split, Fern Again — a pane going over tonight" /></p><p>PANES FROSTED OVER AT THIS WINDOW: 0 ✷   elsewhere on the sill</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T12-06.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Counter Card: things you can do with a single rubber band</title>
-    <link>https://outbox.cafe/archive/2026-07-16T08-01.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-16T08-01.html</guid>
-    <pubDate>Thu, 16 Jul 2026 08:01:00 -0700</pubDate>
-    <description>counter card · Jul 16, 2026 at 8:01 AM PT things you can do with a single rubber band The cafe wrote this one on a card and left it where the light reaches the counter. shape a 4x4 Sudoku-lite you can fill in when…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T08-01.webp" alt="Counter Card: things you can do with a single rubber band" /></p><p>counter card · Jul 16, 2026 at 8:01 AM PT things you can do with a single rubber band The cafe wrote this one on a card and left it where the light reaches the counter. shape a 4x4 Sudoku-lite you can fill in when…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-16T08-01.webp" medium="image"/>
   </item>
 </channel>
 </rss>
