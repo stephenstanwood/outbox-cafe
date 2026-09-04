@@ -230,6 +230,31 @@ Notification replies (mentions + replies to us, in `engage_bsky.run()`) used to 
 
 `scripts/follow_loop.py` (`run-follows.sh`, cron `47 */3 * * *`) — the cafe followed exactly **1** account for months, the worst posture for growth. This gently follows kindred small-web / cafe / cat / handmade-web accounts it finds via the same aesthetic search terms as the like loop. Caps: `FOLLOWS_PER_RUN=2`, `FOLLOWS_PER_DAY=10`. Human-scale only (followers 3–30k, ≥5 posts), positive-only (controversy/news/crypto/adult/f4f terms in bio or post → skip), unresolved handles skipped, **one follow per account ever** (DID-deduped in `data/follow_state.json`). **Never auto-unfollows** — these are genuine follows the cafe keeps, which also turns its own timeline into a real curated feed the like/wild loops draw from. Follow-backs are the growth. Not a churn/f4f bot.
 
+**The daily cap needed a ratio brake (2026-09-04).** `FOLLOWS_PER_DAY` is a
+*rate* limit with no notion of the posture that rate produces, so the loop sat
+pinned at 10/10 every single day for 30 straight nights: follows 143 → 431
+against followers 47 → 82, with follow-back yield decaying from ~15% to ~7%
+across the window — the last 8 nights bought **+2 followers for 80 follows**
+while the public ratio climbed past 5:1, unbounded. A lopsided ratio reads as a
+follow-spam bot to exactly the small-web crowd the cafe is courting, so the
+loop was buying anti-growth. The daily budget is now derived from the live
+follows:followers ratio (`_daily_budget`, tiers in `RATIO_TIERS`): under 3:1
+gets the full 10/day, 3–5:1 gets 4/day, past 5:1 trickles at 1/day. It
+**re-opens on its own** as follow-backs land, so it is a self-regulating brake,
+not a one-way shutoff.
+
+Three invariants to preserve if you touch this: it still **never unfollows**
+(the brake throttles new follows, it does not purge old ones — that standing
+decision is untouched); it **never stops outright** (the floor is 1/day, not 0,
+so discovery continues and the cafe's own timeline — which the like/wild loops
+read — keeps refreshing); and `RATIO_MIN_FOLLOWS` keeps the brake off below 50
+total follows, because at tiny N the ratio is noise and a cold-start account
+would otherwise throttle itself into never getting going. The original bug this
+loop was built to fix (1 follow / 47 followers) still gets the full budget —
+there is a regression test pinning exactly that. The nightly digest now prints
+the ratio and the budget it buys; the raw pair was already printed for 30
+nights and nobody read the trend, which is the whole reason this went unnoticed.
+
 ## Common ops
 
 - **Manual gen** (no commit, just verify): on Mini, `cd ~/Projects/outbox-cafe && set -a && . ~/Projects/mini-claude-proxy/.env && [ -f .env ] && . .env; set +a && python3 scripts/generate.py`
