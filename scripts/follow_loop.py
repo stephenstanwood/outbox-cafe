@@ -10,7 +10,8 @@ real curated feed of the corners it loves, which the like + wild-reply loops
 then draw from — a virtuous circle.
 
 Deliberately gentle so it never reads as a follow-bot:
-  - low caps (a couple per run, ~10/day)
+  - low caps (a couple per run, ~10/day ceiling) AND a ratio-derived daily
+    budget that tightens when the cafe's follows:followers posture gets lopsided
   - only kindred, active, human-scale accounts (not empty eggs, not celebrities)
   - positive-only: controversy / news / crypto / adult / growth-hack terms in the
     bio or the surfacing post → skip
@@ -42,8 +43,33 @@ STATE_PATH = DATA / "follow_state.json"
 
 # Gentle by design. Every-3h cron = 8 runs/day; the daily cap is the real governor.
 FOLLOWS_PER_RUN = 2
-FOLLOWS_PER_DAY = 10
+FOLLOWS_PER_DAY = 10          # ceiling; the live budget is ratio-derived (_daily_budget)
 FOLLOW_HISTORY_CAP = 4000     # remember every account we've ever followed (dedup)
+
+# The daily cap alone was not enough: it is a RATE limit with no notion of the
+# posture that rate produces. Measured 2026-09-04 across 30 nights of digests,
+# the loop sat pinned at 10/10 every single day — follows 143 → 431 (+288)
+# against followers 47 → 82 (+35). Follow-back yield decayed steadily over that
+# window (~15% in the first third, ~7% in the last) and the final 8 nights
+# bought +2 followers for 80 follows. So the loop was paying a worsening public
+# ratio (5.3:1, climbing 10/day, unbounded) for very nearly nothing — and a
+# lopsided ratio reads as a follow-spam bot to exactly the small-web crowd the
+# cafe is courting.
+#
+# The fix is a brake, NOT a purge: the cafe still never unfollows anyone. The
+# daily budget simply tightens as the ratio worsens and re-opens on its own as
+# follow-backs land, so the loop self-regulates instead of running away.
+# Tiers are (ratio_below, budget), checked in order; past the last tier the loop
+# drops to RATIO_FLOOR_BUDGET rather than stopping outright — a trickle keeps
+# discovery alive (and the cafe's timeline fed, which the like/wild loops read)
+# while being slow enough that the ratio stays effectively flat.
+RATIO_TIERS = ((3.0, FOLLOWS_PER_DAY), (5.0, 4))
+RATIO_FLOOR_BUDGET = 1
+# Below this many total follows the ratio is statistical noise (an account with
+# 0 followers and 10 follows is at "10:1" but has simply not started yet), so
+# the brake stays off. The cafe is far past this; it exists so a cold start
+# can't throttle itself into never getting going.
+RATIO_MIN_FOLLOWS = 50
 
 # Human-scale kindred accounts only. Skip empty eggs (no follow-back signal, often
 # spam) and mega-accounts (won't follow back; following them reads as thirsty).
@@ -98,10 +124,36 @@ def _known_dids(state: dict) -> set[str]:
     return {e.get("did") for e in state.get("followed", []) if isinstance(e, dict) and e.get("did")}
 
 
+def _daily_budget(followers: int, follows: int) -> tuple[int, float]:
+    """Today's follow allowance, derived from the cafe's own follows:followers
+    ratio. Pure and total so it can be reasoned about (and tested) with no
+    network call. See RATIO_TIERS for why this exists."""
+    ratio = follows / max(followers, 1)
+    if follows < RATIO_MIN_FOLLOWS:
+        return FOLLOWS_PER_DAY, ratio
+    for below, budget in RATIO_TIERS:
+        if ratio < below:
+            return budget, ratio
+    return RATIO_FLOOR_BUDGET, ratio
+
+
 # ---------- Bsky ----------
 
 def _req(path: str, *, data=None, headers=None, method="GET"):
     return bsky.request(path, data=data, headers=headers, method=method)
+
+
+def _our_counts(actor: str, jwt: str) -> tuple[int, int] | None:
+    """(followers, follows) for the cafe itself. None on any failure — the caller
+    falls back to the flat ceiling rather than skipping the run, so a transient
+    getProfile blip can never wedge the loop shut."""
+    try:
+        p = _req(f"/app.bsky.actor.getProfile?actor={urllib.parse.quote(actor)}",
+                 headers={"Authorization": f"Bearer {jwt}"})
+    except Exception as e:
+        print(f"[follow] getProfile failed ({e}) — falling back to flat cap", file=sys.stderr)
+        return None
+    return int(p.get("followersCount") or 0), int(p.get("followsCount") or 0)
 
 
 def _search_authors(term: str, jwt: str, our_did: str, known: set[str], limit: int = 25) -> dict:
@@ -194,15 +246,28 @@ def run() -> int:
 
     state = _load_state()
     daily = _today_count(state)
-    cap = min(FOLLOWS_PER_RUN, FOLLOWS_PER_DAY - daily)
-    if cap <= 0:
-        print(f"[follow] daily cap reached ({FOLLOWS_PER_DAY}) — skip")
+    # Cheap pre-check against the ceiling before spending an auth round-trip.
+    # The real (ratio-derived) budget can only ever be lower, never higher.
+    if daily >= FOLLOWS_PER_DAY:
+        print(f"[follow] daily ceiling reached ({FOLLOWS_PER_DAY}) — skip")
         return 0
 
     try:
         did, jwt = bsky.login()
     except Exception as e:
         print(f"[follow] auth failed: {e}", file=sys.stderr)
+        return 0
+
+    counts = _our_counts(did, jwt)
+    if counts is None:
+        budget = FOLLOWS_PER_DAY
+    else:
+        budget, ratio = _daily_budget(*counts)
+        print(f"[follow] posture: {counts[1]} follows / {counts[0]} followers "
+              f"= {ratio:.1f}:1 → budget {budget}/day")
+    cap = min(FOLLOWS_PER_RUN, budget - daily)
+    if cap <= 0:
+        print(f"[follow] daily budget reached ({daily}/{budget}) — skip")
         return 0
 
     known = _known_dids(state)
@@ -253,7 +318,7 @@ def run() -> int:
         time.sleep(2.0)
 
     _save_state(state)
-    print(f"[follow_loop] done. followed={followed_now} (daily now {daily + followed_now}/{FOLLOWS_PER_DAY})")
+    print(f"[follow_loop] done. followed={followed_now} (daily now {daily + followed_now}/{budget})")
     return 0
 
 

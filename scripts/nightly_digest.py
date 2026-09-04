@@ -309,6 +309,18 @@ def main() -> int:
         parts.append(
             f"**bsky** · followers: {bsky.get('followers','?')} · follows: {bsky.get('follows','?')} · posts: {bsky.get('posts','?')}"
         )
+        # The raw pair was printed for 30 nights while the follow loop quietly
+        # ran away with it (143 → 431 follows against 47 → 82 followers) and
+        # nobody read the trend. Interpreting it here — ratio plus the budget
+        # that ratio buys — is what makes the posture legible at a glance.
+        try:
+            from follow_loop import _daily_budget
+            followers, follows = int(bsky["followers"]), int(bsky["follows"])
+            budget, ratio = _daily_budget(followers, follows)
+            flag = " ⚠️" if ratio >= 5.0 else ""
+            parts.append(f"posture: {ratio:.1f}:1 follows/followers{flag} · follow budget {budget}/day")
+        except Exception:
+            pass
         if bsky.get("last_post"):
             parts.append(f"last post: _{bsky['last_post']}_")
 

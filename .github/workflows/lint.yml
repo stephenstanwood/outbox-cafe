@@ -43,3 +43,10 @@ jobs:
           # unused imports). Both must be clean.
           python -m compileall -q scripts
           pyflakes scripts/*.py scripts/lib/*.py
+
+      - name: unit tests
+        run: |
+          set -euo pipefail
+          # tests/ existed but nothing ever ran it. Pure-logic tests only —
+          # no network, no creds — so this stays as fast as the pyflakes step.
+          python -m unittest discover -s tests -v
