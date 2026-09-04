@@ -113,7 +113,7 @@
       "hint": "A gentle old tune called 'Small Weather, Passing' — the kind of half-remembered melody that turns up in a music box, on a jukebox, or hummed absently by someone at a sink.",
       "added": "2026-07-10",
       "by": "scout",
-      "seen": 0
+      "seen": 1
     },
     {
       "name": "Old Haymaker's Switchel",
@@ -264,6 +264,12 @@
       "added": "2026-09-01",
       "by": "scout",
       "seen": 0
+    },
+    {
+      "name": "Harriet Neap & the Kettleclick",
+      "hint": "A minor recording act whose songs turn up on B-sides, jukeboxes, and radios; every track seems to be a loop that outlasts whatever room it's playing in.",
+      "added": "2026-09-04",
+      "by": "scout"
     }
   ],
   "retired": [
