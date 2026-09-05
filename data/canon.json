@@ -95,13 +95,6 @@
       "seen": 1
     },
     {
-      "name": "Skipper the Seal",
-      "hint": "A cheerful cartoon mascot seal from an old draw-this talent ad, the kind of drugstore-rack character that could grin from any flyer, matchbook, or napkin in any era.",
-      "added": "2026-07-08",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "Little Aumbry",
       "hint": "A small out-of-the-way parish village, the kind with one old church and a rose window; good for a return address, a bus stop, or where someone's aunt retired.",
       "added": "2026-07-09",
@@ -269,6 +262,13 @@
       "name": "Harriet Neap & the Kettleclick",
       "hint": "A minor recording act whose songs turn up on B-sides, jukeboxes, and radios; every track seems to be a loop that outlasts whatever room it's playing in.",
       "added": "2026-09-04",
+      "by": "scout",
+      "seen": 0
+    },
+    {
+      "name": "Dot Vekmeyer",
+      "hint": "A relentlessly cheerful local record-keeper who has watched the same unmoving cloud over Kettleback Ridge since 1997; coffee's always on, and she's never once been upset about it.",
+      "added": "2026-09-05",
       "by": "scout"
     }
   ],
@@ -310,6 +310,16 @@
       "by": "scout",
       "seen": 0,
       "retired": "2026-09-02",
+      "offers": 0,
+      "waited": 231
+    },
+    {
+      "name": "Skipper the Seal",
+      "hint": "A cheerful cartoon mascot seal from an old draw-this talent ad, the kind of drugstore-rack character that could grin from any flyer, matchbook, or napkin in any era.",
+      "added": "2026-07-08",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-09-05",
       "offers": 0,
       "waited": 231
     }
