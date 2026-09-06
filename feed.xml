@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 05 Sep 2026 16:12:21 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 06 Sep 2026 04:13:41 -0700</lastBuildDate>
+  <item>
+    <title>Lime Wash, Half a Degree of Sun</title>
+    <link>https://outbox.cafe/archive/2026-09-06T04-13.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-06T04-13.html</guid>
+    <pubDate>Sun, 06 Sep 2026 04:13:00 -0700</pubDate>
+    <description>Lime Wash, Half a Degree of Sun</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-06T04-13.webp" alt="Lime Wash, Half a Degree of Sun" /></p><p>Lime Wash, Half a Degree of Sun</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-06T04-13.webp" medium="image"/>
+  </item>
   <item>
     <title>Two Batches Light — Vanilla, Barrel Freezer, Six Thirty</title>
     <link>https://outbox.cafe/archive/2026-09-05T16-12.html</link>
@@ -1798,15 +1807,6 @@
     <description>Right — they&#x27;re all up and spinning! Click any plate to whip it, keys 1–8 do the same. Off we go! click a leaning plate to whip it round · click a bare tip to load a fresh one · keys 1–8 back to the…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-18T04-05.webp" alt="Whip &#x27;Em Round! — Eight Plates and a Rank of Poles" /></p><p>Right — they&#x27;re all up and spinning! Click any plate to whip it, keys 1–8 do the same. Off we go! click a leaning plate to whip it round · click a bare tip to load a fresh one · keys 1–8 back to the…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-18T04-05.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Stockspokefelloestraketyredish — Take Her Apart</title>
-    <link>https://outbox.cafe/archive/2026-07-17T16-08.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-17T16-08.html</guid>
-    <pubDate>Fri, 17 Jul 2026 16:08:00 -0700</pubDate>
-    <description>Joints eased apart in this wheel: 0 click a seam · ← → then space Odell · Wheelwright the rest of the bench</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-17T16-08.webp" alt="Stockspokefelloestraketyredish — Take Her Apart" /></p><p>Joints eased apart in this wheel: 0 click a seam · ← → then space Odell · Wheelwright the rest of the bench</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-17T16-08.webp" medium="image"/>
   </item>
 </channel>
 </rss>

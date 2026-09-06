@@ -95,13 +95,6 @@
       "seen": 1
     },
     {
-      "name": "Little Aumbry",
-      "hint": "A small out-of-the-way parish village, the kind with one old church and a rose window; good for a return address, a bus stop, or where someone's aunt retired.",
-      "added": "2026-07-09",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "Small Weather, Passing",
       "hint": "A gentle old tune called 'Small Weather, Passing' — the kind of half-remembered melody that turns up in a music box, on a jukebox, or hummed absently by someone at a sink.",
       "added": "2026-07-10",
@@ -269,6 +262,13 @@
       "name": "Dot Vekmeyer",
       "hint": "A relentlessly cheerful local record-keeper who has watched the same unmoving cloud over Kettleback Ridge since 1997; coffee's always on, and she's never once been upset about it.",
       "added": "2026-09-05",
+      "by": "scout",
+      "seen": 0
+    },
+    {
+      "name": "Sandlin Bros. Frozen",
+      "hint": "A frozen-custard and sherbet stand sold through numbered windows; window two is always the slow one, and the scale there reads two grams heavy if you lean on the counter.",
+      "added": "2026-09-06",
       "by": "scout"
     }
   ],
@@ -320,6 +320,16 @@
       "by": "scout",
       "seen": 0,
       "retired": "2026-09-05",
+      "offers": 0,
+      "waited": 231
+    },
+    {
+      "name": "Little Aumbry",
+      "hint": "A small out-of-the-way parish village, the kind with one old church and a rose window; good for a return address, a bus stop, or where someone's aunt retired.",
+      "added": "2026-07-09",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-09-06",
       "offers": 0,
       "waited": 231
     }
