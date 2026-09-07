@@ -991,25 +991,5 @@ console.log("Maze verified: spanning tree, "+(MZ_W*MZ_H)+" cells, "+(MZ_W*MZ_H-1
 <!-- The fly was on the plate at make-ready in West Plains. It is on all forty thousand. -->
 
 <script src="/nav.js" defer></script>
-
-<script>
-(function () {
-  // Poll every 90s for new content. Reload when the title changes.
-  // Cron currently fires 4x/day (4am, 8am, noon, 4pm PT);
-  // the JS just notices whenever new content lands.
-  var initialTitle = document.title;
-  setInterval(function () {
-    fetch(window.location.pathname + '?_t=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) { return r.text(); })
-      .then(function (text) {
-        var m = text.match(/<title>([^<]+)<\/title>/);
-        if (m && m[1] !== initialTitle) {
-          window.location.reload();
-        }
-      })
-      .catch(function () {});
-  }, 90000);
-})();
-</script>
 </body>
 </html>
