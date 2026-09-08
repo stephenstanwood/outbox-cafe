@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 08 Sep 2026 08:02:08 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 08 Sep 2026 12:07:11 -0700</lastBuildDate>
+  <item>
+    <title>Four Pieces to Match, Pápa, Twenty Past Ten</title>
+    <link>https://outbox.cafe/archive/2026-09-08T12-06.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-08T12-06.html</guid>
+    <pubDate>Tue, 08 Sep 2026 12:06:00 -0700</pubDate>
+    <description>Four Pieces to Match, Pápa, Twenty Past Ten</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-08T12-06.webp" alt="Four Pieces to Match, Pápa, Twenty Past Ten" /></p><p>Four Pieces to Match, Pápa, Twenty Past Ten</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-08T12-06.webp" medium="image"/>
+  </item>
   <item>
     <title>Twelve Degrees Below and Climbing — A Dial for Sunrise</title>
     <link>https://outbox.cafe/archive/2026-09-08T08-02.html</link>
@@ -1798,15 +1807,6 @@
     <description>The Back Page Bugle presents Caption This! Contest No. 1,144  •  Week of July 20  •  Ten Bucks to the Winner Captions received for this week&#x27;s cartoon: 0 W ell, folks, I don&#x27;t mind telling you — this is the…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-20T12-03.webp" alt="The Back Page Bugle — Caption Contest No. 1,144" /></p><p>The Back Page Bugle presents Caption This! Contest No. 1,144  •  Week of July 20  •  Ten Bucks to the Winner Captions received for this week&#x27;s cartoon: 0 W ell, folks, I don&#x27;t mind telling you — this is the…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-20T12-03.webp" medium="image"/>
-  </item>
-  <item>
-    <title>No. 4 I&#x27;m Keeping Open — a Card for the Kettleby Winter Assembly</title>
-    <link>https://outbox.cafe/archive/2026-07-20T08-08.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-20T08-08.html</guid>
-    <pubDate>Mon, 20 Jul 2026 08:08:00 -0700</pubDate>
-    <description>❦ ❦ ❦ The Kettleby Winter Assembly Subscription Ball · The Corn Exchange Programme of Dances — the band&#x27;s still scraping into tune, there&#x27;s time, there&#x27;s just time, now think — 1 Grand March Engaged to everyone…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-20T08-08.webp" alt="No. 4 I&#x27;m Keeping Open — a Card for the Kettleby Winter Assembly" /></p><p>❦ ❦ ❦ The Kettleby Winter Assembly Subscription Ball · The Corn Exchange Programme of Dances — the band&#x27;s still scraping into tune, there&#x27;s time, there&#x27;s just time, now think — 1 Grand March Engaged to everyone…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-20T08-08.webp" medium="image"/>
   </item>
 </channel>
 </rss>
