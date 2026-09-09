@@ -116,13 +116,6 @@
       "seen": 2
     },
     {
-      "name": "Prewitt & Daughter",
-      "hint": "A hand-run dahlia-tuber farm out past the county fairgrounds — Ada Prewitt sells, daughter Ruth does the digging; a mail-order name to drop in any era.",
-      "added": "2026-07-18",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "the Deaver boys",
       "hint": "the local pack of rowdy brothers everyone knows by name — the ones who break the rule you just posted; usable in any era as background mischief.",
       "added": "2026-07-19",
@@ -269,7 +262,8 @@
       "name": "Salvu Grech",
       "hint": "The man from the shop opposite — a rival tradesman who always knows what you really paid for a thing, and will tell you while your back is turned.",
       "added": "2026-09-08",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     }
   ],
   "retired": [
@@ -340,6 +334,16 @@
       "by": "scout",
       "seen": 0,
       "retired": "2026-09-07",
+      "offers": 0,
+      "waited": 207
+    },
+    {
+      "name": "Prewitt & Daughter",
+      "hint": "A hand-run dahlia-tuber farm out past the county fairgrounds — Ada Prewitt sells, daughter Ruth does the digging; a mail-order name to drop in any era.",
+      "added": "2026-07-18",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-09-09",
       "offers": 0,
       "waited": 207
     }
