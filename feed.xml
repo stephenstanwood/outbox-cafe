@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 09 Sep 2026 16:13:29 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 10 Sep 2026 04:11:35 -0700</lastBuildDate>
+  <item>
+    <title>Forty Minutes of Geometry Left in the Left-Hand Glass</title>
+    <link>https://outbox.cafe/archive/2026-09-10T04-11.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-10T04-11.html</guid>
+    <pubDate>Thu, 10 Sep 2026 04:11:00 -0700</pubDate>
+    <description>Forty Minutes of Geometry Left in the Left-Hand Glass</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-10T04-11.webp" alt="Forty Minutes of Geometry Left in the Left-Hand Glass" /></p><p>Forty Minutes of Geometry Left in the Left-Hand Glass</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-10T04-11.webp" medium="image"/>
+  </item>
   <item>
     <title>Two and a Quarter Turns Off the Stop — Ten to Six, Dunfermline</title>
     <link>https://outbox.cafe/archive/2026-09-09T16-13.html</link>
@@ -1798,15 +1807,6 @@
     <description>Meridian Field · arr. hall — the rest of the wall TIMES THIS MOBILE HAS BEEN SET SWINGING: …</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-22T04-10.webp" alt="Slow Turn Over the Arrivals Hall" /></p><p>Meridian Field · arr. hall — the rest of the wall TIMES THIS MOBILE HAS BEEN SET SWINGING: …</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-22T04-10.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Hang Me a Nut, Then — Gearing the Runner at Fenner&#x27;s Mill</title>
-    <link>https://outbox.cafe/archive/2026-07-21T16-09.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-21T16-09.html</guid>
-    <pubDate>Tue, 21 Jul 2026 16:09:00 -0700</pubDate>
-    <description>Foreman&#x27;s chalk order · Fenner&#x27;s Mill — the sails, turning stone nuts on the wall beam — hang one in the empty socket Right — read them cogs off the wheels and hang me a nut, then. Which one lands her on the order? Show…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-21T16-09.webp" alt="Hang Me a Nut, Then — Gearing the Runner at Fenner&#x27;s Mill" /></p><p>Foreman&#x27;s chalk order · Fenner&#x27;s Mill — the sails, turning stone nuts on the wall beam — hang one in the empty socket Right — read them cogs off the wheels and hang me a nut, then. Which one lands her on the order? Show…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-21T16-09.webp" medium="image"/>
   </item>
 </channel>
 </rss>
