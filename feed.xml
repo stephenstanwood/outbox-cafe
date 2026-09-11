@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 11 Sep 2026 04:00:23 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 11 Sep 2026 08:00:21 -0700</lastBuildDate>
+  <item>
+    <title>Two Spools Left and the Wind Holding — Estación Central</title>
+    <link>https://outbox.cafe/archive/2026-09-11T08-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-11T08-00.html</guid>
+    <pubDate>Fri, 11 Sep 2026 08:00:00 -0700</pubDate>
+    <description>Two Spools Left and the Wind Holding — Estación Central $800 — other afternoons</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-11T08-00.webp" alt="Two Spools Left and the Wind Holding — Estación Central" /></p><p>Two Spools Left and the Wind Holding — Estación Central $800 — other afternoons</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-11T08-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Step 23 Is On The Other Side — 40 × 80 Top, Rensselaer</title>
     <link>https://outbox.cafe/archive/2026-09-11T04-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>◉ more colour on the wall reels run on this wheel: …</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-23T08-05.webp" alt="Wet Colour on the Hot Deck" /></p><p>◉ more colour on the wall reels run on this wheel: …</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-23T08-05.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Strike It, Match the Seed — Merv&#x27;s Rock Bench</title>
-    <link>https://outbox.cafe/archive/2026-07-23T04-04.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-23T04-04.html</guid>
-    <pubDate>Thu, 23 Jul 2026 04:04:00 -0700</pubDate>
-    <description>MERV&#x27;S ROCK · EST. 1911 · FIRST BATCH OF THE SEASON FRESH OPEN TODAY! Strike It! Six candy colours in the tray. Four bands hid in today&#x27;s seed, same run clean through the stick. Read the pegs, work the order — off you go. Merv: Right…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-23T04-04.webp" alt="Strike It, Match the Seed — Merv&#x27;s Rock Bench" /></p><p>MERV&#x27;S ROCK · EST. 1911 · FIRST BATCH OF THE SEASON FRESH OPEN TODAY! Strike It! Six candy colours in the tray. Four bands hid in today&#x27;s seed, same run clean through the stick. Read the pegs, work the order — off you go. Merv: Right…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-23T04-04.webp" medium="image"/>
   </item>
 </channel>
 </rss>
