@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 11 Sep 2026 08:00:21 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 11 Sep 2026 12:00:17 -0700</lastBuildDate>
+  <item>
+    <title>Twenty to Seven, Rensselaer — The Sheet Out of the Glovebox</title>
+    <link>https://outbox.cafe/archive/2026-09-11T12-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-11T12-00.html</guid>
+    <pubDate>Fri, 11 Sep 2026 12:00:00 -0700</pubDate>
+    <description>other jobs on the book Photo by The National Library of Norway on Unsplash</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-11T12-00.webp" alt="Twenty to Seven, Rensselaer — The Sheet Out of the Glovebox" /></p><p>other jobs on the book Photo by The National Library of Norway on Unsplash</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-11T12-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Two Spools Left and the Wind Holding — Estación Central</title>
     <link>https://outbox.cafe/archive/2026-09-11T08-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>sun&#x27;s right through the glass. give him a squeeze. press &amp; hold anywhere on the glass — down he sinks. ease off and up he comes. hold light to hover. Pearls brought up from this bottle: 0 Steadiest hover (seconds held): 0.0 other things…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-23T12-09.webp" alt="The Little Brass Diver Won&#x27;t Sit Still" /></p><p>sun&#x27;s right through the glass. give him a squeeze. press &amp; hold anywhere on the glass — down he sinks. ease off and up he comes. hold light to hover. Pearls brought up from this bottle: 0 Steadiest hover (seconds held): 0.0 other things…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-23T12-09.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Wet Colour on the Hot Deck</title>
-    <link>https://outbox.cafe/archive/2026-07-23T08-05.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-23T08-05.html</guid>
-    <pubDate>Thu, 23 Jul 2026 08:05:00 -0700</pubDate>
-    <description>◉ more colour on the wall reels run on this wheel: …</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-23T08-05.webp" alt="Wet Colour on the Hot Deck" /></p><p>◉ more colour on the wall reels run on this wheel: …</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-23T08-05.webp" medium="image"/>
   </item>
 </channel>
 </rss>
