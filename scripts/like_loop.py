@@ -17,11 +17,13 @@ from __future__ import annotations
 import json
 import os
 import random
+import re
 import sys
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -41,15 +43,62 @@ TUMBLR_LIKES_PER_RUN = 2
 BSKY_LIKES_PER_DAY = 24
 TUMBLR_LIKES_PER_DAY = 18
 
-# Bsky search queries — mirrors the cafe's wild topics, plus a few seeds.
+# Bsky search queries are deliberately concrete and aesthetic. Broad lifestyle
+# phrases ("morning light", "library card", "old browser", etc.) used to pull
+# weather, politics, product listings and tech news even when phrase-matched.
 BSKY_SEARCH_TERMS = [
     "small web", "indie web", "pixel art", "generative art",
-    "neocities", "zine", "handmade web", "old internet",
-    "fountain pen", "mail art", "morning light",
-    "the radio", "coffee window", "thrift store find",
-    "library stamp", "library card", "vintage poster",
-    "tape deck", "casio keyboard", "old browser",
+    "neocities", "zine", "handmade web", "old web", "web revival",
+    "fountain pen", "mail art", "art journal", "collage",
+    "vintage poster", "riso print", "typewriter", "tape deck", "toy keyboard",
 ]
+
+# searchPosts is intentionally treated as discovery, not a moderation verdict.
+# Its results can be only loosely related to the query: in one 24h window the
+# old loop liked political chatter, a cybersecurity-news post, a marketing
+# agency, a weather forecast and an OpenAI story while searching this list.
+# Require the source text itself to contain the selected interest, then apply a
+# deterministic brand-safety gate before a heart can leave the cafe.
+BSKY_BLOCK_TERMS = {
+    "politics": (
+        "trump", "biden", "putin", "elon musk", "peter thiel",
+        "mark zuckerberg", "jeff bezos", "election", "antifa", "maga",
+        "politics", "political", "congress", "senate", "democrat",
+        "republican", "prime minister", "president", "government", "protest",
+    ),
+    "conflict": (
+        "war", "wwii", "genocide", "shooting", "shooter", "gaza",
+        "israel", "ukraine", "hamas", "cia", "bodily harm",
+    ),
+    "loss": (
+        "killed", "died", "death", "rip", "passed away", "obituary", "obituaries",
+        "funeral", "suicide", "depressed",
+    ),
+    "finance": ("bitcoin", "crypto", "nft", "stock market", "etf", "tariff"),
+    "adult": ("onlyfans", "porn", "nsfw", "escort"),
+    "news_or_incident": (
+        "breaking news", "weather forecast", "phishing", "scam", "malware",
+        "data breach", "security flaw", "security flaws", "vulnerability",
+    ),
+    "ai_meta": (
+        "ai", "openai", "chatgpt", "generative ai", "midjourney",
+        "stable diffusion", "ai generated", "using ai", "vibe coded",
+    ),
+    "promotion": (
+        "marketing agency", "digital marketing", "buy now", "shop now",
+        "for sale", "discount code", "affiliate link", "sponsored post",
+        "giveaway", "follow back", "followback", "f4f", "link in bio",
+        "dms open", "dm me", "commissions open", "make a gift", "donate",
+        "fundraiser", "support my campaign", "upgrade your", "featured on",
+        "upvote", "order now", "free shipping", "limited time",
+        "best fountain pen kits", "on sale", "online shop", "shop update",
+        "every order", "preorder", "pre order", "selling this", "for purchase",
+    ),
+    "hostility": (
+        "fuck", "fucking", "shit", "screw", "hate", "sucks", "awful",
+        "terrible", "devastating", "painful",
+    ),
+}
 
 # Tumblr tag pool — same as reblog tags.
 TUMBLR_TAGS = [
@@ -106,36 +155,88 @@ def _bsky_search(query: str, jwt: str, limit: int = 25) -> list[dict]:
     return d.get("posts", []) or []
 
 
+def _word_tokens(value: str) -> list[str]:
+    """Lowercase word tokens for boundary-safe phrase matching."""
+    return re.findall(r"[a-z0-9]+", (value or "").casefold())
+
+
+def _contains_phrase(text: str, phrase: str) -> bool:
+    """Match whole tokens, allowing punctuation between phrase words.
+
+    This keeps ``war`` out of ``warm`` and lets ``small-web`` satisfy the
+    ``small web`` interest without trusting loose search-engine relevance.
+    """
+    haystack = _word_tokens(text)
+    needle = _word_tokens(phrase)
+    if not needle or len(needle) > len(haystack):
+        return False
+    width = len(needle)
+    return any(haystack[i:i + width] == needle for i in range(len(haystack) - width + 1))
+
+
+def _bsky_rejection_reason(text: str, query: str) -> str | None:
+    """Return why a discovered post is unsafe/off-topic, else ``None``.
+
+    Likes have no LLM moderation step, so uncertainty resolves to a skip. The
+    rule is deliberately inspectable and cheap enough to run on every result.
+    """
+    if len(_word_tokens(text)) < 3:
+        return "empty_or_too_short"
+    if not _contains_phrase(text, query):
+        return "off_topic"
+    for category, phrases in BSKY_BLOCK_TERMS.items():
+        if any(_contains_phrase(text, phrase) for phrase in phrases):
+            return category
+    if re.search(r"\$\s*\d", text or ""):
+        return "promotion"
+    return None
+
+
 def _bsky_like_candidates(state: dict, our_did: str, jwt: str) -> list[dict]:
-    """Return a shuffled list of bsky posts that match cafe interests and aren't already liked."""
+    """Return safe, on-topic bsky posts that the cafe has not already liked."""
     liked = {e.get("uri") for e in state.get("bsky", []) if isinstance(e, dict)}
     rng = random.Random()
-    rng.shuffle(BSKY_SEARCH_TERMS)
+    terms = list(BSKY_SEARCH_TERMS)
+    rng.shuffle(terms)
     candidates: list[dict] = []
-    for term in BSKY_SEARCH_TERMS[:5]:  # 5 search terms per run
+    seen: set[str] = set()
+    rejected: Counter[str] = Counter()
+    for term in terms[:5]:  # 5 search terms per run
         for p in _bsky_search(term, jwt, limit=20):
             uri = p.get("uri")
-            if not uri or uri in liked:
+            cid = p.get("cid")
+            if not uri or not cid or uri in liked:
+                rejected["invalid_or_known"] += 1
+                continue
+            if uri in seen:
+                rejected["duplicate"] += 1
                 continue
             author = (p.get("author") or {}).get("did")
             if author == our_did:
+                rejected["self"] += 1
                 continue
             # Skip if already engaged (reposted/liked) heavily
             vc = p.get("viewer") or {}
             if vc.get("like"):
+                rejected["already_liked"] += 1
                 continue
-            # Avoid posts that look like they'd contain stuff we shouldn't engage with
-            text = ((p.get("record") or {}).get("text") or "").lower()
-            if any(bad in text for bad in (
-                " trump", " biden", " election", " war ", "genocide",
-                "killed", "died", "rip ", "passed away",
-                "crypto ", "nft ", "$", "buy now",
-                "onlyfans", "porn",
-            )):
+            text = ((p.get("record") or {}).get("text") or "").strip()
+            reason = _bsky_rejection_reason(text, term)
+            if reason:
+                rejected[reason] += 1
                 continue
-            candidates.append({"uri": uri, "cid": p.get("cid"), "author": (p.get("author") or {}).get("handle", "?"),
-                              "text": text[:80]})
+            seen.add(uri)
+            candidates.append({
+                "uri": uri,
+                "cid": cid,
+                "author": (p.get("author") or {}).get("handle", "?"),
+                "text": text,
+                "term": term,
+            })
         time.sleep(0.2)
+    if rejected:
+        detail = ", ".join(f"{key}={value}" for key, value in sorted(rejected.items()))
+        print(f"[like/bsky] candidate gate kept {len(candidates)}; rejected {detail}")
     rng.shuffle(candidates)
     return candidates
 
@@ -196,9 +297,10 @@ def run_bsky_likes(state: dict) -> int:
             "uri": c["uri"],
             "author": c["author"],
             "text": c["text"],
+            "term": c["term"],
             "ts": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         })
-        print(f"[like/bsky] ♥ @{c['author']} | {c['text']!r}")
+        print(f"[like/bsky] ♥ @{c['author']} (term={c['term']!r}) | {c['text'][:80]!r}")
         time.sleep(1.5)
 
     return liked_now
