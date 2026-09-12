@@ -107,5 +107,60 @@ class CandidateTests(unittest.TestCase):
         self.assertIn(candidates[0]["term"], {"zine", "small web"})
 
 
+class TumblrSafetyTests(unittest.TestCase):
+    def test_rejects_unsafe_handle_when_image_post_has_no_text(self):
+        p = {
+            "blog_name": "photo-pretty-sexy-wow",
+            "tags": ["gif art"],
+            "summary": "",
+            "content": [],
+        }
+        self.assertEqual(like_loop._tumblr_rejection_reason(p), "unsafe_handle")
+
+    def test_rejects_unsafe_tags_and_text(self):
+        cases = (
+            ({"blog_name": "x", "tags": ["gif art", "nsfw"]}, "adult"),
+            ({"blog_name": "x", "tags": ["collage"], "summary": "Election protest collage"}, "politics"),
+            ({"blog_name": "x", "tags": ["zine"], "content": [{"type": "text", "text": "zine preorder now"}]}, "promotion"),
+        )
+        for post_data, reason in cases:
+            with self.subTest(post=post_data):
+                self.assertEqual(like_loop._tumblr_rejection_reason(post_data), reason)
+
+    def test_accepts_image_only_post_under_a_specific_safe_tag(self):
+        p = {"blog_name": "paper-moth", "tags": ["mail art"], "summary": "", "content": []}
+        self.assertIsNone(like_loop._tumblr_rejection_reason(p))
+
+    def test_candidates_apply_gate_and_dedupe_across_tags(self):
+        safe = {
+            "id": 1,
+            "reblog_key": "safe-key",
+            "blog_name": "paper-moth",
+            "tags": ["mail art"],
+            "summary": "hand-cut mail art from yesterday",
+            "note_count": 3,
+        }
+        unsafe = {
+            "id": 2,
+            "reblog_key": "unsafe-key",
+            "blog_name": "photo-sexy-wow",
+            "tags": ["gif art"],
+            "summary": "",
+            "note_count": 3,
+        }
+        with (
+            mock.patch.object(like_loop, "TUMBLR_TAGS", ["mail art", "gif art"]),
+            mock.patch.object(like_loop, "_tumblr_search_tag", return_value=[safe, unsafe]),
+            mock.patch.object(like_loop.time, "sleep"),
+        ):
+            candidates = like_loop._tumblr_like_candidates({}, "outbox-cafe")
+
+        self.assertEqual(len(candidates), 1)
+        self.assertEqual(candidates[0]["id"], 1)
+        self.assertEqual(candidates[0]["blog_name"], "paper-moth")
+        self.assertEqual(candidates[0]["reblog_key"], "safe-key")
+        self.assertIn(candidates[0]["tag"], {"mail art", "gif art"})
+
+
 if __name__ == "__main__":
     unittest.main()

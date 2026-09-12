@@ -25,6 +25,7 @@ import urllib.parse
 import urllib.request
 from collections import Counter
 from datetime import datetime, timezone
+from html import unescape
 from pathlib import Path
 
 from lib.io import atomic_write_json
@@ -59,7 +60,7 @@ BSKY_SEARCH_TERMS = [
 # agency, a weather forecast and an OpenAI story while searching this list.
 # Require the source text itself to contain the selected interest, then apply a
 # deterministic brand-safety gate before a heart can leave the cafe.
-BSKY_BLOCK_TERMS = {
+CONTENT_BLOCK_TERMS = {
     "politics": (
         "trump", "biden", "putin", "elon musk", "peter thiel",
         "mark zuckerberg", "jeff bezos", "election", "antifa", "maga",
@@ -75,7 +76,10 @@ BSKY_BLOCK_TERMS = {
         "funeral", "suicide", "depressed",
     ),
     "finance": ("bitcoin", "crypto", "nft", "stock market", "etf", "tariff"),
-    "adult": ("onlyfans", "porn", "nsfw", "escort"),
+    "adult": (
+        "onlyfans", "porn", "nsfw", "escort", "sexy", "sexual", "nude",
+        "nudity", "erotic", "erotica",
+    ),
     "news_or_incident": (
         "breaking news", "weather forecast", "phishing", "scam", "malware",
         "data breach", "security flaw", "security flaws", "vulnerability",
@@ -99,6 +103,14 @@ BSKY_BLOCK_TERMS = {
         "terrible", "devastating", "painful",
     ),
 }
+
+# Tumblr's tagged endpoint often returns image-only posts with no summary or
+# alt text. In that uncertain case the exact aesthetic tag may still be useful,
+# but an explicitly unsafe/spammy handle is enough to fail closed.
+TUMBLR_HANDLE_BLOCK_FRAGMENTS = (
+    "onlyfans", "nsfw", "porn", "sexy", "erotic", "crypto", "nft",
+    "politic", "breakingnews",
+)
 
 # Tumblr tag pool — same as reblog tags.
 TUMBLR_TAGS = [
@@ -184,7 +196,12 @@ def _bsky_rejection_reason(text: str, query: str) -> str | None:
         return "empty_or_too_short"
     if not _contains_phrase(text, query):
         return "off_topic"
-    for category, phrases in BSKY_BLOCK_TERMS.items():
+    return _blocked_content_reason(text)
+
+
+def _blocked_content_reason(text: str) -> str | None:
+    """Return the first shared off-brand content category, if any."""
+    for category, phrases in CONTENT_BLOCK_TERMS.items():
         if any(_contains_phrase(text, phrase) for phrase in phrases):
             return category
     if re.search(r"\$\s*\d", text or ""):
@@ -325,12 +342,50 @@ def _tumblr_search_tag(tag: str, limit: int = 15) -> list[dict]:
         return []
 
 
+def _tumblr_post_text(post: dict) -> str:
+    """Collect the inspectable text Tumblr exposes without fetching media."""
+    parts = [
+        post.get("blog_name") or "",
+        post.get("slug") or "",
+        post.get("summary") or "",
+        post.get("body") or "",
+        post.get("caption") or "",
+        " ".join(str(tag) for tag in (post.get("tags") or [])),
+    ]
+    for block in post.get("content") or []:
+        if isinstance(block, dict) and block.get("type") == "text":
+            parts.append(str(block.get("text") or ""))
+    for trail in post.get("trail") or []:
+        if not isinstance(trail, dict):
+            continue
+        trail_blog = trail.get("blog") or {}
+        if isinstance(trail_blog, dict):
+            parts.append(str(trail_blog.get("name") or ""))
+        raw = str(trail.get("content_raw") or "")
+        if raw:
+            parts.append(unescape(re.sub(r"<[^>]+>", " ", raw)))
+    return " ".join(parts)
+
+
+def _tumblr_rejection_reason(post: dict) -> str | None:
+    """Fail closed on unsafe Tumblr metadata; image bytes are never fetched."""
+    handle = str(post.get("blog_name") or "").casefold()
+    if any(fragment in handle for fragment in TUMBLR_HANDLE_BLOCK_FRAGMENTS):
+        return "unsafe_handle"
+    nsfw = post.get("is_nsfw")
+    marked_adult = str(post.get("content_rating") or "").casefold() == "adult"
+    if nsfw is True or str(nsfw).casefold() == "true" or marked_adult:
+        return "adult"
+    return _blocked_content_reason(_tumblr_post_text(post))
+
+
 def _tumblr_like_candidates(state: dict, our_blog: str) -> list[dict]:
     liked_ids = {int(e.get("id", 0)) for e in state.get("tumblr", []) if isinstance(e, dict)}
     rng = random.Random()
     tags = list(TUMBLR_TAGS); rng.shuffle(tags)
     candidates: list[dict] = []
     seen: set[int] = set()
+    rejected: Counter[str] = Counter()
     for tag in tags[:4]:
         for p in _tumblr_search_tag(tag, limit=12):
             try:
@@ -347,8 +402,13 @@ def _tumblr_like_candidates(state: dict, our_blog: str) -> list[dict]:
                 continue
             nc = p.get("note_count", 0) or 0
             if nc > 8000:  # skip mega-viral
+                rejected["mega_viral"] += 1
                 continue
             seen.add(pid)
+            reason = _tumblr_rejection_reason(p)
+            if reason:
+                rejected[reason] += 1
+                continue
             candidates.append({
                 "id": pid,
                 "reblog_key": p["reblog_key"],
@@ -356,6 +416,9 @@ def _tumblr_like_candidates(state: dict, our_blog: str) -> list[dict]:
                 "tag": tag,
             })
         time.sleep(0.25)
+    if rejected:
+        detail = ", ".join(f"{key}={value}" for key, value in sorted(rejected.items()))
+        print(f"[like/tumblr] candidate gate kept {len(candidates)}; rejected {detail}")
     rng.shuffle(candidates)
     return candidates
 
