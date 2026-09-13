@@ -1012,25 +1012,5 @@ console.log("Lamp re-aim, Sept. 1983: 11 fixtures moved back 30–40 in., aimed 
 <!-- Soda straw growth ~0.1 mm/yr. Stubs at Stop 8 date 1928-1953. Lit obliquely at guide's discretion. -->
 
 <script src="/nav.js" defer></script>
-
-<script>
-(function () {
-  // Poll every 90s for new content. Reload when the title changes.
-  // Cron currently fires 4x/day (4am, 8am, noon, 4pm PT);
-  // the JS just notices whenever new content lands.
-  var initialTitle = document.title;
-  setInterval(function () {
-    fetch(window.location.pathname + '?_t=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) { return r.text(); })
-      .then(function (text) {
-        var m = text.match(/<title>([^<]+)<\/title>/);
-        if (m && m[1] !== initialTitle) {
-          window.location.reload();
-        }
-      })
-      .catch(function () {});
-  }, 90000);
-})();
-</script>
 </body>
 </html>
