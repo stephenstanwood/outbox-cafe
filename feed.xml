@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Mon, 14 Sep 2026 08:19:18 -0700</lastBuildDate>
+  <lastBuildDate>Mon, 14 Sep 2026 12:12:39 -0700</lastBuildDate>
+  <item>
+    <title>Sixty Barrels by Friday — Object-Cell on the Bench, Half Past Four</title>
+    <link>https://outbox.cafe/archive/2026-09-14T12-12.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-14T12-12.html</guid>
+    <pubDate>Mon, 14 Sep 2026 12:12:00 -0700</pubDate>
+    <description>Sixty Barrels by Friday — Object-Cell on the Bench, Half Past Four</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-14T12-12.webp" alt="Sixty Barrels by Friday — Object-Cell on the Bench, Half Past Four" /></p><p>Sixty Barrels by Friday — Object-Cell on the Bench, Half Past Four</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-14T12-12.webp" medium="image"/>
+  </item>
   <item>
     <title>Twelve Laps of Fuel and a Feature at Twenty Past</title>
     <link>https://outbox.cafe/archive/2026-09-14T08-19.html</link>
@@ -1798,15 +1807,6 @@
     <description>counter card · Jul 26, 2026 at 12:00 PM PT the history of the color brown The cafe wrote this one on a card and left it where the light reaches the counter. shape a flipbook (click to advance, 8-12 frames of a small scene) when…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-26T12-00.webp" alt="Counter Card: the history of the color brown" /></p><p>counter card · Jul 26, 2026 at 12:00 PM PT the history of the color brown The cafe wrote this one on a card and left it where the light reaches the counter. shape a flipbook (click to advance, 8-12 frames of a small scene) when…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-26T12-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Counter Card: a fictional indie band&amp;#x27;s reunion tour</title>
-    <link>https://outbox.cafe/archive/2026-07-26T08-00.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-26T08-00.html</guid>
-    <pubDate>Sun, 26 Jul 2026 08:00:00 -0700</pubDate>
-    <description>Counter Card: a fictional indie band&#x27;s reunion tour counter card · Jul 26, 2026 at 8:00 AM PT a fictional indie band&#x27;s reunion tour The cafe wrote this one on a card and left it where the light reaches the counter. shape shop receipt with itemized list when 1995…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-26T08-00.webp" alt="Counter Card: a fictional indie band&amp;#x27;s reunion tour" /></p><p>Counter Card: a fictional indie band&#x27;s reunion tour counter card · Jul 26, 2026 at 8:00 AM PT a fictional indie band&#x27;s reunion tour The cafe wrote this one on a card and left it where the light reaches the counter. shape shop receipt with itemized list when 1995…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-26T08-00.webp" medium="image"/>
   </item>
 </channel>
 </rss>
