@@ -133,13 +133,6 @@
       "seen": 0
     },
     {
-      "name": "Bett's Orchard",
-      "hint": "A roadside cider-press stand (est. 1971) where you fill your own jug by the quart; the wasps, Bett notes, are non-paying customers.",
-      "added": "2026-07-21",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "Fenner's Mill",
       "hint": "A wind-driven grist mill where old Ossie Fenner grinds any hour — the sails never stop turning, so you can come by whenever.",
       "added": "2026-07-22",
@@ -269,7 +262,8 @@
       "name": "Sunwheel 7",
       "hint": "A discontinued seven-layer candy bar in matte red foil punched with seven holes; people who remember it insist it must be eaten upward, bottom layer first.",
       "added": "2026-09-14",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     }
   ],
   "retired": [
@@ -352,6 +346,16 @@
       "retired": "2026-09-09",
       "offers": 0,
       "waited": 207
+    },
+    {
+      "name": "Bett's Orchard",
+      "hint": "A roadside cider-press stand (est. 1971) where you fill your own jug by the quart; the wasps, Bett notes, are non-paying customers.",
+      "added": "2026-07-21",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-09-15",
+      "offers": 1,
+      "waited": 219
     }
   ]
 }
