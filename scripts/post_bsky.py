@@ -25,6 +25,7 @@ from typing import Any
 
 from lib.llm import run_claude
 from lib import bsky
+from lib.caption import excerpt_caption
 
 ROOT = Path(__file__).resolve().parent.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
@@ -281,9 +282,20 @@ def post_drop(
 
     template = THROWBACK_PROMPT_TEMPLATE if kind == "throwback" else PROMPT_TEMPLATE
     body_text = _call_claude_for_post(staff, title, snippet, template=template)
+    caption_source = "claude"
     if not body_text:
-        print("[post_bsky] claude returned no text — skipping", file=sys.stderr)
-        return False
+        # Claude is capped (or flaked). The words are already on the page: quote
+        # a fragment of it in the cat's name instead of going dark — see
+        # lib/caption.py. 48 of 126 drops never reached bsky in the month before
+        # this existed, all on cap windows.
+        fallback = excerpt_caption(html, staff.get("signoff", ""), rng, platform="bsky")
+        if not fallback:
+            print("[post_bsky] claude returned no text and page has nothing quotable — skipping",
+                  file=sys.stderr)
+            return False
+        body_text, caption_source = fallback
+        print(f"[post_bsky] claude returned no text — quoting the page instead "
+              f"(source={caption_source})", file=sys.stderr)
 
     # No URL in body — outbound links kill engagement and the cafe URL lives in the
     # bio. The thumbnail image is the visual hook; followers profile-click for the rest.
@@ -338,16 +350,7 @@ def post_drop(
         record["embed"] = image_embed
 
     try:
-        resp = _bsky_request(
-            "/com.atproto.repo.createRecord",
-            data={
-                "repo": did,
-                "collection": "app.bsky.feed.post",
-                "record": record,
-            },
-            headers=auth,
-            method="POST",
-        )
+        resp = bsky.create_post(did, jwt, record)
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8", errors="ignore")[:500]
         print(f"[post_bsky] createRecord HTTP {e.code}: {body}", file=sys.stderr)
@@ -365,6 +368,7 @@ def post_drop(
             uri=resp.get("uri"),
             subject=f"our:{archive_html_path.name}",
             text=body_text,
+            caption=caption_source,
         )
     except Exception:
         pass

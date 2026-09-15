@@ -333,11 +333,7 @@ def post_to_bsky(text: str, image_path: Path) -> str | None:
         },
     }
     try:
-        resp = _bsky_request(
-            "/com.atproto.repo.createRecord",
-            data={"repo": did, "collection": "app.bsky.feed.post", "record": record},
-            headers=auth,
-        )
+        resp = bsky.create_post(did, jwt, record)
     except Exception as e:
         print(f"[slip] bsky createRecord failed: {e}", file=sys.stderr)
         return None

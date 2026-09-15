@@ -201,10 +201,6 @@ def _generate_act(act: int, max_tries: int = 4) -> str | None:
 
 # ---------- Bsky ----------
 
-def _bsky_req(path: str, *, data=None, headers=None, method="GET"):
-    return bsky.request(path, data=data, headers=headers, method=method)
-
-
 def post_to_bsky(text: str) -> str | None:
     if not (os.environ.get("BSKY_HANDLE") and os.environ.get("BSKY_APP_PASSWORD")):
         print("[pancake] bsky creds missing", file=sys.stderr)
@@ -221,12 +217,7 @@ def post_to_bsky(text: str) -> str | None:
         "langs": ["en"],
     }
     try:
-        resp = _bsky_req(
-            "/com.atproto.repo.createRecord",
-            data={"repo": did, "collection": "app.bsky.feed.post", "record": record},
-            headers={"Authorization": f"Bearer {jwt}"},
-            method="POST",
-        )
+        resp = bsky.create_post(did, jwt, record)
     except Exception as e:
         print(f"[pancake] bsky createRecord failed: {e}", file=sys.stderr)
         return None

@@ -32,6 +32,7 @@ from pathlib import Path
 from typing import Any
 
 from lib.llm import run_claude
+from lib.caption import excerpt_caption
 from lib import tumblr
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -170,9 +171,17 @@ def post_drop(
     print(f"[post_tumblr] persona={staff['name']} title={title[:60]!r}", file=sys.stderr)
 
     body_text = _call_claude(staff, title, snippet)
+    caption_source = "claude"
     if not body_text:
-        print("[post_tumblr] claude returned no text — skipping", file=sys.stderr)
-        return False
+        # Same zero-Claude fallback as post_bsky: quote the page (lib/caption.py).
+        fallback = excerpt_caption(html_text, staff.get("signoff", ""), rng, platform="tumblr")
+        if not fallback:
+            print("[post_tumblr] claude returned no text and page has nothing quotable — skipping",
+                  file=sys.stderr)
+            return False
+        body_text, caption_source = fallback
+        print(f"[post_tumblr] claude returned no text — quoting the page instead "
+              f"(source={caption_source})", file=sys.stderr)
 
     tags = list(DEFAULT_TAGS)
     if spec_format:
@@ -236,6 +245,7 @@ def post_drop(
             uri=post_url,
             subject=f"our:{archive_html_path.name}",
             text=body_text,
+            caption=caption_source,
         )
     except Exception:
         pass

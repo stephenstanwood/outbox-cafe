@@ -92,12 +92,7 @@ def _post_bluesky(text: str, archive_url: str, thumb_path: Path | None, title: s
         record["embed"] = image_embed
 
     try:
-        resp = bsky.request(
-            "/com.atproto.repo.createRecord",
-            data={"repo": did, "collection": "app.bsky.feed.post", "record": record},
-            headers=auth,
-            method="POST",
-        )
+        resp = bsky.create_post(did, jwt, record)
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8", errors="ignore")[:500]
         print(f"[spotlight/bsky] createRecord HTTP {e.code}: {body}", file=sys.stderr)

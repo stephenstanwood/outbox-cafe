@@ -178,6 +178,35 @@ Related: the rituals used to sleep through a 45/90/180s backoff before
 discovering a cap that cannot clear. They now check `usage_limited(model)` and
 bail after the first capped try.
 
+### Drop captions never go dark on a cap — quote the page instead (2026-09-15)
+
+The same failure as the rituals, one layer up: `post_bsky` / `post_tumblr` ask
+Claude to write the caption *at post time*, so on a cap window the drop lands
+on the site and the social post is silently skipped (`claude returned no text
+— skipping`). Between 2026-08-15 and 2026-09-15 that was **48 of 126 drops**
+(38%), clustered Fri–Sun, and the only trace was the digest's `⚠️ gen health:
+4 bsky post(s) failed` line, which nothing consumes.
+
+`scripts/lib/caption.py` is the zero-Claude fallback: when the LLM returns
+nothing, the poster quotes a fragment of the page (visible DOM lines first,
+then prose-looking string literals inside `<script>` since many pages render
+their copy from JS, then the `<title>` alone for text-free canvas pieces),
+signed with the same picked persona's signoff. No LLM anywhere in the path, so
+a cap can't disable it. Fragments pass the same house-rule gate the prompts
+enforce (no URLs, no `outbox`/AI/"weird"/"retro", no UI instructions, no photo
+credits) and a shape score (length sweet spot, terminal punctuation, not
+shouty, not a `·` chrome line). `post_log.jsonl` rows carry
+`caption: "claude" | "dom" | "script" | "title"` so `reflect.py` can compare
+them later; the digest prints a `**captions:**` count on days it fired.
+
+**Rules:** any new social poster that calls Claude at post time must have a
+zero-Claude fallback (this module, or the ritual drawer for scheduled pieces).
+Extend `_BLOCK_RE` if a new house rule lands in the prompts — the gate and the
+prompts must not drift. `bsky.create_post()` is the only way to createRecord a
+post: it retries the platform's periodic timeouts and checks `listRecords` for
+the record's own `createdAt` before each retry so it never double-posts
+(Pancake's 2026-09-12 act 2 was lost to one un-retried timeout).
+
 ### Weekly ritual crons run at :06 (2026-06-09)
 
 Slip is `6 9 * * 0`, Doris is `6 15 * * 0` — staggered off the :00 grid the

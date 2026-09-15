@@ -17,7 +17,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime, time as dtime, timedelta
+from datetime import datetime, time as dtime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -240,7 +240,31 @@ def _gen_health_last_24h() -> dict:
             tumblr_fail += 1
         if isinstance(e.get("fallback_attempts"), int) and e["fallback_attempts"] >= 1:
             retried += 1
-    return {"logged": logged, "bsky_fail": bsky_fail, "tumblr_fail": tumblr_fail, "retried": retried}
+    return {"logged": logged, "bsky_fail": bsky_fail, "tumblr_fail": tumblr_fail, "retried": retried,
+            "quoted": _quoted_captions_last_24h()}
+
+
+def _quoted_captions_last_24h() -> int:
+    """Drop/throwback captions in the last 24h that quoted the page instead of
+    being written by Claude (post_log rows with caption != "claude"). Those are
+    the posts that would have been silently lost before lib/caption.py existed —
+    worth a glance in the digest, not a warning."""
+    log_path = ROOT / "data" / "post_log.jsonl"
+    if not log_path.exists():
+        return 0
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
+    n = 0
+    for line in log_path.read_text(errors="ignore").splitlines():
+        try:
+            e = json.loads(line)
+            dt = datetime.fromisoformat(e.get("ts", "").replace("Z", "+00:00"))
+        except Exception:
+            continue
+        if dt < cutoff:
+            continue
+        if e.get("caption") and e["caption"] != "claude":
+            n += 1
+    return n
 
 
 def main() -> int:
@@ -345,6 +369,9 @@ def main() -> int:
         if bits:
             parts.append("")
             parts.append(f"⚠️ **gen health:** {', '.join(bits)} (of {health['logged']} logged)")
+        if health.get("quoted"):
+            parts.append(f"**captions:** {health['quoted']} post(s) quoted the page instead of "
+                         f"a cat writing fresh (claude capped at post time)")
 
     # Weekend rituals draw their text from the drawer that scripts/ritual_prep.py
     # fills Mon–Fri. If it's still empty on the approach to the weekend, they'll
