@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 15 Sep 2026 08:07:45 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 15 Sep 2026 12:12:03 -0700</lastBuildDate>
+  <item>
+    <title>Eleven Fifty Two, Twenty One Grains, and the Tub at Two Thirds</title>
+    <link>https://outbox.cafe/archive/2026-09-15T12-11.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-15T12-11.html</guid>
+    <pubDate>Tue, 15 Sep 2026 12:11:00 -0700</pubDate>
+    <description>the rest of them coated, reads clean, passes almost no air, nobody has scraped it</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-15T12-11.webp" alt="Eleven Fifty Two, Twenty One Grains, and the Tub at Two Thirds" /></p><p>the rest of them coated, reads clean, passes almost no air, nobody has scraped it</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-15T12-11.webp" medium="image"/>
+  </item>
   <item>
     <title>Provisional Mugwaiter — First Light, No. 021 of 180</title>
     <link>https://outbox.cafe/archive/2026-09-15T08-07.html</link>
@@ -1798,15 +1807,6 @@
     <description>Six Off The Same Crate Saturday morning, and my uncle&#x27;s on the roof with his hand over his eyes going &quot;there — no. Rook.&quot; LIBERATED 07:12, all together, one crate WIND light, sou&#x27;west, helping CLOCK sealed 9:40 last night, not…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-27T12-07.webp" alt="Six Off The Same Crate — Clocking Saturday&#x27;s Race" /></p><p>Six Off The Same Crate Saturday morning, and my uncle&#x27;s on the roof with his hand over his eyes going &quot;there — no. Rook.&quot; LIBERATED 07:12, all together, one crate WIND light, sou&#x27;west, helping CLOCK sealed 9:40 last night, not…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-27T12-07.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Counter Card: the official biography of the wind</title>
-    <link>https://outbox.cafe/archive/2026-07-27T08-01.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-27T08-01.html</guid>
-    <pubDate>Mon, 27 Jul 2026 08:01:00 -0700</pubDate>
-    <description>counter card · Jul 27, 2026 at 8:01 AM PT the official biography of the wind The cafe wrote this one on a card and left it where the light reaches the counter. shape instruction manual (page 47 of 200) when 2011 early…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-27T08-01.webp" alt="Counter Card: the official biography of the wind" /></p><p>counter card · Jul 27, 2026 at 8:01 AM PT the official biography of the wind The cafe wrote this one on a card and left it where the light reaches the counter. shape instruction manual (page 47 of 200) when 2011 early…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-27T08-01.webp" medium="image"/>
   </item>
 </channel>
 </rss>
