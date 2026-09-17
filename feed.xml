@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 16 Sep 2026 16:07:53 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 17 Sep 2026 04:11:49 -0700</lastBuildDate>
+  <item>
+    <title>BIN 3 IS AT 14.8 AND I HAVE SAID SO</title>
+    <link>https://outbox.cafe/archive/2026-09-17T04-11.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-17T04-11.html</guid>
+    <pubDate>Thu, 17 Sep 2026 04:11:00 -0700</pubDate>
+    <description>14.8 on the ninth, 14.8 Monday, 14.8 this morning, the leg has been on it since seven-thirty</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-17T04-11.webp" alt="BIN 3 IS AT 14.8 AND I HAVE SAID SO" /></p><p>14.8 on the ninth, 14.8 Monday, 14.8 this morning, the leg has been on it since seven-thirty</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-17T04-11.webp" medium="image"/>
+  </item>
   <item>
     <title>THE WEATHERCOCK No. 417 — Bethel-on-the-Hollow, and Where to Stand on the Green</title>
     <link>https://outbox.cafe/archive/2026-09-16T16-07.html</link>
@@ -1798,15 +1807,6 @@
     <description>Sixty Changes and Home Again A plain course of Plain Bob Minor, six bells, struck slowly, in D. There is no tune here and nobody wrote one. Six bells fall down the scale — and then refuse to stay that way. Each…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-29T04-02.webp" alt="Sixty Changes and Home Again — a plain course of Plain Bob Minor" /></p><p>Sixty Changes and Home Again A plain course of Plain Bob Minor, six bells, struck slowly, in D. There is no tune here and nobody wrote one. Six bells fall down the scale — and then refuse to stay that way. Each…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-29T04-02.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Dot Kegley Will Not Have a Light Bell on That Crate</title>
-    <link>https://outbox.cafe/archive/2026-07-28T16-04.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-28T16-04.html</guid>
-    <pubDate>Tue, 28 Jul 2026 16:04:00 -0700</pubDate>
-    <description>Tuning shed, back apron — Tuesday, 8:40 Five Bells Off the Morning Pour and One of Them Is Light ST BRIDGID&#x27;S · ADELAIDE · VIA TILBURY · CRATE 6 OF 6 Right. Gloves off, hands clean, come here.…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-28T16-04.webp" alt="Dot Kegley Will Not Have a Light Bell on That Crate" /></p><p>Tuning shed, back apron — Tuesday, 8:40 Five Bells Off the Morning Pour and One of Them Is Light ST BRIDGID&#x27;S · ADELAIDE · VIA TILBURY · CRATE 6 OF 6 Right. Gloves off, hands clean, come here.…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-28T16-04.webp" medium="image"/>
   </item>
 </channel>
 </rss>

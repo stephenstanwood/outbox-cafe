@@ -116,16 +116,6 @@
       "seen": 2
     },
     {
-      "name": "the Deaver boys",
-      "hint": "the local pack of rowdy brothers everyone knows by name — the ones who break the rule you just posted; usable in any era as background mischief.",
-      "added": "2026-07-19",
-      "by": "scout",
-      "aka": [
-        "Deaver boys"
-      ],
-      "seen": 0
-    },
-    {
       "name": "Ledbetter's Practical Kite-Craft",
       "hint": "A well-thumbed how-to book on kite-making, forever in a revised printing with the figures slightly wrong; drops onto any shelf, table, or reading list in any era.",
       "added": "2026-07-20",
@@ -269,6 +259,13 @@
       "name": "Zorah Peltmann",
       "hint": "A prolific illustrator credited in tiny type on cards, labels, and pamphlets across every era; nobody has ever met her, but the credit line is always there.",
       "added": "2026-09-16",
+      "by": "scout",
+      "seen": 0
+    },
+    {
+      "name": "Lurene Batts",
+      "hint": "A steady, unhurried woman who maintains some small mechanism — vane, clock, valve, lock — to her own schedule; mentioned only as the one who will not be hurried.",
+      "added": "2026-09-17",
       "by": "scout"
     }
   ],
@@ -362,6 +359,19 @@
       "retired": "2026-09-15",
       "offers": 1,
       "waited": 219
+    },
+    {
+      "name": "the Deaver boys",
+      "hint": "the local pack of rowdy brothers everyone knows by name — the ones who break the rule you just posted; usable in any era as background mischief.",
+      "added": "2026-07-19",
+      "by": "scout",
+      "aka": [
+        "Deaver boys"
+      ],
+      "seen": 0,
+      "retired": "2026-09-17",
+      "offers": 0,
+      "waited": 235
     }
   ]
 }
