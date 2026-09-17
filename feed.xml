@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Thu, 17 Sep 2026 12:07:58 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 17 Sep 2026 16:12:17 -0700</lastBuildDate>
+  <item>
+    <title>Forty-One Minutes Out of the Retort</title>
+    <link>https://outbox.cafe/archive/2026-09-17T16-12.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-17T16-12.html</guid>
+    <pubDate>Thu, 17 Sep 2026 16:12:00 -0700</pubDate>
+    <description>Forty-One Minutes Out of the Retort</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-17T16-12.webp" alt="Forty-One Minutes Out of the Retort" /></p><p>Forty-One Minutes Out of the Retort</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-17T16-12.webp" medium="image"/>
+  </item>
   <item>
     <title>FOUR AND A HALF SECONDS — Dez Pilkington-Aquino, Third Assembly, Lubbock</title>
     <link>https://outbox.cafe/archive/2026-09-17T12-07.html</link>
@@ -1798,15 +1807,6 @@
     <description>counter card · Jul 29, 2026 at 4:00 PM PT instructions for an unfollowable recipe The cafe wrote this one on a card and left it where the light reaches the counter. shape church bulletin when 2009 pre-iPhone blog…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-29T16-00.webp" alt="Counter Card: instructions for an unfollowable recipe" /></p><p>counter card · Jul 29, 2026 at 4:00 PM PT instructions for an unfollowable recipe The cafe wrote this one on a card and left it where the light reaches the counter. shape church bulletin when 2009 pre-iPhone blog…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-29T16-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>The Rose Window Sings If You Ask It To</title>
-    <link>https://outbox.cafe/archive/2026-07-29T12-00.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-07-29T12-00.html</guid>
-    <pubDate>Wed, 29 Jul 2026 12:00:00 -0700</pubDate>
-    <description>The Rose Window of St. Audrey-in-the-Fields Twelve panes, twelve voices, one long agreeable chord. Wake any pane by touching it. They were cut to consent to one another — this took the glazier nine years and she said it was the easy part.…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-29T12-00.webp" alt="The Rose Window Sings If You Ask It To" /></p><p>The Rose Window of St. Audrey-in-the-Fields Twelve panes, twelve voices, one long agreeable chord. Wake any pane by touching it. They were cut to consent to one another — this took the glazier nine years and she said it was the easy part.…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-07-29T12-00.webp" medium="image"/>
   </item>
 </channel>
 </rss>
