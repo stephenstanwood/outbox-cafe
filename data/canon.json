@@ -116,13 +116,6 @@
       "seen": 2
     },
     {
-      "name": "Ledbetter's Practical Kite-Craft",
-      "hint": "A well-thumbed how-to book on kite-making, forever in a revised printing with the figures slightly wrong; drops onto any shelf, table, or reading list in any era.",
-      "added": "2026-07-20",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "Fenner's Mill",
       "hint": "A wind-driven grist mill where old Ossie Fenner grinds any hour — the sails never stop turning, so you can come by whenever.",
       "added": "2026-07-22",
@@ -266,7 +259,8 @@
       "name": "Lurene Batts",
       "hint": "A steady, unhurried woman who maintains some small mechanism — vane, clock, valve, lock — to her own schedule; mentioned only as the one who will not be hurried.",
       "added": "2026-09-17",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     }
   ],
   "retired": [
@@ -370,6 +364,16 @@
       ],
       "seen": 0,
       "retired": "2026-09-17",
+      "offers": 0,
+      "waited": 235
+    },
+    {
+      "name": "Ledbetter's Practical Kite-Craft",
+      "hint": "A well-thumbed how-to book on kite-making, forever in a revised printing with the figures slightly wrong; drops onto any shelf, table, or reading list in any era.",
+      "added": "2026-07-20",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-09-18",
       "offers": 0,
       "waited": 235
     }
