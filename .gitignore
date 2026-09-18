@@ -87,3 +87,10 @@ data/canon_offers.json
 # can write its own runs.jsonl entry (network-dead pull, hard generate crash).
 # The nightly digest reads it so a missed drop can't pass as a quiet day.
 data/aborted_runs.jsonl
+
+# Reciprocity instrumentation — nightly followers snapshot (state) and the
+# append-only log of inbound events attributed back to the cafe's outbound
+# gestures. Per-Mini runtime state; tracking either would dirty the tree the
+# gen runner rebases.
+data/reciprocity_state.json
+data/reciprocity.jsonl
