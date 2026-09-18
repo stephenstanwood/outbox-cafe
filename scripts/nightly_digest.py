@@ -289,6 +289,17 @@ def main() -> int:
     except Exception as e:
         print(f"[digest] canon scout errored (non-fatal): {e}", file=sys.stderr)
 
+    # Reciprocity pass — tonight's followers snapshot diffed against last
+    # night's, plus the day's inbound notifications, each attributed back to
+    # whatever the cafe did to that account first. Turns `gestures out:`
+    # from a bare count into a conversion rate. Zero LLM calls.
+    reciprocity = ""
+    try:
+        from reciprocity import run as run_reciprocity
+        reciprocity = run_reciprocity()
+    except Exception as e:
+        print(f"[digest] reciprocity pass errored (non-fatal): {e}", file=sys.stderr)
+
     count, titles = _gens_last_24h()
     bsky = _bsky_summary()
     signals = _signals_last_24h()
@@ -347,6 +358,8 @@ def main() -> int:
             pass
         if bsky.get("last_post"):
             parts.append(f"last post: _{bsky['last_post']}_")
+    if reciprocity:
+        parts.append(reciprocity)
 
     if signals:
         parts.append("")
