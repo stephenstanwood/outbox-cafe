@@ -117,8 +117,8 @@ def _at_uri_did(uri: str | None) -> str | None:
     return rest if rest.startswith("did:") else None
 
 
-def load_gestures(since: datetime, *, post_log: Path = POST_LOG,
-                  like_state: Path = LIKE_STATE) -> list[dict]:
+def load_gestures(since: datetime, *, post_log: Path | None = None,
+                  like_state: Path | None = None) -> list[dict]:
     """Every outbound gesture since `since`, oldest first.
 
     Each: {"type", "ts" (aware UTC), "did" (may be None), "handle" (lower, no @)}.
@@ -126,6 +126,11 @@ def load_gestures(since: datetime, *, post_log: Path = POST_LOG,
     rows also carry the target's DID in the uri. The bsky like loop logs to
     its own state file (uri + author), not post_log.
     """
+    # Resolve these at call time. Tests and one-off audits deliberately swap the
+    # module paths; binding POST_LOG/LIKE_STATE as defaults at import time made
+    # run() silently keep reading the production files instead.
+    post_log = post_log or POST_LOG
+    like_state = like_state or LIKE_STATE
     out: list[dict] = []
     if post_log.exists():
         for line in post_log.read_text(errors="ignore").splitlines():
@@ -338,16 +343,24 @@ def summarize(events: list[dict], gestures: list[dict], floor: datetime,
     unprompted_follows = 0
     for e in events:
         key = e.get("did") or e.get("handle") or ""
-        kinds = {g["type"] for g in e.get("gestures") or []
-                 if (parse_ts(g.get("ts")) or floor) >= floor}
+        credited = e.get("attributed")
+        # Attribution is deliberately single-touch: the earliest proactive
+        # gesture wins, otherwise the earliest reactive one. Keep the complete
+        # gesture list in the event for auditability, but do not let one return
+        # visit inflate every gesture type that happened to touch the account.
+        eligible = {
+            g["type"] for g in e.get("gestures") or []
+            if (parse_ts(g.get("ts")) or floor) >= floor
+        }
+        kind = credited if credited in eligible else None
         if e.get("event") == "follow":
-            if not e.get("gestures"):
+            if kind is None:
                 unprompted_follows += 1
-            for t in kinds:
-                followed[t].add(key)
+            else:
+                followed[kind].add(key)
         elif e.get("event") in INBOUND_REASONS:
-            for t in kinds:
-                engaged[t].add(key)
+            if kind is not None:
+                engaged[kind].add(key)
 
     bits = []
     for t in GESTURE_TYPES:
@@ -402,7 +415,6 @@ def run(*, now: datetime | None = None, state_path: Path = STATE_PATH,
         return ""
 
     state = _load_state(state_path)
-    gestures = load_gestures(now - timedelta(days=ATTRIBUTION_DAYS + 1))
 
     if not state.get("followers"):
         # First night: nothing to diff against. Seed and start the clock.
@@ -416,6 +428,12 @@ def run(*, now: datetime | None = None, state_path: Path = STATE_PATH,
         print(f"[reciprocity] seeded snapshot with {len(current)} follower(s) — attribution starts now")
         return (f"**reciprocity:** started tracking tonight — {len(current)} followers on the books;"
                 f" follow-backs and engagement now attribute to the cafe's own gestures")
+
+    # The seed is the observation boundary: a pre-seed gesture cannot enter a
+    # denominator because its conversion may already have happened unseen.
+    seeded = parse_ts(state.get("seeded_at")) or now
+    gesture_floor = max(seeded, now - timedelta(days=ATTRIBUTION_DAYS))
+    gestures = load_gestures(gesture_floor)
 
     prev = state["followers"]
     new, lost = diff_followers(prev, current)
@@ -444,6 +462,14 @@ def run(*, now: datetime | None = None, state_path: Path = STATE_PATH,
         reached_first: set[str] = set()
         newest = watermark
         for n in notifs:
+            at = parse_ts(n.get("indexedAt"))
+            if at is None:
+                continue
+            # Advance past every notification we inspected, including follows
+            # and other ignored reasons. Otherwise a quiet day of follow-only
+            # notices leaves the watermark stale and replays the same pages on
+            # every future run.
+            newest = max(newest, at)
             reason = n.get("reason")
             if reason not in INBOUND_REASONS:
                 continue
@@ -451,13 +477,11 @@ def run(*, now: datetime | None = None, state_path: Path = STATE_PATH,
             a_did = author.get("did")
             if not a_did or a_did == did:
                 continue
-            at = parse_ts(n.get("indexedAt")) or now
-            newest = max(newest, at)
             ev = make_event(reason, a_did, author.get("handle"), at, gestures)
             _append_event(ev, events_path)
             total += 1
             accounts.add(a_did)
-            if ev["gestures"]:
+            if ev["attributed"] in PROACTIVE:
                 reached_first.add(a_did)
         inbound_today = (total, len(accounts), len(reached_first))
         state["notif_watermark"] = _iso(max(newest, watermark))
@@ -476,7 +500,6 @@ def run(*, now: datetime | None = None, state_path: Path = STATE_PATH,
     _save_state(state, state_path)
     print(f"[reciprocity] followers {len(prev)} → {len(current)} (+{len(new)} / -{len(lost)})")
 
-    seeded = parse_ts(state.get("seeded_at")) or now
     floor = max(seeded, now - timedelta(days=SUMMARY_DAYS))
     events = _load_events(floor, events_path)
     return summarize(events, gestures, floor, inbound_today)

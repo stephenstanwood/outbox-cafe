@@ -137,10 +137,13 @@ class SummaryTests(unittest.TestCase):
         ]
         events = [
             {"ts": R._iso(NOW), "event": "follow", "did": None, "handle": "old.bsky.social",
+             "attributed": "wild",
              "gestures": [{"type": "wild", "ts": R._iso(NOW - timedelta(days=10))}]},
             {"ts": R._iso(NOW), "event": "follow", "did": None, "handle": "new.bsky.social",
+             "attributed": "wild",
              "gestures": [{"type": "wild", "ts": R._iso(NOW - timedelta(days=2))}]},
             {"ts": R._iso(NOW), "event": "like", "did": None, "handle": "other.bsky.social",
+             "attributed": "wild",
              "gestures": [{"type": "wild", "ts": R._iso(NOW - timedelta(days=1))}]},
         ]
         line = R.summarize(events, gestures, floor)
@@ -151,8 +154,9 @@ class SummaryTests(unittest.TestCase):
         gestures = [g("follow_ack_like", 1, did="did:plc:fan", handle="fan.bsky.social")]
         events = [
             {"ts": R._iso(NOW), "event": "follow", "did": "did:plc:stranger",
-             "handle": "s.bsky.social", "gestures": []},
+             "handle": "s.bsky.social", "attributed": None, "gestures": []},
             {"ts": R._iso(NOW), "event": "reply", "did": "did:plc:fan", "handle": "fan.bsky.social",
+             "attributed": "follow_ack_like",
              "gestures": [{"type": "follow_ack_like", "ts": R._iso(NOW - timedelta(days=1))}]},
         ]
         line = R.summarize(events, gestures, floor)
@@ -166,6 +170,24 @@ class SummaryTests(unittest.TestCase):
         self.assertEqual(R.summarize([], [], floor, inbound_today=(0, 0, 0)), "")
         line = R.summarize([], [], floor, inbound_today=(7, 4, 2))
         self.assertIn("7 like/reply/repost from 4 account(s) — 2 the cafe had reached first", line)
+
+    def test_one_event_credits_only_the_selected_gesture(self):
+        floor = NOW - timedelta(days=5)
+        gestures = [
+            g("follow", 3, did="did:plc:x", handle="x.bsky.social"),
+            g("wild", 2, handle="x.bsky.social"),
+        ]
+        events = [{
+            "ts": R._iso(NOW), "event": "like", "did": "did:plc:x",
+            "handle": "x.bsky.social", "attributed": "follow",
+            "gestures": [
+                {"type": "follow", "ts": R._iso(NOW - timedelta(days=3))},
+                {"type": "wild", "ts": R._iso(NOW - timedelta(days=2))},
+            ],
+        }]
+        line = R.summarize(events, gestures, floor)
+        self.assertIn("follow 1 → 0 followed, 1 engaged", line)
+        self.assertIn("wild reply 1 → 0 followed, 0 engaged", line)
 
 
 class RunTests(unittest.TestCase):
@@ -190,9 +212,9 @@ class RunTests(unittest.TestCase):
 
     def test_seed_then_attribute(self):
         rows = [
-            {"ts": R._iso(NOW - timedelta(days=3)), "type": "wild",
+            {"ts": R._iso(NOW - timedelta(hours=18)), "type": "wild",
              "uri": "at://did:plc:cafe/app.bsky.feed.post/r", "subject": "@newbie.bsky.social"},
-            {"ts": R._iso(NOW - timedelta(days=2)), "type": "follow",
+            {"ts": R._iso(NOW - timedelta(hours=12)), "type": "follow",
              "uri": "at://did:plc:fb", "subject": "@fb.bsky.social"},
         ]
         with tempfile.TemporaryDirectory() as d:
@@ -234,6 +256,56 @@ class RunTests(unittest.TestCase):
             self.assertEqual(len(state["followers"]), 4)
             self.assertEqual(state["followers"]["did:plc:old"]["first_seen"], R._iso(night1))
             self.assertGreater(state["notif_watermark"], R._iso(night1))
+
+    def test_pre_seed_gesture_is_not_credited(self):
+        rows = [{
+            "ts": R._iso(NOW - timedelta(days=3)), "type": "wild",
+            "uri": "at://did:plc:cafe/app.bsky.feed.post/r", "subject": "@newbie.bsky.social",
+        }]
+        with tempfile.TemporaryDirectory() as d:
+            night1 = NOW - timedelta(days=1)
+            self._run(d, {"did:plc:old": "old.bsky.social"}, [], night1, rows)
+            self._run(d, {
+                "did:plc:old": "old.bsky.social",
+                "did:plc:newbie": "newbie.bsky.social",
+            }, [], NOW, rows)
+            events = [json.loads(l) for l in (Path(d) / "events.jsonl").read_text().splitlines()]
+            follow = next(e for e in events if e["event"] == "follow")
+            self.assertIsNone(follow["attributed"])
+            self.assertEqual(follow["gestures"], [])
+
+    def test_ignored_notification_advances_watermark(self):
+        rows = [{
+            "ts": R._iso(NOW - timedelta(hours=12)), "type": "follow_ack_like",
+            "uri": "at://did:plc:fan/app.bsky.feed.post/r", "subject": "@fan.bsky.social",
+        }]
+        with tempfile.TemporaryDirectory() as d:
+            night1 = NOW - timedelta(days=1)
+            followers = {"did:plc:fan": "fan.bsky.social"}
+            self._run(d, followers, [], night1, rows)
+            follow_notice_at = NOW - timedelta(hours=2)
+            text = self._run(d, followers, [{
+                "reason": "follow", "indexedAt": R._iso(follow_notice_at),
+                "author": {"did": "did:plc:fan", "handle": "fan.bsky.social"},
+            }], NOW, rows)
+            state = json.loads((Path(d) / "state.json").read_text())
+            self.assertEqual(state["notif_watermark"], R._iso(follow_notice_at))
+            self.assertNotIn("inbound today:", text)
+
+    def test_reactive_touch_is_not_reported_as_cafe_reached_first(self):
+        rows = [{
+            "ts": R._iso(NOW - timedelta(hours=12)), "type": "follow_ack_like",
+            "uri": "at://did:plc:fan/app.bsky.feed.post/r", "subject": "@fan.bsky.social",
+        }]
+        with tempfile.TemporaryDirectory() as d:
+            night1 = NOW - timedelta(days=1)
+            followers = {"did:plc:fan": "fan.bsky.social"}
+            self._run(d, followers, [], night1, rows)
+            text = self._run(d, followers, [{
+                "reason": "like", "indexedAt": R._iso(NOW - timedelta(hours=2)),
+                "author": {"did": "did:plc:fan", "handle": "fan.bsky.social"},
+            }], NOW, rows)
+            self.assertIn("1 like/reply/repost from 1 account(s) — 0 the cafe had reached first", text)
 
     def test_network_failure_is_quiet(self):
         with tempfile.TemporaryDirectory() as d:
