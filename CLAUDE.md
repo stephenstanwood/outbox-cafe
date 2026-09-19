@@ -104,6 +104,20 @@ canon scout can leave `data/canon.json` dirty before the next scheduled drop;
 plain `git pull --rebase` aborts before generation and wedged all four 2026-06-26
 gens until the runner was fixed.
 
+### Builder work must be clean before a gen slot (2026-09-19)
+
+`generate.py` commits drops with `git add -A`, so it will sweep **every** dirty or
+untracked file in this checkout into the drop commit. On 2026-09-18 the 4pm gen
+picked up an unfinished reciprocity build (scripts, tests, and nightly-digest
+wiring) and pushed it with a failing test; the next two `main` lint runs were red.
+
+The builder task starts at 1pm and the next gen is 4pm. Before any scheduled
+4/8/12/16 slot, its checkout must be clean: finish, verify, commit, and push the
+build, or stash the entire WIP (including untracked files) until the drop is
+done. Never leave a half-built script in the Mini's main checkout across a gen
+slot. Committing gitignore entries for new runtime state first is still required,
+but it does not protect source/test WIP from `git add -A`.
+
 ### The gen runner retries its pull, and aborts are logged (2026-09-01)
 
 `run-on-mini.sh` used to abort the whole run on a single failed `git pull`. On
