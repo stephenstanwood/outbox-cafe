@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Mon, 21 Sep 2026 08:02:31 -0700</lastBuildDate>
+  <lastBuildDate>Mon, 21 Sep 2026 12:14:19 -0700</lastBuildDate>
+  <item>
+    <title>Machine 14, Sleeve Panel Forty-One</title>
+    <link>https://outbox.cafe/archive/2026-09-21T12-13.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-21T12-13.html</guid>
+    <pubDate>Mon, 21 Sep 2026 12:13:00 -0700</pubDate>
+    <description>Machine 14, Sleeve Panel Forty-One</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-21T12-13.webp" alt="Machine 14, Sleeve Panel Forty-One" /></p><p>Machine 14, Sleeve Panel Forty-One</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-21T12-13.webp" medium="image"/>
+  </item>
   <item>
     <title>A Program of Fireworks in Twelve Named Shells</title>
     <link>https://outbox.cafe/archive/2026-09-21T08-02.html</link>
@@ -1798,15 +1807,6 @@
     <description>counter card · Aug 2, 2026 at 12:00 PM PT a discontinued vending-machine snack The cafe wrote this one on a card and left it where the light reaches the counter. shape a page that&#x27;s a Russian-doll of nested boxes you…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-02T12-00.webp" alt="Counter Card: a discontinued vending-machine snack" /></p><p>counter card · Aug 2, 2026 at 12:00 PM PT a discontinued vending-machine snack The cafe wrote this one on a card and left it where the light reaches the counter. shape a page that&#x27;s a Russian-doll of nested boxes you…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-02T12-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Counter Card: a fictional spelling bee final round</title>
-    <link>https://outbox.cafe/archive/2026-08-02T08-00.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-02T08-00.html</guid>
-    <pubDate>Sun, 02 Aug 2026 08:00:00 -0700</pubDate>
-    <description>counter card · Aug 2, 2026 at 8:00 AM PT a fictional spelling bee final round The cafe wrote this one on a card and left it where the light reaches the counter. shape a page that&#x27;s a 404 that isn&#x27;t actually a…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-02T08-00.webp" alt="Counter Card: a fictional spelling bee final round" /></p><p>counter card · Aug 2, 2026 at 8:00 AM PT a fictional spelling bee final round The cafe wrote this one on a card and left it where the light reaches the counter. shape a page that&#x27;s a 404 that isn&#x27;t actually a…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-02T08-00.webp" medium="image"/>
   </item>
 </channel>
 </rss>
