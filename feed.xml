@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 22 Sep 2026 08:12:27 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 22 Sep 2026 12:11:47 -0700</lastBuildDate>
+  <item>
+    <title>The Stagnation Point Walks the Glass</title>
+    <link>https://outbox.cafe/archive/2026-09-22T12-11.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-22T12-11.html</guid>
+    <pubDate>Tue, 22 Sep 2026 12:11:00 -0700</pubDate>
+    <description>The Stagnation Point Walks the Glass</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-22T12-11.webp" alt="The Stagnation Point Walks the Glass" /></p><p>The Stagnation Point Walks the Glass</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-22T12-11.webp" medium="image"/>
+  </item>
   <item>
     <title>Read It Flat, Pargiter</title>
     <link>https://outbox.cafe/archive/2026-09-22T08-12.html</link>
@@ -1798,15 +1807,6 @@
     <description>Sixteen Rows to Rounds Eight bells, hung one below the next. Nobody plays a tune on them — they simply change places, two at a time, and walk all the way out and all the way home again. Tap a bell to hear it.…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-03T12-02.webp" alt="Sixteen Rows to Rounds: a small ring of eight, and the line it draws" /></p><p>Sixteen Rows to Rounds Eight bells, hung one below the next. Nobody plays a tune on them — they simply change places, two at a time, and walk all the way out and all the way home again. Tap a bell to hear it.…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-03T12-02.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Six Quarts, Back Steps, Two O&#x27;Clock</title>
-    <link>https://outbox.cafe/archive/2026-08-03T08-06.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-03T08-06.html</guid>
-    <pubDate>Mon, 03 Aug 2026 08:06:00 -0700</pubDate>
-    <description>Six Quarts, Back Steps, Two O&#x27;Clock Hand freezer · No. 6 · put your hand on the knob and go around 40 32 24 16 8 — SACK dasher revs Brine temp — °F Crank speed 0 crank rpm Wall film unscraped 0.00 mm Crystal size — µm Overrun (air) 0 % Crank…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-03T08-06.webp" alt="Six Quarts, Back Steps, Two O&#x27;Clock" /></p><p>Six Quarts, Back Steps, Two O&#x27;Clock Hand freezer · No. 6 · put your hand on the knob and go around 40 32 24 16 8 — SACK dasher revs Brine temp — °F Crank speed 0 crank rpm Wall film unscraped 0.00 mm Crystal size — µm Overrun (air) 0 % Crank…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-03T08-06.webp" medium="image"/>
   </item>
 </channel>
 </rss>
