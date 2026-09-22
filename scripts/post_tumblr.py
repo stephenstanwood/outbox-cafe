@@ -26,8 +26,6 @@ import random
 import re
 import sys
 import urllib.error
-import urllib.parse
-import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -194,38 +192,23 @@ def post_drop(
     safe_text = _html.escape(body_text).replace("\n", "<br>")
     caption_html = f"<p>{safe_text}</p>"
 
-    url = f"{tumblr.BASE}/blog/{blog}.tumblr.com/post"
-
     try:
         if thumb_png_path and thumb_png_path.exists():
             # No `link` field — we don't want the photo to be a clickable
             # funnel back to the archive page. Photo opens in Tumblr's
             # normal post view, which is fine.
-            fields = {
+            resp = tumblr.create_post(blog, {
                 "type": "photo",
                 "caption": caption_html,
                 "tags": ",".join(tags),
-            }
-            body, ctype = tumblr.build_multipart(fields, thumb_png_path.read_bytes(), thumb_png_path.name)
-            auth = tumblr.oauth_header("POST", url)  # multipart: fields NOT in signature
+            }, image_bytes=thumb_png_path.read_bytes(), image_name=thumb_png_path.name)
         else:
-            fields = {
+            resp = tumblr.create_post(blog, {
                 "type": "text",
                 "title": title[:200],
                 "body": caption_html,
                 "tags": ",".join(tags),
-            }
-            body = urllib.parse.urlencode(fields).encode()
-            ctype = "application/x-www-form-urlencoded"
-            auth = tumblr.oauth_header("POST", url, params=fields)  # urlencoded: fields sign
-        req = urllib.request.Request(
-            url,
-            data=body,
-            headers={"Authorization": auth, "Content-Type": ctype},
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=30) as r:
-            resp = json.load(r)
+            })
     except urllib.error.HTTPError as e:
         err_body = e.read().decode("utf-8", errors="ignore")[:500]
         print(f"[post_tumblr] HTTP {e.code}: {err_body}", file=sys.stderr)

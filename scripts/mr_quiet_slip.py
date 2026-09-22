@@ -33,7 +33,6 @@ import random
 import re
 import sys
 import urllib.error
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -352,9 +351,6 @@ def post_to_tumblr(text: str, image_path: Path) -> str | None:
         print("[slip] tumblr creds missing — skip tumblr", file=sys.stderr)
         return None
 
-    url = f"{tumblr.BASE}/blog/{blog}.tumblr.com/post"
-    auth = tumblr.oauth_header("POST", url)  # multipart: fields NOT in signature
-
     import html as _html
     caption_html = f"<p>{_html.escape(text)}</p>"
     tags = ["mr quiet", "the cafe", "fortune cookie", "weekly slip", "outbox cafe", "slip of paper"]
@@ -363,13 +359,9 @@ def post_to_tumblr(text: str, image_path: Path) -> str | None:
         "caption": caption_html,
         "tags": ",".join(tags),
     }
-    body, ctype = tumblr.build_multipart(fields, image_path.read_bytes(), image_path.name)
-    req = urllib.request.Request(
-        url, data=body, headers={"Authorization": auth, "Content-Type": ctype}, method="POST"
-    )
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            resp = json.load(r)
+        resp = tumblr.create_post(blog, fields, image_bytes=image_path.read_bytes(),
+                                  image_name=image_path.name)
     except urllib.error.HTTPError as e:
         err = e.read().decode("utf-8", errors="ignore")[:500]
         print(f"[slip] tumblr HTTP {e.code}: {err}", file=sys.stderr)

@@ -26,8 +26,6 @@ import os
 import re
 import sys
 import urllib.error
-import urllib.parse
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -156,7 +154,6 @@ def post_text_to_tumblr(title: str, body: str) -> str | None:
         print("[muffin] tumblr creds missing — abort", file=sys.stderr)
         return None
     blog = os.environ["TUMBLR_BLOG_NAME"]
-    url = f"{tumblr.BASE}/blog/{blog}.tumblr.com/post"
     # Convert paragraph breaks to <p> tags
     paragraphs = [p.strip() for p in body.split("\n\n") if p.strip()]
     body_html = "\n".join(f"<p>{_html.escape(p).replace(chr(10), '<br>')}</p>" for p in paragraphs)
@@ -167,15 +164,8 @@ def post_text_to_tumblr(title: str, body: str) -> str | None:
         "body": body_html,
         "tags": ",".join(tags),
     }
-    body_enc = urllib.parse.urlencode(fields).encode()
-    auth = tumblr.oauth_header("POST", url, params=fields)
-    req = urllib.request.Request(url, data=body_enc, headers={
-        "Authorization": auth,
-        "Content-Type": "application/x-www-form-urlencoded",
-    }, method="POST")
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            d = json.load(r)
+        d = tumblr.create_post(blog, fields)
     except urllib.error.HTTPError as e:
         err = e.read().decode("utf-8", errors="ignore")[:500]
         print(f"[muffin] HTTP {e.code}: {err}", file=sys.stderr)

@@ -20,8 +20,6 @@ import json
 import os
 import sys
 import urllib.error
-import urllib.parse
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -135,40 +133,23 @@ def _post_tumblr(text: str, archive_url: str, thumb_path: Path | None,
         body_parts.append(f"<p>{safe}</p>")
     caption_html = "".join(body_parts)
 
-    url = f"{tumblr.BASE}/blog/{blog}.tumblr.com/post"
-
     try:
         if thumb_path and thumb_path.exists():
-            fields = {
+            resp = tumblr.create_post(blog, {
                 "type": "photo",
                 "caption": caption_html,
                 "tags": tags,
                 # Tying the image to the archive URL makes the photo itself a tap-target
                 # back to the gen — desirable for spotlights (unlike daily drops).
                 "link": archive_url,
-            }
-            body, ctype = tumblr.build_multipart(
-                fields, thumb_path.read_bytes(), thumb_path.name
-            )
-            auth_header = tumblr.oauth_header("POST", url)  # multipart: fields NOT in signature
+            }, image_bytes=thumb_path.read_bytes(), image_name=thumb_path.name)
         else:
-            fields = {
+            resp = tumblr.create_post(blog, {
                 "type": "text",
                 "title": title[:200],
                 "body": caption_html,
                 "tags": tags,
-            }
-            body = urllib.parse.urlencode(fields).encode()
-            ctype = "application/x-www-form-urlencoded"
-            auth_header = tumblr.oauth_header("POST", url, params=fields)
-        req = urllib.request.Request(
-            url,
-            data=body,
-            headers={"Authorization": auth_header, "Content-Type": ctype},
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=30) as r:
-            resp = json.load(r)
+            })
     except urllib.error.HTTPError as e:
         err_body = e.read().decode("utf-8", errors="ignore")[:500]
         print(f"[spotlight/tumblr] HTTP {e.code}: {err_body}", file=sys.stderr)

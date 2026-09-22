@@ -29,9 +29,6 @@ import json
 import os
 import re
 import sys
-import urllib.error
-import urllib.parse
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -232,22 +229,14 @@ def post_to_tumblr(text: str) -> str | None:
     if not all(os.environ.get(k) for k in needed):
         return None
     blog = os.environ["TUMBLR_BLOG_NAME"]
-    url = f"{tumblr.BASE}/blog/{blog}.tumblr.com/post"
     tags = ["pancake", "the cafe", "outbox cafe", "saturday"]
     fields = {
         "type": "text",
         "body": f"<p>{_html.escape(text)}</p>",
         "tags": ",".join(tags),
     }
-    body = urllib.parse.urlencode(fields).encode()
-    auth = tumblr.oauth_header("POST", url, params=fields)
-    req = urllib.request.Request(url, data=body,
-        headers={"Authorization": auth, "Content-Type": "application/x-www-form-urlencoded"},
-        method="POST",
-    )
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            d = json.load(r)
+        d = tumblr.create_post(blog, fields)
     except Exception as e:
         print(f"[pancake] tumblr failed: {e}", file=sys.stderr)
         return None
