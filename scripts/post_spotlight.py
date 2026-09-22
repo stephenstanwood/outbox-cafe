@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import argparse
 import html as _html
-import json
 import os
 import sys
 import urllib.error
