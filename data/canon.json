@@ -113,7 +113,7 @@
       "hint": "The grand old downtown department store, famous for the roof aviary worth the whole elevator ride — droppable in any era as a passing shopping-trip mention.",
       "added": "2026-07-15",
       "by": "scout",
-      "seen": 2
+      "seen": 3
     },
     {
       "name": "Fenner's Mill",
@@ -147,13 +147,6 @@
       "name": "A. Vasconcelos",
       "hint": "The initialed name found stamped or inked on well-made small things — gauges, handles, tags — always with a date and never a first name, only ever the person who made it.",
       "added": "2026-08-07",
-      "by": "scout",
-      "seen": 0
-    },
-    {
-      "name": "Bev Hallonquist",
-      "hint": "The woman who can fix the thing everyone else has given up on, usually found with both arms inside it; keeps every shop order she's ever written, and knows exactly which drawer.",
-      "added": "2026-08-11",
       "by": "scout",
       "seen": 0
     },
@@ -266,6 +259,13 @@
       "name": "R. Speight",
       "hint": "A salesman in the front office who quotes prices and promises dates without ever asking the people who do the work; his signature turns up on any order, any era.",
       "added": "2026-09-21",
+      "by": "scout",
+      "seen": 0
+    },
+    {
+      "name": "Vasilakis-Pryor",
+      "hint": "A wholesale cut-flower bay — trade only, no retail — whose buckets are always going missing and are charged at forty cents each if not returned with the driver.",
+      "added": "2026-09-22",
       "by": "scout"
     }
   ],
@@ -382,6 +382,16 @@
       "retired": "2026-09-18",
       "offers": 0,
       "waited": 235
+    },
+    {
+      "name": "Bev Hallonquist",
+      "hint": "The woman who can fix the thing everyone else has given up on, usually found with both arms inside it; keeps every shop order she's ever written, and knows exactly which drawer.",
+      "added": "2026-08-11",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-09-22",
+      "offers": 1,
+      "waited": 163
     }
   ]
 }
