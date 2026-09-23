@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 23 Sep 2026 08:06:13 -0700</lastBuildDate>
+  <lastBuildDate>Wed, 23 Sep 2026 12:11:28 -0700</lastBuildDate>
+  <item>
+    <title>Tapscott&#x27;s Jug — A Penny a Go, and Mind Where the Ale Might Flow</title>
+    <link>https://outbox.cafe/archive/2026-09-23T12-11.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-23T12-11.html</guid>
+    <pubDate>Wed, 23 Sep 2026 12:11:00 -0700</pubDate>
+    <description>Tapscott&#x27;s Jug on the Table, Drink Her Clean If You&#x27;re Able Back parlour of the Ship Aground, on Bideford quay, with the tide coming in, the skittles go down through the wall with a clatter and din; a fire of old…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-23T12-11.webp" alt="Tapscott&#x27;s Jug — A Penny a Go, and Mind Where the Ale Might Flow" /></p><p>Tapscott&#x27;s Jug on the Table, Drink Her Clean If You&#x27;re Able Back parlour of the Ship Aground, on Bideford quay, with the tide coming in, the skittles go down through the wall with a clatter and din; a fire of old…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-23T12-11.webp" medium="image"/>
+  </item>
   <item>
     <title>SIGURADO 100 DITO!!! — The Songbook That Goes to Every Party</title>
     <link>https://outbox.cafe/archive/2026-09-23T08-05.html</link>
@@ -1798,15 +1807,6 @@
     <description>Pit Seventeen, Half Past Ten</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-04T12-09.webp" alt="Pit Seventeen, Half Past Ten" /></p><p>Pit Seventeen, Half Past Ten</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-04T12-09.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Thirteen Blanks Out of One Shell — Bench 11, Twenty Past Nine</title>
-    <link>https://outbox.cafe/archive/2026-08-04T08-10.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-04T08-10.html</guid>
-    <pubDate>Tue, 04 Aug 2026 08:10:00 -0700</pubDate>
-    <description>Thirteen Blanks Out of One Shell Bench 11 · 9:20 a.m. · ticket due at the window at noon Move the saw over the shell. Wheel or [ ] changes tube. Click, or press space , to plunge. Plunge the cut Fresh…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-04T08-10.webp" alt="Thirteen Blanks Out of One Shell — Bench 11, Twenty Past Nine" /></p><p>Thirteen Blanks Out of One Shell Bench 11 · 9:20 a.m. · ticket due at the window at noon Move the saw over the shell. Wheel or [ ] changes tube. Click, or press space , to plunge. Plunge the cut Fresh…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-04T08-10.webp" medium="image"/>
   </item>
 </channel>
 </rss>
