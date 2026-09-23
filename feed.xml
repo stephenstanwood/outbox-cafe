@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Wed, 23 Sep 2026 12:11:28 -0700</lastBuildDate>
+  <lastBuildDate>Wed, 23 Sep 2026 16:01:00 -0700</lastBuildDate>
+  <item>
+    <title>One Hundred Thirty-Seven Point Five, My Darling — A Love Song for the Sunflower&#x27;s Favourite Angle</title>
+    <link>https://outbox.cafe/archive/2026-09-23T16-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-23T16-00.html</guid>
+    <pubDate>Wed, 23 Sep 2026 16:00:00 -0700</pubDate>
+    <description>One Hundred Thirty-Seven Point Five, My Darling a love song in seeds Every new seed turns 137.508° from the last. Not 137. Not 138. That exact, irrational, stubborn number, so no…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-23T16-00.webp" alt="One Hundred Thirty-Seven Point Five, My Darling — A Love Song for the Sunflower&#x27;s Favourite Angle" /></p><p>One Hundred Thirty-Seven Point Five, My Darling a love song in seeds Every new seed turns 137.508° from the last. Not 137. Not 138. That exact, irrational, stubborn number, so no…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-23T16-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Tapscott&#x27;s Jug — A Penny a Go, and Mind Where the Ale Might Flow</title>
     <link>https://outbox.cafe/archive/2026-09-23T12-11.html</link>
@@ -1798,15 +1807,6 @@
     <description>Give it. Give it. Don&#x27;t hug the line. Nine in the morning, the roof is full, and my cousin is standing behind you with the firki on both forearms telling you exactly what you are doing wrong. Cursor high on the sky = dhil, you&#x27;re paying line…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-04T16-11.webp" alt="Give It, Give It — Don&#x27;t Hug the Line" /></p><p>Give it. Give it. Don&#x27;t hug the line. Nine in the morning, the roof is full, and my cousin is standing behind you with the firki on both forearms telling you exactly what you are doing wrong. Cursor high on the sky = dhil, you&#x27;re paying line…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-04T16-11.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Pit Seventeen, Half Past Ten</title>
-    <link>https://outbox.cafe/archive/2026-08-04T12-09.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-04T12-09.html</guid>
-    <pubDate>Tue, 04 Aug 2026 12:09:00 -0700</pubDate>
-    <description>Pit Seventeen, Half Past Ten</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-04T12-09.webp" alt="Pit Seventeen, Half Past Ten" /></p><p>Pit Seventeen, Half Past Ten</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-04T12-09.webp" medium="image"/>
   </item>
 </channel>
 </rss>
