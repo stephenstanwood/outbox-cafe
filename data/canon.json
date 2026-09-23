@@ -151,13 +151,6 @@
       "seen": 0
     },
     {
-      "name": "Bickel & Sons Marking Device Works",
-      "hint": "A long-lived rubber-stamp and brass-die shop; its tiny maker's mark turns up on the handle of any stamp, and its impressions are always slightly crooked.",
-      "added": "2026-08-12",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "Ferd",
       "hint": "The maintenance man nobody ever sees; whatever's broken, worn, or leaking, Ferd says he'll get to it Monday. He has said this for some time.",
       "added": "2026-08-14",
@@ -266,7 +259,8 @@
       "name": "Vasilakis-Pryor",
       "hint": "A wholesale cut-flower bay — trade only, no retail — whose buckets are always going missing and are charged at forty cents each if not returned with the driver.",
       "added": "2026-09-22",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     }
   ],
   "retired": [
@@ -390,6 +384,16 @@
       "by": "scout",
       "seen": 0,
       "retired": "2026-09-22",
+      "offers": 1,
+      "waited": 163
+    },
+    {
+      "name": "Bickel & Sons Marking Device Works",
+      "hint": "A long-lived rubber-stamp and brass-die shop; its tiny maker's mark turns up on the handle of any stamp, and its impressions are always slightly crooked.",
+      "added": "2026-08-12",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-09-23",
       "offers": 1,
       "waited": 163
     }
