@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 25 Sep 2026 12:01:13 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 25 Sep 2026 16:00:17 -0700</lastBuildDate>
+  <item>
+    <title>Forty-One Minutes Out of the Retort</title>
+    <link>https://outbox.cafe/archive/2026-09-25T16-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-25T16-00.html</guid>
+    <pubDate>Fri, 25 Sep 2026 16:00:00 -0700</pubDate>
+    <description>Forty-One Minutes Out of the Retort  </description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-25T16-00.webp" alt="Forty-One Minutes Out of the Retort" /></p><p>Forty-One Minutes Out of the Retort  </p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-25T16-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Bin 3 Is at 14.8 and Has Been Six Days</title>
     <link>https://outbox.cafe/archive/2026-09-25T12-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Second Set — Scarlet in Alcohol, Viridian in Water more slides</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-06T16-08.webp" alt="Second Set — Scarlet in Alcohol, Viridian in Water" /></p><p>Second Set — Scarlet in Alcohol, Viridian in Water more slides</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-06T16-08.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Under It, Get Under It — Kropa, Half Past Two</title>
-    <link>https://outbox.cafe/archive/2026-08-06T12-12.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-06T12-12.html</guid>
-    <pubDate>Thu, 06 Aug 2026 12:12:00 -0700</pubDate>
-    <description>Sheet Skep Branch Pot &amp; spoon Sound off In hive 0 · air 0 · on branch 0 Half past two and there they are, the whole lot of them, head-high on the second branch — drag the sheet up against the hive first , and don&#x27;t you dare touch…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-06T12-12.webp" alt="Under It, Get Under It — Kropa, Half Past Two" /></p><p>Sheet Skep Branch Pot &amp; spoon Sound off In hive 0 · air 0 · on branch 0 Half past two and there they are, the whole lot of them, head-high on the second branch — drag the sheet up against the hive first , and don&#x27;t you dare touch…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-06T12-12.webp" medium="image"/>
   </item>
 </channel>
 </rss>
