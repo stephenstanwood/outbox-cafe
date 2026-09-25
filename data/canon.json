@@ -116,13 +116,6 @@
       "seen": 3
     },
     {
-      "name": "Fenner's Mill",
-      "hint": "A wind-driven grist mill where old Ossie Fenner grinds any hour — the sails never stop turning, so you can come by whenever.",
-      "added": "2026-07-22",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "Chef Pinder",
       "hint": "A homey fictional frozen TV-dinner brand ('Chef Pinder's Own'), forever promising a whole hot supper in 25 minutes; drop it into any pantry, ad, or memory.",
       "added": "2026-07-23",
@@ -266,7 +259,8 @@
       "name": "Aldous Fenwick-Mbeki",
       "hint": "A commentator who will call any contest, however small, and asks only for a chair, a glass of water and quiet in the gallery.",
       "added": "2026-09-24",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     }
   ],
   "retired": [
@@ -402,6 +396,16 @@
       "retired": "2026-09-23",
       "offers": 1,
       "waited": 163
+    },
+    {
+      "name": "Fenner's Mill",
+      "hint": "A wind-driven grist mill where old Ossie Fenner grinds any hour — the sails never stop turning, so you can come by whenever.",
+      "added": "2026-07-22",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-09-25",
+      "offers": 0,
+      "waited": 255
     }
   ]
 }
