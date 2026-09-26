@@ -65,6 +65,11 @@ FOLLOW_HISTORY_CAP = 4000     # remember every account we've ever followed (dedu
 # while being slow enough that the ratio stays effectively flat.
 RATIO_TIERS = ((3.0, FOLLOWS_PER_DAY), (5.0, 4))
 RATIO_FLOOR_BUDGET = 1
+# A transient getProfile failure must not disable the ratio brake. Keep the
+# most recent live posture for one day; on a failed read, replay it plus any
+# follows this loop recorded afterward. If there is no trustworthy snapshot,
+# fall back to the one-follow trickle rather than the old flat 10/day ceiling.
+POSTURE_CACHE_MAX_AGE_SECONDS = 24 * 60 * 60
 # Below this many total follows the ratio is statistical noise (an account with
 # 0 followers and 10 follows is at "10:1" but has simply not started yet), so
 # the brake stays off. The cafe is far past this; it exists so a cold start
@@ -137,6 +142,85 @@ def _daily_budget(followers: int, follows: int) -> tuple[int, float]:
     return RATIO_FLOOR_BUDGET, ratio
 
 
+def _parse_state_ts(raw: str | None) -> datetime | None:
+    if not isinstance(raw, str) or not raw:
+        return None
+    try:
+        parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def _remember_posture(state: dict, followers: int, follows: int,
+                      *, now: datetime | None = None) -> None:
+    at = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    state["posture"] = {
+        "followers": max(0, int(followers)),
+        "follows": max(0, int(follows)),
+        "ts": at.isoformat().replace("+00:00", "Z"),
+    }
+
+
+def _cached_posture(state: dict, *, now: datetime | None = None) -> tuple[int, int, float] | None:
+    """Return a fresh-enough cached (followers, projected follows, age hours).
+
+    The live snapshot already includes every follow made before its timestamp.
+    Locally recorded follows after that point are added so a cache hit can only
+    hold or tighten the last known ratio-derived budget, never loosen it merely
+    because the profile endpoint is unavailable.
+    """
+    posture = state.get("posture")
+    if not isinstance(posture, dict):
+        return None
+    at = _parse_state_ts(posture.get("ts"))
+    current = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    if at is None:
+        return None
+    age = (current - at).total_seconds()
+    if age < 0 or age > POSTURE_CACHE_MAX_AGE_SECONDS:
+        return None
+    try:
+        followers = max(0, int(posture["followers"]))
+        follows = max(0, int(posture["follows"]))
+    except (KeyError, TypeError, ValueError):
+        return None
+
+    local_since = 0
+    for entry in state.get("followed", []):
+        if not isinstance(entry, dict):
+            continue
+        followed_at = _parse_state_ts(entry.get("ts"))
+        if followed_at is not None and at < followed_at <= current:
+            local_since += 1
+    return followers, follows + local_since, age / 3600
+
+
+def _resolve_budget(state: dict, counts: tuple[int, int] | None,
+                    *, now: datetime | None = None) -> tuple[int, float | None, str, tuple[int, int] | None]:
+    """Choose a live, cached, or conservative budget for this run.
+
+    The final fallback is deliberately the nonzero floor: profile outages do
+    not wedge discovery shut, but they also cannot resurrect the runaway flat
+    ceiling the ratio brake replaced.
+    """
+    current = now or datetime.now(timezone.utc)
+    if counts is not None:
+        followers, follows = counts
+        _remember_posture(state, followers, follows, now=current)
+        budget, ratio = _daily_budget(followers, follows)
+        return budget, ratio, "live", (followers, follows)
+
+    cached = _cached_posture(state, now=current)
+    if cached is not None:
+        followers, follows, _age_h = cached
+        budget, ratio = _daily_budget(followers, follows)
+        return budget, ratio, "cached", (followers, follows)
+    return RATIO_FLOOR_BUDGET, None, "conservative", None
+
+
 # ---------- Bsky ----------
 
 def _req(path: str, *, data=None, headers=None, method="GET"):
@@ -145,13 +229,12 @@ def _req(path: str, *, data=None, headers=None, method="GET"):
 
 def _our_counts(actor: str, jwt: str) -> tuple[int, int] | None:
     """(followers, follows) for the cafe itself. None on any failure — the caller
-    falls back to the flat ceiling rather than skipping the run, so a transient
-    getProfile blip can never wedge the loop shut."""
+    uses a recent cached posture or the nonzero conservative floor."""
     try:
         p = _req(f"/app.bsky.actor.getProfile?actor={urllib.parse.quote(actor)}",
                  headers={"Authorization": f"Bearer {jwt}"})
     except Exception as e:
-        print(f"[follow] getProfile failed ({e}) — falling back to flat cap", file=sys.stderr)
+        print(f"[follow] getProfile failed ({e}) — using safe posture fallback", file=sys.stderr)
         return None
     return int(p.get("followersCount") or 0), int(p.get("followsCount") or 0)
 
@@ -259,12 +342,16 @@ def run() -> int:
         return 0
 
     counts = _our_counts(did, jwt)
-    if counts is None:
-        budget = FOLLOWS_PER_DAY
-    else:
-        budget, ratio = _daily_budget(*counts)
-        print(f"[follow] posture: {counts[1]} follows / {counts[0]} followers "
+    budget, ratio, source, effective_counts = _resolve_budget(state, counts)
+    if source == "live":
+        _save_state(state)  # persist before an early budget/no-candidate return
+        print(f"[follow] posture: {effective_counts[1]} follows / {effective_counts[0]} followers "
               f"= {ratio:.1f}:1 → budget {budget}/day")
+    elif source == "cached":
+        print(f"[follow] cached posture: {effective_counts[1]} follows / "
+              f"{effective_counts[0]} followers = {ratio:.1f}:1 → budget {budget}/day")
+    else:
+        print(f"[follow] posture unavailable — conservative budget {budget}/day")
     cap = min(FOLLOWS_PER_RUN, budget - daily)
     if cap <= 0:
         print(f"[follow] daily budget reached ({daily}/{budget}) — skip")

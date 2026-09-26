@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import sys
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,9 +20,12 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from follow_loop import (  # noqa: E402
     FOLLOWS_PER_DAY,
+    POSTURE_CACHE_MAX_AGE_SECONDS,
     RATIO_FLOOR_BUDGET,
     RATIO_MIN_FOLLOWS,
+    _cached_posture,
     _daily_budget,
+    _resolve_budget,
 )
 
 
@@ -76,6 +80,91 @@ class DailyBudgetTests(unittest.TestCase):
         budget, ratio = _daily_budget(82, 431)
         self.assertAlmostEqual(ratio, 431 / 82, places=6)
         self.assertEqual(budget, RATIO_FLOOR_BUDGET)
+
+
+class PostureFallbackTests(unittest.TestCase):
+    NOW = datetime(2026, 9, 26, 12, tzinfo=timezone.utc)
+
+    def test_live_counts_are_remembered(self) -> None:
+        state = {"followed": []}
+        budget, ratio, source, counts = _resolve_budget(
+            state, (100, 499), now=self.NOW,
+        )
+        self.assertEqual((budget, source, counts), (4, "live", (100, 499)))
+        self.assertAlmostEqual(ratio, 4.99)
+        self.assertEqual(state["posture"], {
+            "followers": 100,
+            "follows": 499,
+            "ts": "2026-09-26T12:00:00Z",
+        })
+
+    def test_failed_read_reuses_recent_posture(self) -> None:
+        state = {
+            "followed": [],
+            "posture": {
+                "followers": 82,
+                "follows": 431,
+                "ts": "2026-09-26T09:00:00Z",
+            },
+        }
+        budget, ratio, source, counts = _resolve_budget(state, None, now=self.NOW)
+        self.assertEqual((budget, source, counts),
+                         (RATIO_FLOOR_BUDGET, "cached", (82, 431)))
+        self.assertAlmostEqual(ratio, 431 / 82)
+
+    def test_cached_posture_projects_follows_made_after_snapshot(self) -> None:
+        state = {
+            "posture": {
+                "followers": 100,
+                "follows": 499,
+                "ts": "2026-09-26T09:00:00Z",
+            },
+            "followed": [
+                {"did": "before", "ts": "2026-09-26T08:59:59Z"},
+                {"did": "after-1", "ts": "2026-09-26T10:00:00Z"},
+                {"did": "after-2", "ts": "2026-09-26T11:00:00Z"},
+            ],
+        }
+        cached = _cached_posture(state, now=self.NOW)
+        self.assertEqual(cached[:2], (100, 501))
+        budget, _ratio, source, counts = _resolve_budget(state, None, now=self.NOW)
+        self.assertEqual((budget, source, counts),
+                         (RATIO_FLOOR_BUDGET, "cached", (100, 501)))
+
+    def test_missing_or_expired_cache_uses_nonzero_floor(self) -> None:
+        empty = {"followed": []}
+        self.assertEqual(
+            _resolve_budget(empty, None, now=self.NOW),
+            (RATIO_FLOOR_BUDGET, None, "conservative", None),
+        )
+
+        expired_at = self.NOW - timedelta(seconds=POSTURE_CACHE_MAX_AGE_SECONDS + 1)
+        expired = {
+            "followed": [],
+            "posture": {
+                "followers": 100,
+                "follows": 200,
+                "ts": expired_at.isoformat().replace("+00:00", "Z"),
+            },
+        }
+        self.assertEqual(
+            _resolve_budget(expired, None, now=self.NOW),
+            (RATIO_FLOOR_BUDGET, None, "conservative", None),
+        )
+
+    def test_invalid_or_future_cache_is_not_trusted(self) -> None:
+        for posture in (
+            {"followers": "nope", "follows": 10, "ts": "2026-09-26T09:00:00Z"},
+            {"followers": 100, "follows": 200, "ts": "not-a-time"},
+            {"followers": 100, "follows": 200, "ts": 123},
+            {"followers": 100, "follows": 200, "ts": "2026-09-26T13:00:00Z"},
+        ):
+            with self.subTest(posture=posture):
+                budget, ratio, source, counts = _resolve_budget(
+                    {"followed": [], "posture": posture}, None, now=self.NOW,
+                )
+                self.assertEqual((budget, ratio, source, counts),
+                                 (RATIO_FLOOR_BUDGET, None, "conservative", None))
 
 
 if __name__ == "__main__":
