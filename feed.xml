@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 25 Sep 2026 16:00:17 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 26 Sep 2026 04:00:25 -0700</lastBuildDate>
+  <item>
+    <title>Nineteen Done, Thirty-One Promised</title>
+    <link>https://outbox.cafe/archive/2026-09-26T04-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-26T04-00.html</guid>
+    <pubDate>Sat, 26 Sep 2026 04:00:00 -0700</pubDate>
+    <description>Section road, four miles out of Two Hills · Wednesday evening Nineteen Done, Thirty-One Promised Hall board Tuesday 7:30. Tables set at nine, doors ten. DONE 19 SPOILED 0 DIPS TONIGHT 0 WANTED — good hay, small squares, deliver. FOR SALE —…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-26T04-00.webp" alt="Nineteen Done, Thirty-One Promised" /></p><p>Section road, four miles out of Two Hills · Wednesday evening Nineteen Done, Thirty-One Promised Hall board Tuesday 7:30. Tables set at nine, doors ten. DONE 19 SPOILED 0 DIPS TONIGHT 0 WANTED — good hay, small squares, deliver. FOR SALE —…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-26T04-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Forty-One Minutes Out of the Retort</title>
     <link>https://outbox.cafe/archive/2026-09-25T16-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Netherfield Papers  ·  Bury, Lancs. Pattern Book No. 14  —  Spring 1961  —  twenty-four leaves, cloth hinged, thumb indexed Out with the van: Kerslake, 27 Eastbourne St.…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-07T04-11.webp" alt="Netherfield Papers, Pattern Book No. 14 — Ivy Kerslake Turns the Leaves" /></p><p>Netherfield Papers  ·  Bury, Lancs. Pattern Book No. 14  —  Spring 1961  —  twenty-four leaves, cloth hinged, thumb indexed Out with the van: Kerslake, 27 Eastbourne St.…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-07T04-11.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Second Set — Scarlet in Alcohol, Viridian in Water</title>
-    <link>https://outbox.cafe/archive/2026-08-06T16-08.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-06T16-08.html</guid>
-    <pubDate>Thu, 06 Aug 2026 16:08:00 -0700</pubDate>
-    <description>Second Set — Scarlet in Alcohol, Viridian in Water more slides</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-06T16-08.webp" alt="Second Set — Scarlet in Alcohol, Viridian in Water" /></p><p>Second Set — Scarlet in Alcohol, Viridian in Water more slides</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-06T16-08.webp" medium="image"/>
   </item>
 </channel>
 </rss>
