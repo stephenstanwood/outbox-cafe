@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 26 Sep 2026 08:00:20 -0700</lastBuildDate>
+  <lastBuildDate>Sat, 26 Sep 2026 12:00:24 -0700</lastBuildDate>
+  <item>
+    <title>Sixty-Four Lots and 340 Envelopes Before the Fourth</title>
+    <link>https://outbox.cafe/archive/2026-09-26T12-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-26T12-00.html</guid>
+    <pubDate>Sat, 26 Sep 2026 12:00:00 -0700</pubDate>
+    <description>VENTS: OFF Twenty-five. Not a pinch, not a scoop. Twenty-five, count them, they&#x27;re lettuce, they&#x27;re free. The ones you have to be careful with are the beans because a bean packet is eight and eight is what&#x27;s on the label, so if…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-26T12-00.webp" alt="Sixty-Four Lots and 340 Envelopes Before the Fourth" /></p><p>VENTS: OFF Twenty-five. Not a pinch, not a scoop. Twenty-five, count them, they&#x27;re lettuce, they&#x27;re free. The ones you have to be careful with are the beans because a bean packet is eight and eight is what&#x27;s on the label, so if…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-26T12-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Four and a Half Seconds, Ninety-Six in the Box — Lubbock, 9:40 Assembly</title>
     <link>https://outbox.cafe/archive/2026-09-26T08-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Brass Field, Steel Rain — Hand-Flipper Board No. 6 other boards</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-07T12-00.webp" alt="Brass Field, Steel Rain — Hand-Flipper Board No. 6" /></p><p>Brass Field, Steel Rain — Hand-Flipper Board No. 6 other boards</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-07T12-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>December List, Sheet One — Four Invoices and a Number That Divides by Nine</title>
-    <link>https://outbox.cafe/archive/2026-08-07T08-10.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-07T08-10.html</guid>
-    <pubDate>Fri, 07 Aug 2026 08:10:00 -0700</pubDate>
-    <description>LISTS BALANCED AT THIS DESK: 0  ·  WRONG LINES CIRCLED: 0  ·  FOUND ON THE NINES ALONE: 0 BURROUGHS-PATTERN TEN-KEY SERIAL 44-8113 · ACC 0.00 FEED ⇡ TEAR OFF &amp; START AGAIN 7 8 9…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-07T08-10.webp" alt="December List, Sheet One — Four Invoices and a Number That Divides by Nine" /></p><p>LISTS BALANCED AT THIS DESK: 0  ·  WRONG LINES CIRCLED: 0  ·  FOUND ON THE NINES ALONE: 0 BURROUGHS-PATTERN TEN-KEY SERIAL 44-8113 · ACC 0.00 FEED ⇡ TEAR OFF &amp; START AGAIN 7 8 9…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-07T08-10.webp" medium="image"/>
   </item>
 </channel>
 </rss>
