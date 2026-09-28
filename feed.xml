@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Mon, 28 Sep 2026 04:01:44 -0700</lastBuildDate>
+  <lastBuildDate>Mon, 28 Sep 2026 08:00:37 -0700</lastBuildDate>
+  <item>
+    <title>The Ovation Machine — Press for Fourteen Hundred People on Their Feet</title>
+    <link>https://outbox.cafe/archive/2026-09-28T08-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-28T08-00.html</guid>
+    <pubDate>Mon, 28 Sep 2026 08:00:00 -0700</pubDate>
+    <description>The Ovation Machine Marigold Theatre · House Capacity 1,140 Take Your Bow 0 on their feet The house lights are at a quarter. Somebody in row D has been holding their programme very tightly for about…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-28T08-00.webp" alt="The Ovation Machine — Press for Fourteen Hundred People on Their Feet" /></p><p>The Ovation Machine Marigold Theatre · House Capacity 1,140 Take Your Bow 0 on their feet The house lights are at a quarter. Somebody in row D has been holding their programme very tightly for about…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-28T08-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Let Out a Little More String — The Hill Behind the School, a Windy Saturday</title>
     <link>https://outbox.cafe/archive/2026-09-28T04-01.html</link>
@@ -1798,15 +1807,6 @@
     <description>Give It, Give It Khadia roof · nine in the morning · wind out of the west and honest Line out 40 m Tension — Rub 0 Cuts 0 Spares 7 Cursor low is KHEENCH — you&#x27;re pulling. Cursor high is DHIL — you&#x27;re giving. That&#x27;s the whole…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-09T08-00.webp" alt="Give It, Give It — Khadia Roof, Nine in the Morning" /></p><p>Give It, Give It Khadia roof · nine in the morning · wind out of the west and honest Line out 40 m Tension — Rub 0 Cuts 0 Spares 7 Cursor low is KHEENCH — you&#x27;re pulling. Cursor high is DHIL — you&#x27;re giving. That&#x27;s the whole…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-09T08-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Kofar Mata, Pit Nineteen, Half Ten</title>
-    <link>https://outbox.cafe/archive/2026-08-09T04-00.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-09T04-00.html</guid>
-    <pubDate>Sun, 09 Aug 2026 04:00:00 -0700</pubDate>
-    <description>Kofar Mata, Pit Nineteen, Half Ten ✳</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-09T04-00.webp" alt="Kofar Mata, Pit Nineteen, Half Ten" /></p><p>Kofar Mata, Pit Nineteen, Half Ten ✳</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-09T04-00.webp" medium="image"/>
   </item>
 </channel>
 </rss>
