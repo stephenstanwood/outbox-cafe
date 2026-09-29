@@ -301,6 +301,39 @@ def _type_breakdown(entries: list[dict], counts: dict[str, dict], own_did: str) 
     return out
 
 
+def _caption_breakdown(entries: list[dict], counts: dict[str, dict], own_did: str) -> dict[str, dict]:
+    """Compare measured drop captions without changing type or persona weights.
+
+    Older rows have no caption label, and off-bsky/other people's posts have no
+    comparable Bluesky counts. Neither belongs in this comparison.
+    """
+    groups: dict[str, list[float]] = defaultdict(list)
+    for e in entries:
+        if e.get("type") != "drop" or not is_own_post(e, own_did):
+            continue
+        uri = e["uri"]
+        if uri not in counts:
+            continue
+        source = e.get("caption")
+        if source == "claude":
+            groups["fresh"].append(engagement_score(counts[uri]))
+        elif source in ("dom", "script", "title"):
+            score = engagement_score(counts[uri])
+            groups["quoted"].append(score)
+            groups[source].append(score)
+
+    def stats(scores: list[float]) -> dict:
+        avg = round(sum(scores) / len(scores), 2) if scores else 0.0
+        return {"avg_score": avg, "posts": len(scores)}
+
+    return {
+        "fresh": stats(groups["fresh"]),
+        "quoted": stats(groups["quoted"]),
+        "sources": {source: stats(groups[source]) for source in ("dom", "script", "title")
+                    if groups[source]},
+    }
+
+
 def _gesture_breakdown(entries: list[dict], own_did: str) -> dict[str, dict]:
     """Outbound gestures — things the cafe did to someone ELSE'S post.
 
@@ -360,6 +393,7 @@ def _summary(
     gestures: dict[str, dict],
     warm_topics: list[dict],
     sample: int,
+    captions: dict[str, dict] | None = None,
 ) -> str:
     if sample < MIN_SAMPLE:
         return f"sample too small ({sample} posts) — running with neutral 1.0× weights"
@@ -387,6 +421,13 @@ def _summary(
     if bottom:
         parts.append("down: " + ", ".join(bottom))
     parts.append("our posts avg: " + type_line)
+    if captions and captions.get("fresh") and captions.get("quoted"):
+        fresh, quoted = captions["fresh"], captions["quoted"]
+        if min(fresh["posts"], quoted["posts"]) >= MIN_TYPE_SAMPLE:
+            parts.append(
+                f"drop captions avg: fresh:{fresh['avg_score']}(n{fresh['posts']}) · "
+                f"quoted:{quoted['avg_score']}(n{quoted['posts']})"
+            )
     parts.append("gestures out: " + gesture_line)
     parts.append("warm topics: " + topic_line)
     return " | ".join(parts)
@@ -425,9 +466,10 @@ def run() -> int:
 
     persona_mults = _persona_multipliers(qualifying, counts, own)
     type_break = _type_breakdown(qualifying, counts, own)
+    captions = _caption_breakdown(qualifying, counts, own)
     gestures = _gesture_breakdown(entries, own)
     warm_topics = _wild_topics_warm(qualifying, counts, own)
-    summary = _summary(persona_mults, type_break, gestures, warm_topics, len(scored))
+    summary = _summary(persona_mults, type_break, gestures, warm_topics, len(scored), captions)
 
     output = {
         "updated_ts": datetime.now(timezone.utc).isoformat(),
@@ -437,6 +479,7 @@ def run() -> int:
         "sample_size": len(scored),
         "persona": persona_mults,
         "type": type_break,
+        "caption": captions,
         "gestures": gestures,
         "rows_by_bucket": {k: buckets[k] for k in (ROW_OWN, ROW_GESTURE, ROW_OFF_BSKY)},
         "wild_topics_warm": warm_topics,

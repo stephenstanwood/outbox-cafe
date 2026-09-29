@@ -28,6 +28,7 @@ from reflect import (  # noqa: E402
     ROW_GESTURE,
     ROW_OFF_BSKY,
     ROW_OWN,
+    _caption_breakdown,
     _gesture_breakdown,
     _persona_multipliers,
     _summary,
@@ -150,6 +151,41 @@ class TypeBreakdownTests(unittest.TestCase):
         self.assertEqual(base, withgesture)
 
 
+class CaptionBreakdownTests(unittest.TestCase):
+    def test_compares_only_measured_own_drops_with_known_caption_source(self):
+        entries = [
+            row("drop", OURS, "fresh", caption="claude"),
+            row("drop", OURS, "dom", caption="dom"),
+            row("drop", OURS, "script", caption="script"),
+            row("drop", OURS, "title", caption="title"),
+            row("drop", OURS, "legacy"),
+            row("drop", OURS, "missing", caption="claude"),
+            row("drop", THEIRS, "viral", caption="dom"),
+            row("throwback", OURS, "other", caption="dom"),
+        ]
+        measured = {
+            uri(OURS, "fresh"): counts(like=2),
+            uri(OURS, "dom"): counts(like=4),
+            uri(OURS, "script"): counts(like=1),
+            uri(OURS, "title"): counts(like=1),
+            uri(OURS, "legacy"): counts(like=100),
+            uri(THEIRS, "viral"): counts(like=500),
+            uri(OURS, "other"): counts(like=100),
+        }
+        out = _caption_breakdown(entries, measured, OURS)
+        self.assertEqual(out["fresh"], {"avg_score": 2.0, "posts": 1})
+        self.assertEqual(out["quoted"], {"avg_score": 2.0, "posts": 3})
+        self.assertEqual(out["sources"]["dom"], {"avg_score": 4.0, "posts": 1})
+        self.assertEqual(sum(v["posts"] for v in out["sources"].values()), 3)
+
+    def test_empty_sample_has_stable_zero_counts(self):
+        self.assertEqual(_caption_breakdown([], {}, OURS), {
+            "fresh": {"avg_score": 0.0, "posts": 0},
+            "quoted": {"avg_score": 0.0, "posts": 0},
+            "sources": {},
+        })
+
+
 class PersonaMultiplierTests(unittest.TestCase):
     """Persona weights ACT on the cafe. A gesture must never steer a voice."""
 
@@ -238,6 +274,16 @@ class SummaryTests(unittest.TestCase):
 
     def test_min_type_sample_is_a_real_threshold(self):
         self.assertGreater(MIN_TYPE_SAMPLE, 1)
+
+    def test_caption_comparison_only_prints_with_two_real_samples(self):
+        captions = {
+            "fresh": {"avg_score": 2.2, "posts": 12},
+            "quoted": {"avg_score": 2.4, "posts": 9},
+        }
+        line = _summary({}, {}, {}, [], sample=30, captions=captions)
+        self.assertIn("drop captions avg: fresh:2.2(n12) · quoted:2.4(n9)", line)
+        captions["quoted"]["posts"] = MIN_TYPE_SAMPLE - 1
+        self.assertNotIn("drop captions avg:", _summary({}, {}, {}, [], sample=30, captions=captions))
 
 
 if __name__ == "__main__":
