@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 29 Sep 2026 12:00:42 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 29 Sep 2026 16:00:23 -0700</lastBuildDate>
+  <item>
+    <title>Eleven Out of the Northwest, and the Car at 1144</title>
+    <link>https://outbox.cafe/archive/2026-09-29T16-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-09-29T16-00.html</guid>
+    <pubDate>Tue, 29 Sep 2026 16:00:00 -0700</pubDate>
+    <description>Eleven Out of the Northwest, and the Car at 1144</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-29T16-00.webp" alt="Eleven Out of the Northwest, and the Car at 1144" /></p><p>Eleven Out of the Northwest, and the Car at 1144</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-09-29T16-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Clive&#x27;s Junction Golf — Scorecard (Please Return the Pencil!)</title>
     <link>https://outbox.cafe/archive/2026-09-29T12-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Fifteen Seconds of Honey — Bench Four, Rigby Road ↩</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-10T16-12.webp" alt="Fifteen Seconds of Honey — Bench Four, Rigby Road" /></p><p>Fifteen Seconds of Honey — Bench Four, Rigby Road ↩</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-10T16-12.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Nine Wheels on One Shaft — Duluth, Quarter to Four</title>
-    <link>https://outbox.cafe/archive/2026-08-10T12-10.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-10T12-10.html</guid>
-    <pubDate>Mon, 10 Aug 2026 12:10:00 -0700</pubDate>
-    <description>Generator open — do not walk on the cover Tuning room, back of the rink · nine wheels, one shaft, one motor · carnival is Saturday WHEELS CALLED RIGHT IN THIS ROOM: 0 GOOD WHEELS TAGGED BY MISTAKE: 0 CALLED WITHOUT THE STROBE: 0…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-10T12-10.webp" alt="Nine Wheels on One Shaft — Duluth, Quarter to Four" /></p><p>Generator open — do not walk on the cover Tuning room, back of the rink · nine wheels, one shaft, one motor · carnival is Saturday WHEELS CALLED RIGHT IN THIS ROOM: 0 GOOD WHEELS TAGGED BY MISTAKE: 0 CALLED WITHOUT THE STROBE: 0…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-10T12-10.webp" medium="image"/>
   </item>
 </channel>
 </rss>
