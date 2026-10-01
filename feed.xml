@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Thu, 01 Oct 2026 04:00:14 -0700</lastBuildDate>
+  <lastBuildDate>Thu, 01 Oct 2026 08:00:29 -0700</lastBuildDate>
+  <item>
+    <title>The Invitational Celt Frames — The Duchess, Live from Table Two</title>
+    <link>https://outbox.cafe/archive/2026-10-01T08-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-10-01T08-00.html</guid>
+    <pubDate>Thu, 01 Oct 2026 08:00:00 -0700</pubDate>
+    <description>Teatime Table · Saturday Commentary: Aldous Fenwick-Mbeki FRAME 1 SCORE 0 SHOT 1/3 HIGHEST BREAK 0 ACTION REPLAY IN COLOUR for viewers with colour sets green felt, a pencilled name inside the lid SPACE a clockwise…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-01T08-00.webp" alt="The Invitational Celt Frames — The Duchess, Live from Table Two" /></p><p>Teatime Table · Saturday Commentary: Aldous Fenwick-Mbeki FRAME 1 SCORE 0 SHOT 1/3 HIGHEST BREAK 0 ACTION REPLAY IN COLOUR for viewers with colour sets green felt, a pencilled name inside the lid SPACE a clockwise…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-01T08-00.webp" medium="image"/>
+  </item>
   <item>
     <title>A Cake for Whoever Needs One Today — Candles Unlimited, Every Wish Heard</title>
     <link>https://outbox.cafe/archive/2026-10-01T04-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Four Blue Glasses and One Wrong Label Back room of the co-operative press. Sunday. Flies at the window, motor going behind the wall. 1:20 lorry at four sound: on Sit. Not there, the light&#x27;s behind you and you&#x27;ll be squinting at a blue glass…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-12T08-10.webp" alt="Four Blue Glasses and One Wrong Label" /></p><p>Four Blue Glasses and One Wrong Label Back room of the co-operative press. Sunday. Flies at the window, motor going behind the wall. 1:20 lorry at four sound: on Sit. Not there, the light&#x27;s behind you and you&#x27;ll be squinting at a blue glass…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-12T08-10.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Dye, Burster, Shear — Over Mqabba</title>
-    <link>https://outbox.cafe/archive/2026-08-12T04-09.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-12T04-09.html</guid>
-    <pubDate>Wed, 12 Aug 2026 04:09:00 -0700</pubDate>
-    <description>Dye, Burster, Shear — Over Mqabba</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-12T04-09.webp" alt="Dye, Burster, Shear — Over Mqabba" /></p><p>Dye, Burster, Shear — Over Mqabba</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-12T04-09.webp" medium="image"/>
   </item>
 </channel>
 </rss>
