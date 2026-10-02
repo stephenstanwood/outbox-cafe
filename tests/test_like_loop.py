@@ -97,8 +97,7 @@ class RejectionTests(unittest.TestCase):
                 "zine", "politics",
             ),
             (
-                "Some men rob you with a six-gun -- others with a fountain pen. "
-                "-- Woodie Guthrie",
+                "A fountain-pen quote attributed to Woodie Guthrie mentions a six-gun.",
                 "fountain pen", "public_figures",
             ),
             ("The art journal is up for Ko-Fi supporters!", "art journal", "promotion"),
