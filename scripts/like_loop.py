@@ -66,16 +66,28 @@ CONTENT_BLOCK_TERMS = {
         "mark zuckerberg", "jeff bezos", "election", "antifa", "maga",
         "politics", "political", "congress", "senate", "democrat",
         "republican", "prime minister", "president", "government", "protest",
+        "human rights", "civil rights", "colonialism", "colonial legacies",
+        "citizenship",
+    ),
+    # These names turned up in otherwise hobby-shaped search results. A
+    # fountain-pen quote or typewriter story can still be about a public figure.
+    "public_figures": (
+        "james kochalka", "woodie guthrie", "woody guthrie", "ray bradbury",
     ),
     "conflict": (
         "war", "wwii", "genocide", "shooting", "shooter", "gaza",
         "israel", "ukraine", "hamas", "cia", "bodily harm",
+        "forced displacement", "six gun", "sixgun", "armed robbery",
+        "rob you", "robbed", "robbery", "gunfire",
     ),
     "loss": (
         "killed", "died", "death", "rip", "passed away", "obituary", "obituaries",
         "funeral", "suicide", "depressed",
     ),
-    "finance": ("bitcoin", "crypto", "nft", "stock market", "etf", "tariff"),
+    "finance": (
+        "bitcoin", "crypto", "nft", "stock market", "etf", "tariff",
+        "pyramid scheme",
+    ),
     "adult": (
         "onlyfans", "porn", "nsfw", "escort", "sexy", "sexual", "nude",
         "nudity", "erotic", "erotica",
@@ -97,12 +109,22 @@ CONTENT_BLOCK_TERMS = {
         "upvote", "order now", "free shipping", "limited time",
         "best fountain pen kits", "on sale", "online shop", "shop update",
         "every order", "preorder", "pre order", "selling this", "for purchase",
+        "ko fi", "patreon", "supporters only", "paid subscribers",
     ),
     "hostility": (
         "fuck", "fucking", "shit", "screw", "hate", "sucks", "awful",
         "terrible", "devastating", "painful",
+        "goddamn", "goddamned",
     ),
 }
+
+# A keyword inside a URL/handle is not evidence that the post discusses it.
+# Include scheme-less domains: Bluesky often displays links without https://.
+_LINK_RE = re.compile(
+    r"\b(?:https?://|www\.)[^\s<>]+|"
+    r"\b(?:[a-z0-9-]+\.)+[a-z]{2,}(?:/[^\s<>]*)?",
+    re.IGNORECASE,
+)
 
 # Tumblr's tagged endpoint often returns image-only posts with no summary or
 # alt text. In that uncertain case the exact aesthetic tag may still be useful,
@@ -192,10 +214,13 @@ def _bsky_rejection_reason(text: str, query: str) -> str | None:
     Likes have no LLM moderation step, so uncertainty resolves to a skip. The
     rule is deliberately inspectable and cheap enough to run on every result.
     """
-    if len(_word_tokens(text)) < 3:
+    prose = _LINK_RE.sub(" ", text or "")
+    if len(_word_tokens(prose)) < 3:
         return "empty_or_too_short"
-    if not _contains_phrase(text, query):
+    if not _contains_phrase(prose, query):
         return "off_topic"
+    # Safety still checks the full source, including links: a harmless sentence
+    # must not conceal a blocked subject in its destination.
     return _blocked_content_reason(text)
 
 

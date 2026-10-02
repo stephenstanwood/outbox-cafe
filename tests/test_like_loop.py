@@ -57,6 +57,71 @@ class RejectionTests(unittest.TestCase):
         self.assertRejected("", "zine", "empty_or_too_short")
         self.assertRejected("nice zine", "zine", "empty_or_too_short")
 
+    def test_url_and_handle_keywords_do_not_qualify_a_post(self):
+        cases = (
+            "James Kochalka answered a lineage question with a monster on the envelope\n"
+            "https://nicheof.one/feed/what-the-typewriter-does-to-an-answer/",
+            "Another interesting read: nicheof.one/feed/what-the-typewriter-does/",
+            "Another interesting read: www.example.com/typewriter",
+            "Something lovely from @typewriter.example today.",
+        )
+        for text in cases:
+            with self.subTest(text=text):
+                self.assertRejected(text, "typewriter", "off_topic")
+
+    def test_links_do_not_pad_an_empty_post_into_eligibility(self):
+        self.assertRejected(
+            "https://example.com/a/typewriter/in/the/workshop",
+            "typewriter",
+            "empty_or_too_short",
+        )
+
+    def test_real_hobby_prose_can_still_carry_a_link(self):
+        self.assertIsNone(like_loop._bsky_rejection_reason(
+            "My typewriter drew a little paper garden. https://example.com/photos/1",
+            "typewriter",
+        ))
+
+    def test_blocked_link_is_still_checked_for_safety(self):
+        self.assertRejected(
+            "My pixel art collection is here: https://example.com/nft/collection",
+            "pixel art",
+            "finance",
+        )
+
+    def test_rejects_observed_october_likes(self):
+        cases = (
+            (
+                'Taiwan Association for Human Rights hold seminar: '
+                '"Forced Displacement under colonial Legacies" & Zine Workshop.',
+                "zine", "politics",
+            ),
+            (
+                "Some men rob you with a six-gun -- others with a fountain pen. "
+                "-- Woodie Guthrie",
+                "fountain pen", "public_figures",
+            ),
+            ("The art journal is up for Ko-Fi supporters!", "art journal", "promotion"),
+            ("I'm starting my snail mail art pyramid scheme again.", "mail art", "finance"),
+            ("I want a typewriter to write a goddamned original thing.", "typewriter", "hostility"),
+        )
+        for text, query, reason in cases:
+            with self.subTest(text=text):
+                self.assertRejected(text, query, reason)
+
+    def test_hobby_keywords_do_not_override_observed_public_figures(self):
+        for name in ("James Kochalka", "Woody Guthrie", "Woodie Guthrie", "Ray Bradbury"):
+            with self.subTest(name=name):
+                self.assertRejected(
+                    "A typewriter story about " + name + ".",
+                    "typewriter", "public_figures",
+                )
+
+    def test_new_conflict_terms_do_not_match_safe_word_fragments(self):
+        self.assertIsNone(like_loop._bsky_rejection_reason(
+            "My fountain pen drew six gunmetal-colored butterflies.", "fountain pen",
+        ))
+
     def test_rejects_at_the_start_of_text_not_just_after_a_space(self):
         self.assertRejected("Election zine for the local senate race.", "zine", "politics")
 
@@ -126,6 +191,19 @@ class TumblrSafetyTests(unittest.TestCase):
         for post_data, reason in cases:
             with self.subTest(post=post_data):
                 self.assertEqual(like_loop._tumblr_rejection_reason(post_data), reason)
+
+    def test_shared_gate_rejects_the_same_topics_on_tumblr(self):
+        cases = (
+            ("Human-rights zine workshop and seminar", "politics"),
+            ("Six-gun fountain pen quote", "conflict"),
+            ("Art journal for Ko-Fi supporters", "promotion"),
+            ("Mail art pyramid scheme", "finance"),
+        )
+        for text, reason in cases:
+            with self.subTest(text=text):
+                self.assertEqual(like_loop._tumblr_rejection_reason({
+                    "blog_name": "paper-moth", "tags": ["zine"], "summary": text,
+                }), reason)
 
     def test_accepts_image_only_post_under_a_specific_safe_tag(self):
         p = {"blog_name": "paper-moth", "tags": ["mail art"], "summary": "", "content": []}
