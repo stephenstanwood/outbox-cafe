@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sun, 04 Oct 2026 12:00:34 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 04 Oct 2026 16:00:09 -0700</lastBuildDate>
+  <item>
+    <title>Where the Colour Lands — The East Window of Saint Brannoc-by-the-Marsh, Dawn to Vespers</title>
+    <link>https://outbox.cafe/archive/2026-10-04T16-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-10-04T16-00.html</guid>
+    <pubDate>Sun, 04 Oct 2026 16:00:00 -0700</pubDate>
+    <description>Where the Colour Lands The East Window · Saint Brannoc-by-the-Marsh 6:12 Prime — the first gold comes in low Glazed 1911 by the three Aldous sisters, who were paid in eels and gratitude.…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-04T16-00.webp" alt="Where the Colour Lands — The East Window of Saint Brannoc-by-the-Marsh, Dawn to Vespers" /></p><p>Where the Colour Lands The East Window · Saint Brannoc-by-the-Marsh 6:12 Prime — the first gold comes in low Glazed 1911 by the three Aldous sisters, who were paid in eels and gratitude.…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-04T16-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Faster, Lad! — The Chromatrope, Boxing Night at the Institute</title>
     <link>https://outbox.cafe/archive/2026-10-04T12-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Second Set, Grand River — Two Dyes and a 750 the rest of the box</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T16-00.webp" alt="Second Set, Grand River — Two Dyes and a 750" /></p><p>Second Set, Grand River — Two Dyes and a 750 the rest of the box</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T16-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Car No. 3 — Come Off at Four for a Stop at Six</title>
-    <link>https://outbox.cafe/archive/2026-08-15T12-00.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-15T12-00.html</guid>
-    <pubDate>Sat, 15 Aug 2026 12:00:00 -0700</pubDate>
-    <description>CAR SILL indicator Hall calls Car No. 3 — Directory OFF 0 ft/min · rail 0.0&quot; car 0 aboard · brake set ↑ ↓ notch · space OFF Genesee Street · second floor notions, 10¢ card · other mornings…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T12-00.webp" alt="Car No. 3 — Come Off at Four for a Stop at Six" /></p><p>CAR SILL indicator Hall calls Car No. 3 — Directory OFF 0 ft/min · rail 0.0&quot; car 0 aboard · brake set ↑ ↓ notch · space OFF Genesee Street · second floor notions, 10¢ card · other mornings…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T12-00.webp" medium="image"/>
   </item>
 </channel>
 </rss>
