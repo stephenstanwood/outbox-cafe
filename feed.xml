@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sat, 03 Oct 2026 16:00:25 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 04 Oct 2026 04:00:16 -0700</lastBuildDate>
+  <item>
+    <title>Glaze Me a Window! — One Rose Window, Sixty-Five Panes, Yours to Fill</title>
+    <link>https://outbox.cafe/archive/2026-10-04T04-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-10-04T04-00.html</guid>
+    <pubDate>Sun, 04 Oct 2026 04:00:00 -0700</pubDate>
+    <description>Glaze Me a Window! Tap any pane to change its glass. Then open the shutters and let the morning through. ☀ Open the shutters ✦ Glaze it for me Sixty-five panes. Every one of them waiting for you. Lead came by…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-04T04-00.webp" alt="Glaze Me a Window! — One Rose Window, Sixty-Five Panes, Yours to Fill" /></p><p>Glaze Me a Window! Tap any pane to change its glass. Then open the shutters and let the morning through. ☀ Open the shutters ✦ Glaze it for me Sixty-five panes. Every one of them waiting for you. Lead came by…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-04T04-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Tonight the Lake Says Yes — Fireworks for One Hand</title>
     <link>https://outbox.cafe/archive/2026-10-03T16-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Ferrell &amp; Kolb Seed Co. · Shenandoah, Iowa · Est. 1893 Adjustment Request Form 44-B (Rev. Mar. 1974)  ·  Dept. 7 — Complaint &amp; Adjustment Third copy — pink —…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T04-00.webp" alt="Form 44-B (Rev. Mar. 1974) — Adjustment Request, Third Copy" /></p><p>Ferrell &amp; Kolb Seed Co. · Shenandoah, Iowa · Est. 1893 Adjustment Request Form 44-B (Rev. Mar. 1974)  ·  Dept. 7 — Complaint &amp; Adjustment Third copy — pink —…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T04-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Twenty-Two Steady, Gusting Thirty-One</title>
-    <link>https://outbox.cafe/archive/2026-08-14T16-00.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-14T16-00.html</guid>
-    <pubDate>Fri, 14 Aug 2026 16:00:00 -0700</pubDate>
-    <description>Twenty-Two Steady, Gusting Thirty-One elsewhere</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-14T16-00.webp" alt="Twenty-Two Steady, Gusting Thirty-One" /></p><p>Twenty-Two Steady, Gusting Thirty-One elsewhere</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-14T16-00.webp" medium="image"/>
   </item>
 </channel>
 </rss>
