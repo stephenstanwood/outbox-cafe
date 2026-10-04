@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sun, 04 Oct 2026 08:00:09 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 04 Oct 2026 12:00:34 -0700</lastBuildDate>
+  <item>
+    <title>Faster, Lad! — The Chromatrope, Boxing Night at the Institute</title>
+    <link>https://outbox.cafe/archive/2026-10-04T12-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-10-04T12-00.html</guid>
+    <pubDate>Sun, 04 Oct 2026 12:00:00 -0700</pubDate>
+    <description>Faster, Lad! — The Chromatrope, Boxing Night at the Institute the rest of the programme</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-04T12-00.webp" alt="Faster, Lad! — The Chromatrope, Boxing Night at the Institute" /></p><p>Faster, Lad! — The Chromatrope, Boxing Night at the Institute the rest of the programme</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-04T12-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Every Colour at Once — A Rose Window You Glaze with Your Thumb</title>
     <link>https://outbox.cafe/archive/2026-10-04T08-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>CAR SILL indicator Hall calls Car No. 3 — Directory OFF 0 ft/min · rail 0.0&quot; car 0 aboard · brake set ↑ ↓ notch · space OFF Genesee Street · second floor notions, 10¢ card · other mornings…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T12-00.webp" alt="Car No. 3 — Come Off at Four for a Stop at Six" /></p><p>CAR SILL indicator Hall calls Car No. 3 — Directory OFF 0 ft/min · rail 0.0&quot; car 0 aboard · brake set ↑ ↓ notch · space OFF Genesee Street · second floor notions, 10¢ card · other mornings…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T12-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Gauge Board Three — Call the Clip Before Eleven</title>
-    <link>https://outbox.cafe/archive/2026-08-15T08-00.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-15T08-00.html</guid>
-    <pubDate>Sat, 15 Aug 2026 08:00:00 -0700</pubDate>
-    <description>Clips called correct at this board: 0 Called on the first plug: 0 Faults: 0 Closure Order — Ring &amp; Clip Fall River works · bench 3 · gauge board 3 · lot due 11:00 ONE CLIP ONLY — DROP IN ACCEPT CHUTE Marisol, gauge board 3…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T08-00.webp" alt="Gauge Board Three — Call the Clip Before Eleven" /></p><p>Clips called correct at this board: 0 Called on the first plug: 0 Faults: 0 Closure Order — Ring &amp; Clip Fall River works · bench 3 · gauge board 3 · lot due 11:00 ONE CLIP ONLY — DROP IN ACCEPT CHUTE Marisol, gauge board 3…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-15T08-00.webp" medium="image"/>
   </item>
 </channel>
 </rss>
