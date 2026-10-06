@@ -44,7 +44,7 @@ ROOT = SCRIPT_DIR.parent
 PERSONAS_PATH = ROOT / "data" / "personas.json"
 
 from lib.llm import run_claude, usage_limited
-from lib import bsky, ritual_cache, tumblr
+from lib import bsky, ritual_cache, ritual_variety, tumblr
 SLIPS_DIR = ROOT / "archive" / "slips"
 SLIPS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -62,7 +62,7 @@ COURIER_PATHS = [
 
 APHORISM_PROMPT = """You are Mr. Quiet, the small formal black cat who sits at the back booth of outbox.cafe every day. You never speak. Occasionally a slip of paper appears on the counter with a few words on it.
 
-Today is Sunday morning. A new slip needs to appear on the counter.
+Today is Sunday morning, {date_str}. A new slip needs to appear on the counter.
 
 Write ONE single line — a fortune-cookie aphorism that takes itself seriously. Cryptic but earnest. Never threatening or weird. Never current events. Never about the cafe's automation or AI. One sentence, one line.
 
@@ -82,7 +82,40 @@ Hard requirements:
 - Period at the end is fine. Question mark is fine. No exclamation marks.
 - Original — do NOT repeat any of the voice anchors above.
 
+This week the slip is about the {obj} — name it, or let it be the quiet center of the line.
+
+Slips already on the counter in recent weeks (say something new — not these ideas, not their shapes):
+{recent}
+
 Output: just the line. Nothing else."""
+
+
+def aphorism_spec(now: datetime | None = None) -> "tuple[str, object]":
+    """(prompt, extractor) for this week's slip.
+
+    The slip kept circling one idea ("slow mornings are not lost time" two
+    Sundays running), so the prompt now carries a concrete counter object and
+    the recent slips, and the extractor rejects a line that echoes one of them.
+    See lib/ritual_variety. Shared with ritual_prep so the two paths can't drift.
+    """
+    recent = ritual_variety.recent_slips()
+    d = ritual_variety.ritual_sunday(now)
+    prompt = APHORISM_PROMPT.format(
+        obj=ritual_variety.pick_slip_object(recent),
+        date_str=d.strftime("%B %-d"),
+        recent="\n".join(f"- {r}" for r in recent) or "- (none yet)",
+    )
+
+    def extract(out: str) -> str | None:
+        line = extract_aphorism(out)
+        if line:
+            echo = ritual_variety.slip_too_similar(line, recent)
+            if echo:
+                print(f"[slip] {line!r} echoes {echo!r} — rejecting", file=sys.stderr)
+                return None
+        return line
+
+    return prompt, extract
 
 
 # Backoff between failed tries. The 5/24 + 6/7 Sunday-9am failures were
@@ -119,6 +152,7 @@ def extract_aphorism(out: str) -> str | None:
 def generate_aphorism_live(model: str = "opus", max_tries: int = 4) -> str | None:
     """Call Claude headless and return ONE clean aphorism line, or None."""
     import time
+    prompt, extract = aphorism_spec()
     for attempt in range(max_tries):
         if attempt > 0:
             # A spent weekly window will not clear inside a retry loop, and the
@@ -130,11 +164,11 @@ def generate_aphorism_live(model: str = "opus", max_tries: int = 4) -> str | Non
             delay = RETRY_SLEEPS[min(attempt - 1, len(RETRY_SLEEPS) - 1)]
             print(f"[slip] retrying in {delay}s", file=sys.stderr)
             time.sleep(delay)
-        res = run_claude(APHORISM_PROMPT, model=model, timeout=120)
+        res = run_claude(prompt, model=model, timeout=120)
         if not res.ok:
             print(res.log_line("slip"), file=sys.stderr)
             continue
-        line = extract_aphorism(res.text)
+        line = extract(res.text)
         if line:
             return line
         print(f"[slip] no usable line in output (try {attempt+1}); raw: {res.text[:200]!r}", file=sys.stderr)

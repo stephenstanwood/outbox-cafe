@@ -31,6 +31,7 @@ from pathlib import Path
 
 from lib.llm import run_claude, usage_limited
 from lib import ritual_cache
+from lib import ritual_variety
 from lib import tumblr
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -41,7 +42,7 @@ POST_LOG = DATA / "post_log.jsonl"
 
 
 # Doris voice — pulled from personas.json + sharpened for the column format.
-COLUMN_PROMPT = """You are Doris, "the regular" at outbox.cafe — a russian blue cat, ancient, regal posture, sits in the bay window like she's running for office. You come in every day. You have opinions about baked goods. Today is Sunday and you are writing your weekly column about this week's muffins.
+COLUMN_PROMPT = """You are Doris, "the regular" at outbox.cafe — a russian blue cat, ancient, regal posture, sits in the bay window like she's running for office. You come in every day. You have opinions about baked goods. Today is {date_str} ({season}) and you are writing your weekly column about this week's muffins.
 
 == YOUR VOICE ==
 - Complete sentences, proper punctuation (real periods, commas, em dashes).
@@ -53,7 +54,7 @@ COLUMN_PROMPT = """You are Doris, "the regular" at outbox.cafe — a russian blu
 
 == HARD RULES ==
 - NEVER: current events, politics, illness/grief/death (real), financial advice, religion, controversial figures, AI/automation, anything bot-embarrassing if quoted out of context.
-- Roy is mentioned in past tense as your late husband — soft and warm, never sad-heavy. He had hobbies (woodworking, jam, model trains, etc. — pick something appropriate, don't repeat the same one every week).
+- Roy is mentioned in past tense as your late husband — soft and warm, never sad-heavy. If he comes up this week, the hobby to remember him by is {roy}.
 - Don't break character. Don't reference the cafe's "automation" or LLMs.
 - Tumblr loves a real essay. 220-380 words. Not a tweet.
 
@@ -70,9 +71,36 @@ Output as plain text. Structure:
 - "The cranberry-walnut muffins are not what they used to be. I am being honest because I love this place. —Doris"
 
 == THIS WEEK'S MUFFIN ==
-Roll a flavor on your own — anything plausible for a small cafe. Common picks: blueberry, lemon-poppyseed, banana-walnut, morning-glory, apple-cinnamon, pumpkin-spice (if late autumn), bran, chocolate-zucchini, savory cheddar-chive, plum-cardamom. Pick one. Be specific. Have an opinion.
+This week's muffin is {muffin}. Be specific about it. Have an opinion. If you mention the season or the weather, it is {season} — never another month.
+
+Your last few column titles were:
+{avoid_titles}
+Don't reuse any of those titles or their descriptors (the part after the comma). Give this one its own.
 
 OUTPUT THE COLUMN ONLY. No preamble. No "Sure, here's the column:". No quotes around it. No explanation."""
+
+
+def column_spec(now: datetime | None = None) -> "tuple[str, object]":
+    """(prompt, extractor) for this week's column.
+
+    The date, muffin, and Roy's hobby are chosen in code (lib/ritual_variety)
+    because the bare prompt converged on Plum-Cardamom 7 weeks in 13. The
+    extractor adds one rule on top of `extract_column`: the title must not
+    repeat a recent one. Shared with ritual_prep so the two paths can't drift.
+    """
+    b = ritual_variety.column_brief(now)
+    prompt = COLUMN_PROMPT.format(
+        date_str=b["date_str"], season=b["season"], muffin=b["muffin"], roy=b["roy"],
+        avoid_titles="\n".join(f"- {t}" for t in b["avoid_titles"]) or "- (none yet)",
+    )
+
+    def extract(out: str) -> str | None:
+        col = extract_column(out)
+        if col and not ritual_variety.column_title_ok(col, b["avoid_titles"]):
+            return None
+        return col
+
+    return prompt, extract
 
 
 # Spread retries across ~6 minutes — the Sunday failures (5/24, 6/7) were
@@ -99,6 +127,7 @@ def extract_column(out: str) -> str | None:
 
 def generate_column_live(model: str = "opus", max_tries: int = 4) -> str | None:
     import time
+    prompt, extract = column_spec()
     for attempt in range(max_tries):
         if attempt > 0:
             # A spent weekly window won't clear mid-loop; don't sleep ~6 min to learn that.
@@ -109,11 +138,11 @@ def generate_column_live(model: str = "opus", max_tries: int = 4) -> str | None:
             delay = RETRY_SLEEPS[min(attempt - 1, len(RETRY_SLEEPS) - 1)]
             print(f"[muffin] retrying in {delay}s", file=sys.stderr)
             time.sleep(delay)
-        res = run_claude(COLUMN_PROMPT, model=model, timeout=180)
+        res = run_claude(prompt, model=model, timeout=180)
         if not res.ok:
             print(res.log_line("muffin"), file=sys.stderr)
             continue
-        column = extract_column(res.text)
+        column = extract(res.text)
         if column:
             return column
         print(f"[muffin] output too short or missing signoff (try {attempt+1}): {res.text[:160]!r}", file=sys.stderr)

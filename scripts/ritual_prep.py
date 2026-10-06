@@ -55,15 +55,13 @@ def _specs() -> "dict[str, tuple[str, str, int, object]]":
     import mr_quiet_slip
     import pancake_sequence
 
+    # The two Sunday voices carry week-specific context (date, rotation picks,
+    # recent history) — see lib/ritual_variety.
+    slip_prompt, slip_extract = mr_quiet_slip.aphorism_spec()
+    doris_prompt, doris_extract = doris_muffin.column_spec()
     specs: "dict[str, tuple[str, str, int, object]]" = {
-        "slip": (
-            mr_quiet_slip.APHORISM_PROMPT, "opus", 120,
-            mr_quiet_slip.extract_aphorism,
-        ),
-        "doris": (
-            doris_muffin.COLUMN_PROMPT, "opus", 180,
-            doris_muffin.extract_column,
-        ),
+        "slip": (slip_prompt, "opus", 120, slip_extract),
+        "doris": (doris_prompt, "opus", 180, doris_extract),
     }
     for act in (1, 2, 3):
         specs[f"pancake_{act}"] = (
