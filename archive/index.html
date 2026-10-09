@@ -68,8 +68,16 @@
     border: 2px solid var(--gold);
     box-shadow: 4px 4px 0 var(--gold);
   }
-  header.hero .meta a { color: var(--gold); text-decoration: none; }
-  header.hero .meta a:hover { text-decoration: underline; }
+  header.hero .meta a, header.hero .meta button { color: var(--gold); text-decoration: none; }
+  header.hero .meta button {
+    font: inherit; letter-spacing: inherit; border: 0; border-radius: 0;
+    padding: 0; background: transparent; cursor: pointer;
+  }
+  header.hero .meta a:hover, header.hero .meta button:hover { text-decoration: underline; }
+  header.hero .meta button:disabled { opacity: 0.45; cursor: default; text-decoration: none; }
+  header.hero .meta a:focus-visible, header.hero .meta button:focus-visible {
+    outline: 2px solid var(--gold); outline-offset: 4px;
+  }
 
   /* CARD GRID */
   .grid {
@@ -434,6 +442,9 @@
       max-width: 100%; gap: 8px 12px; row-gap: 6px;
     }
   }
+  @media (max-width: 360px) {
+    header.hero h1 { font-size: 36px; }
+  }
 
   /* BINDER — keep-a-card */
   .card-wrap { position: relative; }
@@ -455,11 +466,6 @@
   @media (hover: none) { .keep-btn { opacity: 0.85; transform: rotate(8deg) scale(1); } }
   #binder-toggle.on { background: var(--gold); color: var(--ink); padding: 0 6px; }
   body.binder-only .card-wrap:not(.kept) { display: none; }
-  #binder-empty {
-    display: none; text-align: center; color: var(--dim);
-    font-style: italic; font-size: 14px; padding: 40px 0;
-  }
-  body.binder-only #binder-empty.show { display: block; }
 
   /* FINDER — rummage the cabinet by title / era / format / tone */
   .finder {
@@ -487,11 +493,17 @@
     min-width: 0;
   }
   .card-wrap.hide-search { display: none; }
-  #finder-empty {
-    display: none; text-align: center; color: var(--dim);
+  #cabinet-clear {
+    border: 0; border-bottom: 1px dashed var(--dim); padding: 3px 0;
+    font: 12px "Courier New", ui-monospace, monospace;
+    letter-spacing: 1px; color: var(--dim); background: transparent;
+    cursor: pointer;
+  }
+  #cabinet-clear:hover { color: var(--ink); border-color: var(--ink); }
+  #cabinet-empty {
+    text-align: center; color: var(--dim);
     font-style: italic; font-size: 14px; padding: 40px 0;
   }
-  #finder-empty.show { display: block; }
 
   /* SEEN — a quiet visit log. nav.js stamps each gen page you open into
      localStorage; the cabinet reads it to mark cards + power the UNSEEN
@@ -510,11 +522,6 @@
   .card-wrap.seen .seen-mark { display: block; }
   #unseen-toggle.on { background: var(--gold); color: var(--ink); padding: 0 6px; }
   body.unseen-only .card-wrap.seen { display: none; }
-  #unseen-empty {
-    display: none; text-align: center; color: var(--dim);
-    font-style: italic; font-size: 14px; padding: 40px 0;
-  }
-  body.unseen-only #unseen-empty.show { display: block; }
 
   /* RARE — hunt the scarce cards (★★★ and up: RARE / HOLO / FIRST EDITION).
      Additive hide only (hides everything that ISN'T rare+), so it intersects
@@ -533,33 +540,19 @@
     <span>SET: 2026</span>
     <span>692 / ∞</span>
     <a href="/">→ NEWEST</a>
-    <a href="#" id="cabinet-shuffle">⤳ STUMBLE</a>
-    <a href="#" id="binder-toggle" title="show only the cards you've kept">★ BINDER · <span id="binder-count">0</span></a>
-    <a href="#" id="unseen-toggle" title="show only cards you haven't opened yet">◇ UNSEEN · <span id="unseen-count">0</span></a>
-    <a href="#" id="rare-toggle" title="show only the scarce cards — ★★★ and up">✦ RARE · 172</a>
+    <button type="button" id="cabinet-shuffle" title="open a random card from this shelf">⤳ STUMBLE</button>
+    <button type="button" id="binder-toggle" aria-pressed="false" title="show only the cards you've kept">★ BINDER · <span id="binder-count">0</span></button>
+    <button type="button" id="unseen-toggle" aria-pressed="false" title="show only cards you haven't opened yet">◇ UNSEEN · <span id="unseen-count">0</span></button>
+    <button type="button" id="rare-toggle" aria-pressed="false" title="show only the scarce cards — ★★★ and up">✦ RARE · 172</button>
   </div>
   <div class="finder">
     <input id="finder-input" type="search" autocomplete="off" spellcheck="false"
            placeholder="rummage the cabinet… (try: puzzle · 1978 · diner)"
            aria-label="search the collection">
-    <span id="finder-count" aria-live="polite"></span>
+    <span id="finder-count" role="status" aria-live="polite" aria-atomic="true"></span>
+    <button type="button" id="cabinet-clear" aria-label="clear search and filters" hidden>CLEAR</button>
   </div>
 </header>
-
-<script>
-  // Stumble button: pick a random card and go there.
-  document.getElementById('cabinet-shuffle').addEventListener('click', function (e) {
-    e.preventDefault();
-    fetch('/archive/list.json', { cache: 'no-store' })
-      .then(function (r) { return r.json(); })
-      .then(function (list) {
-        if (Array.isArray(list) && list.length) {
-          location.href = '/archive/' + list[Math.floor(Math.random() * list.length)];
-        }
-      })
-      .catch(function () {});
-  });
-</script>
 
 <main class="grid">
 
@@ -17864,9 +17857,7 @@
         </div>
 </main>
 
-<p id="binder-empty">your binder is empty. tap the ☆ on a card to keep it.</p>
-<p id="finder-empty">nothing in the cabinet matches that. try a looser word.</p>
-<p id="unseen-empty">you've opened every card in the cabinet. that's all of 'em — for now. ✓</p>
+<p id="cabinet-empty" hidden></p>
 
 <footer>
   outbox.cafe · trading cards mint themselves four times a day<br>
@@ -17879,33 +17870,91 @@
 
 
 <script>
-  // Binder: kept cards live in this browser's localStorage. No accounts,
-  // no server — a shoebox under your own bed.
+  // One shelf for search, filters, the result count, and Stumble. Every filter
+  // still only hides cards; the shared match list also governs random picks.
+  // Kept/seen cards stay in this browser — a shoebox under your own bed.
   (function () {
     var KEY = 'outbox-binder';
-    function load() {
+    var SEEN_KEY = 'outbox-seen';
+    function load(key) {
       try {
-        var v = JSON.parse(localStorage.getItem(KEY) || '[]');
+        var v = JSON.parse(localStorage.getItem(key) || '[]');
         return Array.isArray(v) ? v : [];
       } catch (e) { return []; }
     }
     function save(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
-    var kept = load();
-    var countEl = document.getElementById('binder-count');
-    var emptyEl = document.getElementById('binder-empty');
+    var kept = load(KEY);
+    var seen = load(SEEN_KEY);
     var wraps = Array.prototype.slice.call(document.querySelectorAll('.card-wrap'));
+    var input = document.getElementById('finder-input');
+    var countEl = document.getElementById('finder-count');
+    var emptyEl = document.getElementById('cabinet-empty');
+    var clear = document.getElementById('cabinet-clear');
+    var stumble = document.getElementById('cabinet-shuffle');
+    var visible = [];
+    var filters = [
+      ['binder-toggle', 'binder-only'],
+      ['unseen-toggle', 'unseen-only'],
+      ['rare-toggle', 'rare-only']
+    ];
     function refresh() {
+      var q = input.value.toLowerCase().trim();
+      var terms = q ? q.split(/\s+/) : [];
+      var binderOnly = document.body.classList.contains('binder-only');
+      var unseenOnly = document.body.classList.contains('unseen-only');
+      var rareOnly = document.body.classList.contains('rare-only');
+      var filtered = terms.length > 0 || binderOnly || unseenOnly || rareOnly;
+      var keptCount = 0;
+      var unseenCount = 0;
+      visible = [];
       wraps.forEach(function (w) {
-        var on = kept.indexOf(w.getAttribute('data-file')) !== -1;
-        w.classList.toggle('kept', on);
+        var file = w.getAttribute('data-file');
+        var isKept = kept.indexOf(file) !== -1;
+        var isSeen = seen.indexOf(file) !== -1;
+        var isRare = ['r', 'h', 'f'].indexOf(w.getAttribute('data-rarity')) !== -1;
+        var hay = w.getAttribute('data-search') || '';
+        var hit = terms.every(function (t) { return hay.indexOf(t) !== -1; });
+        w.classList.toggle('kept', isKept);
+        w.classList.toggle('seen', isSeen);
+        w.classList.toggle('hide-search', !hit);
+        if (isKept) keptCount++;
+        if (!isSeen) unseenCount++;
         var b = w.querySelector('.keep-btn');
         if (b) {
-          b.textContent = on ? '\u2605' : '\u2606';
-          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+          b.textContent = isKept ? '\u2605' : '\u2606';
+          b.setAttribute('aria-pressed', isKept ? 'true' : 'false');
+          b.setAttribute('aria-label', isKept ? 'remove this card from your binder' : 'keep this card in your binder');
+          b.title = isKept ? 'remove from your binder' : 'keep in your binder';
+        }
+        if (hit && (!binderOnly || isKept) && (!unseenOnly || !isSeen) && (!rareOnly || isRare)) {
+          visible.push(w.querySelector('.card'));
         }
       });
-      if (countEl) countEl.textContent = kept.length;
-      if (emptyEl) emptyEl.classList.toggle('show', kept.length === 0);
+      document.getElementById('binder-count').textContent = keptCount;
+      document.getElementById('unseen-count').textContent = unseenCount;
+      countEl.textContent = filtered ? (visible.length + ' / ' + wraps.length) : '';
+      clear.hidden = !filtered;
+      stumble.disabled = visible.length === 0;
+      emptyEl.hidden = visible.length > 0 || wraps.length === 0;
+      if (!emptyEl.hidden) {
+        if (binderOnly && keptCount === 0) {
+          emptyEl.textContent = 'your binder is empty. tap the ☆ on a card to keep it.';
+        } else if (unseenOnly && unseenCount === 0) {
+          emptyEl.textContent = "you've opened every card in the cabinet. that's all of 'em — for now. ✓";
+        } else if (terms.length && (binderOnly || unseenOnly || rareOnly)) {
+          emptyEl.textContent = 'no cards match that search with these filters. try a looser word or clear the filters.';
+        } else if (terms.length) {
+          emptyEl.textContent = 'nothing in the cabinet matches that. try a looser word.';
+        } else {
+          emptyEl.textContent = 'no cards match these filters. clear them to open the whole cabinet.';
+        }
+      }
+      filters.forEach(function (f) {
+        var toggle = document.getElementById(f[0]);
+        var on = document.body.classList.contains(f[1]);
+        toggle.classList.toggle('on', on);
+        toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
     }
     wraps.forEach(function (w) {
       var b = w.querySelector('.keep-btn');
@@ -17919,87 +17968,37 @@
         refresh();
       });
     });
-    var toggle = document.getElementById('binder-toggle');
-    if (toggle) {
+    filters.forEach(function (f) {
+      var toggle = document.getElementById(f[0]);
       toggle.addEventListener('click', function (e) {
         e.preventDefault();
-        var on = document.body.classList.toggle('binder-only');
-        toggle.classList.toggle('on', on);
+        document.body.classList.toggle(f[1]);
+        refresh();
       });
-    }
-    refresh();
-  })();
-
-  // Finder: rummage the cabinet by title / era / format / tone. All terms
-  // must match (AND). Pure client-side — combines with binder-only via CSS
-  // (both add display:none, so they intersect).
-  (function () {
-    var input = document.getElementById('finder-input');
-    if (!input) return;
-    var countEl = document.getElementById('finder-count');
-    var emptyEl = document.getElementById('finder-empty');
-    var wraps = Array.prototype.slice.call(document.querySelectorAll('.card-wrap'));
-    var total = wraps.length;
-    function apply() {
-      var q = input.value.toLowerCase().trim();
-      var terms = q ? q.split(/\s+/) : [];
-      var shown = 0;
-      wraps.forEach(function (w) {
-        var hay = w.getAttribute('data-search') || '';
-        var hit = terms.every(function (t) { return hay.indexOf(t) !== -1; });
-        w.classList.toggle('hide-search', !hit);
-        if (hit) shown++;
-      });
-      if (countEl) countEl.textContent = terms.length ? (shown + ' / ' + total) : '';
-      if (emptyEl) emptyEl.classList.toggle('show', terms.length > 0 && shown === 0);
-    }
-    input.addEventListener('input', apply);
-    apply();
-  })();
-
-  // Seen: which cards you've opened. nav.js stamps every gen page you visit
-  // into localStorage; the cabinet reads that set to mark cards, count what's
-  // left, and power the UNSEEN filter. This browser only — same shoebox model
-  // as the binder. Read-only here (nav.js does the writing on the gen pages).
-  (function () {
-    var seen;
-    try { seen = JSON.parse(localStorage.getItem('outbox-seen') || '[]'); }
-    catch (e) { seen = []; }
-    if (!Array.isArray(seen)) seen = [];
-    var set = {};
-    seen.forEach(function (f) { set[f] = 1; });
-    var wraps = Array.prototype.slice.call(document.querySelectorAll('.card-wrap'));
-    var total = wraps.length;
-    var seenCount = 0;
-    wraps.forEach(function (w) {
-      if (set[w.getAttribute('data-file')]) { w.classList.add('seen'); seenCount++; }
     });
-    var unseen = total - seenCount;
-    var countEl = document.getElementById('unseen-count');
-    if (countEl) countEl.textContent = unseen;
-    var emptyEl = document.getElementById('unseen-empty');
-    var toggle = document.getElementById('unseen-toggle');
-    if (toggle) {
-      toggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        var on = document.body.classList.toggle('unseen-only');
-        toggle.classList.toggle('on', on);
-        if (emptyEl) emptyEl.classList.toggle('show', on && unseen === 0);
-      });
-    }
-  })();
-
-  // Rare: hunt the scarce cards (★★★ and up). Pure CSS filter — no localStorage.
-  // Combines with UNSEEN / BINDER via intersection (all filters only add
-  // display:none), so RARE + UNSEEN = scarce cards you haven't opened yet.
-  (function () {
-    var toggle = document.getElementById('rare-toggle');
-    if (!toggle) return;
-    toggle.addEventListener('click', function (e) {
+    input.addEventListener('input', refresh);
+    clear.addEventListener('click', function () {
+      input.value = '';
+      filters.forEach(function (f) { document.body.classList.remove(f[1]); });
+      refresh();
+      input.focus();
+    });
+    stumble.addEventListener('click', function (e) {
       e.preventDefault();
-      var on = document.body.classList.toggle('rare-only');
-      toggle.classList.toggle('on', on);
+      if (visible.length) location.href = visible[Math.floor(Math.random() * visible.length)].href;
     });
+    function reloadSaved() {
+      kept = load(KEY);
+      seen = load(SEEN_KEY);
+      refresh();
+    }
+    // Back/forward cache and another open tab can change the saved shelf
+    // without a full reload. Reconcile them before counting or stumbling.
+    window.addEventListener('pageshow', reloadSaved);
+    window.addEventListener('storage', function (e) {
+      if (e.key === KEY || e.key === SEEN_KEY || e.key === null) reloadSaved();
+    });
+    refresh();
   })();
 </script>
 
