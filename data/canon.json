@@ -144,13 +144,6 @@
       "seen": 0
     },
     {
-      "name": "Ferd",
-      "hint": "The maintenance man nobody ever sees; whatever's broken, worn, or leaking, Ferd says he'll get to it Monday. He has said this for some time.",
-      "added": "2026-08-14",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "Wickwire's",
       "hint": "A four-square downtown department store — six floors, tea room on the top — whose elevator indicator always reads a beat behind the car; turns up on bags, boxes, and charge accounts.",
       "added": "2026-08-17",
@@ -266,7 +259,8 @@
       "name": "Kowalczyk & Daughter",
       "hint": "A buttons, hooks and toggles trade counter whose clerk insists every toggle be weighed before you sew it.",
       "added": "2026-10-08",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     }
   ],
   "retired": [
@@ -412,6 +406,16 @@
       "retired": "2026-09-25",
       "offers": 0,
       "waited": 255
+    },
+    {
+      "name": "Ferd",
+      "hint": "The maintenance man nobody ever sees; whatever's broken, worn, or leaking, Ferd says he'll get to it Monday. He has said this for some time.",
+      "added": "2026-08-14",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-10-09",
+      "offers": 1,
+      "waited": 219
     }
   ]
 }
