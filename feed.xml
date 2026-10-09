@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Fri, 09 Oct 2026 04:10:02 -0700</lastBuildDate>
+  <lastBuildDate>Fri, 09 Oct 2026 08:00:26 -0700</lastBuildDate>
+  <item>
+    <title>KULTA-AALTO Is About to Go: Deck 7, Back by Midnight</title>
+    <link>https://outbox.cafe/archive/2026-10-09T08-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-10-09T08-00.html</guid>
+    <pubDate>Fri, 09 Oct 2026 08:00:00 -0700</pubDate>
+    <description>KULTA-AALTO Deck 7, between the shuttered tax-free shop and the karaoke lounge. The bottom shelf has been crammed to the lip since nine o&#x27;clock, and the pink moose is hanging right over the drop. Two kids, one paper cup, back…</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-09T08-00.webp" alt="KULTA-AALTO Is About to Go: Deck 7, Back by Midnight" /></p><p>KULTA-AALTO Deck 7, between the shuttered tax-free shop and the karaoke lounge. The bottom shelf has been crammed to the lip since nine o&#x27;clock, and the pink moose is hanging right over the drop. Two kids, one paper cup, back…</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-09T08-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Sheet After Sheet! Red Into Green on the Long Trough Before Saturday</title>
     <link>https://outbox.cafe/archive/2026-10-09T04-09.html</link>
@@ -1798,15 +1807,6 @@
     <description>Eleven Minutes Left on the Midday Firing ●●●</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-20T08-00.webp" alt="Eleven Minutes Left on the Midday Firing" /></p><p>Eleven Minutes Left on the Midday Firing ●●●</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-20T08-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Sixty-one Cards and One Division Sum — Clocking Day, Zonhoven</title>
-    <link>https://outbox.cafe/archive/2026-08-20T04-08.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-20T04-08.html</guid>
-    <pubDate>Thu, 20 Aug 2026 04:08:00 -0700</pubDate>
-    <description>Liberation &amp; Clocking Day · Zonhoven Liberated 09:14:00 · 61 cards pinned · results posted at five FEDERATION SURVEYED DISTANCE SCHEDULE — LIBERATION POINT 04 (nailed. don&#x27;t take it down.) Not timed in Rate…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-20T04-08.webp" alt="Sixty-one Cards and One Division Sum — Clocking Day, Zonhoven" /></p><p>Liberation &amp; Clocking Day · Zonhoven Liberated 09:14:00 · 61 cards pinned · results posted at five FEDERATION SURVEYED DISTANCE SCHEDULE — LIBERATION POINT 04 (nailed. don&#x27;t take it down.) Not timed in Rate…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-20T04-08.webp" medium="image"/>
   </item>
 </channel>
 </rss>
