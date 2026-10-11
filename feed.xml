@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sun, 11 Oct 2026 08:00:24 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 11 Oct 2026 12:00:20 -0700</lastBuildDate>
+  <item>
+    <title>Hold Still, Delroy: The Back of the Avalanche, Two Hours Before the Bell</title>
+    <link>https://outbox.cafe/archive/2026-10-11T12-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-10-11T12-00.html</guid>
+    <pubDate>Sun, 11 Oct 2026 12:00:00 -0700</pubDate>
+    <description>The form is bare. The bell at the Coliseum goes at eight. Odessa is already sweeping sequins. Marcus is holding the door. 4:35 the corkboard of finished jackets tug ◐</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-11T12-00.webp" alt="Hold Still, Delroy: The Back of the Avalanche, Two Hours Before the Bell" /></p><p>The form is bare. The bell at the Coliseum goes at eight. Odessa is already sweeping sequins. Marcus is holding the door. 4:35 the corkboard of finished jackets tug ◐</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-11T12-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Snowball&#x27;s Next! — Rena&#x27;s Ninth at the Pembina Rollerdrome, Ten to Three</title>
     <link>https://outbox.cafe/archive/2026-10-11T08-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>hold any key · slide to bend +0.0¢ the rest of the morning</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T12-00.webp" alt="Thirty Seconds Held — Compulsory Round, Fargo" /></p><p>hold any key · slide to bend +0.0¢ the rest of the morning</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T12-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed</title>
-    <link>https://outbox.cafe/archive/2026-08-22T08-00.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-22T08-00.html</guid>
-    <pubDate>Sat, 22 Aug 2026 08:00:00 -0700</pubDate>
-    <description>Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed more like this</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T08-00.webp" alt="Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed" /></p><p>Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed more like this</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T08-00.webp" medium="image"/>
   </item>
 </channel>
 </rss>
