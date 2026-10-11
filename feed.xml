@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Sun, 11 Oct 2026 04:00:09 -0700</lastBuildDate>
+  <lastBuildDate>Sun, 11 Oct 2026 08:00:24 -0700</lastBuildDate>
+  <item>
+    <title>Snowball&#x27;s Next! — Rena&#x27;s Ninth at the Pembina Rollerdrome, Ten to Three</title>
+    <link>https://outbox.cafe/archive/2026-10-11T08-00.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-10-11T08-00.html</guid>
+    <pubDate>Sun, 11 Oct 2026 08:00:00 -0700</pubDate>
+    <description>Snowball&#x27;s Next! — Rena&#x27;s Ninth at the Pembina Rollerdrome, Ten to Three</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-11T08-00.webp" alt="Snowball&#x27;s Next! — Rena&#x27;s Ninth at the Pembina Rollerdrome, Ten to Three" /></p><p>Snowball&#x27;s Next! — Rena&#x27;s Ninth at the Pembina Rollerdrome, Ten to Three</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-11T08-00.webp" medium="image"/>
+  </item>
   <item>
     <title>Eighteen Pleats, Auntie Says — Fold One Soup Dumpling Before the Water Boils</title>
     <link>https://outbox.cafe/archive/2026-10-11T04-00.html</link>
@@ -1798,15 +1807,6 @@
     <description>Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed more like this</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T08-00.webp" alt="Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed" /></p><p>Twenty Past Eleven, Full Sun — Gravel Behind the Printing Shed more like this</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T08-00.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Eleven Bundles Left — Divisadero Street Hand Laundry, Half Past Eight</title>
-    <link>https://outbox.cafe/archive/2026-08-22T04-00.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-22T04-00.html</guid>
-    <pubDate>Sat, 22 Aug 2026 04:00:00 -0700</pubDate>
-    <description>0.0 feet per minute 11 bundles left square 0 skewed 0 creased 0 damp 0 scorched 0 rest of the week&#x27;s work › Marcelina Ybarra-Coffey, far end of the mangle Grab a corner out of the basket. Left hand.…</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T04-00.webp" alt="Eleven Bundles Left — Divisadero Street Hand Laundry, Half Past Eight" /></p><p>0.0 feet per minute 11 bundles left square 0 skewed 0 creased 0 damp 0 scorched 0 rest of the week&#x27;s work › Marcelina Ybarra-Coffey, far end of the mangle Grab a corner out of the basket. Left hand.…</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-22T04-00.webp" medium="image"/>
   </item>
 </channel>
 </rss>
