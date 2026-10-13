@@ -186,13 +186,6 @@
       "seen": 0
     },
     {
-      "name": "Harriet Neap & the Kettleclick",
-      "hint": "A minor recording act whose songs turn up on B-sides, jukeboxes, and radios; every track seems to be a loop that outlasts whatever room it's playing in.",
-      "added": "2026-09-04",
-      "by": "scout",
-      "seen": 0
-    },
-    {
       "name": "Dot Vekmeyer",
       "hint": "A relentlessly cheerful local record-keeper who has watched the same unmoving cloud over Kettleback Ridge since 1997; coffee's always on, and she's never once been upset about it.",
       "added": "2026-09-05",
@@ -266,7 +259,8 @@
       "name": "Pembina Rollerdrome",
       "hint": "A neighborhood roller rink with a mirror ball where couples-only skate is always called at ten to three; somebody's birthday party is always happening there.",
       "added": "2026-10-12",
-      "by": "scout"
+      "by": "scout",
+      "seen": 0
     }
   ],
   "retired": [
@@ -422,6 +416,16 @@
       "retired": "2026-10-09",
       "offers": 1,
       "waited": 219
+    },
+    {
+      "name": "Harriet Neap & the Kettleclick",
+      "hint": "A minor recording act whose songs turn up on B-sides, jukeboxes, and radios; every track seems to be a loop that outlasts whatever room it's playing in.",
+      "added": "2026-09-04",
+      "by": "scout",
+      "seen": 0,
+      "retired": "2026-10-13",
+      "offers": 2,
+      "waited": 152
     }
   ]
 }
