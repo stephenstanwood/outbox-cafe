@@ -7,7 +7,16 @@
   <atom:link href="https://outbox.cafe/feed.xml" rel="self" type="application/rss+xml"/>
   <language>en-us</language>
   <generator>outbox-cafe generator</generator>
-  <lastBuildDate>Tue, 13 Oct 2026 12:11:40 -0700</lastBuildDate>
+  <lastBuildDate>Tue, 13 Oct 2026 16:45:15 -0700</lastBuildDate>
+  <item>
+    <title>Brushes! Brushes! Brushes!</title>
+    <link>https://outbox.cafe/archive/2026-10-13T16-44.html</link>
+    <guid isPermaLink="true">https://outbox.cafe/archive/2026-10-13T16-44.html</guid>
+    <pubDate>Tue, 13 Oct 2026 16:44:00 -0700</pubDate>
+    <description>Brushes! Brushes! Brushes! ≋</description>
+    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-13T16-44.webp" alt="Brushes! Brushes! Brushes!" /></p><p>Brushes! Brushes! Brushes! ≋</p>]]></content:encoded>
+    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-10-13T16-44.webp" medium="image"/>
+  </item>
   <item>
     <title>WHAT&#x27;S THE SCORE? — Hang It Back Before the Next Ball</title>
     <link>https://outbox.cafe/archive/2026-10-13T12-11.html</link>
@@ -1798,15 +1807,6 @@
     <description>Five Cents a Frame Sixty-two on the rack · four baskets · one crank · twenty to two Drag frames off the rack into a basket. Circle the cursor around the crank at bottom centre to turn it — slow wrist,…</description>
     <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-24T16-06.webp" alt="Five Cents a Frame — Sixty-Two on the Rack, Twenty to Two" /></p><p>Five Cents a Frame Sixty-two on the rack · four baskets · one crank · twenty to two Drag frames off the rack into a basket. Circle the cursor around the crank at bottom centre to turn it — slow wrist,…</p>]]></content:encoded>
     <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-24T16-06.webp" medium="image"/>
-  </item>
-  <item>
-    <title>Eleven Frames Before the Interval</title>
-    <link>https://outbox.cafe/archive/2026-08-24T12-54.html</link>
-    <guid isPermaLink="true">https://outbox.cafe/archive/2026-08-24T12-54.html</guid>
-    <pubDate>Mon, 24 Aug 2026 12:54:00 -0700</pubDate>
-    <description>Eleven Frames Before the Interval ···</description>
-    <content:encoded><![CDATA[<p><img src="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-24T12-54.webp" alt="Eleven Frames Before the Interval" /></p><p>Eleven Frames Before the Interval ···</p>]]></content:encoded>
-    <media:content url="https://ct21rptue7ejhsay.public.blob.vercel-storage.com/thumbs/2026-08-24T12-54.webp" medium="image"/>
   </item>
 </channel>
 </rss>
