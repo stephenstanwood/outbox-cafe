@@ -29,11 +29,11 @@ import json
 import os
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from lib.llm import run_claude, usage_limited
-from lib import bsky, ritual_cache, tumblr
+from lib import bsky, ritual_cache, ritual_variety, tumblr
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -59,6 +59,8 @@ OUTPUT THE POST ONLY. No quotes around it. No explanation. Just the mash + —Pa
 
 This is ACT 2 of a Saturday sequence. You are STARTING to type real words but they keep dissolving back into mash. Output a single short post that mixes keyboard nonsense with partial words and one or two real ones. Like Pancake is almost there but not quite. 30-90 characters total.
 
+The word you keep almost typing today is "{word}" — attempt it, misspell it, trail off partway through it, get it right once.
+
 GOOD examples (study the rhythm):
 - "the sun. the sun. asdfjkl the. sun."
 - "wormmmm. asdf. the bird. fjsdkl."
@@ -79,7 +81,10 @@ GOOD examples (study the rhythm and feel):
 - "an envelope is just a small room you can fold up. —Pancake"
 - "the high shelf knows what it knows. —Pancake"
 
-Topics you tend toward: sunbeams, the high shelf, a bird visible through the window, envelopes, the smell of the espresso machine warming up, soft small things.
+It is a Saturday evening in {season}. Tonight's line is about {subject} — use the word "{word}".
+
+Lines you have already posted on past Saturdays (find a new thought — not these ideas, not their shapes):
+{recent}
 
 Lowercase. One sentence (period optional). End with " —Pancake".
 
@@ -156,9 +161,47 @@ def extract_act(act: int, out: str) -> str | None:
     return None
 
 
+# The act-3 examples above are voice anchors; echoing one is as stale as
+# echoing last week.
+_ANCHORS = re.findall(r'^- "(.+?) —Pancake"$', ACT_PROMPTS[3], re.M)
+
+
+def act_spec(act: int, now: datetime | None = None) -> "tuple[str, object]":
+    """(prompt, extractor) for one act this week.
+
+    Act 3 kept circling three subjects (the sunbeam "arrangement" posted twice
+    nearly verbatim; the espresso machine three Saturdays running), so this
+    week's subject is chosen in code (lib/ritual_variety), act 2 drifts toward
+    its word, and act 3 must use it and must not echo a past line. Shared with
+    ritual_prep so the drawer and the live fallback can't drift.
+    """
+    if act == 1:
+        return ACT_PROMPTS[1], lambda out: extract_act(1, out)
+    recent = ritual_variety.recent_pancake_lines()
+    subject, word = ritual_variety.pick_pancake_subject(recent, ritual_cache.week_key(now))
+    if act == 2:
+        return ACT_PROMPTS[2].format(word=word), lambda out: extract_act(2, out)
+    sat = ritual_variety.ritual_sunday(now) - timedelta(days=1)
+    prompt = ACT_PROMPTS[3].format(
+        subject=subject, word=word, season=ritual_variety.season_phrase(sat),
+        recent="\n".join(f"- {r}" for r in recent) or "- (none yet)",
+    )
+
+    def extract(out: str) -> str | None:
+        line = extract_act(3, out)
+        if line:
+            why = ritual_variety.pancake_line_ok(line, word, recent + _ANCHORS)
+            if why:
+                print(f"[pancake-3] {line!r} {why} — rejecting", file=sys.stderr)
+                return None
+        return line
+
+    return prompt, extract
+
+
 def generate_act_live(act: int, max_tries: int = 4) -> str | None:
     import time
-    prompt = ACT_PROMPTS[act]
+    prompt, extract = act_spec(act)
     # opus now (Max OAuth = $0) — short outputs, but the best model is free
     for attempt in range(max_tries):
         if attempt > 0:
@@ -174,7 +217,7 @@ def generate_act_live(act: int, max_tries: int = 4) -> str | None:
         if not res.ok:
             print(res.log_line(f"pancake-{act}"), file=sys.stderr)
             continue
-        line = extract_act(act, res.text)
+        line = extract(res.text)
         if line:
             return line
         print(f"[pancake-{act}] no usable output try {attempt+1}: {res.text[:160]!r}", file=sys.stderr)

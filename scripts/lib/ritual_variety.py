@@ -21,6 +21,13 @@ anything reviewed recently, a Roy hobby not used in the last few columns, a
 concrete counter object for the slip, the real Sunday date, and a validator
 that rejects a slip too close to one already posted.
 
+Pancake's Saturday act 3 had the same problem a day earlier in the week: "the
+sunbeam and i have an arrangement: it moves, i move" (9/6) came back as "an
+understanding: it moves, i move" (9/27), and the espresso machine warmed up on
+10/4, 10/11, and again in the W42 drawer. The prompt's "topics you tend toward"
+list *was* the attractor. Now one week's subject is chosen here and shared by
+act 2 (the word she keeps almost typing) and act 3 (the line she lands).
+
 Everything here reads Mini-local history (``archive/columns/*.txt`` and
 ``data/post_log.jsonl``) and degrades to "no history" if either is missing, so
 a fresh checkout still produces a valid prompt.
@@ -200,8 +207,8 @@ def column_title_ok(text: str, recent_titles: list[str]) -> bool:
 
 # ---------- Mr. Quiet ----------
 
-def recent_slips(n: int = SLIP_MEMORY) -> list[str]:
-    """Distinct slip lines from post_log, newest first."""
+def _recent_texts(prefix: str, n: int) -> list[str]:
+    """Distinct post_log texts whose type starts with `prefix`, newest first."""
     lines: list[str] = []
     try:
         rows = POST_LOG.read_text().splitlines()
@@ -212,7 +219,7 @@ def recent_slips(n: int = SLIP_MEMORY) -> list[str]:
             e = json.loads(raw)
         except ValueError:
             continue
-        if not str(e.get("type", "")).startswith("slip"):
+        if not str(e.get("type", "")).startswith(prefix):
             continue
         text = (e.get("text") or "").strip()
         if text and text not in lines:
@@ -220,6 +227,11 @@ def recent_slips(n: int = SLIP_MEMORY) -> list[str]:
         if len(lines) >= n:
             break
     return lines
+
+
+def recent_slips(n: int = SLIP_MEMORY) -> list[str]:
+    """Distinct slip lines from post_log, newest first."""
+    return _recent_texts("slip", n)
 
 
 def _words(s: str) -> list[str]:
@@ -230,8 +242,8 @@ def _content(s: str) -> set[str]:
     return {w.rstrip("s") for w in _words(s) if w not in _STOP and len(w) > 2}
 
 
-def slip_too_similar(line: str, recent: list[str]) -> str | None:
-    """The recent slip `line` echoes, or None.
+def echoes(line: str, recent: list[str]) -> str | None:
+    """The recent line `line` echoes, or None.
 
     Echo = shares a 4-word run, or half its content words. Catches
     "slow mornings are not lost time; they are X" against its twin.
@@ -249,8 +261,87 @@ def slip_too_similar(line: str, recent: list[str]) -> str | None:
     return None
 
 
+slip_too_similar = echoes
+
+
 def pick_slip_object(recent: list[str], rng: random.Random | None = None) -> str:
     rng = rng or random.Random()
     text = " ".join(recent).lower()
     fresh = [o for o in SLIP_OBJECTS if o.split()[-1] not in text]
     return rng.choice(fresh or list(SLIP_OBJECTS))
+
+
+# ---------- Pancake ----------
+
+PANCAKE_MEMORY = 12
+# Subjects already used within this many act-3 lines are skipped.
+PANCAKE_SUBJECT_MEMORY = 8
+
+# Things a window-sill calico notices. (prompt phrase, key word). The key word
+# is what act 2 keeps trying to type, what act 3 must contain, and what marks
+# a subject as recently used.
+PANCAKE_SUBJECTS: tuple[tuple[str, str], ...] = (
+    ("the sunbeam crossing the floor", "sunbeam"),
+    ("the high shelf", "shelf"),
+    ("a bird that visits the sill outside the window", "bird"),
+    ("an envelope left on the counter", "envelope"),
+    ("the espresso machine warming up", "espresso"),
+    ("the radiator ticking as it heats", "radiator"),
+    ("rain running down the glass", "rain"),
+    ("a paper bag someone set on the floor", "bag"),
+    ("the mail slot in the door", "mail"),
+    ("a loose thread on a customer's scarf", "thread"),
+    ("a moth at the lamp after dark", "moth"),
+    ("an empty cardboard box", "box"),
+    ("the doorbell over the door", "bell"),
+    ("a leaf that blew in when the door opened", "leaf"),
+    ("a pigeon walking the sidewalk like it owns it", "pigeon"),
+    ("the fog sitting on the street in the morning", "fog"),
+    ("a wool hat left on a chair", "hat"),
+    ("the steam off someone's cup", "steam"),
+    ("a pencil rolling off a table", "pencil"),
+    ("the shadow of the blinds on the wall", "shadow"),
+    ("the clock above the counter", "clock"),
+    ("a stack of saucers drying by the sink", "saucer"),
+)
+
+
+def recent_pancake_lines(n: int = PANCAKE_MEMORY) -> list[str]:
+    """Distinct Pancake act-3 lines from post_log, newest first."""
+    return _recent_texts("pancake_seq_3", n)
+
+
+_IRREGULAR = {"leaf": "leaves", "shelf": "shelves"}
+
+
+def _has_word(text: str, key: str) -> bool:
+    """Whole-word match allowing a plural: "bird" hits "birds", "hat" never hits "that"."""
+    forms = [re.escape(key) + r"(?:s|es|'s)?"]
+    if key in _IRREGULAR:
+        forms.append(re.escape(_IRREGULAR[key]))
+    return re.search(rf"\b(?:{'|'.join(forms)})\b", text.lower()) is not None
+
+
+def pick_pancake_subject(recent: list[str], week: str) -> tuple[str, str]:
+    """This week's (phrase, key word) for Pancake, skipping recently used subjects.
+
+    Seeded by the ISO week so act 2 and act 3 agree even when one comes from
+    the drawer and the other is generated live on Saturday.
+    """
+    text = " ".join(recent[:PANCAKE_SUBJECT_MEMORY])
+    fresh = [s for s in PANCAKE_SUBJECTS if not _has_word(text, s[1])]
+    return random.Random(f"pancake:{week}").choice(fresh or list(PANCAKE_SUBJECTS))
+
+
+def pancake_line_ok(line: str, key: str, recent: list[str]) -> str | None:
+    """Why an act-3 line should be rejected, or None if it's fine."""
+    def bare(s: str) -> str:
+        # Every line is signed; the signature isn't overlap.
+        return re.sub(r"\s*[—-]+\s*pancake\s*$", "", s.strip(), flags=re.I)
+
+    if not _has_word(line, key):
+        return f"doesn't mention this week's {key!r}"
+    echo = echoes(bare(line), [bare(r) for r in recent])
+    if echo:
+        return f"echoes {echo!r}"
+    return None

@@ -63,11 +63,10 @@ def _specs() -> "dict[str, tuple[str, str, int, object]]":
         "slip": (slip_prompt, "opus", 120, slip_extract),
         "doris": (doris_prompt, "opus", 180, doris_extract),
     }
+    # Acts 2 and 3 share a code-chosen subject for the week (lib/ritual_variety).
     for act in (1, 2, 3):
-        specs[f"pancake_{act}"] = (
-            pancake_sequence.ACT_PROMPTS[act], "opus", 60,
-            (lambda a: lambda out: pancake_sequence.extract_act(a, out))(act),
-        )
+        prompt, extract = pancake_sequence.act_spec(act)
+        specs[f"pancake_{act}"] = (prompt, "opus", 60, extract)
     return specs
 
 

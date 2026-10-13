@@ -122,5 +122,78 @@ class SlipTest(unittest.TestCase):
             rv.POST_LOG = orig
 
 
+class PancakeTest(unittest.TestCase):
+    """Act 3 posted the sunbeam "arrangement" twice and the espresso machine
+    three Saturdays running; the subject is now chosen in code."""
+
+    SUNBEAM = "the sunbeam and i have an arrangement: it moves, i move, and neither of us has ever once said so out loud. —Pancake"
+    ESPRESSO = "the espresso machine warms up the same way i do, slowly and with a little humming. —Pancake"
+
+    def test_recent_subjects_are_skipped(self):
+        for w in range(1, 53):
+            _, key = rv.pick_pancake_subject([self.SUNBEAM, self.ESPRESSO], f"2026-W{w:02d}")
+            self.assertNotIn(key, ("sunbeam", "espresso"))
+
+    def test_subject_is_stable_within_a_week(self):
+        # Act 2 may come from the drawer while act 3 is generated live on Saturday.
+        a = rv.pick_pancake_subject([self.SUNBEAM], "2026-W42")
+        self.assertEqual(a, rv.pick_pancake_subject([self.SUNBEAM], "2026-W42"))
+
+    def test_exhausted_pool_still_returns_something(self):
+        everything = [f"the {k} —Pancake" for _, k in rv.PANCAKE_SUBJECTS]
+        self.assertIn(rv.pick_pancake_subject(everything, "2026-W42"), rv.PANCAKE_SUBJECTS)
+
+    def test_the_real_echo_is_caught(self):
+        line = "the sunbeam and i have an understanding: it moves, i move, neither of us mentions it. —Pancake"
+        self.assertIn("echoes", rv.pancake_line_ok(line, "sunbeam", [self.SUNBEAM]))
+
+    def test_line_must_use_the_weeks_word(self):
+        self.assertIn("doesn't mention", rv.pancake_line_ok("the high shelf knows. —Pancake", "moth", []))
+
+    def test_plurals_count_but_substrings_do_not(self):
+        self.assertIsNone(rv.pancake_line_ok("the leaves came in with the wind. —Pancake", "leaf", []))
+        self.assertIn("doesn't mention", rv.pancake_line_ok("that is that. —Pancake", "hat", []))
+
+    def test_signature_is_not_overlap(self):
+        prev = ["the bird is back. —Pancake", "the shelf is high. —Pancake"]
+        self.assertIsNone(rv.pancake_line_ok("a moth has found the lamp and is telling it everything. —Pancake", "moth", prev))
+
+    def test_recent_lines_read_act_3_only(self):
+        with tempfile.TemporaryDirectory() as d:
+            log = Path(d) / "post_log.jsonl"
+            rows = [
+                {"type": "pancake_seq_3_bsky", "text": "old. —Pancake"},
+                {"type": "pancake_seq_3_tumblr", "text": "old. —Pancake"},
+                {"type": "pancake_seq_2_bsky", "text": "the win. asdf —Pancake"},
+                {"type": "pancake_seq_3_bsky", "text": "new. —Pancake"},
+            ]
+            log.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+            orig = rv.POST_LOG
+            rv.POST_LOG = log
+            try:
+                self.assertEqual(rv.recent_pancake_lines(), ["new. —Pancake", "old. —Pancake"])
+            finally:
+                rv.POST_LOG = orig
+
+
+class PancakeSpecTest(unittest.TestCase):
+    def test_acts_2_and_3_share_the_word_and_prompts_render(self):
+        import pancake_sequence as ps
+        now = datetime(2026, 10, 12, 2, 30)
+        p2, _ = ps.act_spec(2, now)
+        p3, extract = ps.act_spec(3, now)
+        word = p2.split('almost typing today is "', 1)[1].split('"', 1)[0]
+        self.assertIn(f'use the word "{word}"', p3)
+        self.assertIn("mid-October", p3)
+        self.assertNotIn("{", p2 + p3)
+        self.assertIsNone(extract("the high shelf knows what it knows. —Pancake"))  # anchor echo / wrong word
+
+    def test_act_1_is_unchanged(self):
+        import pancake_sequence as ps
+        prompt, extract = ps.act_spec(1)
+        self.assertEqual(prompt, ps.ACT_PROMPTS[1])
+        self.assertEqual(extract("jkdsf;lkj fjjjjj —Pancake"), "jkdsf;lkj fjjjjj —Pancake")
+
+
 if __name__ == "__main__":
     unittest.main()
